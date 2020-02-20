@@ -1,0 +1,11 @@
+svg circle {
+  stroke: black;
+  stroke-width: 1px;
+  opacity: 0.8;
+}
+
+svg line {
+  stroke-width: 8px;
+  opacity: 0.8;
+  stroke: black;
+}

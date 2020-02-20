@@ -1,6 +1,13 @@
 import {Component, Prop, h, State} from '@stencil/core';
-import {parsePose, PoseBodyFrameModel, PoseLimb, PoseModel, PosePointModel, RGBColor} from "../../utils/binary-parser";
-import {Buffer} from "buffer";
+
+import {
+  Pose,
+  PoseBodyFrameModel,
+  PoseLimb,
+  PoseModel,
+  PosePointModel,
+  RGBColor
+} from "pose-utils";
 
 
 @Component({
@@ -29,9 +36,7 @@ export class PoseViewer {
   }
 
   async componentWillLoad() {
-    const res = await fetch(this.src);
-    const buffer = Buffer.from(await res.arrayBuffer());
-    this.pose = parsePose(buffer);
+    this.pose = await Pose.fromRemote(this.src);
 
     let frame = 0;
 
@@ -115,7 +120,7 @@ export class PoseViewer {
 
 
   render() {
-    if (!this.pose) {
+    if (!this.frame) {
       return "";
     }
 

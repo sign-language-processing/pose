@@ -24,10 +24,11 @@
   "devDependencies": {
     "@stencil/core": "^1.8.4",
     "@types/binary-parser": "^1.5.0",
-        "rollup-plugin-node-polyfills": "^0.2.1"
+    "rollup-plugin-node-polyfills": "^0.2.1"
   },
   "license": "MIT",
   "dependencies": {
-    "binary-parser": "^1.5.0"
+    "binary-parser": "^1.5.0",
+    "pose-utils": "file:../format/typescript"
   }
 }

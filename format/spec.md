@@ -25,6 +25,7 @@
 \[`unsigned short` Blue]
 
 # Body
+\[`unsined short` FPS]
 \[`unsined short` Number of frames]
 
 ## For every frame

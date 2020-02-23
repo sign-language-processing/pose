@@ -47,6 +47,7 @@ export interface PoseBodyFrameModel {
 }
 
 export interface PoseBodyModel {
+  fps: number,
   _frames: number,
   frames: PoseBodyFrameModel[]
 }

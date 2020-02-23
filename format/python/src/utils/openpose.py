@@ -1,3 +1,5 @@
+import math
+
 BODY_POINTS = ["Nose", "Neck", "RShoulder", "RElbow", "RWrist", "LShoulder", "LElbow", "LWrist", "MidHip",
                "RHip", "RKnee", "RAnkle", "LHip", "LKnee", "LAnkle", "REye", "LEye", "REar", "LEar", "LBigToe",
                "LSmallToe", "LHeel", "RBigToe", "RSmallToe", "RHeel"]
@@ -102,8 +104,6 @@ FACE_EYEBROW_RIGHT_LIMBS = [("FEB_" + str(i), "FEB_" + str(i + 1)) for i in rang
 FACE_POINTS = FACE_BORDER_POINTS + FACE_EYEBROWS_POINTS + FACE_NOSE_POINTS + FACE_EYE_POINTS + FACE_OUTER_LIPS_POINTS + FACE_INNER_LIPS_POINTS + FACE_PUPILS_POINTS
 FACE_LIMBS = FACE_BORDER_LIMBS_LEFT + FACE_BORDER_LIMBS_RIGHT + FACE_OUTER_LIPS_LIMBS + FACE_INNER_LIPS_LIMBS + FACE_NOSE_LIMBS + FACE_EYEBROW_LEFT_LIMBS + FACE_EYEBROW_RIGHT_LIMBS + FACE_EYE_LEFT_LIMBS + FACE_EYE_RIGHT_LIMBS
 
-
-
 HAND_POINTS_COLOR = [
     [192, 0, 0],
     [192, 192, 0],
@@ -112,3 +112,29 @@ HAND_POINTS_COLOR = [
     [0, 0, 192],
     [127, 127, 127]
 ]
+
+# Definition of OpenPose Components
+OpenPose_Hand_Component = {
+    "points": HAND_POINTS,
+    "colors": [[math.floor(x + 35 * (i % 4)) for x in HAND_POINTS_COLOR[i // 4]] for i in
+               range(-1, len(HAND_POINTS) - 1)],
+    "limbs": HAND_LIMBS,
+    "point_format": "XYC"
+}
+
+OpenPose_Components = {
+    "pose_keypoints_2d": {
+        "points": BODY_POINTS,
+        "colors": [[255, 0, 0]],  # Red
+        "limbs": BODY_LIMBS,
+        "point_format": "XYC"
+    },
+    "face_keypoints_2d": {
+        "points": FACE_POINTS,
+        "colors": [[128, 0, 0]],  # Brown
+        "limbs": FACE_LIMBS,
+        "point_format": "XYC"
+    },
+    "hand_left_keypoints_2d": OpenPose_Hand_Component,
+    "hand_right_keypoints_2d": OpenPose_Hand_Component
+}

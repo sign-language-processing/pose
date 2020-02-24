@@ -1,6 +1,7 @@
 import copy
 import struct
 import timeit
+from collections import defaultdict
 from itertools import chain
 from json import load
 from time import time
@@ -10,6 +11,7 @@ import math
 import numpy as np
 from imgaug import Keypoint, KeypointsOnImage
 from imgaug.augmenters import Augmenter
+from scipy.interpolate import interp1d
 
 
 def s2b(s: str) -> bytes:
@@ -125,6 +127,45 @@ class Pose:
 
         return Pose(header, body, fps=body["fps"])
 
+    def interpolate_fps(self, fps, kind='cubic'):
+        frames = self.body["frames"]
+
+        new_frames_len = math.ceil((len(frames) - 1) * fps / self.body["fps"]) + 1
+        new_x = [i / fps for i in range(new_frames_len)]
+
+        keypoints = defaultdict(lambda: defaultdict(lambda: {"x": [], "y": []}))
+        for i, frame in enumerate(frames):
+            for person in frame["people"]:
+                for name, component in self.header["components"].items():
+                    for j, point in enumerate(person[name]):
+                        if point["C"] > 0:
+                            for d in component["point_format"]:
+                                if d in point:
+                                    k = (name, j, d)
+                                    keypoints[person["id"]][k]["x"].append(i / self.body["fps"])
+                                    keypoints[person["id"]][k]["y"].append(point[d])
+
+
+        intep = {p: {k: interp1d(v["x"], v["y"], kind=kind)(new_x) for k, v in data.items()}
+                 for p, data in keypoints.items()}
+
+        new_frames = []
+        for i in range(len(new_x)):
+            people = []
+            for p, new_data in intep.items():
+                person = {"id": p}
+                for name, component in self.header["components"].items():
+                    person[name] = [{d: 0 for d in component["point_format"]} for _ in range(len(component["points"]))]
+
+                for (name, point_i, d), new_y in new_data.items():
+                    person[name][point_i][d] = new_y[i]
+
+                people.append(person)
+            new_frames.append({"people": people})
+
+        self.body["frames"] = new_frames
+        self.body["fps"] = fps
+
     def save_header(self, f):
         f.write(struct.pack("<f", self.header["version"]))  # File version
 
@@ -172,7 +213,7 @@ class Pose:
             f.write(struct.pack("<h", person["id"]))
 
             for part, features in self.header["components"].items():
-                points = chain.from_iterable([p.values() for p in person[part]])
+                points = list(chain.from_iterable([p.values() for p in person[part]]))
                 p_format = "f" * len(features["point_format"]) * len(features["points"])
                 f.write(struct.pack("<" + p_format, *points))
 

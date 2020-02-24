@@ -6,7 +6,7 @@ from format.python.src.custom_augment.piecewise_affine_kp import PiecewiseAffine
 from format.python.src.pose import Pose, PoseReader
 from format.python.src.utils.openpose import BODY_POINTS
 
-buffer = open("video/sample.pose", "rb").read()
+buffer = open("imgs/video_000000000000_keypoints.pose", "rb").read()
 p = PoseReader(buffer).read()
 p.focus_pose()
 
@@ -31,8 +31,8 @@ for i in tqdm(list(range(50))):
         dist_p1=("pose_keypoints_2d", BODY_POINTS.index("RShoulder")),
         dist_p2=("pose_keypoints_2d", BODY_POINTS.index("LShoulder")),
         scale_factor=500)
-    new_p.save("video/augmented/" + str(i) + ".pose")
+    new_p.save("imgs/augmented/" + str(i) + ".pose")
 
-    html.append('<pose-viewer src="sample-data/video/augmented/' + str(i) + '.pose"></pose-viewer>')
+    html.append('<pose-viewer src="sample-data/imgs/augmented/' + str(i) + '.pose"></pose-viewer>')
 
 print("\n".join(html))

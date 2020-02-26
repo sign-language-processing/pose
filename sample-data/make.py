@@ -3,13 +3,14 @@ import json
 from os import listdir, path
 
 from format.python.src.main import Pose
+from format.python.src.pose import PoseReader
 
 json_dir = "json"
 json_files = list(listdir(json_dir))
 
 frames = [json.load(open(path.join(json_dir, file_name), "r")) for file_name in json_files]
 
-poses = [Pose.from_openpose_json(frame) for frame in frames]
+poses = [PoseReader.from_openpose_json(frame) for frame in frames]
 
 # Save imgs
 for f_name, pose in zip(json_files, poses):

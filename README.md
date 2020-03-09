@@ -62,3 +62,8 @@ To change the frame rate of a video, using data interpolation, use the `interpol
 p.interpolate_fps(24, kind='cubic')
 p.interpolate_fps(24, kind='linear')
 ```
+
+#### Local install
+```bash
+pip install -e /home/nlp/amit/PhD/PoseFormat/lib/python/
+```

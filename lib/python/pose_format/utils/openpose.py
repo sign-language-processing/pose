@@ -119,7 +119,7 @@ OpenPose_Hand_Component = {
     "colors": [[math.floor(x + 35 * (i % 4)) for x in HAND_POINTS_COLOR[i // 4]] for i in
                range(-1, len(HAND_POINTS) - 1)],
     "limbs": HAND_LIMBS,
-    "point_format": "XYC"
+    "point_format": {"X": 0, "Y": 1, "C": 2}
 }
 
 OpenPose_Components = {
@@ -127,13 +127,13 @@ OpenPose_Components = {
         "points": BODY_POINTS,
         "colors": [[255, 0, 0]],  # Red
         "limbs": BODY_LIMBS,
-        "point_format": "XYC"
+        "point_format": {"X": 0, "Y": 1, "C": 2}
     },
     "face_keypoints_2d": {
         "points": FACE_POINTS,
         "colors": [[128, 0, 0]],  # Brown
         "limbs": FACE_LIMBS,
-        "point_format": "XYC"
+        "point_format": {"X": 0, "Y": 1, "C": 2}
     },
     "hand_left_keypoints_2d": OpenPose_Hand_Component,
     "hand_right_keypoints_2d": OpenPose_Hand_Component

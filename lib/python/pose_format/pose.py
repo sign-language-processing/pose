@@ -8,22 +8,25 @@ import math
 import numpy as np
 from imgaug import Keypoint, KeypointsOnImage
 from imgaug.augmenters import Augmenter
-from jsonlines import jsonlines
 from scipy.interpolate import interp1d
 
-from lib.python.pose_format.utils.fast_math import distance, angle
+from .utils.fast_math import distance, angle
 
 
 def s2b(s: str) -> bytes:
     return bytes(s, 'utf8')
 
 
-POINT_DIMENSIONS = ["X", "Y", "Z"]
-
 POINT_AGGREGATORS = {
     "distance": distance,
     "angle": angle,
 }
+
+
+class Points:
+    def __init__(self, dimensions, confidence):
+        self.dimensions = dimensions
+        self.confidence = confidence
 
 
 class Pose:
@@ -37,25 +40,26 @@ class Pose:
     def add_frame(self, frame):
         self.body["frames"].append(frame)
 
-    @staticmethod
-    def point_to_numpy(point):
-        return np.array([point[p] for p in POINT_DIMENSIONS if p in point])
-
     def iterate_points_dimensions(self, callback):
-        def iterate_dimensions(point):
-            for k in POINT_DIMENSIONS:
-                if k in point:
-                    callback(point, k)
+        def iterate_dimensions(points, i):
+            for j, v in enumerate(points.dimensions[i]):
+                callback(points, i, j, v)
 
         return self.iterate_points(iterate_dimensions)
 
     def iterate_points(self, callback):
+        def iterate_component(points):
+            for i, c in enumerate(points.confidence):
+                if c > 0:
+                    callback(points, i)
+
+        return self.iterate_components(iterate_component)
+
+    def iterate_components(self, callback):
         for frame in self.body["frames"]:
             for person in frame["people"]:
-                for component in self.header["components"].keys():
-                    for point in person[component]:
-                        if point["C"] > 0:
-                            callback(point)
+                for name, component in self.header["components"].items():
+                    callback(person[name])
 
     def focus_pose(self):
         """
@@ -65,23 +69,23 @@ class Pose:
         if len(frames) == 0:
             return
 
-        mins = {p: math.inf for p in POINT_DIMENSIONS}
-        maxs = {p: 0 for p in POINT_DIMENSIONS}
+        mins = [math.inf for _ in range(3)]
+        maxs = [0 for _ in range(3)]
 
-        def set_min_max(point, k):
-            mins[k] = min(mins[k], point[k])
-            maxs[k] = max(maxs[k], point[k])
+        def set_min_max(points, i, j, v):
+            mins[j] = min(mins[j], v)
+            maxs[j] = max(maxs[j], v)
 
         self.iterate_points_dimensions(set_min_max)
 
-        def translate_point(point, k):
-            point[k] -= mins[k]
+        def translate_point(points, i, j, v):
+            points.dimensions[i][j] -= mins[j]
 
         self.iterate_points_dimensions(translate_point)
 
-        self.header["width"] = math.ceil(max(maxs["X"] - mins["X"], 0))
-        self.header["height"] = math.ceil(max(maxs["Y"] - mins["Y"], 0))
-        self.header["depth"] = math.ceil(max(maxs["Z"] - mins["Z"], 0))
+        self.header["width"] = math.ceil(max(maxs[0] - mins[0], 0))
+        self.header["height"] = math.ceil(max(maxs[1] - mins[1], 0))
+        self.header["depth"] = math.ceil(max(maxs[2] - mins[2], 0))
 
     def normalize(self, dist_p1: Tuple[str, int], dist_p2: Tuple[str, int], scale_factor: float = 1):
         frames = self.body["frames"]
@@ -92,24 +96,29 @@ class Pose:
         distances = []
         for frame in frames:
             for person in frame["people"]:
-                p1 = Pose.point_to_numpy(person[dist_p1[0]][dist_p1[1]])
-                p2 = Pose.point_to_numpy(person[dist_p2[0]][dist_p2[1]])
+                p1 = person[dist_p1[0]].dimensions[dist_p1[1]]
+                p2 = person[dist_p2[0]].dimensions[dist_p2[1]]
                 distances.append(distance(p1, p2))
 
         # 2. scale all points to dist/scale
         scale = scale_factor / np.mean(distances)
 
-        def scale_point(point, k):
-            point[k] *= scale
+        def scale_point(points):
+            points.dimensions = points.dimensions * scale
 
-        self.iterate_points_dimensions(scale_point)
+        self.iterate_components(scale_point)
 
         # 3. Shift all points to be positive, starting from 0
         self.focus_pose()
 
     def augment2d(self, augmenter: Augmenter):
         keypoints = []
-        self.iterate_points(lambda point: keypoints.append(Keypoint(x=point["X"], y=point["Y"])))
+
+        def add_keypoints(points, i):
+            point = points.dimensions[i]
+            keypoints.append(Keypoint(x=point[0], y=point[1]))
+
+        self.iterate_points(add_keypoints)
 
         kps = KeypointsOnImage(keypoints, shape=(self.header["height"], self.header["width"]))
         kps_aug = augmenter(keypoints=kps)  # Augment keypoints
@@ -122,15 +131,16 @@ class Pose:
             people = []
             for person in frame["people"]:
                 person_n = {"id": person["id"]}
-                for component in self.header["components"].keys():
-                    person_n[component] = []
-                    for point in person[component]:
-                        if point["C"] > 0:
+                for name, component in self.header["components"].items():
+                    confidence = np.array(person[name].confidence)
+                    dimensions = np.zeros((len(component["points"]), len(component["point_format"])-1))
+                    for i, c in enumerate(confidence):
+                        if c > 0:
                             keypoint = kps_aug.keypoints[point_idx]
-                            point_n = {"C": point["C"], "X": keypoint.x, "Y": keypoint.y}
-                            person_n[component].append(point_n)
-                        else:
-                            person_n[component].append(zero_point)
+                            point_idx += 1
+                            dimensions[i][0] = keypoint.x
+                            dimensions[i][1] = keypoint.y
+                    person_n[name] = Points(dimensions=dimensions, confidence=confidence)
                 people.append(person_n)
 
             frames.append({"people": people})
@@ -138,8 +148,10 @@ class Pose:
         return Pose(self.header, {"frames": frames}, fps=self.body["fps"])
 
     def interpolate_fps(self, fps, kind='cubic'):
+        raise NotImplementedError("Implementation not good")
         frames = self.body["frames"]
 
+        # New array of the second for every frame
         new_frames_len = math.ceil((len(frames) - 1) * fps / self.body["fps"]) + 1
         new_x = [i / fps for i in range(new_frames_len)]
 
@@ -147,33 +159,55 @@ class Pose:
         for i, frame in enumerate(frames):
             for person in frame["people"]:
                 for name, component in self.header["components"].items():
-                    for j, point in enumerate(person[name]):
-                        if point["C"] > 0:
-                            for d in component["point_format"]:
-                                if d in point:
-                                    k = (name, j, d)
-                                    keypoints[person["id"]][k]["x"].append(i / self.body["fps"])
-                                    keypoints[person["id"]][k]["y"].append(point[d])
+                    dimensions = person[name].dimensions  # TODO need to also interpolate confidence
+                    for j, c in enumerate(person[name].confidence):
+                        if c > 0:
+                            for d, y in enumerate(dimensions[j]):
+                                k = (name, j, d)
+                                keypoints[person["id"]][k]["x"].append(i / self.body["fps"])
+                                keypoints[person["id"]][k]["y"].append(y)
 
-        intep = {p: {k: interp1d(v["x"], v["y"], kind=kind)(new_x) for k, v in data.items()}
-                 for p, data in keypoints.items()}
+        # Interpolate all dimensions
+        interp = {}
+        for p, data in keypoints.items():
+            interp[p] = {}
+            for k, v in data.items():
+                if len(v["x"]) == 0:  # Can't interpolate
+                    interp[p][k] = np.zeros(len(new_x))
+                elif len(v["x"]) == 1:
+                    interp[p][k] = np.full(v["y"][0])
+                else:
+                    min_range = next((i for i, x in enumerate(new_x) if x > v["x"][0]), 0)
+                    max_range = next((i for i, x in enumerate(new_x) if x > v["x"][-1]), None)
+                    interp[p][k] = [interp1d(v["x"], v["y"], kind=kind)(new_x[min_range:max_range])]
+
+                    # Add padding
+                    if min_range > 0:
+                        interp[p][k].insert(0, [0] * min_range)
+                    if max_range is not None:
+                        interp[p][k].append([0] * (len(new_x) - max_range))
+
+                    interp[p][k] = np.concatenate(interp[p][k])
 
         new_frames = []
         for i in range(len(new_x)):
             people = []
-            for p, new_data in intep.items():
+            for p, new_data in interp.items():
                 person = {"id": p}
                 for name, component in self.header["components"].items():
-                    person[name] = [{d: 0 for d in component["point_format"]} for _ in range(len(component["points"]))]
+                    person[name] = Points(
+                        dimensions=np.zeros((len(component["points"]), len(component["point_format"]) - 1)),
+                        confidence=np.zeros((len(component["points"])))
+                    )
 
                 for (name, point_i, d), new_y in new_data.items():
-                    person[name][point_i][d] = new_y[i]
+                    print(name, point_i, d)
+                    person[name].dimensions[point_i][d] = new_y[i]
 
                 people.append(person)
             new_frames.append({"people": people})
 
-        self.body["frames"] = new_frames
-        self.body["fps"] = fps
+        return Pose(self.header, {"frames": new_frames}, fps)
 
     def to_vectors(self, types: List[str], people=1) -> Iterator:
         aggregators = [POINT_AGGREGATORS[t] for t in types]
@@ -186,16 +220,17 @@ class Pose:
             for person in frame["people"][:people]:
                 for name, component in self.header["components"].items():
                     for (a, b) in component["limbs"]:
-                        a_point = person[name][component["points"].index(a)]
-                        b_point = person[name][component["points"].index(b)]
+                        a_index = component["points"].index(a)
+                        b_index = component["points"].index(b)
 
-                        if a_point["C"] == 0 or b_point["C"] == 0:
+                        p = person[name]
+                        if p.confidence[a_index] == 0 or p.confidence[b_index] == 0:
                             for _ in aggregators:
                                 vector[idx] = 0
                                 idx += 1
                         else:
-                            p1 = Pose.point_to_numpy(a_point)
-                            p2 = Pose.point_to_numpy(b_point)
+                            p1 = p.dimensions[a_index]
+                            p2 = p.dimensions[b_index]
                             for aggregator in aggregators:
                                 vector[idx] = aggregator(p1, p2)
                                 idx += 1

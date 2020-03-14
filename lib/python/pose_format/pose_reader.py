@@ -67,12 +67,14 @@ class PoseReader:
             point_format = self.unpack_str()
             _points, _limbs, _colors = self.unpack(Unpack.triple_ushort)
             points = [self.unpack_str() for _ in range(_points)]
-            limbs = [[points[i] for i in self.unpack(Unpack.double_ushort)] for _ in range(_limbs)]
+            limb_indexes = [self.unpack(Unpack.double_ushort) for _ in range(_limbs)]
+            limbs = [[points[i] for i in idxs] for idxs in limb_indexes]
             colors = self.unpack_numpy("H", (_colors, 3))
 
             components[name] = {
                 "points": points,
                 "colors": colors,
+                "limb_indexes": limb_indexes,
                 "limbs": limbs,
                 "point_format": point_format
             }
@@ -100,7 +102,7 @@ class PoseReader:
                     points = np.array(self.unpack_numpy("f", (len(features["points"]), len(features["point_format"]))))
                     dimensions, confidence = np.split(points, [-1], axis=1) # TODO This split is costly
 
-                    person[name] = Points(dimensions=dimensions, confidence=confidence)
+                    person[name] = Points(dimensions=dimensions, confidence=confidence.flatten().tolist())
                 people.append(person)
             frames.append({"people": people})
 

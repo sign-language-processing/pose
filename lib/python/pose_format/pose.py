@@ -41,17 +41,18 @@ class Pose:
         self.body["frames"].append(frame)
 
     def iterate_points_dimensions(self, callback):
-        def iterate_dimensions(points, i):
-            for j, v in enumerate(points.dimensions[i]):
+        def iterate_dimensions(points, i, point):
+            for j, v in enumerate(point):
                 callback(points, i, j, v)
 
         return self.iterate_points(iterate_dimensions)
 
     def iterate_points(self, callback):
         def iterate_component(points):
-            for i, c in enumerate(points.confidence):
-                if c > 0:
-                    callback(points, i)
+            dimensions = points.dimensions.tolist()
+            for i, v in enumerate(dimensions):
+                if points.confidence[i] > 0:
+                    callback(points, i, v)
 
         return self.iterate_components(iterate_component)
 
@@ -72,16 +73,24 @@ class Pose:
         mins = [math.inf for _ in range(3)]
         maxs = [0 for _ in range(3)]
 
-        def set_min_max(points, i, j, v):
-            mins[j] = min(mins[j], v)
-            maxs[j] = max(maxs[j], v)
+        def set_min_max(points):
+            local_mins = np.amin(points.dimensions, axis=0)
+            local_maxs = np.amax(points.dimensions, axis=0)
 
-        self.iterate_points_dimensions(set_min_max)
+            for i, v in enumerate(local_mins):
+                mins[i] = min(mins[i], v)
 
-        def translate_point(points, i, j, v):
-            points.dimensions[i][j] -= mins[j]
+            for i, v in enumerate(local_maxs):
+                maxs[i] = max(maxs[i], v)
 
-        self.iterate_points_dimensions(translate_point)
+        self.iterate_components(set_min_max)
+
+        if np.count_nonzero(mins) > 0: # Only translate if there is a number to translate by
+            def translate_points(points):
+                truncated_mins = mins[:points.dimensions.shape[1]]
+                points.dimensions = np.subtract(points.dimensions, truncated_mins)
+
+            self.iterate_components(translate_points)
 
         self.header["width"] = math.ceil(max(maxs[0] - mins[0], 0))
         self.header["height"] = math.ceil(max(maxs[1] - mins[1], 0))
@@ -114,8 +123,7 @@ class Pose:
     def augment2d(self, augmenter: Augmenter):
         keypoints = []
 
-        def add_keypoints(points, i):
-            point = points.dimensions[i]
+        def add_keypoints(points, i, point):
             keypoints.append(Keypoint(x=point[0], y=point[1]))
 
         self.iterate_points(add_keypoints)
@@ -124,23 +132,20 @@ class Pose:
         kps_aug = augmenter(keypoints=kps)  # Augment keypoints
         point_idx = 0
 
-        zero_point = {"C": 0, "X": 0, "Y": 0}
-
         frames = []
         for frame in self.body["frames"]:
             people = []
             for person in frame["people"]:
                 person_n = {"id": person["id"]}
                 for name, component in self.header["components"].items():
-                    confidence = np.array(person[name].confidence)
                     dimensions = np.zeros((len(component["points"]), len(component["point_format"])-1))
-                    for i, c in enumerate(confidence):
+                    for i, c in enumerate(person[name].confidence):
                         if c > 0:
                             keypoint = kps_aug.keypoints[point_idx]
                             point_idx += 1
-                            dimensions[i][0] = keypoint.x
-                            dimensions[i][1] = keypoint.y
-                    person_n[name] = Points(dimensions=dimensions, confidence=confidence)
+                            dimensions[i,0] = keypoint.x
+                            dimensions[i,1] = keypoint.y
+                    person_n[name] = Points(dimensions=dimensions, confidence=person[name].confidence)
                 people.append(person_n)
 
             frames.append({"people": people})
@@ -202,7 +207,7 @@ class Pose:
 
                 for (name, point_i, d), new_y in new_data.items():
                     print(name, point_i, d)
-                    person[name].dimensions[point_i][d] = new_y[i]
+                    person[name].dimensions[point_i, d] = new_y[i]
 
                 people.append(person)
             new_frames.append({"people": people})
@@ -215,26 +220,22 @@ class Pose:
         vec_size = sum([len(v["limbs"]) for v in self.header["components"].values()]) * len(aggregators)
 
         for i, frame in enumerate(self.body["frames"]):
-            vector = np.zeros(vec_size)  # its faster to initialize the vector as 0s, than to append to a list
+            limbs = []
             idx = 0
-            for person in frame["people"][:people]:
-                for name, component in self.header["components"].items():
-                    for (a, b) in component["limbs"]:
-                        a_index = component["points"].index(a)
-                        b_index = component["points"].index(b)
+            for name, component in self.header["components"].items():
+                for person in frame["people"][:people]:
+                    dimensions = person[name].dimensions.tolist()
+                    for (a, b) in component["limb_indexes"]:
+                        limbs.append([dimensions[a], dimensions[b]])
 
-                        p = person[name]
-                        if p.confidence[a_index] == 0 or p.confidence[b_index] == 0:
-                            for _ in aggregators:
-                                vector[idx] = 0
-                                idx += 1
-                        else:
-                            p1 = p.dimensions[a_index]
-                            p2 = p.dimensions[b_index]
-                            for aggregator in aggregators:
-                                vector[idx] = aggregator(p1, p2)
-                                idx += 1
+            # TODO batch this
+            vector = np.empty(vec_size)  # its faster to initialize empty vector, than to append to a list
+            for aggregator in aggregators:
+                for (p1, p2) in limbs:
+                    vector[idx] = aggregator(p1, p2)
+
             yield vector
+
 
     def save_header(self, f):
         f.write(struct.pack("<f", self.header["version"]))  # File version

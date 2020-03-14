@@ -1,10 +1,6 @@
-import struct
-
 import imgaug.augmenters as iaa
-import imgaug as ia
-import numpy as np
 from tqdm import tqdm
-from lib.python.pose_format import PoseReader, Pose
+from lib.python.pose_format import PoseReader
 
 iterations = 100
 
@@ -29,7 +25,6 @@ for _ in tqdm(range(iterations), total=iterations):
 print("Vectorize")
 for _ in tqdm(range(iterations), total=iterations):
     list(p.to_vectors(["angle", "distance"]))
-
 
 print("Augment")
 for _ in tqdm(range(iterations), total=iterations):

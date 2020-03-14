@@ -221,18 +221,19 @@ class Pose:
 
         for i, frame in enumerate(self.body["frames"]):
             limbs = []
-            idx = 0
             for name, component in self.header["components"].items():
                 for person in frame["people"][:people]:
                     dimensions = person[name].dimensions.tolist()
                     for (a, b) in component["limb_indexes"]:
                         limbs.append([dimensions[a], dimensions[b]])
 
+            vector = np.zeros(vec_size)  # its faster to initialize empty vector, than to append to a list
+            idx = 0
             # TODO batch this
-            vector = np.empty(vec_size)  # its faster to initialize empty vector, than to append to a list
             for aggregator in aggregators:
                 for (p1, p2) in limbs:
                     vector[idx] = aggregator(p1, p2)
+                    idx += 1
 
             yield vector
 

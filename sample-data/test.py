@@ -14,7 +14,7 @@ p.normalize(
 )
 
 # Vectorize
-list(p.to_vectors(["angle", "distance"]))
+print(list(p.to_vectors(["angle", "distance"])))
 
 # Augment
 seq = iaa.Sequential([])

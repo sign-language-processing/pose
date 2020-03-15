@@ -1,0 +1,11 @@
+
+Test Name		    Previous Implementation		New Implementation		New New Implementation
+Unpack file 0.0 	40.17it/s 					83.06it/s 				30.27it/s
+Unpack file 0.1 	-------- 					-------- 				1649.22it/s
+Save file 	        -------- 					--------                578.25it/s
+Focus Pose		    45.06it/s					138.29it/s				774.27it/s
+Normalize		    26.96it/s					108.77it/s				1920.28it/s
+Vectorize		    9.67it/s					48.78it/s               550.21it/s
+Augment			    34.11it/s					33.60it/s
+
+

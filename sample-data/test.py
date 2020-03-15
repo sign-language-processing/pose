@@ -1,21 +1,40 @@
-from lib.python.pose_format import PoseReader
+from lib.python.pose_format import Pose
 import imgaug.augmenters as iaa
+import numpy as np
+import numpy.ma as ma
+
+from lib.python.pose_format.vectorizer import SequenceVectorizer, DistanceVectorizer, AngleVectorizer
+
+a = np.zeros((93, 1, 137))
+print(np.stack((a,a), axis=3).shape)
 
 buffer = open("1.pose", "rb").read()
-p = PoseReader(buffer).read()
+
+p = Pose.read(buffer)
+
+p.write("test.pose")
+buffer = open("test.pose", "rb").read()
+p = Pose.read(buffer)
+
+
+print(p.body.data.shape)
+print(p.body.confidence.shape)
 
 # Focus Pose
-p.focus_pose()
+p.focus()
 
 # Normalize
-p.normalize(
-    dist_p1=("pose_keypoints_2d", 2),  # RShoulder
-    dist_p2=("pose_keypoints_2d", 5),  # LShoulder
+info = p.header.normalization_info(
+    p1=("pose_keypoints_2d", "RShoulder"),
+    p2=("pose_keypoints_2d", "LShoulder")
 )
+p.normalize(info)
 
 # Vectorize
-print(list(p.to_vectors(["angle", "distance"])))
+aggregator = SequenceVectorizer([DistanceVectorizer()])
+p.to_vectors(aggregator)
 
-# Augment
-seq = iaa.Sequential([])
-p.augment2d(seq)
+#
+# # Augment
+# seq = iaa.Sequential([])
+# p.augment2d(seq)

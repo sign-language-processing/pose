@@ -5,19 +5,12 @@ from typing import Tuple
 from dataclasses import dataclass
 import numpy as np
 
+from .header import PoseHeaderDimensions
 from .pose import Pose, Points
 from .utils.openpose import OpenPose_Components
 
 
-@dataclass
-class Unpack:
-    short = struct.Struct("<h")
-    ushort = struct.Struct("<H")
 
-    double_ushort = struct.Struct("<HH")
-    triple_ushort = struct.Struct("<HHH")
-
-    metadata = struct.Struct("<fHHHH")
 
 
 
@@ -57,59 +50,7 @@ class PoseReader:
         bytes_ = self.unpack_f("%ds" % length)
         return bytes_.decode("utf-8")
 
-    def read_header(self):
-        # Metadata
-        version, width, height, depth, _components = self.unpack(Unpack.metadata)
 
-        components = {}
-        for _ in range(_components):
-            name = self.unpack_str()
-            point_format = self.unpack_str()
-            _points, _limbs, _colors = self.unpack(Unpack.triple_ushort)
-            points = [self.unpack_str() for _ in range(_points)]
-            limb_indexes = [self.unpack(Unpack.double_ushort) for _ in range(_limbs)]
-            limbs = [[points[i] for i in idxs] for idxs in limb_indexes]
-            colors = self.unpack_numpy("H", (_colors, 3))
-
-            components[name] = {
-                "points": points,
-                "colors": colors,
-                "limb_indexes": limb_indexes,
-                "limbs": limbs,
-                "point_format": point_format
-            }
-
-        header = {
-            "version": version,
-            "width": width,
-            "height": height,
-            "depth": depth,
-            "components": components
-        }
-
-        return header
-
-    def read_body(self, header):
-        fps, _frames = self.unpack(Unpack.double_ushort)
-        frames = []
-        for _ in range(_frames):
-            _people = self.unpack(Unpack.ushort)
-            people = []
-            for _ in range(_people):
-                person_id = self.unpack(Unpack.short)
-                person = {"id": person_id}
-                for name, features in header["components"].items():
-                    points = np.array(self.unpack_numpy("f", (len(features["points"]), len(features["point_format"]))))
-                    dimensions, confidence = np.split(points, [-1], axis=1) # TODO This split is costly
-
-                    person[name] = Points(dimensions=dimensions, confidence=confidence.flatten().tolist())
-                people.append(person)
-            frames.append({"people": people})
-
-        return {
-            "fps": fps,
-            "frames": frames
-        }
 
     @staticmethod
     def from_openpose_json(json, width=1000, height=1000, depth=0):

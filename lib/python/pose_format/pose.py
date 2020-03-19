@@ -1,10 +1,11 @@
-from io import BufferedReader, BufferedWriter
-from typing import Tuple, List
+from random import sample
+
+import math
 
 from .vectorizer import Vectorizer
 from .pose_body import PoseBody
 from .pose_header import PoseHeader, PoseHeaderDimensions, PoseNormalizationInfo
-from lib.python.pose_format.utils.reader import BufferReader
+from .utils.reader import BufferReader
 
 import numpy as np
 import numpy.ma as ma
@@ -78,8 +79,8 @@ class Pose:
         idx = 0
         for component in self.header.components:
             for (a, b) in component.limbs:
-                pt1s.append(a+idx)
-                pt2s.append(b+idx)
+                pt1s.append(a + idx)
+                pt2s.append(b + idx)
             idx += len(component.points)
 
         people_vectors = vectorizer(transposed[pt1s], transposed[pt2s])
@@ -90,24 +91,11 @@ class Pose:
 
         return np.transpose(vectors)
 
+    def augment_vectors(self, vectors: np.ndarray, std=0.1, dropout_std=0.1) -> np.ndarray:
+        if dropout_std > 0:
+            dropout_percent = np.abs(np.random.normal(loc=0, scale=dropout_std, size=1))[0]
+            dropout_indexes = sample(range(0, vectors.shape[0]), int(vectors.shape[0] * dropout_percent))
+            vectors = np.delete(vectors, dropout_indexes, axis=0)
 
-        #
-        # vec_size = sum([len(v["limbs"]) for v in self.header["components"].values()]) * len(aggregators)
-        #
-        # for i, frame in enumerate(self.body["frames"]):
-        #     limbs = []
-        #     for name, component in self.header["components"].items():
-        #         for person in frame["people"][:people]:
-        #             dimensions = person[name].dimensions.tolist()
-        #             for (a, b) in component["limb_indexes"]:
-        #                 limbs.append([dimensions[a], dimensions[b]])
-        #
-        #     vector = np.zeros(vec_size)  # its faster to initialize empty vector, than to append to a list
-        #     idx = 0
-        #     # TODO batch this
-        #     for aggregator in aggregators:
-        #         for (p1, p2) in limbs:
-        #             vector[idx] = aggregator(p1, p2)
-        #             idx += 1
-        #
-        #     yield vector
+        multiplier = np.random.normal(loc=0, scale=std, size=vectors.shape[1]) + 1
+        return np.multiply(vectors, multiplier)

@@ -23,7 +23,7 @@ function componentHeaderParser() {
     return newParser()
         .uint16("_name")
         .string("name", {length: "_name"})
-        .uint16("_format", )
+        .uint16("_format",)
         .string("format", {length: "_format"})
         .uint16("_points")
         .uint16("_limbs")
@@ -61,7 +61,7 @@ function getHeaderParser() {
 }
 
 
-function getBodyParser(header: PoseHeaderModel) {
+function getBodyParserV0_0(header: PoseHeaderModel) {
     let personParser: any = newParser()
         .int16("id");
     header.components.forEach(component => {
@@ -93,12 +93,58 @@ function getBodyParser(header: PoseHeaderModel) {
         })
 }
 
+function getBodyParserV0_1(header: PoseHeaderModel) {
+    const _points = header.components.map(c => c.points.length).reduce((a, b) => a + b, 0);
+    const _dims = Math.max(...header.components.map(c => c.format.length)) - 1;
+
+    let pointParser: any = newParser()
+        .array("points", {
+            type: "float",
+            length: _dims
+        });
+
+    let personParser: any = newParser()
+        .array("points", {
+            type: pointParser,
+            length: _points
+        });
+
+    const dataFramesParser = newParser()
+        .array("people", {
+            type: personParser,
+            length: "_people"
+        });
+
+    return newParser()
+        .seek(header.headerLength)
+        .uint16("fps")
+        .uint16("_frames")
+        .uint16("_people")
+        .array("dataFrames", {
+            type: dataFramesParser,
+            length: "_frames"
+        })
+}
+
 
 const headerParser = getHeaderParser();
 
 export function parsePose(buffer: Buffer): PoseModel {
     const header = headerParser.parse(buffer) as unknown as PoseHeaderModel;
-    const body = getBodyParser(header).parse(buffer) as unknown as PoseBodyModel;
+
+    let body: PoseBodyModel;
+    switch (header.version) {
+        case 0:
+            body = getBodyParserV0_0(header).parse(buffer) as unknown as PoseBodyModel;
+            break;
+
+        case 0.1:
+            body = getBodyParserV0_1(header).parse(buffer) as unknown as PoseBodyModel;;
+            break;
+
+        default:
+            throw new Error("Parsing this body version is not implemented");
+    }
 
     return {header, body};
 }

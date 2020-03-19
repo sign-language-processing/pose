@@ -3,22 +3,20 @@ import imgaug.augmenters as iaa
 import numpy as np
 import numpy.ma as ma
 
+from lib.python.pose_format.pose_visualizer import PoseVisualizer
 from lib.python.pose_format.vectorizer import SequenceVectorizer, DistanceVectorizer, AngleVectorizer
 
-a = np.zeros((93, 1, 137))
-print(np.stack((a,a), axis=3).shape)
 
 buffer = open("1.pose", "rb").read()
+p0 = Pose.read(buffer)
+PoseVisualizer(p0).draw("v0.0")
 
-p = Pose.read(buffer)
+p0.write("test.pose")
 
-p.write("test.pose")
 buffer = open("test.pose", "rb").read()
 p = Pose.read(buffer)
+PoseVisualizer(p).draw("v0.1")
 
-
-print(p.body.data.shape)
-print(p.body.confidence.shape)
 
 # Focus Pose
 p.focus()
@@ -32,7 +30,12 @@ p.normalize(info)
 
 # Vectorize
 aggregator = SequenceVectorizer([DistanceVectorizer()])
-p.to_vectors(aggregator)
+vectors = p.to_vectors(aggregator)
+
+# Augment
+vectors = p.augment_vectors(vectors)
+
+
 
 #
 # # Augment

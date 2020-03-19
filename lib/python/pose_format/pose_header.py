@@ -1,7 +1,7 @@
 import struct
 from typing import List, Tuple, BinaryIO
 
-from lib.python.pose_format.utils.reader import BufferReader, ConstStructs
+from .utils.reader import BufferReader, ConstStructs
 
 VERSION = 0.1
 

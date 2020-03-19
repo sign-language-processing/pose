@@ -1,7 +1,7 @@
 from typing import BinaryIO
 
 from .pose_header import PoseHeader
-from lib.python.pose_format.utils.reader import BufferReader, ConstStructs
+from .utils.reader import BufferReader, ConstStructs
 import numpy as np
 import numpy.ma as ma
 
@@ -63,7 +63,9 @@ class PoseBody:
             data = reader.unpack_numpy(ConstStructs.float, (_frames, _people, _points, _dims))
             confidence = reader.unpack_numpy(ConstStructs.float, (_frames, _people, _points))
 
-            masked_data = ma.masked_array(data, mask=np.stack([confidence, confidence], axis=3))
+            b_confidence = np.where(confidence > 0, 0, 1) # 0 means no-mask, 1 means with-mask
+            stacked_confidence = np.stack([b_confidence, b_confidence], axis=3)
+            masked_data = ma.masked_array(data, mask=stacked_confidence)
 
             return PoseBody(fps, masked_data, confidence)
 

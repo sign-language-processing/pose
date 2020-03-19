@@ -6,7 +6,7 @@ import numpy.ma as ma
 
 from lib.python.pose_format.vectorizer import SequenceVectorizer, DistanceVectorizer, AngleVectorizer
 
-iterations = 10
+iterations = 20
 
 buffer = open("1.pose", "rb").read()
 p = Pose.read(buffer)
@@ -26,7 +26,6 @@ print("Save File")
 for _ in tqdm(range(iterations), total=iterations):
     p.write("test.pose")
 
-
 print("Focus Pose")
 for _ in tqdm(range(iterations), total=iterations):
     p.focus()
@@ -40,13 +39,12 @@ for _ in tqdm(range(iterations), total=iterations):
     p.normalize(info)
 
 print("Vectorize")
-aggregator = SequenceVectorizer([DistanceVectorizer()])
+vectorizer = SequenceVectorizer([DistanceVectorizer()])  # TODO angle
 for _ in tqdm(range(iterations), total=iterations):
-    p.to_vectors(aggregator)
+    p.to_vectors(vectorizer)
 
+vectors = p.to_vectors(vectorizer)
 
-#
-# print("Augment")
-# for _ in tqdm(range(iterations), total=iterations):
-#     seq = iaa.Sequential([])
-#     p.augment2d(seq)
+print("Augment")
+for _ in tqdm(range(iterations), total=iterations):
+    p.augment_vectors(vectors)

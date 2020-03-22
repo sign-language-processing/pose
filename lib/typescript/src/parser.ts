@@ -93,39 +93,72 @@ function getBodyParserV0_0(header: PoseHeaderModel) {
         })
 }
 
-function getBodyParserV0_1(header: PoseHeaderModel) {
+function parseBodyV0_0(header: PoseHeaderModel, buffer: Buffer): PoseBodyModel {
+    return getBodyParserV0_0(header).parse(buffer) as unknown as PoseBodyModel
+}
+
+function parseBodyV0_1(header: PoseHeaderModel, buffer: Buffer): PoseBodyModel {
     const _points = header.components.map(c => c.points.length).reduce((a, b) => a + b, 0);
     const _dims = Math.max(...header.components.map(c => c.format.length)) - 1;
 
-    let pointParser: any = newParser()
-        .array("points", {
-            type: "float",
-            length: _dims
-        });
-
-    let personParser: any = newParser()
-        .array("points", {
-            type: pointParser,
-            length: _points
-        });
-
-    const dataFramesParser = newParser()
-        .array("people", {
-            type: personParser,
-            length: "_people"
-        });
-
-    return newParser()
+    const infoParser = newParser()
         .seek(header.headerLength)
         .uint16("fps")
         .uint16("_frames")
-        .uint16("_people")
-        .array("dataFrames", {
-            type: dataFramesParser,
-            length: "_frames"
-        })
-}
+        .uint16("_people");
 
+    const info = infoParser.parse(buffer);
+
+    const dataParser = newParser()
+        .seek(header.headerLength + 6)
+        .array("data", {
+            type: "floatle",
+            length: info._frames * info._people * _points * _dims
+        })
+        // @ts-ignore
+        .saveOffset('dataLength');
+
+    const data = dataParser.parse(buffer);
+
+    const confidenceParser = newParser()
+        .seek(data.dataLength)
+        .array("confidence", {
+            type: "floatle",
+            length: info._frames * info._people * _points
+        });
+
+    const confidence = confidenceParser.parse(buffer);
+
+    const frames: any[] = [];
+    for (let i = 0; i < info._frames; i++) {
+        const people: any[] = [];
+        frames.push({people});
+        for (let j = 0; j < info._people; j++) {
+            const person: any = {};
+            people.push(person);
+            let k = 0;
+            header.components.forEach(component => {
+                person[component.name] = [];
+
+                for (let l = 0; l < component.points.length; l++) {
+                    const offset = i * (info._people * _points) + j * _points;
+                    person[component.name].push({
+                        "X": data.data[offset * 2 + (k + l) * 2],
+                        "Y": data.data[offset * 2 + (k + l) * 2 + 1],
+                        "C": confidence.confidence[offset + k + l]
+                    })
+                }
+                k += component.points.length;
+            });
+        }
+    }
+
+    return {
+        ...info,
+        frames
+    } as PoseBodyModel;
+
+}
 
 const headerParser = getHeaderParser();
 
@@ -133,17 +166,18 @@ export function parsePose(buffer: Buffer): PoseModel {
     const header = headerParser.parse(buffer) as unknown as PoseHeaderModel;
 
     let body: PoseBodyModel;
-    switch (header.version) {
+    const version = Math.round(header.version * 1000) / 1000;
+    switch (version) {
         case 0:
-            body = getBodyParserV0_0(header).parse(buffer) as unknown as PoseBodyModel;
+            body = parseBodyV0_0(header, buffer);
             break;
 
         case 0.1:
-            body = getBodyParserV0_1(header).parse(buffer) as unknown as PoseBodyModel;;
+            body = parseBodyV0_1(header, buffer);
             break;
 
         default:
-            throw new Error("Parsing this body version is not implemented");
+            throw new Error("Parsing this body version is not implemented - " + header.version);
     }
 
     return {header, body};

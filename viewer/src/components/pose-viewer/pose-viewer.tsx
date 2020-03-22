@@ -41,18 +41,15 @@ export class PoseViewer {
 
     this.frame = this.pose.body.frames[this.nextFrameId];
 
-    console.log(this.pose.body.fps, this.pose.body.frames.length);
-
     if (this.pose.body.frames.length > 1) {
       this.clearInterval();
-      this.loopInterval = setInterval(this.frameLoop.bind(this), 1000/this.pose.body.fps)
+      this.loopInterval = setInterval(this.frameLoop.bind(this), 1000 / this.pose.body.fps)
     } else {
       this.frameLoop();
     }
   }
 
   clearInterval() {
-    console.log(this.loopInterval);
     if (this.loopInterval) {
       clearInterval(this.loopInterval);
     }

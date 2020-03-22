@@ -1,6 +1,8 @@
 from random import sample
 
 import math
+from imgaug import Keypoint, KeypointsOnImage
+from imgaug.augmenters import Augmenter
 
 from .vectorizer import Vectorizer
 from .pose_body import PoseBody
@@ -99,3 +101,60 @@ class Pose:
 
         multiplier = np.random.normal(loc=0, scale=std, size=vectors.shape[1]) + 1
         return np.multiply(vectors, multiplier)
+
+    def squeeze(self, by: int):
+        new_data = self.body.data[::by]
+        new_confidence = self.body.confidence[::by]
+
+        body = PoseBody(fps=self.body.fps, data=new_data, confidence=new_confidence)
+        return Pose(header=self.header, body=body)
+
+    def augment2d(self, rotation_std=0.2, shear_std=0.2, scale_std=0.2):
+        """
+        :param rotation_std: Rotation in radians
+        :param shear_std: Shear X in percent
+        :param scale_std: Scale X in percent
+        :return:
+        """
+        matrix = np.eye(2)
+
+        # Based on https://en.wikipedia.org/wiki/Shear_matrix
+        if shear_std > 0:
+            shear_matrix = np.eye(2)
+            shear_matrix[0][1] = np.random.normal(loc=0, scale=shear_std, size=1)[0]
+            matrix = np.dot(matrix, shear_matrix)
+
+        # Based on https://en.wikipedia.org/wiki/Rotation_matrix
+        if rotation_std > 0:
+            rotation_angle = np.random.normal(loc=0, scale=rotation_std, size=1)[0]
+            rotation_cos = np.cos(rotation_angle)
+            rotation_sin = np.sin(rotation_angle)
+            rotation_matrix = np.array([[rotation_cos, -rotation_sin], [rotation_sin, rotation_cos]])
+            matrix = np.dot(matrix, rotation_matrix)
+
+        # Based on https://en.wikipedia.org/wiki/Scaling_(geometry)
+        if scale_std > 0:
+            scale_matrix = np.eye(2)
+            scale_matrix[0][0] += np.random.normal(loc=0, scale=scale_std, size=1)[0]
+            matrix = np.dot(matrix, scale_matrix)
+
+        new_data = ma.dot(self.body.data, matrix.astype(dtype=np.float32))
+
+        body = PoseBody(fps=self.body.fps, data=new_data, confidence=self.body.confidence)
+        return Pose(header=self.header, body=body)
+
+    def augment2d_imgaug(self, augmenter: Augmenter):
+        _frames, _people, _points, _dims = self.body.data.shape
+        np_keypoints = self.body.data.data.reshape((_frames * _people * _points, _dims))
+
+        keypoints = [Keypoint(x=x, y=y) for x, y in np_keypoints]
+
+        kps = KeypointsOnImage(keypoints, shape=(self.header.dimensions.height, self.header.dimensions.width))
+        kps_aug = augmenter(keypoints=kps)  # Augment keypoints
+
+        np_keypoints = np.array([[k.x, k.y] for k in kps_aug.keypoints]).reshape((_frames, _people, _points, _dims))
+
+        new_data = ma.array(data=np_keypoints, mask=self.body.data.mask)
+
+        body = PoseBody(fps=self.body.fps, data=new_data, confidence=self.body.confidence)
+        return Pose(header=self.header, body=body)

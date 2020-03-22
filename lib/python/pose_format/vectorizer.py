@@ -2,7 +2,7 @@ from typing import List
 
 from numpy import ma
 
-from .utils.fast_math import distance_batch
+from .utils.fast_math import distance_batch, angle_batch
 
 
 class Vectorizer:
@@ -16,7 +16,7 @@ class DistanceVectorizer(Vectorizer):
 
 class AngleVectorizer(Vectorizer):
     def __call__(self, p1s, p2s):
-        raise NotImplementedError("Must implement '__call__'")
+        return angle_batch(p1s, p2s).filled(0)
 
 class SequenceVectorizer(Vectorizer):
     def __init__(self, vectorizers: List[Vectorizer]):

@@ -1,6 +1,8 @@
 import struct
 from typing import List, Tuple, BinaryIO
 
+import math
+
 from .utils.reader import BufferReader, ConstStructs
 
 VERSION = 0.1
@@ -58,9 +60,9 @@ class PoseHeaderComponent:
 
 class PoseHeaderDimensions:
     def __init__(self, width: int, height: int, depth: int = 0):
-        self.width = width
-        self.height = height
-        self.depth = depth
+        self.width = math.ceil(width)
+        self.height = math.ceil(height)
+        self.depth = math.ceil(depth)
 
     @staticmethod
     def read(version: float, reader: BufferReader):

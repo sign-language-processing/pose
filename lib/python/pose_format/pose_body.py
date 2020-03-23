@@ -1,5 +1,7 @@
 from typing import BinaryIO
 
+from scipy.interpolate import interp1d
+
 from .pose_header import PoseHeader
 from .utils.reader import BufferReader, ConstStructs
 import numpy as np
@@ -63,7 +65,7 @@ class PoseBody:
             data = reader.unpack_numpy(ConstStructs.float, (_frames, _people, _points, _dims))
             confidence = reader.unpack_numpy(ConstStructs.float, (_frames, _people, _points))
 
-            b_confidence = np.where(confidence > 0, 0, 1) # 0 means no-mask, 1 means with-mask
+            b_confidence = np.where(confidence > 0, 0, 1)  # 0 means no-mask, 1 means with-mask
             stacked_confidence = np.stack([b_confidence, b_confidence], axis=3)
             masked_data = ma.masked_array(data, mask=stacked_confidence)
 
@@ -80,3 +82,27 @@ class PoseBody:
 
     def points_perspective(self):
         return ma.transpose(self.data, axes=(2, 1, 0, 3))
+
+    def interpolate(self, new_fps: int, kind='cubic'):
+        _frames = self.data.shape[0]
+        if _frames == 1:
+            raise ValueError("Can't interpolate single frame")
+
+        new_steps = np.linspace(0, 1, round(_frames * new_fps / self.fps))
+
+        transposed = self.points_perspective()  # (points, people, frames, dims)
+        masked_confidence = ma.array(self.confidence, mask=self.confidence == 0)
+        confidence = ma.expand_dims(masked_confidence.transpose(), axis=3)  # (points, people, frames, 1)
+        points = ma.concatenate([transposed, confidence], axis=3)
+
+        for people in points:
+            for frames in people:
+                mask = frames.transpose()[0].mask
+                if np.any(mask):  # Meaning there is at least one masked value
+                    steps = np.linspace(0, 1, len(frames))
+                    partial_steps = ma.array(steps, mask=mask).compressed()
+
+                    f = interp1d(partial_steps, frames.compressed(), axis=0, kind=kind)
+
+                    print(partial_steps)
+                    pass

@@ -36,3 +36,6 @@ p = Pose.read(buffer)
 
 # Augment Global
 p.augment2d()
+
+# Augment Global ImgAug
+p.augment2d_imgaug(iaa.Sequential([]))

@@ -72,6 +72,22 @@ class Pose:
         if round(scale, 5) != 1:
             self.body.data = ma.multiply(self.body.data, scale)
 
+    def squeeze(self, by: int):
+        """
+        Fast way of data interpolation
+        :param by: take one row every "by" rows
+        :return: Pose
+        """
+        new_data = self.body.data[::by]
+        new_confidence = self.body.confidence[::by]
+
+        body = PoseBody(fps=self.body.fps, data=new_data, confidence=new_confidence)
+        return Pose(header=self.header, body=body)
+
+    def interpolate(self, new_fps: int, kind='cubic'):
+        body = self.body.interpolate(new_fps=new_fps, kind=kind)
+        return Pose(header=self.header, body=body)
+
     def to_vectors(self, vectorizer: Vectorizer) -> np.ndarray:
         transposed = self.body.points_perspective()
 
@@ -101,13 +117,6 @@ class Pose:
 
         multiplier = np.random.normal(loc=0, scale=std, size=vectors.shape[1]) + 1
         return np.multiply(vectors, multiplier)
-
-    def squeeze(self, by: int):
-        new_data = self.body.data[::by]
-        new_confidence = self.body.confidence[::by]
-
-        body = PoseBody(fps=self.body.fps, data=new_data, confidence=new_confidence)
-        return Pose(header=self.header, body=body)
 
     def augment2d(self, rotation_std=0.2, shear_std=0.2, scale_std=0.2):
         """

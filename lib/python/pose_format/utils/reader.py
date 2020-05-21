@@ -1,19 +1,19 @@
 import struct
-from io import BufferedReader
 from typing import Tuple
 import numpy as np
 from dataclasses import dataclass
+from tqdm import tqdm
 
 
 @dataclass
 class ConstStructs:
-    float = struct.Struct("<f")
+    float: struct.Struct = struct.Struct("<f")
 
-    short = struct.Struct("<h")
-    ushort = struct.Struct("<H")
+    short: struct.Struct = struct.Struct("<h")
+    ushort: struct.Struct = struct.Struct("<H")
 
-    double_ushort = struct.Struct("<HH")
-    triple_ushort = struct.Struct("<HHH")
+    double_ushort: struct.Struct = struct.Struct("<HH")
+    triple_ushort: struct.Struct = struct.Struct("<HHH")
 
 
 class BufferReader:
@@ -23,7 +23,7 @@ class BufferReader:
 
     def unpack_f(self, s_format: str):
         if not hasattr(ConstStructs, s_format):
-            le_format = "<" + s_format
+            le_format: str = "<" + s_format
             setattr(ConstStructs, s_format, struct.Struct(le_format))
 
         return self.unpack(getattr(ConstStructs, s_format))
@@ -34,7 +34,7 @@ class BufferReader:
         return arr
 
     def unpack(self, s: struct.Struct):
-        unpack = s.unpack_from(self.buffer, self.read_offset)
+        unpack: tuple = s.unpack_from(self.buffer, self.read_offset)
         self.advance(s)
         if len(unpack) == 1:
             return unpack[0]
@@ -43,7 +43,16 @@ class BufferReader:
     def advance(self, s: struct.Struct, times=1):
         self.read_offset += s.size * times
 
-    def unpack_str(self):
-        length = self.unpack(ConstStructs.ushort)
-        bytes_ = self.unpack_f("%ds" % length)
+    def unpack_str(self) -> str:
+        length: int = self.unpack(ConstStructs.ushort)
+        bytes_: bytes = self.unpack_f("%ds" % length)
         return bytes_.decode("utf-8")
+
+
+if __name__ == "__main__":
+    buffer = struct.pack("<H5s", 5, bytes("hello", 'utf8'))
+    reader = BufferReader(buffer)
+
+    for _ in tqdm(range(10000)):
+        reader.read_offset = 0
+        reader.unpack_str()

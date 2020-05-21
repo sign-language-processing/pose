@@ -1,4 +1,5 @@
 from random import sample
+from typing import List
 
 import math
 from imgaug import Keypoint, KeypointsOnImage
@@ -14,6 +15,8 @@ import numpy.ma as ma
 
 from .utils.fast_math import distance_batch
 
+# import numpy as np
+# np.seterr(all='raise')
 
 class Pose:
     def __init__(self, header: PoseHeader, body: PoseBody):
@@ -35,6 +38,9 @@ class Pose:
         f.flush()
         f.close()
 
+    def torch(self):
+        self.body = self.body.torch()
+
     def focus(self):
         """
         Gets the pose to start at (0,0) and have dimensions as big as needed
@@ -53,7 +59,7 @@ class Pose:
         """
         Normalize the point to a fixed distance between two points
         """
-        transposed = self.body.points_perspective()
+        transposed = self.body.zero_filled().points_perspective()
 
         p1s = transposed[info.p1]
         p2s = transposed[info.p2]
@@ -65,7 +71,12 @@ class Pose:
             p1s = ma.concatenate(p1s)
             p2s = ma.concatenate(p2s)
 
+        # try:
         mean_distance = np.mean(distance_batch(p1s, p2s))
+        # except FloatingPointError:
+        #     print(self.body.data)
+        #     print(p1s)
+        #     print(p2s)
 
         scale = scale_factor / mean_distance  # scale all points to dist/scale
 
@@ -81,7 +92,7 @@ class Pose:
         new_data = self.body.data[::by]
         new_confidence = self.body.confidence[::by]
 
-        body = PoseBody(fps=self.body.fps, data=new_data, confidence=new_confidence)
+        body = self.body.__class__(fps=self.body.fps, data=new_data, confidence=new_confidence)
         return Pose(header=self.header, body=body)
 
     def interpolate(self, new_fps: int, kind='cubic'):
@@ -101,7 +112,9 @@ class Pose:
                 pt2s.append(b + idx)
             idx += len(component.points)
 
-        people_vectors = vectorizer(transposed[pt1s], transposed[pt2s])
+        people_vectors = vectorizer(transposed[pt1s], transposed[pt2s], header=self.header)
+
+        # Concatenate vectors of different people
         if people_vectors.shape[1] == 1:
             vectors = np.squeeze(people_vectors)
         else:
@@ -109,14 +122,9 @@ class Pose:
 
         return np.transpose(vectors)
 
-    def augment_vectors(self, vectors: np.ndarray, std=0.1, dropout_std=0.1) -> np.ndarray:
-        if dropout_std > 0:
-            dropout_percent = np.abs(np.random.normal(loc=0, scale=dropout_std, size=1))[0]
-            dropout_indexes = sample(range(0, vectors.shape[0]), int(vectors.shape[0] * dropout_percent))
-            vectors = np.delete(vectors, dropout_indexes, axis=0)
-
-        multiplier = np.random.normal(loc=0, scale=std, size=vectors.shape[1]) + 1
-        return np.multiply(vectors, multiplier)
+    def frame_dropout(self, dropout_std=0.1):
+        body = self.body.frame_dropout(dropout_std=dropout_std)
+        return Pose(header=self.header, body=body)
 
     def augment2d(self, rotation_std=0.2, shear_std=0.2, scale_std=0.2):
         """
@@ -147,9 +155,7 @@ class Pose:
             scale_matrix[0][0] += np.random.normal(loc=0, scale=scale_std, size=1)[0]
             matrix = np.dot(matrix, scale_matrix)
 
-        new_data = ma.dot(self.body.data, matrix.astype(dtype=np.float32))
-
-        body = PoseBody(fps=self.body.fps, data=new_data, confidence=self.body.confidence)
+        body = self.body.matmul(matrix.astype(dtype=np.float32))
         return Pose(header=self.header, body=body)
 
     def augment2d_imgaug(self, augmenter: Augmenter):
@@ -167,3 +173,19 @@ class Pose:
 
         body = PoseBody(fps=self.body.fps, data=new_data, confidence=self.body.confidence)
         return Pose(header=self.header, body=body)
+
+    def get_components(self, components: List[str]):
+        indexes = []
+        new_components = []
+
+        idx = 0
+        for component in self.header.components:
+            if component.name in components:
+                new_components.append(component)
+                indexes += list(range(idx, len(component.points) + idx))
+            idx += len(component.points)
+
+        new_header = PoseHeader(self.header.version, self.header.dimensions, new_components)
+        new_body = self.body.get_points(indexes)
+
+        return Pose(header=new_header, body=new_body)

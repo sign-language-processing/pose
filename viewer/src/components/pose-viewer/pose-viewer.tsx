@@ -37,6 +37,7 @@ export class PoseViewer {
 
   async componentWillLoad() {
     this.pose = await Pose.fromRemote(this.src);
+    console.log(this.pose);
 
 
     this.frame = this.pose.body.frames[this.nextFrameId];

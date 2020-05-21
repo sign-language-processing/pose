@@ -27,6 +27,8 @@ class PoseHeaderComponent:
         self.colors = colors
         self.format = point_format
 
+        self.relative_limbs = self.get_relative_limbs()
+
     @staticmethod
     def read(version: float, reader: BufferReader):
         name = reader.unpack_str()
@@ -57,6 +59,9 @@ class PoseHeaderComponent:
         for (r, g, b) in self.colors:  # RGB Colors
             buffer.write(ConstStructs.triple_ushort.pack(r, g, b))
 
+    def get_relative_limbs(self):
+        limbs_map = {p2: i for i, (p1, p2) in enumerate(self.limbs)}
+        return [limbs_map[p1] if p1 in limbs_map else None for p1, p2 in self.limbs]
 
 class PoseHeaderDimensions:
     def __init__(self, width: int, height: int, depth: int = 0):

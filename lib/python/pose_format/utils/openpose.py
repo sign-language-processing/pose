@@ -138,3 +138,32 @@ OpenPose_Components = {
     "hand_left_keypoints_2d": OpenPose_Hand_Component,
     "hand_right_keypoints_2d": OpenPose_Hand_Component
 }
+
+
+def load_openpose(json, width=1000, height=1000, depth=0):
+    raise NotImplementedError("Need to implement to v0.1")
+    # header = {
+    #     "version": 0,
+    #     "width": width,
+    #     "height": height,
+    #     "depth": depth,
+    #     "components": OpenPose_Components,
+    # }
+    #
+    # frame = {"people": []}
+    # body = {
+    #     "fps": 0,
+    #     "frames": [frame]
+    # }
+    #
+    # for person in json["people"]:
+    #     p = {"id": person["person_id"][0]}
+    #
+    #     for part, features in header["components"].items():
+    #         numbers = person[part]
+    #         point = features["point_format"]
+    #         p[part] = [{k: numbers[i + j] for i, k in enumerate(point)} for j in range(0, len(numbers), len(point))]
+    #
+    #     frame["people"].append(p)
+    #
+    # return Pose(header, body)

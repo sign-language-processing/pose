@@ -1,11 +1,12 @@
-Test Name		    ,Previous Implementation,New Implementation,		New New Implementation
-Unpack file 0.0,40.17 				             ,83.06 			         ,30.27
-Unpack file 0.1,	 				                 ,			               ,1649.22
-Save file 	    ,186.96 			             ,                  ,578.25
-Focus Pose		   ,45.06				              ,138.29			         ,774.27
-Normalize		    ,26.96				              ,108.77			         ,1920.28
-Vectorize		    ,9.67				               ,48.78             ,444.62
-Augment Local	 ,					                  ,                  ,3604.13
-Augment	Global	,34.11				              ,33.60             ,675.37
-Interpolate    ,8.60                   ,                  ,
+Test Name		    ,Previous Implementation,New Implementation	,New New Implementation, Really optimizing now,  						Really optimizing now - Batch = 10,
+Unpack file 0.0,40.17 				             ,83.06 			         ,30.27																		,
+Unpack file 0.1,	 				                 ,			               ,1649.22					           ,
+Save file 	    ,186.96 			             ,                  ,578.25						           ,
+Focus Pose		   ,45.06				              ,138.29			         ,774.27						           ,
+Normalize		    ,26.96				              ,108.77			         ,1920.28					           ,
+Vectorize		    ,9.67				               ,48.78             ,444.62						           ,1838.89 (gpu) / 529.97(cpu)   ,15910 (gpu) / 2644(cpu),
+Augment Local	 ,					                  ,                  ,3604.13					           ,-------
+Frame Dropout	 ,					                  ,                  ,5414.31					           ,5582.95
+Augment	Global	,34.11				              ,33.60             ,675.37						           ,5863.95
+Interpolate    ,8.60                   ,                  ,16                     ,
 

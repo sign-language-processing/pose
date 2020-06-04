@@ -1,6 +1,8 @@
 import struct
 from typing import Tuple
 import numpy as np
+import tensorflow as tf
+import torch
 from dataclasses import dataclass
 from tqdm import tqdm
 
@@ -21,6 +23,9 @@ class BufferReader:
         self.buffer = buffer
         self.read_offset = 0
 
+    def bytes_left(self):
+        return len(self.buffer) - self.read_offset
+
     def unpack_f(self, s_format: str):
         if not hasattr(ConstStructs, s_format):
             le_format: str = "<" + s_format
@@ -32,6 +37,14 @@ class BufferReader:
         arr = np.ndarray(shape, s.format, self.buffer, self.read_offset)
         self.advance(s, int(np.prod(shape)))
         return arr
+
+    def unpack_torch(self, s: struct.Struct, shape: Tuple):
+        arr = self.unpack_numpy(s, shape)
+        return torch.from_numpy(arr)
+
+    def unpack_tensorflow(self, s: struct.Struct, shape: Tuple):
+        arr = self.unpack_numpy(s, shape)
+        return tf.constant(arr)
 
     def unpack(self, s: struct.Struct):
         unpack: tuple = s.unpack_from(self.buffer, self.read_offset)

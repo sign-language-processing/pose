@@ -105,6 +105,9 @@ class PoseHeader:
         for component in self.components:
             component.write(buffer)
 
+    def total_points(self):
+        return sum(map(lambda c: len(c.points), self.components))
+
     def _get_point_index(self, component: str, point: str):
         idx = 0
         for c in self.components:

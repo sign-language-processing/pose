@@ -1,8 +1,11 @@
-from typing import Tuple
+import itertools
+from typing import Tuple, Iterator
 
 import cv2
+import math
 import numpy.ma as ma
 import numpy as np
+from tqdm import tqdm
 
 from .pose import Pose
 
@@ -12,8 +15,7 @@ class PoseVisualizer:
         self.pose = pose
 
     def _draw_frame(self, frame: ma.MaskedArray, frame_confidence: np.ndarray,
-                    background=(255, 255, 255)) -> np.ndarray:
-        img = np.full((self.pose.header.dimensions.width, self.pose.header.dimensions.height, 3), background, dtype="uint8")
+                    img=np.ndarray) -> np.ndarray:
 
         for person, person_confidence in zip(frame, frame_confidence):
             c = person_confidence.tolist()
@@ -49,10 +51,34 @@ class PoseVisualizer:
 
         return img
 
-    def draw(self, f_name: str, background: Tuple[int, int, int] = (255, 255, 255)):
+    def draw(self, background: Tuple[int, int, int] = (255, 255, 255), max_frames: int = math.inf):
         int_data = np.array(np.around(self.pose.body.data.data), dtype="int32")
-        video = []
-        for frame, confidence in zip(int_data, self.pose.body.confidence):
-            video.append(self._draw_frame(frame, confidence, background))
+        for frame, confidence in itertools.islice(zip(int_data, self.pose.body.confidence), max_frames):
+            background = np.full((self.pose.header.dimensions.height, self.pose.header.dimensions.width, 3), background,
+                                 dtype="uint8")
+            yield self._draw_frame(frame, confidence, background)
 
-        cv2.imwrite(f_name + ".png", video[0])
+    def draw_on_video(self, background_video: str, max_frames: int = None):
+        int_data = np.array(np.around(self.pose.body.data.data), dtype="int32")
+
+        if max_frames is None:
+            max_frames = len(int_data)
+
+        cap = cv2.VideoCapture(background_video)
+        for frame, confidence in itertools.islice(zip(int_data, self.pose.body.confidence), max_frames):
+            _, background = cap.read()
+            background = cv2.resize(background, (self.pose.header.dimensions.width, self.pose.header.dimensions.height))
+            yield self._draw_frame(frame, confidence, background)
+        cap.release()
+
+    def save_frame(self, f_name: str, frame: np.ndarray):
+        cv2.imwrite(f_name, frame)
+
+    def save_video(self, f_name: str, frames: Iterator):
+        print("out f", f_name)
+        image_size = (self.pose.header.dimensions.width, self.pose.header.dimensions.height)
+        out = cv2.VideoWriter(f_name, cv2.VideoWriter_fourcc(*'MP4V'), self.pose.body.fps, image_size)
+        for frame in tqdm(frames):
+            out.write(frame)
+
+        out.release()

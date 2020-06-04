@@ -1,5 +1,3 @@
-from typing import Tuple, List, Union
-
 import torch
 
 
@@ -8,7 +6,9 @@ class MaskedTensor:
         self.tensor = tensor
         self.mask = mask if mask is not None else torch.ones(tensor.shape, dtype=torch.bool).to(tensor.device)
 
-        self.device = tensor.device
+    def __getattr__(self, item):
+        print(type(self.tensor.__getattribute__(item)))
+        return self.tensor.__getattribute__(item)
 
     def __len__(self):
         return self.tensor.shape[0]
@@ -27,6 +27,9 @@ class MaskedTensor:
         tensor = self.tensor * other
         return MaskedTensor(tensor=tensor, mask=self.mask)
 
+    def __eq__(self, other):
+        return self.tensor == other
+
     def pow_(self, exponent: float):
         self.tensor.pow_(exponent)
         return self
@@ -36,9 +39,25 @@ class MaskedTensor:
         mask = self.mask.prod(dim=dim)
         return MaskedTensor(tensor=tensor, mask=mask)
 
+    def size(self, *args):
+        return self.tensor.size(*args)
+
     @property
     def shape(self):
         return self.tensor.shape
+
+    @property
+    def dtype(self):
+        return self.tensor.dtype
+
+    @property
+    def device(self):
+        return self.tensor.device
+
+    def to(self, device):
+        tensor = self.tensor.to(device)
+        mask = self.mask.to(device)
+        return MaskedTensor(tensor=tensor, mask=mask)
 
     def cuda(self, device=None, non_blocking: bool = False):
         tensor = self.tensor.cuda(device=device, non_blocking=non_blocking)
@@ -57,7 +76,7 @@ class MaskedTensor:
         tensor = torch.matmul(self.tensor, matrix.to(self.device))
         return MaskedTensor(tensor, self.mask)
 
-    def transpose(self, dim0: int, dim1: int):
+    def transpose(self, dim0, dim1):
         tensor = self.tensor.transpose(dim0, dim1)
         mask = self.mask.transpose(dim0, dim1)
         return MaskedTensor(tensor=tensor, mask=mask)
@@ -67,7 +86,7 @@ class MaskedTensor:
         mask = self.mask.permute(dims)
         return MaskedTensor(tensor=tensor, mask=mask)
 
-    def squeeze(self, dim: int):
+    def squeeze(self, dim):
         tensor = self.tensor.squeeze(dim)
         mask = self.mask.squeeze(dim)
         return MaskedTensor(tensor=tensor, mask=mask)
@@ -82,17 +101,7 @@ class MaskedTensor:
         mask = self.mask.reshape(shape=shape)
         return MaskedTensor(tensor=tensor, mask=mask)
 
-
-class MaskedTorch:
-    @staticmethod
-    def cat(tensors: List[Union[MaskedTensor, torch.Tensor]], dim: int):
-        tensors: List[MaskedTensor] = [t if isinstance(t, MaskedTensor) else MaskedTensor(tensor=t) for t in tensors]
-        tensor = torch.cat([t.tensor for t in tensors], dim=dim)
-        mask = torch.cat([t.mask for t in tensors], dim=dim)
-        return MaskedTensor(tensor=tensor, mask=mask)
-
-    @staticmethod
-    def stack(tensors: List[MaskedTensor], dim: int):
-        tensor = torch.stack([t.tensor for t in tensors], dim=dim)
-        mask = torch.stack([t.mask for t in tensors], dim=dim)
+    def rename(self, *names):
+        tensor = self.tensor.rename(*names)
+        mask = self.mask.rename(*names)
         return MaskedTensor(tensor=tensor, mask=mask)

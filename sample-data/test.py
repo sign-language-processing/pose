@@ -32,14 +32,14 @@ p.write("654es_mx.pose")
 
 
 # Focus Pose
-p.focus()
-
-# Normalize
-info = p.header.normalization_info(
-    p1=("pose_keypoints_2d", "RShoulder"),
-    p2=("pose_keypoints_2d", "LShoulder")
-)
-p.normalize(info)
+# p.focus()
+#
+# # Normalize
+# info = p.header.normalization_info(
+#     p1=("pose_keypoints_2d", "RShoulder"),
+#     p2=("pose_keypoints_2d", "LShoulder")
+# )
+# p.normalize(info)
 
 # #
 # # Vectorize

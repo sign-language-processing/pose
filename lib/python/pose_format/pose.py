@@ -7,6 +7,7 @@ from imgaug.augmenters import Augmenter
 
 from .vectorizer import Vectorizer
 from .pose_body import PoseBody
+from .numpy.pose_body import NumPyPoseBody
 from .pose_header import PoseHeader, PoseHeaderDimensions, PoseNormalizationInfo
 from .utils.reader import BufferReader
 
@@ -123,8 +124,8 @@ class Pose:
         return np.transpose(vectors)
 
     def frame_dropout(self, dropout_std=0.1):
-        body = self.body.frame_dropout(dropout_std=dropout_std)
-        return Pose(header=self.header, body=body)
+        body, selected_indexes = self.body.frame_dropout(dropout_std=dropout_std)
+        return Pose(header=self.header, body=body), selected_indexes
 
     def augment2d(self, rotation_std=0.2, shear_std=0.2, scale_std=0.2):
         """
@@ -171,7 +172,7 @@ class Pose:
 
         new_data = ma.array(data=np_keypoints, mask=self.body.data.mask)
 
-        body = PoseBody(fps=self.body.fps, data=new_data, confidence=self.body.confidence)
+        body = NumPyPoseBody(fps=self.body.fps, data=new_data, confidence=self.body.confidence)
         return Pose(header=self.header, body=body)
 
     def get_components(self, components: List[str]):

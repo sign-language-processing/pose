@@ -17,6 +17,7 @@ export const config: Config = {
     {
       type: 'www',
       copy: [
+        {src: 'data', dest: 'data'},
         {src: '../../sample-data', dest: 'sample-data'}
       ],
       serviceWorker: null // disable service workers

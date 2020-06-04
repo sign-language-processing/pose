@@ -1,4 +1,11 @@
+from typing import List, Tuple
+
 import math
+import numpy as np
+from numpy import ma
+
+from pose_format import PoseHeader, PoseBody, Pose
+from pose_format.pose_header import PoseHeaderDimensions, PoseHeaderComponent
 
 BODY_POINTS = ["Nose", "Neck", "RShoulder", "RElbow", "RWrist", "LShoulder", "LElbow", "LWrist", "MidHip",
                "RHip", "RKnee", "RAnkle", "LHip", "LKnee", "LAnkle", "REye", "LEye", "REar", "LEar", "LBigToe",
@@ -102,7 +109,9 @@ FACE_EYEBROW_RIGHT_LIMBS = [("FEB_" + str(i), "FEB_" + str(i + 1)) for i in rang
 
 # Face points, in order
 FACE_POINTS = FACE_BORDER_POINTS + FACE_EYEBROWS_POINTS + FACE_NOSE_POINTS + FACE_EYE_POINTS + FACE_OUTER_LIPS_POINTS + FACE_INNER_LIPS_POINTS + FACE_PUPILS_POINTS
-FACE_LIMBS = FACE_BORDER_LIMBS_LEFT + FACE_BORDER_LIMBS_RIGHT + FACE_OUTER_LIPS_LIMBS + FACE_INNER_LIPS_LIMBS + FACE_NOSE_LIMBS + FACE_EYEBROW_LEFT_LIMBS + FACE_EYEBROW_RIGHT_LIMBS + FACE_EYE_LEFT_LIMBS + FACE_EYE_RIGHT_LIMBS
+FACE_LIMBS: List[Tuple[str, str]] = FACE_BORDER_LIMBS_LEFT + FACE_BORDER_LIMBS_RIGHT + FACE_OUTER_LIPS_LIMBS + \
+                                    FACE_INNER_LIPS_LIMBS + FACE_NOSE_LIMBS + FACE_EYEBROW_LEFT_LIMBS + \
+                                    FACE_EYEBROW_RIGHT_LIMBS + FACE_EYE_LEFT_LIMBS + FACE_EYE_RIGHT_LIMBS
 
 HAND_POINTS_COLOR = [
     [192, 0, 0],
@@ -113,28 +122,63 @@ HAND_POINTS_COLOR = [
     [127, 127, 127]
 ]
 
-# Definition of OpenPose Components
-OpenPose_Hand_Component = {
-    "points": HAND_POINTS,
-    "colors": [[math.floor(x + 35 * (i % 4)) for x in HAND_POINTS_COLOR[i // 4]] for i in
-               range(-1, len(HAND_POINTS) - 1)],
-    "limbs": HAND_LIMBS,
-    "point_format": "XYC"
-}
 
-OpenPose_Components = {
-    "pose_keypoints_2d": {
-        "points": BODY_POINTS,
-        "colors": [[255, 0, 0]],  # Red
-        "limbs": BODY_LIMBS,
-        "point_format": "XYC"
-    },
-    "face_keypoints_2d": {
-        "points": FACE_POINTS,
-        "colors": [[128, 0, 0]],  # Brown
-        "limbs": FACE_LIMBS,
-        "point_format": "XYC"
-    },
-    "hand_left_keypoints_2d": OpenPose_Hand_Component,
-    "hand_right_keypoints_2d": OpenPose_Hand_Component
-}
+# Definition of OpenPose Components
+
+def limbs_index(limbs: List[Tuple[str, str]], points: List[str]) -> List[Tuple[int, int]]:
+    return [(points.index(p1), points.index(p2)) for p1, p2 in limbs]
+
+
+hand_colors = [tuple([math.floor(x + 35 * (i % 4)) for x in HAND_POINTS_COLOR[i // 4]])
+               for i in range(-1, len(HAND_POINTS) - 1)]
+
+OpenPose_Hand_Component = lambda name: PoseHeaderComponent(name=name, points=HAND_POINTS,
+                                                           limbs=limbs_index(HAND_LIMBS, HAND_POINTS),
+                                                           colors=hand_colors, point_format="XYC")
+
+#     {
+#     "points": HAND_POINTS,
+#     "colors": [[math.floor(x + 35 * (i % 4)) for x in HAND_POINTS_COLOR[i // 4]] for i in
+#                range(-1, len(HAND_POINTS) - 1)],
+#     "limbs": HAND_LIMBS,
+#     "point_format": {"X": 0, "Y": 1, "C": 2}
+# }
+
+OpenPose_Components = [
+    PoseHeaderComponent(name="pose_keypoints_2d", points=BODY_POINTS, limbs=limbs_index(BODY_LIMBS, BODY_POINTS),
+                        colors=[(255, 0, 0)], point_format="XYC"),
+    PoseHeaderComponent(name="face_keypoints_2d", points=FACE_POINTS, limbs=limbs_index(FACE_LIMBS, FACE_POINTS),
+                        colors=[(128, 0, 0)], point_format="XYC"),
+    OpenPose_Hand_Component("hand_left_keypoints_2d"),
+    OpenPose_Hand_Component("hand_right_keypoints_2d"),
+]
+
+
+def load_openpose(frames: list, fps: float = 24, width=1000, height=1000, depth=0):
+    dimensions = PoseHeaderDimensions(width=width, height=height, depth=depth)
+
+    header: PoseHeader = PoseHeader(version=0.1, dimensions=dimensions, components=OpenPose_Components)
+
+    total_points = header.total_points()
+
+    data = np.zeros(shape=(len(frames), 1, total_points, 2), dtype=np.float32)
+    confidence = np.zeros(shape=(len(frames), 1, total_points), dtype=np.float32)
+    for i, frame in enumerate(frames):
+        for j, person in enumerate(frame["people"][:1]):
+            idx = 0
+            for component in header.components:
+                numbers = person[component.name]
+                for k in range(0, len(numbers), len(component.format)):
+                    data[i, j, idx, 0] = numbers[k + 0]
+                    data[i, j, idx, 1] = numbers[k + 1]
+                    confidence[i, j, idx] = numbers[k + 2]
+                    idx += 1
+
+    # Mask data
+    mask = confidence == 0  # 0 means no-mask, 1 means with-mask
+    stacked_confidence = np.stack([mask, mask], axis=3)
+    masked_data = ma.masked_array(data, mask=stacked_confidence)
+
+    body = PoseBody(fps=int(fps), data=masked_data, confidence=confidence)
+
+    return Pose(header, body)

@@ -1,260 +1,192 @@
-import copy
-import struct
-from collections import defaultdict
-from itertools import chain
-from typing import Tuple, Iterator, List
+from random import sample
+from typing import List
 
 import math
-import numpy as np
 from imgaug import Keypoint, KeypointsOnImage
 from imgaug.augmenters import Augmenter
-from jsonlines import jsonlines
-from scipy.interpolate import interp1d
 
-from lib.python.pose_format.utils.fast_math import distance, angle
+from .vectorizer import Vectorizer
+from .pose_body import PoseBody
+from .numpy.pose_body import NumPyPoseBody
+from .pose_header import PoseHeader, PoseHeaderDimensions, PoseNormalizationInfo
+from .utils.reader import BufferReader
 
+import numpy as np
+import numpy.ma as ma
 
-def s2b(s: str) -> bytes:
-    return bytes(s, 'utf8')
+from .utils.fast_math import distance_batch
 
-
-POINT_DIMENSIONS = ["X", "Y", "Z"]
-
-POINT_AGGREGATORS = {
-    "distance": distance,
-    "angle": angle,
-}
-
+# import numpy as np
+# np.seterr(all='raise')
 
 class Pose:
-    def __init__(self, header, body=None, fps=24):
+    def __init__(self, header: PoseHeader, body: PoseBody):
         self.header = header
         self.body = body
-        if self.body is None:
-            self.body = {"frames": []}
-        self.body["fps"] = fps
-
-    def add_frame(self, frame):
-        self.body["frames"].append(frame)
 
     @staticmethod
-    def point_to_numpy(point):
-        return np.array([point[p] for p in POINT_DIMENSIONS if p in point])
+    def read(buffer: bytes):
+        reader = BufferReader(buffer)
+        header = PoseHeader.read(reader)
+        body = PoseBody.read(header, reader)
 
-    def iterate_points_dimensions(self, callback):
-        def iterate_dimensions(point):
-            for k in POINT_DIMENSIONS:
-                if k in point:
-                    callback(point, k)
+        return Pose(header, body)
 
-        return self.iterate_points(iterate_dimensions)
+    def write(self, f_name: str):
+        f = open(f_name, "wb")
+        self.header.write(f)
+        self.body.write(f)
+        f.flush()
+        f.close()
 
-    def iterate_points(self, callback):
-        for frame in self.body["frames"]:
-            for person in frame["people"]:
-                for component in self.header["components"].keys():
-                    for point in person[component]:
-                        if point["C"] > 0:
-                            callback(point)
+    def torch(self):
+        self.body = self.body.torch()
 
-    def focus_pose(self):
+    def focus(self):
         """
         Gets the pose to start at (0,0) and have dimensions as big as needed
         """
-        frames = self.body["frames"]
-        if len(frames) == 0:
-            return
 
-        mins = {p: math.inf for p in POINT_DIMENSIONS}
-        maxs = {p: 0 for p in POINT_DIMENSIONS}
+        mins = ma.min(self.body.data, axis=(0, 1, 2))
+        maxs = ma.max(self.body.data, axis=(0, 1, 2))
 
-        def set_min_max(point, k):
-            mins[k] = min(mins[k], point[k])
-            maxs[k] = max(maxs[k], point[k])
+        if np.count_nonzero(mins) > 0:  # Only translate if there is a number to translate by
+            self.body.data = ma.subtract(self.body.data, mins)
 
-        self.iterate_points_dimensions(set_min_max)
+        dimensions = (maxs - mins).tolist()
+        self.header.dimensions = PoseHeaderDimensions(*dimensions)
 
-        def translate_point(point, k):
-            point[k] -= mins[k]
+    def normalize(self, info: PoseNormalizationInfo, scale_factor: float = 1):
+        """
+        Normalize the point to a fixed distance between two points
+        """
+        transposed = self.body.zero_filled().points_perspective()
 
-        self.iterate_points_dimensions(translate_point)
+        p1s = transposed[info.p1]
+        p2s = transposed[info.p2]
 
-        self.header["width"] = math.ceil(max(maxs["X"] - mins["X"], 0))
-        self.header["height"] = math.ceil(max(maxs["Y"] - mins["Y"], 0))
-        self.header["depth"] = math.ceil(max(maxs["Z"] - mins["Z"], 0))
+        if transposed.shape[1] == 0:
+            p1s = p1s[0]
+            p2s = p2s[0]
+        else:
+            p1s = ma.concatenate(p1s)
+            p2s = ma.concatenate(p2s)
 
-    def normalize(self, dist_p1: Tuple[str, int], dist_p2: Tuple[str, int], scale_factor: float = 1):
-        frames = self.body["frames"]
-        if len(frames) == 0:
-            return
+        # try:
+        mean_distance = np.mean(distance_batch(p1s, p2s))
+        # except FloatingPointError:
+        #     print(self.body.data)
+        #     print(p1s)
+        #     print(p2s)
 
-        # 1. Calculate the distance between p1 and p2
-        distances = []
-        for frame in frames:
-            for person in frame["people"]:
-                p1 = Pose.point_to_numpy(person[dist_p1[0]][dist_p1[1]])
-                p2 = Pose.point_to_numpy(person[dist_p2[0]][dist_p2[1]])
-                distances.append(distance(p1, p2))
+        scale = scale_factor / mean_distance  # scale all points to dist/scale
 
-        # 2. scale all points to dist/scale
-        scale = scale_factor / np.mean(distances)
+        if round(scale, 5) != 1:
+            self.body.data = ma.multiply(self.body.data, scale)
 
-        def scale_point(point, k):
-            point[k] *= scale
+    def squeeze(self, by: int):
+        """
+        Fast way of data interpolation
+        :param by: take one row every "by" rows
+        :return: Pose
+        """
+        new_data = self.body.data[::by]
+        new_confidence = self.body.confidence[::by]
 
-        self.iterate_points_dimensions(scale_point)
+        body = self.body.__class__(fps=self.body.fps, data=new_data, confidence=new_confidence)
+        return Pose(header=self.header, body=body)
 
-        # 3. Shift all points to be positive, starting from 0
-        self.focus_pose()
+    def interpolate(self, new_fps: int, kind='cubic'):
+        body = self.body.interpolate(new_fps=new_fps, kind=kind)
+        return Pose(header=self.header, body=body)
 
-    def augment2d(self, augmenter: Augmenter):
-        keypoints = []
-        self.iterate_points(lambda point: keypoints.append(Keypoint(x=point["X"], y=point["Y"])))
+    def to_vectors(self, vectorizer: Vectorizer) -> np.ndarray:
+        transposed = self.body.points_perspective()
 
-        kps = KeypointsOnImage(keypoints, shape=(self.header["height"], self.header["width"]))
+        pt1s = []
+        pt2s = []
+
+        idx = 0
+        for component in self.header.components:
+            for (a, b) in component.limbs:
+                pt1s.append(a + idx)
+                pt2s.append(b + idx)
+            idx += len(component.points)
+
+        people_vectors = vectorizer(transposed[pt1s], transposed[pt2s], header=self.header)
+
+        # Concatenate vectors of different people
+        if people_vectors.shape[1] == 1:
+            vectors = np.squeeze(people_vectors)
+        else:
+            vectors = np.concatenate(people_vectors, axis=0)
+
+        return np.transpose(vectors)
+
+    def frame_dropout(self, dropout_std=0.1):
+        body, selected_indexes = self.body.frame_dropout(dropout_std=dropout_std)
+        return Pose(header=self.header, body=body), selected_indexes
+
+    def augment2d(self, rotation_std=0.2, shear_std=0.2, scale_std=0.2):
+        """
+        :param rotation_std: Rotation in radians
+        :param shear_std: Shear X in percent
+        :param scale_std: Scale X in percent
+        :return:
+        """
+        matrix = np.eye(2)
+
+        # Based on https://en.wikipedia.org/wiki/Shear_matrix
+        if shear_std > 0:
+            shear_matrix = np.eye(2)
+            shear_matrix[0][1] = np.random.normal(loc=0, scale=shear_std, size=1)[0]
+            matrix = np.dot(matrix, shear_matrix)
+
+        # Based on https://en.wikipedia.org/wiki/Rotation_matrix
+        if rotation_std > 0:
+            rotation_angle = np.random.normal(loc=0, scale=rotation_std, size=1)[0]
+            rotation_cos = np.cos(rotation_angle)
+            rotation_sin = np.sin(rotation_angle)
+            rotation_matrix = np.array([[rotation_cos, -rotation_sin], [rotation_sin, rotation_cos]])
+            matrix = np.dot(matrix, rotation_matrix)
+
+        # Based on https://en.wikipedia.org/wiki/Scaling_(geometry)
+        if scale_std > 0:
+            scale_matrix = np.eye(2)
+            scale_matrix[0][0] += np.random.normal(loc=0, scale=scale_std, size=1)[0]
+            matrix = np.dot(matrix, scale_matrix)
+
+        body = self.body.matmul(matrix.astype(dtype=np.float32))
+        return Pose(header=self.header, body=body)
+
+    def augment2d_imgaug(self, augmenter: Augmenter):
+        _frames, _people, _points, _dims = self.body.data.shape
+        np_keypoints = self.body.data.data.reshape((_frames * _people * _points, _dims))
+
+        keypoints = [Keypoint(x=x, y=y) for x, y in np_keypoints]
+
+        kps = KeypointsOnImage(keypoints, shape=(self.header.dimensions.height, self.header.dimensions.width))
         kps_aug = augmenter(keypoints=kps)  # Augment keypoints
-        point_idx = 0
 
-        zero_point = {"C": 0, "X": 0, "Y": 0}
+        np_keypoints = np.array([[k.x, k.y] for k in kps_aug.keypoints]).reshape((_frames, _people, _points, _dims))
 
-        frames = []
-        for frame in self.body["frames"]:
-            people = []
-            for person in frame["people"]:
-                person_n = {"id": person["id"]}
-                for component in self.header["components"].keys():
-                    person_n[component] = []
-                    for point in person[component]:
-                        if point["C"] > 0:
-                            keypoint = kps_aug.keypoints[point_idx]
-                            point_n = {"C": point["C"], "X": keypoint.x, "Y": keypoint.y}
-                            person_n[component].append(point_n)
-                        else:
-                            person_n[component].append(zero_point)
-                people.append(person_n)
+        new_data = ma.array(data=np_keypoints, mask=self.body.data.mask)
 
-            frames.append({"people": people})
+        body = NumPyPoseBody(fps=self.body.fps, data=new_data, confidence=self.body.confidence)
+        return Pose(header=self.header, body=body)
 
-        return Pose(self.header, {"frames": frames}, fps=self.body["fps"])
+    def get_components(self, components: List[str]):
+        indexes = []
+        new_components = []
 
-    def interpolate_fps(self, fps, kind='cubic'):
-        frames = self.body["frames"]
+        idx = 0
+        for component in self.header.components:
+            if component.name in components:
+                new_components.append(component)
+                indexes += list(range(idx, len(component.points) + idx))
+            idx += len(component.points)
 
-        new_frames_len = math.ceil((len(frames) - 1) * fps / self.body["fps"]) + 1
-        new_x = [i / fps for i in range(new_frames_len)]
+        new_header = PoseHeader(self.header.version, self.header.dimensions, new_components)
+        new_body = self.body.get_points(indexes)
 
-        keypoints = defaultdict(lambda: defaultdict(lambda: {"x": [], "y": []}))
-        for i, frame in enumerate(frames):
-            for person in frame["people"]:
-                for name, component in self.header["components"].items():
-                    for j, point in enumerate(person[name]):
-                        if point["C"] > 0:
-                            for d in component["point_format"]:
-                                if d in point:
-                                    k = (name, j, d)
-                                    keypoints[person["id"]][k]["x"].append(i / self.body["fps"])
-                                    keypoints[person["id"]][k]["y"].append(point[d])
-
-        intep = {p: {k: interp1d(v["x"], v["y"], kind=kind)(new_x) for k, v in data.items()}
-                 for p, data in keypoints.items()}
-
-        new_frames = []
-        for i in range(len(new_x)):
-            people = []
-            for p, new_data in intep.items():
-                person = {"id": p}
-                for name, component in self.header["components"].items():
-                    person[name] = [{d: 0 for d in component["point_format"]} for _ in range(len(component["points"]))]
-
-                for (name, point_i, d), new_y in new_data.items():
-                    person[name][point_i][d] = new_y[i]
-
-                people.append(person)
-            new_frames.append({"people": people})
-
-        self.body["frames"] = new_frames
-        self.body["fps"] = fps
-
-    def to_vectors(self, types: List[str], people=1) -> Iterator:
-        aggregators = [POINT_AGGREGATORS[t] for t in types]
-
-        vec_size = sum([len(v["limbs"]) for v in self.header["components"].values()]) * len(aggregators)
-
-        for i, frame in enumerate(self.body["frames"]):
-            vector = np.zeros(vec_size)  # its faster to initialize the vector as 0s, than to append to a list
-            idx = 0
-            for person in frame["people"][:people]:
-                for name, component in self.header["components"].items():
-                    for (a, b) in component["limbs"]:
-                        a_point = person[name][component["points"].index(a)]
-                        b_point = person[name][component["points"].index(b)]
-
-                        if a_point["C"] == 0 or b_point["C"] == 0:
-                            for _ in aggregators:
-                                vector[idx] = 0
-                                idx += 1
-                        else:
-                            p1 = Pose.point_to_numpy(a_point)
-                            p2 = Pose.point_to_numpy(b_point)
-                            for aggregator in aggregators:
-                                vector[idx] = aggregator(p1, p2)
-                                idx += 1
-            yield vector
-
-    def save_header(self, f):
-        f.write(struct.pack("<f", self.header["version"]))  # File version
-
-        f.write(struct.pack("<H", self.header["width"]))  # Width
-        f.write(struct.pack("<H", self.header["height"]))  # Height
-        f.write(struct.pack("<H", self.header["depth"]))  # Depth
-
-        f.write(struct.pack("<H", len(self.header["components"])))  # Number of components
-
-        # Add components
-        for part, features in self.header["components"].items():
-            f.write(struct.pack("<H%ds" % len(part), len(part), s2b(part)))  # Write part name
-
-            # Write component points format
-            point_format = features["point_format"]
-            f.write(struct.pack("<H%ds" % len(point_format), len(point_format), s2b(point_format)))  # Write part name
-
-            # Write component lengths
-            lengths = len(features["points"]), len(features["limbs"]), len(features["colors"])
-            f.write(struct.pack("<HHH", *lengths))
-
-            # Names of Points
-            point_names = [[len(n), s2b(n)] for n in features["points"]]
-            s_format = "".join(["H%ds" % len(p) for p in features["points"]])
-            f.write(struct.pack("<" + s_format, *chain.from_iterable(point_names)))
-
-            # Write the indexes of the limbs
-            limbs = [features["points"].index(p) for limb in features["limbs"] for p in limb]
-            f.write(struct.pack("<" + "H" * len(limbs), *limbs))
-
-            # Write the colors
-            colors = list(chain.from_iterable(features["colors"]))
-            f.write(struct.pack("<" + "H" * len(colors), *colors))
-
-    def save_body(self, f):
-        f.write(struct.pack("<H", self.body["fps"]))  # Write FPS
-        f.write(struct.pack("<H", len(self.body["frames"])))  # Write number of frames
-        for frame in self.body["frames"]:
-            self.save_frame(f, frame)
-
-    def save_frame(self, f, frame):
-        f.write(struct.pack("<H", len(frame["people"])))  # Write number of people
-
-        for person in frame["people"]:
-            f.write(struct.pack("<h", person["id"]))
-
-            for part, features in self.header["components"].items():
-                points = list(chain.from_iterable([p.values() for p in person[part]]))
-                p_format = "f" * len(features["point_format"]) * len(features["points"])
-                f.write(struct.pack("<" + p_format, *points))
-
-    def save(self, f_name):
-        f = open(f_name, "wb")
-        self.save_header(f)
-        self.save_body(f)
-        f.flush()
-        f.close()
+        return Pose(header=new_header, body=new_body)

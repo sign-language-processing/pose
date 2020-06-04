@@ -1,3 +1,4 @@
 from .pose import Pose
-from .pose_reader import PoseReader
+from .pose_body import PoseBody
+from .pose_header import PoseHeader
 

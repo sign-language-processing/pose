@@ -4,8 +4,9 @@ import math
 import numpy as np
 from numpy import ma
 
-from pose_format import PoseHeader, PoseBody, Pose
-from pose_format.pose_header import PoseHeaderDimensions, PoseHeaderComponent
+from ..pose import Pose
+from ..pose_body import PoseBody
+from ..pose_header import PoseHeader, PoseHeaderDimensions, PoseHeaderComponent
 
 BODY_POINTS = ["Nose", "Neck", "RShoulder", "RElbow", "RWrist", "LShoulder", "LElbow", "LWrist", "MidHip",
                "RHip", "RKnee", "RAnkle", "LHip", "LKnee", "LAnkle", "REye", "LEye", "REar", "LEar", "LBigToe",

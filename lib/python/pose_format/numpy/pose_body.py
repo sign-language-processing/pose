@@ -10,7 +10,8 @@ from ..utils.reader import BufferReader, ConstStructs
 import numpy as np
 import numpy.ma as ma
 
-
+# import numpy as np
+# np.seterr(all='raise')
 
 class NumPyPoseBody(PoseBody):
     tensor_reader = 'unpack_numpy'

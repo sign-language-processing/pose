@@ -7,8 +7,12 @@ class MaskedTensor:
         self.mask = mask if mask is not None else torch.ones(tensor.shape, dtype=torch.bool).to(tensor.device)
 
     def __getattr__(self, item):
-        print(type(self.tensor.__getattribute__(item)))
-        return self.tensor.__getattribute__(item)
+        val = self.tensor.__getattribute__(item)
+        if hasattr(val, '__call__'):  # If is a function
+            # return getattr(MaskedTorch, item)(self)
+            raise NotImplementedError("callbable '%s' not defined" % item)
+        else:
+            return val
 
     def __len__(self):
         return self.tensor.shape[0]
@@ -18,14 +22,26 @@ class MaskedTensor:
         mask = self.mask[key]
         return MaskedTensor(tensor=tensor, mask=mask)
 
-    def __sub__(self, other: "MaskedTensor"):
-        tensor = self.tensor - other.tensor
-        mask = self.mask & other.mask
+    def arithmetic(self, action: str, other):
+        if isinstance(other, MaskedTensor):
+            tensor = getattr(self.tensor, action)(other.tensor)
+            mask = self.mask & other.mask
+        else:
+            tensor = getattr(self.tensor, action)(other)
+            mask = self.mask
         return MaskedTensor(tensor=tensor, mask=mask)
 
-    def __mul__(self, other: torch.Tensor):
-        tensor = self.tensor * other
-        return MaskedTensor(tensor=tensor, mask=self.mask)
+    def __add__(self, other):
+        return self.arithmetic("__add__", other)
+
+    def __sub__(self, other):
+        return self.arithmetic("__sub__", other)
+
+    def __mul__(self, other):
+        return self.arithmetic("__mul__", other)
+
+    def __truediv__(self, other):
+        return self.arithmetic("__truediv__", other)
 
     def __eq__(self, other):
         return self.tensor == other
@@ -36,23 +52,15 @@ class MaskedTensor:
 
     def sum(self, dim: int):
         tensor = self.tensor.sum(dim=dim)
-        mask = self.mask.prod(dim=dim)
+        mask = self.mask.prod(dim=dim).bool()
         return MaskedTensor(tensor=tensor, mask=mask)
 
     def size(self, *args):
         return self.tensor.size(*args)
 
-    @property
-    def shape(self):
-        return self.tensor.shape
-
-    @property
-    def dtype(self):
-        return self.tensor.dtype
-
-    @property
-    def device(self):
-        return self.tensor.device
+    def fix_nan(self):  # TODO think of faster way
+        self.tensor[self.tensor != self.tensor] = 0
+        return self
 
     def to(self, device):
         tensor = self.tensor.to(device)

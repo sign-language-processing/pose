@@ -2,7 +2,7 @@ import tensorflow as tf
 
 
 class AngleRepresentation:
-    def ___call__(self, p1s: tf.Tensor, p2s: tf.Tensor) -> tf.Tensor:
+    def __call__(self, p1s: tf.Tensor, p2s: tf.Tensor) -> tf.Tensor:
         """
         Angle of the X/Y axis between two points
         :param p1s: tf.Tensor (Points, Batch, Len, Dims)

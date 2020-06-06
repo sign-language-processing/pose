@@ -5,12 +5,26 @@ from .tensor import MaskedTensor
 
 
 class TorchFallback(type):
+    doesnt_change_mask = {
+        "sqrt", "square",
+        "cos", "sin", "tan", "acos", "asin", "atan"
+    }
+
     def __getattr__(cls, attr):
         def func(*args, **kwargs):
             if len(args) > 0 and isinstance(args[0], MaskedTensor):
                 args = list(args)
+                mask = args[0].mask
                 args[0] = args[0].tensor
-            return getattr(torch, attr)(*args, **kwargs)
+
+                res = getattr(torch, attr)(*args, **kwargs)
+                if attr in TorchFallback.doesnt_change_mask:
+                    return MaskedTensor(res, mask)
+                else:
+                    return res
+
+            else:  # If this action is done on an unmasked tensor
+                return getattr(torch, attr)(*args, **kwargs)
 
         return func
 

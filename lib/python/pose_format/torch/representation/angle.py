@@ -1,5 +1,5 @@
 import torch
-from pose_format.utils.masked_tensor import MaskedTensor
+from ..masked.tensor import MaskedTensor
 from torch import nn
 
 
@@ -19,3 +19,13 @@ class AngleRepresentation(nn.Module):
         slopes[slopes != slopes] = 0  # Fix NaN, TODO think of faster way
 
         return torch.atan(slopes)
+
+
+if __name__ == "__main__":
+    representation = AngleRepresentation()
+    p1s = MaskedTensor(torch.tensor([[[[1, 2, 3]]]], dtype=torch.float))
+    print(p1s.shape)
+
+    p2s = MaskedTensor(torch.tensor([[[[4, 5, 6]]]], dtype=torch.float))
+    angles = representation(p1s, p2s)
+    print(angles)

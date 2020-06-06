@@ -8,12 +8,12 @@ def get_vectors_norm(vectors):
 
 
 class InnerAngleRepresentation:
-    def ___call__(self, a: tf.Tensor, b: tf.Tensor, c: tf.Tensor) -> tf.Tensor:
+    def __call__(self, a: tf.Tensor, b: tf.Tensor, c: tf.Tensor) -> tf.Tensor:
         """
         Angle in point b for the triangle <a, b, c>
         :param a: tf.Tensor (Points, Batch, Len, Dims)
         :param b: tf.Tensor (Points, Batch, Len, Dims)
-        :param b: tf.Tensor (Points, Batch, Len, Dims)
+        :param c: tf.Tensor (Points, Batch, Len, Dims)
         :return: tf.Tensor (Points, Batch, Len)
         """
 

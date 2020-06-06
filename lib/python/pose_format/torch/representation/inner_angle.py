@@ -1,8 +1,15 @@
 import torch
-from pose_format.utils.masked_tensor import MaskedTensor
+from ..masked.tensor import MaskedTensor
+from ..masked.torch import MaskedTorch
 from torch import nn
 
-from ..masked.torch import MaskedTorch
+
+def get_vectors_norm(vectors: MaskedTensor):
+    square = MaskedTorch.square(vectors)
+    summed = square.sum(dim=3)
+    v_mag = MaskedTorch.sqrt(summed)
+    v_norm = vectors / v_mag
+    return v_norm
 
 
 class InnerAngleRepresentation(nn.Module):
@@ -18,12 +25,13 @@ class InnerAngleRepresentation(nn.Module):
         v1 = a - b  # (Points, Batch, Len, Dims)
         v2 = c - b  # (Points, Batch, Len, Dims)
 
-        v1_norm = MaskedTorch.norm(v1, dim=3)
-        v2_norm = MaskedTorch.norm(v2, dim=3)
+        v1_norm = get_vectors_norm(v1)
+        v2_norm = get_vectors_norm(v2)
 
-        slopes = MaskedTorch.sum(v1_norm * v2_norm, dim=3).zero_filled()
-        slopes[slopes != slopes] = 0  # Fix NaN, TODO think of faster way
+        slopes = (v1_norm * v2_norm).sum(dim=3)
+        angles = MaskedTorch.acos(slopes)
 
-        angles = torch.acos(slopes)
+        angles = angles.zero_filled()
+        angles[angles != angles] = 0  # Fix NaN, TODO think of faster way
 
         return angles

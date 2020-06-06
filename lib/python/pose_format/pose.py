@@ -16,8 +16,7 @@ import numpy.ma as ma
 
 from .utils.fast_math import distance_batch
 
-# import numpy as np
-# np.seterr(all='raise')
+
 
 class Pose:
     def __init__(self, header: PoseHeader, body: PoseBody):
@@ -25,10 +24,10 @@ class Pose:
         self.body = body
 
     @staticmethod
-    def read(buffer: bytes):
+    def read(buffer: bytes, pose_body=NumPyPoseBody):
         reader = BufferReader(buffer)
         header = PoseHeader.read(reader)
-        body = PoseBody.read(header, reader)
+        body = pose_body.read(header, reader)
 
         return Pose(header, body)
 

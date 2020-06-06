@@ -2,8 +2,8 @@ from random import sample
 from typing import List, Tuple
 
 import numpy as np
-from lib.python.pose_format.utils.reader import BufferReader, ConstStructs
-from lib.python.pose_format.pose_header import PoseHeader
+from .utils.reader import BufferReader, ConstStructs
+from .pose_header import PoseHeader
 
 
 POINTS_DIMS = (2, 1, 0, 3)
@@ -36,8 +36,8 @@ class PoseBody:
         _frames = int(reader.bytes_left() / (_people * _points * (_dims + 1) * 4))
 
         tensor_reader = reader.__getattribute__(cls.tensor_reader)
-        data = tensor_reader(cls.tensor_reader)(ConstStructs.float, (_frames, _people, _points, _dims))
-        confidence = tensor_reader(ConstStructs.float, (_frames, _people, _points))
+        data = tensor_reader(ConstStructs.float, shape=(_frames, _people, _points, _dims))
+        confidence = tensor_reader(ConstStructs.float, shape=(_frames, _people, _points))
 
         return cls(fps, data, confidence)
 

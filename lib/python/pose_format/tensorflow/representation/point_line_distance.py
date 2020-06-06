@@ -9,7 +9,7 @@ class PointLineDistanceRepresentation:
 
     def __call__(self, p1s: tf.Tensor, p2s: tf.Tensor, p3s: tf.Tensor) -> tf.Tensor:
         """
-        Angle in point b for the triangle <a, b, c>
+        Distance between the point p1s to the line <p2s, p3s>
         :param p1s: tf.Tensor (Points, Batch, Len, Dims)
         :param p2s: tf.Tensor (Points, Batch, Len, Dims)
         :param p3s: tf.Tensor (Points, Batch, Len, Dims)

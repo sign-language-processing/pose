@@ -5,7 +5,6 @@ import math
 from imgaug import Keypoint, KeypointsOnImage
 from imgaug.augmenters import Augmenter
 
-from .vectorizer import Vectorizer
 from .pose_body import PoseBody
 from .numpy.pose_body import NumPyPoseBody
 from .pose_header import PoseHeader, PoseHeaderDimensions, PoseNormalizationInfo
@@ -98,29 +97,6 @@ class Pose:
     def interpolate(self, new_fps: int, kind='cubic'):
         body = self.body.interpolate(new_fps=new_fps, kind=kind)
         return Pose(header=self.header, body=body)
-
-    def to_vectors(self, vectorizer: Vectorizer) -> np.ndarray:
-        transposed = self.body.points_perspective()
-
-        pt1s = []
-        pt2s = []
-
-        idx = 0
-        for component in self.header.components:
-            for (a, b) in component.limbs:
-                pt1s.append(a + idx)
-                pt2s.append(b + idx)
-            idx += len(component.points)
-
-        people_vectors = vectorizer(transposed[pt1s], transposed[pt2s], header=self.header)
-
-        # Concatenate vectors of different people
-        if people_vectors.shape[1] == 1:
-            vectors = np.squeeze(people_vectors)
-        else:
-            vectors = np.concatenate(people_vectors, axis=0)
-
-        return np.transpose(vectors)
 
     def frame_dropout(self, dropout_std=0.1):
         body, selected_indexes = self.body.frame_dropout(dropout_std=dropout_std)

@@ -50,7 +50,7 @@ class PoseRepresentation:
         triangles = [(p1, p2, p4) for p1, p2 in zip(self.limb_pt1s, self.limb_pt2s)
                      for p3, p4 in zip(self.limb_pt1s, self.limb_pt2s) if p2 == p3]
 
-        return list(*triangles)
+        return list(zip(*triangles))
 
     def group_embeds(self, embeds: List):
         """
@@ -65,7 +65,7 @@ class PoseRepresentation:
     def permute(self, src, shape: tuple):
         raise NotImplementedError('Group embeds is not implemented')
 
-    def forward(self, src):
+    def __call__(self, src):
         """
         :param src: Size (Batch, Len, Points, Dims)
         :return: Size (Batch, Len, embed_size)
@@ -79,13 +79,13 @@ class PoseRepresentation:
             embeds += [module(points) for module in self.rep_modules1]
 
         # Use modules requiring limbs
-        if len(self.rep_modules1) > 0:
+        if len(self.rep_modules2) > 0:
             pt1s = self.get_points(points, self.limb_pt1s)
             pt2s = self.get_points(points, self.limb_pt2s)
             embeds += [module(p1s=pt1s, p2s=pt2s) for module in self.rep_modules2]
 
         # Use modules requiring triangles
-        if len(self.rep_modules1) > 0:
+        if len(self.rep_modules3) > 0:
             pt1s = self.get_points(points, self.triangle_pt1s)
             pt2s = self.get_points(points, self.triangle_pt2s)
             pt3s = self.get_points(points, self.triangle_pt3s)

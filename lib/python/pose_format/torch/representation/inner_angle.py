@@ -13,17 +13,17 @@ def get_vectors_norm(vectors: MaskedTensor):
 
 
 class InnerAngleRepresentation(nn.Module):
-    def forward(self, a: MaskedTensor, b: MaskedTensor, c: MaskedTensor) -> torch.Tensor:
+    def forward(self, p1s: MaskedTensor, p2s: MaskedTensor, p3s: MaskedTensor) -> torch.Tensor:
         """
-        Angle in point b for the triangle <a, b, c>
-        :param a: MaskedTensor (Points, Batch, Len, Dims)
-        :param b: MaskedTensor (Points, Batch, Len, Dims)
-        :param c: MaskedTensor (Points, Batch, Len, Dims)
+        Angle in point p2s for the triangle <p1s, p2s, c>
+        :param p1s: MaskedTensor (Points, Batch, Len, Dims)
+        :param p2s: MaskedTensor (Points, Batch, Len, Dims)
+        :param p3s: MaskedTensor (Points, Batch, Len, Dims)
         :return: torch.Tensor (Points, Batch, Len)
         """
         # Following https://stackoverflow.com/questions/19729831/angle-between-3-points-in-3d-space
-        v1 = a - b  # (Points, Batch, Len, Dims)
-        v2 = c - b  # (Points, Batch, Len, Dims)
+        v1 = p1s - p2s  # (Points, Batch, Len, Dims)
+        v2 = p3s - p2s  # (Points, Batch, Len, Dims)
 
         v1_norm = get_vectors_norm(v1)
         v2_norm = get_vectors_norm(v2)

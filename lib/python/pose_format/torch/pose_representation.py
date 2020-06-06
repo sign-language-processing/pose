@@ -3,8 +3,9 @@ from typing import List
 import torch
 from ..pose_header import PoseHeader
 
+from ..pose_representation import PoseRepresentation
 
-class TorchPoseRepresentation:
+class TorchPoseRepresentation(PoseRepresentation):
     def __init__(self, header: PoseHeader, rep_modules1: List = [], rep_modules2: List = [], rep_modules3: List = []):
         super(TorchPoseRepresentation).__init__(header, rep_modules1, rep_modules2, rep_modules3)
 

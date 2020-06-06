@@ -1,8 +1,10 @@
 from typing import List
 import tensorflow as tf
 
+from ..pose_representation import PoseRepresentation
 
-class TensorflowPoseRepresentation:
+
+class TensorflowPoseRepresentation(PoseRepresentation):
     def group_embeds(self, embeds: List[tf.Tensor]):
         """
         :param embeds: torch.Tensor List of tensors size (embed_size, Batch, Len)

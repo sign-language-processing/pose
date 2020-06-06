@@ -8,18 +8,17 @@ def get_vectors_norm(vectors):
 
 
 class InnerAngleRepresentation:
-    def __call__(self, a: tf.Tensor, b: tf.Tensor, c: tf.Tensor) -> tf.Tensor:
+    def __call__(self, p1s: tf.Tensor, p2s: tf.Tensor, p3s: tf.Tensor) -> tf.Tensor:
         """
-        Angle in point b for the triangle <a, b, c>
-        :param a: tf.Tensor (Points, Batch, Len, Dims)
-        :param b: tf.Tensor (Points, Batch, Len, Dims)
-        :param c: tf.Tensor (Points, Batch, Len, Dims)
+        Angle in point p2s for the triangle <p1s, p2s, p3s>
+        :param p1s: tf.Tensor (Points, Batch, Len, Dims)
+        :param p2s: tf.Tensor (Points, Batch, Len, Dims)
+        :param p3s: tf.Tensor (Points, Batch, Len, Dims)
         :return: tf.Tensor (Points, Batch, Len)
         """
-
         # Following https://stackoverflow.com/questions/19729831/angle-between-3-points-in-3d-space
-        v1 = a - b  # (Points, Batch, Len, Dims)
-        v2 = c - b  # (Points, Batch, Len, Dims)
+        v1 = p1s - p2s  # (Points, Batch, Len, Dims)
+        v2 = p3s - p2s  # (Points, Batch, Len, Dims)
 
         v1_norm = get_vectors_norm(v1)
         v2_norm = get_vectors_norm(v2)

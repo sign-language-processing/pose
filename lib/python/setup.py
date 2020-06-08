@@ -12,7 +12,7 @@ setup(
     description='Library for viewing, augmenting, and handling .pose files',
     author='Amit Moryossef',
     author_email='amitmoryossef@gmail.com',
-    url='https://github.com/AmitMY/pose-utils',
+    url='https://github.com/AmitMY/pose-format',
     keywords=['Pose Files', 'Pose Interpolation', 'Pose Augmentation'],
     install_requires=['numpy', 'scipy', 'imgaug', 'pytest'],
     long_description=long_description,

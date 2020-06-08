@@ -47,9 +47,15 @@ class PoseRepresentation:
         assert self.limb_pt1s
         assert self.limb_pt2s
 
-        triangles = [(p1, p2, p4) for p1, p2 in zip(self.limb_pt1s, self.limb_pt2s)
-                     for p3, p4 in zip(self.limb_pt1s, self.limb_pt2s) if p2 == p3]
+        # Limb continuing when limb ended
+        chains = [(p1, p2, p4) for p1, p2 in zip(self.limb_pt1s, self.limb_pt2s)
+                  for p3, p4 in zip(self.limb_pt1s, self.limb_pt2s) if p2 == p3]
+        # # Limbs coming out from the same location
+        # branches = [(p2, p1, p4) for p1, p2 in zip(self.limb_pt1s, self.limb_pt2s)
+        #             for p3, p4 in zip(self.limb_pt1s, self.limb_pt2s) if p1 == p3 and p2 != p4]
+        branches = []
 
+        triangles = chains + branches
         return list(zip(*triangles))
 
     def group_embeds(self, embeds: List):

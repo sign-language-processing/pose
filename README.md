@@ -1,4 +1,4 @@
-# Pose Utils
+# Pose Format
 
 This repository aims to include a complete toolkit for working with poses. 
 It includes a new file format with Python and Javascript readers and writers, in hope to make usage simple.

@@ -3,8 +3,8 @@ from unittest import TestCase
 import math
 import torch
 
-from lib.python.pose_format.torch.representation.angle import AngleRepresentation
-from lib.python.pose_format.torch.masked.tensor import MaskedTensor
+from pose_format.torch.representation.angle import AngleRepresentation
+from pose_format.torch.masked.tensor import MaskedTensor
 
 representation = AngleRepresentation()
 

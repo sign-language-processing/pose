@@ -4,7 +4,7 @@ import numpy as np
 import torch
 import tensorflow as tf
 
-from lib.python.pose_format.utils.reader import BufferReader, ConstStructs
+from pose_format.utils.reader import BufferReader, ConstStructs
 
 
 class TestBufferReader(TestCase):

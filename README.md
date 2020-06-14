@@ -19,7 +19,7 @@ p = Pose.read(buffer)
 ```
 By default, it uses NumPy for the data, but you can also use `torch` and `tensorflow` by writing:
 ```python
-p = Pose.read(bugger, TorchPoseBody)
+p = Pose.read(buffer, TorchPoseBody)
 ```
 
 #### Data Normalization
@@ -33,21 +33,8 @@ p.normalize(
 ```
 
 #### Data Augmentation
-We use [imgaug](https://github.com/aleju/imgaug) for data augmentation. Simply write an `imgaug:Augmentable`, and pass it to `augment2d`.
-For example:
 ```python
-seq = iaa.Sequential([
-    iaa.HorizontalFlip(0.5),  # 50% of poses should be flipped left/right
-    PiecewiseAffineKP(scale=(0.01, 0.05)),  # Distort keypoints
-    iaa.Affine(
-        rotate=(-5, 5),  # Rotate up to 10 degrees each way
-        scale={"x": (0.9, 1.1), "y": (0.9, 1.1)},  # Stretch or squash up to 50% each direction independently
-        shear={"x": (-10, 10), "y": (-10, 10)}  # Shear X/Y up to 16 degrees independently
-    ),
-    iaa.PerspectiveTransform(scale=(0.0, 0.1)) # Change perspective
-])
-
-p.augment2d(seq)
+p.augment2d(rotation_std=0.2, shear_std=0.2, scale_std=0.2)
 ```
 
 #### Data Interpolation

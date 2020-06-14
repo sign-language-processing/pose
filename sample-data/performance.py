@@ -1,12 +1,8 @@
 import itertools
 
-import imgaug.augmenters as iaa
 import torch
 from tqdm import tqdm
 from lib.python.pose_format import Pose
-import numpy as np
-import numpy.ma as ma
-from lib.python.pose_format.vectorizer import SequenceVectorizer, DistanceVectorizer, AngleVectorizer, ZeroVectorizer
 
 iterations = 200
 

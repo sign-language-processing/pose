@@ -1,9 +1,4 @@
-from random import sample
 from typing import List
-
-import math
-from imgaug import Keypoint, KeypointsOnImage
-from imgaug.augmenters import Augmenter
 
 from .pose_body import PoseBody
 from .numpy.pose_body import NumPyPoseBody
@@ -132,22 +127,6 @@ class Pose:
             matrix = np.dot(matrix, scale_matrix)
 
         body = self.body.matmul(matrix.astype(dtype=np.float32))
-        return Pose(header=self.header, body=body)
-
-    def augment2d_imgaug(self, augmenter: Augmenter):
-        _frames, _people, _points, _dims = self.body.data.shape
-        np_keypoints = self.body.data.data.reshape((_frames * _people * _points, _dims))
-
-        keypoints = [Keypoint(x=x, y=y) for x, y in np_keypoints]
-
-        kps = KeypointsOnImage(keypoints, shape=(self.header.dimensions.height, self.header.dimensions.width))
-        kps_aug = augmenter(keypoints=kps)  # Augment keypoints
-
-        np_keypoints = np.array([[k.x, k.y] for k in kps_aug.keypoints]).reshape((_frames, _people, _points, _dims))
-
-        new_data = ma.array(data=np_keypoints, mask=self.body.data.mask)
-
-        body = NumPyPoseBody(fps=self.body.fps, data=new_data, confidence=self.body.confidence)
         return Pose(header=self.header, body=body)
 
     def get_components(self, components: List[str]):

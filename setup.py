@@ -16,7 +16,7 @@ setup(
     author_email='amitmoryossef@gmail.com',
     url='https://github.com/AmitMY/pose-format',
     keywords=['Pose Files', 'Pose Interpolation', 'Pose Augmentation'],
-    install_requires=['numpy', 'scipy', 'imgaug', 'pytest', 'torch', 'tensorflow'],
+    install_requires=['numpy', 'scipy', 'pytest', 'torch', 'tensorflow'],
     long_description=long_description,
     long_description_content_type='text/markdown',
     classifiers=[

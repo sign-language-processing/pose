@@ -1,29 +1,35 @@
-from lib.python.pose_format import Pose
-import imgaug.augmenters as iaa
-import numpy as np
-import numpy.ma as ma
+from tqdm import tqdm
 
-from lib.python.pose_format.pose_visualizer import PoseVisualizer
-from lib.python.pose_format.vectorizer import SequenceVectorizer, DistanceVectorizer, AngleVectorizer, \
-    RelativeAngleVectorizer
+from pose_format import Pose
 
-# buffer = open("1.pose", "rb").read()
-# p0 = Pose.read(buffer)
-# PoseVisualizer(p0).draw("v0.0")
-#
-# p0.write("test.pose")
+from pose_format.numpy import NumPyPoseBody
+from pose_format.torch.pose_body import TorchPoseBody
 
 buffer = open("/home/nlp/amit/PhD/meta-scholar/utils/../datasets/SLCrawl/versions/SpreadTheSign/OpenPose/BODY_25/pose_files/655_es.mx_0.pose", "rb").read()
-p = Pose.read(buffer)
 
-# Normalize
-info = p.header.normalization_info(
-    p1=("pose_keypoints_2d", "RShoulder"),
-    p2=("pose_keypoints_2d", "LShoulder")
-)
-p.normalize(info, scale_factor=500)
+for body in [TorchPoseBody, NumPyPoseBody]:
+    p = Pose.read(buffer, body)
 
-p.write("654es_mx.pose")
+    print("original shape", p.body.data.shape)
+
+    for i in tqdm(list(range(20))):
+        flat = p.body.flatten()
+
+    print("flat shape", flat.shape)
+    print(flat)
+    print("\n\n\n")
+
+
+
+#
+# # Normalize
+# info = p.header.normalization_info(
+#     p1=("pose_keypoints_2d", "RShoulder"),
+#     p2=("pose_keypoints_2d", "LShoulder")
+# )
+# p.normalize(info, scale_factor=500)
+#
+# p.write("654es_mx.pose")
 
 
 # p.get_components(["hand_left_keypoints_2d", "hand_right_keypoints_2d"])

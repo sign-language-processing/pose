@@ -3,8 +3,8 @@ from unittest import TestCase
 import math
 import torch
 
-from lib.python.pose_format.torch.representation.distance import DistanceRepresentation
-from lib.python.pose_format.torch.masked.tensor import MaskedTensor
+from pose_format.torch.representation.distance import DistanceRepresentation
+from pose_format.torch.masked.tensor import MaskedTensor
 
 representation = DistanceRepresentation()
 

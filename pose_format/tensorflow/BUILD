@@ -16,7 +16,10 @@ py_test(
     deps = [
     	":pose_representation",
     	"//:pose_header",
-    	"//tensorflow/representation",
+    	"//tensorflow/representation:angle",
+    	"//tensorflow/representation:distance",
+    	"//tensorflow/representation:inner_angle",
+    	"//tensorflow/representation:point_line_distance",
     	"//utils:openpose",
         "//third_party/py/tensorflow"
     ],

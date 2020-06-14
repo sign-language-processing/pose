@@ -7,7 +7,7 @@ os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
 
 import tensorflow as tf
 
-from lib.python.pose_format.tensorflow.representation.distance import DistanceRepresentation
+from pose_format.tensorflow.representation import DistanceRepresentation
 
 representation = DistanceRepresentation()
 

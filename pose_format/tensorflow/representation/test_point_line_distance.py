@@ -7,7 +7,7 @@ os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
 
 import tensorflow as tf
 
-from lib.python.pose_format.tensorflow.representation.point_line_distance import PointLineDistanceRepresentation
+from pose_format.tensorflow.representation.point_line_distance import PointLineDistanceRepresentation
 
 representation = PointLineDistanceRepresentation()
 

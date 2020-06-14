@@ -5,13 +5,11 @@ from setuptools import setup, find_packages
 with open('README.md', 'r') as fh:
     long_description = fh.read()
 
-packages = [p.replace("lib.python.", "") for p in find_packages()[2:]]
-package_dir = {"": "lib/python"}
+print(find_packages())
 
 setup(
     name='pose_format',
-    package_dir=package_dir,
-    packages=packages,
+    packages=find_packages(),
     version='0.0.1',
     description='Library for viewing, augmenting, and handling .pose files',
     author='Amit Moryossef',

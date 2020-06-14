@@ -63,3 +63,13 @@ py_library(
     ],
     visibility = ["//visibility:public"]
 )
+
+py_test(
+    name = "test_pose",
+    srcs = ["test_pose.py"],
+	srcs_version = "PY3",
+    deps = [
+	    ":pose"
+    ],
+    visibility = ["//visibility:public"]
+)

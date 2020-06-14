@@ -3,9 +3,6 @@
 This repository aims to include a complete toolkit for working with poses. 
 It includes a new file format with Python and Javascript readers and writers, in hope to make usage simple.
 
-Here is a video explaining what this library can do, and the motivations behind it:
-[![Explanation Video](https://img.youtube.com/vi/78eeBoxTr-w/0.jpg)](https://www.youtube.com/watch?v=78eeBoxTr-w)
-
 ### The File Format
 The format supports any type of poses, arbitrary number of people, and arbitrary number of frames (for videos).
 
@@ -18,14 +15,11 @@ The binary spec can be found in [format/spec.md](format/spec.md).
 To load a `.pose` file, use the `PoseReader` class:
 ```python
 buffer = open("file.pose", "rb").read()
-p = PoseReader(buffer).read()
+p = Pose.read(buffer)
 ```
-
-To load an OpenPose `.json` file, use the static method `from_openpose_json`:
+By default, it uses NumPy for the data, but you can also use `torch` and `tensorflow` by writing:
 ```python
-import json
-json = json.load(open("keypoints.json", "r"))
-p = PoseReader.from_openpose_json(json)
+p = Pose.read(bugger, TorchPoseBody)
 ```
 
 #### Data Normalization
@@ -65,5 +59,5 @@ p.interpolate_fps(24, kind='linear')
 
 #### Local install
 ```bash
-pip install -e /home/nlp/amit/PhD/PoseFormat/lib/python/
+pip install -e /home/nlp/amit/PhD/PoseFormat/
 ```

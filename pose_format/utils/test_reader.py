@@ -2,9 +2,10 @@ import struct
 from unittest import TestCase
 import numpy as np
 import torch
+import os
+os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
 import tensorflow as tf
-
-from pose_format.utils.reader import BufferReader, ConstStructs
+from .reader import BufferReader, ConstStructs
 
 
 class TestBufferReader(TestCase):

@@ -7,7 +7,7 @@ os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
 
 import tensorflow as tf
 
-from pose_format.tensorflow.representation import InnerAngleRepresentation
+from pose_format.tensorflow.representation.inner_angle import InnerAngleRepresentation
 
 representation = InnerAngleRepresentation()
 

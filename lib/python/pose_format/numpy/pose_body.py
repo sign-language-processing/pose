@@ -10,6 +10,7 @@ from ..utils.reader import BufferReader, ConstStructs
 import numpy as np
 import numpy.ma as ma
 
+
 # import numpy as np
 # np.seterr(all='raise')
 
@@ -17,7 +18,7 @@ class NumPyPoseBody(PoseBody):
     tensor_reader = 'unpack_numpy'
 
     def __init__(self, fps: int, data: Union[ma.MaskedArray, np.ndarray], confidence: np.ndarray):
-        if isinstance(data, np.ndarray): # If array is not masked
+        if isinstance(data, np.ndarray):  # If array is not masked
             mask = confidence == 0  # 0 means no-mask, 1 means with-mask
             stacked_mask = np.stack([mask, mask], axis=3)
             data = ma.masked_array(data, mask=stacked_mask)
@@ -67,7 +68,7 @@ class NumPyPoseBody(PoseBody):
 
     def write(self, buffer: BinaryIO):
         _frames, _people, _points, _dims = self.data.shape
-        _frames = _frames if _frames < 65535 else 0 # TODO change from short to int
+        _frames = _frames if _frames < 65535 else 0  # TODO change from short to int
         buffer.write(ConstStructs.triple_ushort.pack(self.fps, _frames, _people))
 
         buffer.write(self.data.data.tobytes())
@@ -170,3 +171,16 @@ class NumPyPoseBody(PoseBody):
         masked_data = ma.masked_array(dimensions, mask=stacked_confidence)
 
         return NumPyPoseBody(fps=new_fps, data=masked_data, confidence=confidence)
+
+    def flatten(self):
+        shape = self.data.shape
+        data = self.data.data.reshape(-1, shape[-1])  # Not masked data
+        confidence = self.confidence.flatten()
+        indexes = list(np.ndindex(shape[:-1]))
+        flat = np.c_[indexes, confidence, data]
+        # Filter data from flat
+        flat = flat[confidence != 0]
+        # Scale the first axis by fps
+        scalar = np.ones(len(shape) + shape[-1])
+        scalar[0] = 1 / self.fps
+        return flat * scalar

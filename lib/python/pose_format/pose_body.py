@@ -69,3 +69,6 @@ class PoseBody:
         dropout_indexes = set(sample(range(0, data_len), dropout_number))
         select_indexes = [i for i in range(0, data_len) if i not in dropout_indexes]
         return self.select_frames(select_indexes), select_indexes
+
+    def flatten(self):
+        raise NotImplementedError("Must implement flatten")

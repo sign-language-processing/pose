@@ -1,33 +1,35 @@
+licenses(["notice"])
+
 py_library(
     name = "tensor",
     srcs = ["tensor.py"],
-	srcs_version = "PY3",
+    srcs_version = "PY3",
+    visibility = ["//visibility:public"],
     deps = [
-        "//third_party/py/torch"
+        "//third_party/py/torch:pytorch",
     ],
-    visibility = ["//visibility:public"]
 )
-
 
 py_library(
     name = "torch",
     srcs = ["torch.py"],
-	srcs_version = "PY3",
+    srcs_version = "PY3",
+    visibility = ["//visibility:public"],
     deps = [
-    	":tensor",
-        "//third_party/py/torch"
+        ":tensor",
+        "//third_party/py/torch:pytorch",
     ],
-    visibility = ["//visibility:public"]
 )
-
 
 py_test(
     name = "test_torch",
     srcs = ["test_torch.py"],
-	srcs_version = "PY3",
+    python_version = "PY3",
+    srcs_version = "PY3",
+    visibility = ["//visibility:public"],
     deps = [
-    	":torch",
-    	":tensor"
+        ":tensor",
+        ":torch",
+        "//testing/pybase",
     ],
-    visibility = ["//visibility:public"]
 )

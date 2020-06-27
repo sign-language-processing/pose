@@ -66,8 +66,8 @@ py_library(
 )
 
 py_test(
-    name = "test_pose",
-    srcs = ["test_pose.py"],
+    name = "pose_test",
+    srcs = ["pose_test.py"],
     python_version = "PY3",
     srcs_version = "PY3",
     visibility = ["//visibility:public"],

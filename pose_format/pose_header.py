@@ -63,6 +63,7 @@ class PoseHeaderComponent:
         limbs_map = {p2: i for i, (p1, p2) in enumerate(self.limbs)}
         return [limbs_map[p1] if p1 in limbs_map else None for p1, p2 in self.limbs]
 
+
 class PoseHeaderDimensions:
     def __init__(self, width: int, height: int, depth: int = 0):
         self.width = math.ceil(width)
@@ -121,3 +122,13 @@ class PoseHeader:
 
     def normalization_info(self, p1: Tuple[str, str], p2: Tuple[str, str]):
         return PoseNormalizationInfo(p1=self._get_point_index(*p1), p2=self._get_point_index(*p2))
+
+    def bbox(self):
+        # Convert Header to boxes
+        box_points = ['TOP_LEFT', 'BOTTOM_RIGHT']
+        box_limbs = [(0, 1)]
+        box_colors = [(255, 0, 0)]
+        components = [PoseHeaderComponent(c.name, box_points, box_limbs, box_colors, c.format)
+                      for c in self.components]
+
+        return PoseHeader(self.version, self.dimensions, components)

@@ -3,7 +3,7 @@ licenses(["restricted"])
 package(default_visibility = ["//visibility:public"])
 
 py_library(
-    name = "torch",
+    name = "pytorch",
     srcs = ["torch_dummy.py"],
     srcs_version = "PY2AND3",
 )

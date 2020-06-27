@@ -1,10 +1,18 @@
 import struct
 from typing import Tuple
 import numpy as np
-import tensorflow as tf
-import torch
 from dataclasses import dataclass
 from tqdm import tqdm
+
+try:
+    import tensorflow as tf
+except ImportError:
+    print("Failed to import tensorflow")
+
+try:
+    import torch
+except ImportError:
+    print("Failed to import torch")
 
 
 @dataclass
@@ -39,8 +47,8 @@ class BufferReader:
         return arr
 
     def unpack_torch(self, s: struct.Struct, shape: Tuple):
-        arr = self.unpack_numpy(s, shape)
-        return torch.from_numpy(arr)
+        arr = self.unpack_numpy(s, shape)  # Array is not writable
+        return torch.from_numpy(np.array(arr))
 
     def unpack_tensorflow(self, s: struct.Struct, shape: Tuple):
         arr = self.unpack_numpy(s, shape)

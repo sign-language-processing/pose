@@ -1,7 +1,7 @@
-from typing import List
+import inspect
+from typing import List, BinaryIO
 
 from .pose_body import PoseBody
-from .numpy.pose_body import NumPyPoseBody
 from .pose_header import PoseHeader, PoseHeaderDimensions, PoseNormalizationInfo
 from .utils.reader import BufferReader
 
@@ -11,35 +11,33 @@ import numpy.ma as ma
 from .utils.fast_math import distance_batch
 
 
-
 class Pose:
+    """File IO for '.pose' file format, including the header and body"""
+
     def __init__(self, header: PoseHeader, body: PoseBody):
+        """
+        :param header: PoseHeader
+        :param body: PoseBody
+        """
         self.header = header
         self.body = body
 
     @staticmethod
-    def read(buffer: bytes, pose_body=NumPyPoseBody):
+    def read(buffer: bytes, pose_body: PoseBody):
         reader = BufferReader(buffer)
         header = PoseHeader.read(reader)
         body = pose_body.read(header, reader)
 
         return Pose(header, body)
 
-    def write(self, f_name: str):
-        f = open(f_name, "wb")
-        self.header.write(f)
-        self.body.write(f)
-        f.flush()
-        f.close()
-
-    def torch(self):
-        self.body = self.body.torch()
+    def write(self, buffer: BinaryIO):
+        self.header.write(buffer)
+        self.body.write(self.header.version, buffer)
 
     def focus(self):
         """
         Gets the pose to start at (0,0) and have dimensions as big as needed
         """
-
         mins = ma.min(self.body.data, axis=(0, 1, 2))
         maxs = ma.max(self.body.data, axis=(0, 1, 2))
 
@@ -53,6 +51,7 @@ class Pose:
         """
         Normalize the point to a fixed distance between two points
         """
+        mask = self.body.data.mask
         transposed = self.body.zero_filled().points_perspective()
 
         p1s = transposed[info.p1]
@@ -77,21 +76,7 @@ class Pose:
         if round(scale, 5) != 1:
             self.body.data = ma.multiply(self.body.data, scale)
 
-    def squeeze(self, by: int):
-        """
-        Fast way of data interpolation
-        :param by: take one row every "by" rows
-        :return: Pose
-        """
-        new_data = self.body.data[::by]
-        new_confidence = self.body.confidence[::by]
-
-        body = self.body.__class__(fps=self.body.fps, data=new_data, confidence=new_confidence)
-        return Pose(header=self.header, body=body)
-
-    def interpolate(self, new_fps: int, kind='cubic'):
-        body = self.body.interpolate(new_fps=new_fps, kind=kind)
-        return Pose(header=self.header, body=body)
+        self.body.data = ma.array(self.body.data, mask=mask)
 
     def frame_dropout(self, dropout_std=0.1):
         body, selected_indexes = self.body.frame_dropout(dropout_std=dropout_std)
@@ -144,3 +129,36 @@ class Pose:
         new_body = self.body.get_points(indexes)
 
         return Pose(header=new_header, body=new_body)
+
+    def bbox(self):
+        header = self.header.bbox()
+        body = self.body.bbox(header)
+        return Pose(header=header, body=body)
+
+    pass_through_methods = {
+        "interpolate",  # Interpolate missing pose points
+        "torch",  # Convert body to torch
+        # "bbox",  # Replace every component with its bounding box
+        "slice_step",  # Step through the data
+    }
+
+    def __getattr__(self, attr):
+        if attr not in Pose.pass_through_methods:
+            raise AttributeError("Attribute '%s' doesn't exist on class Pose" % attr)
+
+        def func(*args, **kwargs):
+            prop = getattr(self.body, attr)
+            body_res = prop(*args, **kwargs)
+
+            if isinstance(body_res, PoseBody):
+                header = self.header
+                if hasattr(header, attr):
+                    header_res = getattr(header, attr)(*args, **kwargs)
+                    if isinstance(header_res, PoseHeader):
+                        header = header_res
+
+                return Pose(header, body_res)
+
+            return body_res
+
+        return func

@@ -1,90 +1,94 @@
+licenses(["notice"])
+
 py_library(
     name = "angle",
     srcs = ["angle.py"],
-	srcs_version = "PY3",
+    srcs_version = "PY3",
+    visibility = ["//visibility:public"],
     deps = [
-    	"//torch/masked:tensor",
-        "//third_party/py/torch"
+        "//third_party/py/torch:pytorch",
     ],
-    visibility = ["//visibility:public"]
 )
 
 py_test(
-    name = "test_angle",
-    srcs = ["test_angle.py"],
-	srcs_version = "PY3",
+    name = "angle_test",
+    srcs = ["angle_test.py"],
+    python_version = "PY3",
+    srcs_version = "PY3",
+    visibility = ["//visibility:public"],
     deps = [
-    	":angle",
-        "//third_party/py/torch"
+        ":angle",
+        "//testing/pybase",
+        "//third_party/py/torch:pytorch",
     ],
-    visibility = ["//visibility:public"]
 )
 
 py_library(
     name = "distance",
     srcs = ["distance.py"],
-	srcs_version = "PY3",
+    srcs_version = "PY3",
+    visibility = ["//visibility:public"],
     deps = [
-    	"//torch/masked:tensor",
-    	"//torch/masked:torch",
-        "//third_party/py/torch"
+        "//third_party/py/torch:pytorch",
     ],
-    visibility = ["//visibility:public"]
 )
 
 py_test(
-    name = "test_distance",
-    srcs = ["test_distance.py"],
-	srcs_version = "PY3",
+    name = "distance_test",
+    srcs = ["distance_test.py"],
+    python_version = "PY3",
+    srcs_version = "PY3",
+    visibility = ["//visibility:public"],
     deps = [
-    	":distance",
-        "//third_party/py/torch"
+        ":distance",
+        "//testing/pybase",
+        "//third_party/py/torch:pytorch",
     ],
-    visibility = ["//visibility:public"]
 )
 
 py_library(
     name = "inner_angle",
     srcs = ["inner_angle.py"],
-	srcs_version = "PY3",
+    srcs_version = "PY3",
+    visibility = ["//visibility:public"],
     deps = [
-    	"//torch/masked:tensor",
-    	"//torch/masked:torch",
-        "//third_party/py/torch"
+        "//third_party/py/torch:pytorch",
     ],
-    visibility = ["//visibility:public"]
 )
 
 py_test(
-    name = "test_inner_angle",
-    srcs = ["test_inner_angle.py"],
-	srcs_version = "PY3",
+    name = "inner_angle_test",
+    srcs = ["inner_angle_test.py"],
+    python_version = "PY3",
+    srcs_version = "PY3",
+    visibility = ["//visibility:public"],
     deps = [
-    	":inner_angle",
-        "//third_party/py/torch"
+        ":inner_angle",
+        "//testing/pybase",
+        "//third_party/py/torch:pytorch",
     ],
-    visibility = ["//visibility:public"]
 )
 
 py_library(
     name = "point_line_distance",
     srcs = ["point_line_distance.py"],
-	srcs_version = "PY3",
+    srcs_version = "PY3",
+    visibility = ["//visibility:public"],
     deps = [
-    	"//torch/masked:tensor",
-    	"//torch/masked:torch",
-        "//third_party/py/torch"
+        ":distance",
+        "//third_party/py/torch:pytorch",
     ],
-    visibility = ["//visibility:public"]
 )
 
 py_test(
-    name = "test_point_line_distance",
-    srcs = ["test_point_line_distance.py"],
-	srcs_version = "PY3",
+    name = "point_line_distance_test",
+    srcs = ["point_line_distance_test.py"],
+    python_version = "PY3",
+    srcs_version = "PY3",
+    visibility = ["//visibility:public"],
     deps = [
-    	":point_line_distance",
-        "//third_party/py/torch"
+        ":point_line_distance",
+        "//testing/pybase",
+        "//third_party/py/torch:pytorch",
     ],
-    visibility = ["//visibility:public"]
 )

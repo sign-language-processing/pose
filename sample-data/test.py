@@ -1,23 +1,52 @@
-from tqdm import tqdm
+from pose_format.pose_visualizer import PoseVisualizer
 
 from pose_format import Pose
 
-from pose_format.numpy import NumPyPoseBody
+import numpy as np
+
 from pose_format.torch.pose_body import TorchPoseBody
 
-buffer = open("/home/nlp/amit/PhD/meta-scholar/utils/../datasets/SLCrawl/versions/SpreadTheSign/OpenPose/BODY_25/pose_files/655_es.mx_0.pose", "rb").read()
 
-for body in [TorchPoseBody, NumPyPoseBody]:
-    p = Pose.read(buffer, body)
 
-    print("original shape", p.body.data.shape)
+pose = "/home/nlp/amit/PhD/SpeakerDetection/detector/data/dgs-korpus/poses/95fd3ab2eab442954ed92be5aeeb91d2.pose"
+video = "/home/nlp/amit/PhD/meta-scholar/datasets/SLCrawl/versions/SpreadTheSign/videos/655_es-mx_0.mp4"
 
-    for i in tqdm(list(range(20))):
-        flat = p.body.flatten()
+buffer = open(pose, "rb").read()
 
-    print("flat shape", flat.shape)
-    print(flat)
-    print("\n\n\n")
+
+p = Pose.read(buffer, TorchPoseBody)
+
+
+print("flattening...")
+print("fps", p.body.fps)
+print("frames", len(p.body.data))
+f = p.body.flatten()
+print(f.shape)
+print(f)
+
+
+
+
+
+# visualizer = PoseVisualizer(p)
+# # frame = next(iter(visualizer.draw_on_video(video)))
+# # visualizer.save_frame("test.png", frame)
+#
+# frames = list(visualizer.draw_on_video(video))
+# visualizer.save_video("test.mp4", frames)
+#
+#
+# for body in [TorchPoseBody, NumPyPoseBody]:
+#     p = Pose.read(buffer, body)
+#
+#     print("original shape", p.body.data.shape)
+#
+#     for i in tqdm(list(range(20))):
+#         flat = p.body.flatten()
+#
+#     print("flat shape", flat.shape)
+#     print(flat)
+#     print("\n\n\n")
 
 
 

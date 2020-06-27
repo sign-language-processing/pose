@@ -5,7 +5,7 @@ import numpy as np
 from numpy import ma
 
 from ..pose import Pose
-from ..pose_body import PoseBody
+from ..numpy.pose_body import NumPyPoseBody
 from ..pose_header import PoseHeader, PoseHeaderDimensions, PoseHeaderComponent
 
 BODY_POINTS = ["Nose", "Neck", "RShoulder", "RElbow", "RWrist", "LShoulder", "LElbow", "LWrist", "MidHip",
@@ -180,6 +180,6 @@ def load_openpose(frames: list, fps: float = 24, width=1000, height=1000, depth=
     stacked_confidence = np.stack([mask, mask], axis=3)
     masked_data = ma.masked_array(data, mask=stacked_confidence)
 
-    body = PoseBody(fps=int(fps), data=masked_data, confidence=confidence)
+    body = NumPyPoseBody(fps=int(fps), data=masked_data, confidence=confidence)
 
     return Pose(header, body)

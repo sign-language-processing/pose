@@ -25,6 +25,7 @@ class NumPyPoseBody(PoseBody):
 
         super().__init__(fps, data, confidence)
 
+
     @classmethod
     def read_v0_0(cls, header: PoseHeader, reader: BufferReader):
         fps, _frames = reader.unpack(ConstStructs.double_ushort)
@@ -66,7 +67,7 @@ class NumPyPoseBody(PoseBody):
 
         return cls(fps, ma.stack(frames_d), ma.stack(frames_c))
 
-    def write(self, buffer: BinaryIO):
+    def write(self, version: float, buffer: BinaryIO):
         _frames, _people, _points, _dims = self.data.shape
         _frames = _frames if _frames < 65535 else 0  # TODO change from short to int
         buffer.write(ConstStructs.triple_ushort.pack(self.fps, _frames, _people))
@@ -104,6 +105,30 @@ class NumPyPoseBody(PoseBody):
         new_confidence = np.transpose(confidence[indexes], axes=confidence_reshape)
 
         return NumPyPoseBody(self.fps, new_data, new_confidence)
+
+    def bbox(self, header: PoseHeader):
+        data = ma.transpose(self.data, axes=POINTS_DIMS)
+
+        # Split data by components, `ma` doesn't support ".split"
+        components = []
+        idx = 0
+        for component in header.components:
+            components.append(data[list(range(idx, idx + len(component.points)))])
+            idx += len(component.points)
+
+        boxes = [ma.stack([ma.min(c, axis=0), ma.max(c, axis=0)]) for c in components]
+        boxes_cat = ma.concatenate(boxes)
+        if type(boxes_cat.mask) == np.bool_: # Sometimes, it doesn't concatenate the mask...
+            boxes_mask = ma.concatenate([b.mask for b in boxes])
+            boxes_cat = ma.array(boxes_cat, mask=boxes_mask)
+
+        new_data = ma.transpose(boxes_cat, axes=POINTS_DIMS)
+
+        confidence_mask = np.split(new_data.mask, [-1], axis=3)[0]
+        confidence_mask = np.squeeze(confidence_mask, axis=-1)
+        confidence = np.where(confidence_mask == True, 0, 1)
+
+        return NumPyPoseBody(self.fps, new_data, confidence)
 
     def interpolate(self, new_fps: int, kind='cubic'):
         _frames = self.data.shape[0]

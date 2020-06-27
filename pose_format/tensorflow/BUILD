@@ -12,8 +12,8 @@ py_library(
 )
 
 py_test(
-    name = "test_pose_representation",
-    srcs = ["test_pose_representation.py"],
+    name = "pose_representation_test",
+    srcs = ["pose_representation_test.py"],
     python_version = "PY3",
     srcs_version = "PY3",
     visibility = ["//visibility:public"],

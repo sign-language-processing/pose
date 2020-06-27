@@ -19,16 +19,13 @@ class TorchPoseBody(PoseBody):
 
         super().__init__(fps, data, confidence)
 
-    @classmethod
-    def read_v0_0(cls, header: PoseHeader, reader: BufferReader):
-        raise NotImplementedError("Reading v0 files with torch is not supported")
-
     def cuda(self):
         self.data = self.data.cuda()
         self.confidence = self.confidence.cuda()
 
     def zero_filled(self):
         self.data.zero_filled()
+        return self
 
     def matmul(self, matrix: np.ndarray):
         data = self.data.matmul(torch.from_numpy(matrix))
@@ -50,12 +47,12 @@ class TorchPoseBody(PoseBody):
     def flatten(self):
         shape = self.data.shape
         data = self.data.tensor.reshape(-1, shape[-1])  # Not masked data
-        confidence = torch.tensor(self.confidence.flatten()) # TODO no need to recast ot torch.. but memory access issue
+        confidence = self.confidence.flatten()
         indexes = torch.tensor(list(np.ndindex(shape[:-1])), dtype=torch.float32, device=data.device)
         flat = torch.cat([indexes, torch.unsqueeze(confidence, dim=1), data], dim=1)
         # Filter data from flat
         flat = flat[confidence != 0.]
         # Scale the first axis by fps
-        scalar = torch.ones(len(shape) + shape[-1],device=data.device)
+        scalar = torch.ones(len(shape) + shape[-1], device=data.device)
         scalar[0] = 1 / self.fps
         return flat * scalar

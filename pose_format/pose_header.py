@@ -83,10 +83,12 @@ class PoseHeader:
     def __init__(self,
                  version: float,
                  dimensions: PoseHeaderDimensions,
-                 components: List[PoseHeaderComponent]):
+                 components: List[PoseHeaderComponent],
+                 is_bbox=False):
         self.version = version
         self.dimensions = dimensions
         self.components = components
+        self.is_bbox = is_bbox
 
     @staticmethod
     def read(reader: BufferReader):
@@ -131,4 +133,4 @@ class PoseHeader:
         components = [PoseHeaderComponent(c.name, box_points, box_limbs, box_colors, c.format)
                       for c in self.components]
 
-        return PoseHeader(self.version, self.dimensions, components)
+        return PoseHeader(self.version, self.dimensions, components, True)

@@ -7,10 +7,10 @@ py_library(
     visibility = ["//visibility:public"],
     deps = [
         "//third_party/py/numpy",
-        "//third_party/py/pose_format:pose_body",
-        "//third_party/py/pose_format:pose_header",
-        "//third_party/py/pose_format/torch/masked:tensor",
-        "//third_party/py/pose_format/utils:reader",
+        "//:pose_body",
+        "//:pose_header",
+        "//torch/masked:tensor",
+        "//utils:reader",
         "//third_party/py/torch:pytorch",
     ],
 )
@@ -21,8 +21,8 @@ py_library(
     srcs_version = "PY3",
     visibility = ["//visibility:public"],
     deps = [
-        "//third_party/py/pose_format:pose_header",
-        "//third_party/py/pose_format:pose_representation",
+        "//:pose_header",
+        "//:pose_representation",
         "//third_party/py/torch:pytorch",
     ],
 )

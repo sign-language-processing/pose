@@ -2,35 +2,50 @@ from pose_format.pose_visualizer import PoseVisualizer
 
 from pose_format import Pose
 
-import numpy as np
+import tensorflow as tf
 
-from pose_format.torch.pose_body import TorchPoseBody
+from pose_format.numpy.pose_body import NumPyPoseBody
+from pose_format.tensorflow.pose_body import TensorflowPoseBody, TF_POSE_RECORD_DESCRIPTION
 
-
-
-pose = "/home/nlp/amit/PhD/SpeakerDetection/detector/data/dgs-korpus/poses/95fd3ab2eab442954ed92be5aeeb91d2.pose"
-video = "/home/nlp/amit/PhD/meta-scholar/datasets/SLCrawl/versions/SpreadTheSign/videos/655_es-mx_0.mp4"
+pose = "1.pose"
+video = "/home/nlp/amit/PhD/SpeakerDetection/dgs-korpus-google/videos/1413925_1b1.mp4"
 
 buffer = open(pose, "rb").read()
 
+p = Pose.read(buffer, NumPyPoseBody)
 
-p = Pose.read(buffer, TorchPoseBody)
-
-
-print("flattening...")
-print("fps", p.body.fps)
-print("frames", len(p.body.data))
-f = p.body.flatten()
-print(f.shape)
-print(f)
+p = p.tensorflow()
 
 
+with tf.io.TFRecordWriter("test.tfrecord") as writer:
+    for pose in [p]:
+        features = {
+        }
+        features.update(pose.body.as_tfrecord())
 
+        example = tf.train.Example(features=tf.train.Features(feature=features))
+        writer.write(example.SerializeToString())
 
+features = {}
+features.update(TF_POSE_RECORD_DESCRIPTION)
 
+dataset = tf.data.TFRecordDataset(filenames=["test.tfrecord"])
+dataset = dataset.map(lambda serialized: tf.io.parse_single_example(serialized, features))
+
+for datum in dataset.take(1):
+    pose = TensorflowPoseBody.from_tfrecord(datum)
+    print(pose)
+
+#
+# p.body.data = p.body.data[:1]
+# p.body.confidence = p.body.confidence[:1]
+#
+# p = p.bbox()
+#
+#
 # visualizer = PoseVisualizer(p)
-# # frame = next(iter(visualizer.draw_on_video(video)))
-# # visualizer.save_frame("test.png", frame)
+# frame = next(iter(visualizer.draw_on_video(video)))
+# visualizer.save_frame("test.png", frame)
 #
 # frames = list(visualizer.draw_on_video(video))
 # visualizer.save_video("test.mp4", frames)
@@ -47,7 +62,6 @@ print(f)
 #     print("flat shape", flat.shape)
 #     print(flat)
 #     print("\n\n\n")
-
 
 
 #

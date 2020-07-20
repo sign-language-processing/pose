@@ -47,7 +47,7 @@ p.interpolate_fps(24, kind='linear')
 ### Testing
 Use bazel to run tests
 ```sh
-bazel test :all --test_output=errors
+bazel test ... --test_output=errors
 ```
 
 #### Local install

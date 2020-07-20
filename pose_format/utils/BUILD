@@ -17,9 +17,9 @@ py_library(
     visibility = ["//visibility:public"],
     deps = [
         "//third_party/py/numpy",
-        "//third_party/py/pose_format:pose",
-        "//third_party/py/pose_format:pose_body",
-        "//third_party/py/pose_format:pose_header",
+        "//:pose",
+        "//:pose_body",
+        "//:pose_header",
     ],
 )
 
@@ -37,8 +37,8 @@ py_library(
 )
 
 py_test(
-    name = "test_reader",
-    srcs = ["test_reader.py"],
+    name = "reader_test",
+    srcs = ["reader_test.py"],
     python_version = "PY3",
     srcs_version = "PY3",
     visibility = ["//visibility:public"],

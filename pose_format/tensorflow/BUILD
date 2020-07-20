@@ -6,7 +6,7 @@ py_library(
     srcs_version = "PY3",
     visibility = ["//visibility:public"],
     deps = [
-        "//third_party/py/pose_format:pose_representation",
+        "//:pose_representation",
         "//third_party/py/tensorflow",
     ],
 )
@@ -20,13 +20,13 @@ py_test(
     deps = [
         ":pose_representation",
         "//testing/pybase",
-        "//third_party/py/pose_format:pose_header",
-        "//third_party/py/pose_format:pose_representation",
-        "//third_party/py/pose_format/tensorflow/representation:angle",
-        "//third_party/py/pose_format/tensorflow/representation:distance",
-        "//third_party/py/pose_format/tensorflow/representation:inner_angle",
-        "//third_party/py/pose_format/tensorflow/representation:point_line_distance",
-        "//third_party/py/pose_format/utils:openpose",
+        "//:pose_header",
+        "//:pose_representation",
+        "//tensorflow/representation:angle",
+        "//tensorflow/representation:distance",
+        "//tensorflow/representation:inner_angle",
+        "//tensorflow/representation:point_line_distance",
+        "//utils:openpose",
         "//third_party/py/tensorflow",
     ],
 )

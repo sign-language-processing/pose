@@ -1,7 +1,7 @@
 import torch
 from typing import List, Union
 
-from .tensor import MaskedTensor
+from pose_format.torch.masked.tensor import MaskedTensor
 
 
 class TorchFallback(type):
@@ -31,20 +31,20 @@ class TorchFallback(type):
 
 class MaskedTorch(metaclass=TorchFallback):
     @staticmethod
-    def cat(tensors: List[Union[MaskedTensor, torch.Tensor]], dim: int):
+    def cat(tensors: List[Union[MaskedTensor, torch.Tensor]], dim: int) ->MaskedTensor:
         tensors: List[MaskedTensor] = [t if isinstance(t, MaskedTensor) else MaskedTensor(tensor=t) for t in tensors]
         tensor = torch.cat([t.tensor for t in tensors], dim=dim)
         mask = torch.cat([t.mask for t in tensors], dim=dim)
         return MaskedTensor(tensor=tensor, mask=mask)
 
     @staticmethod
-    def stack(tensors: List[MaskedTensor], dim: int):
+    def stack(tensors: List[MaskedTensor], dim: int) -> MaskedTensor:
         tensor = torch.stack([t.tensor for t in tensors], dim=dim)
         mask = torch.stack([t.mask for t in tensors], dim=dim)
         return MaskedTensor(tensor=tensor, mask=mask)
 
     @staticmethod
-    def zeros(*size, dtype=None):
+    def zeros(*size, dtype=None) -> MaskedTensor:
         tensor = torch.zeros(*size, dtype=dtype)
         mask = torch.zeros(*size, dtype=torch.bool)
         return MaskedTensor(tensor=tensor, mask=mask)

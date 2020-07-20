@@ -16,49 +16,65 @@ class PoseVisualizer:
 
     def _draw_frame(self, frame: ma.MaskedArray, frame_confidence: np.ndarray,
                     img=np.ndarray) -> np.ndarray:
+        avg_color = np.mean(img, axis=(0,1))
+        print("avg_color", avg_color)
 
         for person, person_confidence in zip(frame, frame_confidence):
             c = person_confidence.tolist()
             idx = 0
             for component in self.pose.header.components:
-                # Draw Points
+                colors = [c[::-1] for c in component.colors]
+
+                def _point_color(p_i: int):
+                    opacity = c[p_i + idx]
+                    np_color = colors[p_i % len(component.colors)] * opacity + (1-opacity) * avg_color
+                    return tuple([int(c) for c in np_color])
+
+
+                    # Draw Points
                 for i in range(len(component.points)):
                     if c[i + idx] > 0:
-                        color = component.colors[i % len(component.colors)] * c[i + idx]
-                        cv2.circle(img=img, center=tuple(person[i + idx]), radius=3, color=color, thickness=-1)
+                        cv2.circle(img=img, center=tuple(person[i + idx]), radius=3,
+                                   color=_point_color(i), thickness=-1)
 
-                # Draw Limbs
-                # TODO
-                # for (p1, p2) in limbs[key]:
-                #     if p1 in joints and p2 in joints:
-                #         point1 = (round(joints[p1]["x"]), round(joints[p1]["y"]))
-                #         point2 = (round(joints[p2]["x"]), round(joints[p2]["y"]))
-                #
-                #         length = ((point1[0] - point2[0]) ** 2 + (point1[1] - point2[1]) ** 2) ** 0.5
-                #
-                #         color = tuple(np.mean([point_color(key, p1), point_color(key, p2)], axis=0))
-                #         if "c" in joints[p1]:
-                #             color = color_opacity(color, (joints[p1]["c"] + joints[p2]["c"]) / 2)
-                #
-                #         deg = math.degrees(math.atan2(point1[1] - point2[1], point1[0] - point2[0]))
-                #         polygon = cv2.ellipse2Poly((int((point1[0] + point2[0]) / 2), int((point1[1] + point2[1]) / 2)),
-                #                                    (int(length / 2), 3),
-                #                                    int(deg),
-                #                                    0, 360, 1)
-                #         cv2.fillConvexPoly(image, polygon, color=color)
+                if self.pose.header.is_bbox:
+                    point1 = tuple(person[0 + idx].tolist())
+                    point2 = tuple(person[1 + idx].tolist())
+                    color = tuple(np.mean([_point_color(0), _point_color(1)], axis=0))
+
+                    cv2.rectangle(img=img, pt1=point1, pt2=point2, color=color, thickness=2)
+                else:
+                    int_person = person.astype(np.int32)
+                    # Draw Limbs
+                    for (p1, p2) in component.limbs:
+                        if c[p1 + idx] > 0 and c[p2 + idx] > 0:
+                            point1 = tuple(int_person[p1 + idx].tolist())
+                            point2 = tuple(int_person[p2 + idx].tolist())
+
+                            length = ((point1[0] - point2[0]) ** 2 + (point1[1] - point2[1]) ** 2) ** 0.5
+
+                            color = tuple(np.mean([_point_color(p1), _point_color(p2)], axis=0))
+
+                            deg = math.degrees(math.atan2(point1[1] - point2[1], point1[0] - point2[0]))
+                            polygon = cv2.ellipse2Poly(
+                                (int((point1[0] + point2[0]) / 2), int((point1[1] + point2[1]) / 2)),
+                                (int(length / 2), 3),
+                                int(deg),
+                                0, 360, 1)
+                            cv2.fillConvexPoly(img=img, points=polygon, color=color)
 
                 idx += len(component.points)
 
         return img
 
-    def draw(self, background: Tuple[int, int, int] = (255, 255, 255), max_frames: int = math.inf):
+    def draw(self, background: Tuple[int, int, int] = (255, 255, 255), max_frames: int = None):
         int_data = np.array(np.around(self.pose.body.data.data), dtype="int32")
         for frame, confidence in itertools.islice(zip(int_data, self.pose.body.confidence), max_frames):
             background = np.full((self.pose.header.dimensions.height, self.pose.header.dimensions.width, 3), background,
                                  dtype="uint8")
             yield self._draw_frame(frame, confidence, background)
 
-    def draw_on_video(self, background_video: str, max_frames: int = None):
+    def draw_on_video(self, background_video: str, max_frames: int = None, blur=False):
         int_data = np.array(np.around(self.pose.body.data.data), dtype="int32")
 
         if max_frames is None:
@@ -68,6 +84,10 @@ class PoseVisualizer:
         for frame, confidence in itertools.islice(zip(int_data, self.pose.body.confidence), max_frames):
             _, background = cap.read()
             background = cv2.resize(background, (self.pose.header.dimensions.width, self.pose.header.dimensions.height))
+
+            if blur:
+                background = cv2.blur(background, (20, 20))
+
             yield self._draw_frame(frame, confidence, background)
         cap.release()
 

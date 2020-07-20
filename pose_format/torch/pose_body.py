@@ -29,7 +29,7 @@ class TorchPoseBody(PoseBody):
 
     def matmul(self, matrix: np.ndarray):
         data = self.data.matmul(torch.from_numpy(matrix))
-        return TorchPoseBody(fps=self.fps, data=data, confidence=self.confidence)
+        return self.__class__(fps=self.fps, data=data, confidence=self.confidence)
 
     def points_perspective(self):
         return self.data.permute(POINTS_DIMS)
@@ -42,7 +42,7 @@ class TorchPoseBody(PoseBody):
         confidence = self.confidence.permute(confidence_reshape)
         new_confidence = confidence[indexes].permute(confidence_reshape)
 
-        return TorchPoseBody(self.fps, new_data, new_confidence)
+        return self.__class__(self.fps, new_data, new_confidence)
 
     def flatten(self):
         shape = self.data.shape

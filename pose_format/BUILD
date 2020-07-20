@@ -13,9 +13,9 @@ py_library(
         ":pose_body",
         ":pose_header",
         "//third_party/py/numpy",
-        "//third_party/py/pose_format/numpy:pose_body",
-        "//third_party/py/pose_format/utils:fast_math",
-        "//third_party/py/pose_format/utils:reader",
+        "//numpy:pose_body",
+        "//utils:fast_math",
+        "//utils:reader",
     ],
 )
 
@@ -27,7 +27,7 @@ py_library(
     deps = [
         ":pose_header",
         "//third_party/py/numpy",
-        "//third_party/py/pose_format/utils:reader",
+        "//utils:reader",
     ],
 )
 
@@ -37,7 +37,7 @@ py_library(
     srcs_version = "PY3",
     visibility = ["//visibility:public"],
     deps = [
-        "//third_party/py/pose_format/utils:reader",
+        "//utils:reader",
     ],
 )
 

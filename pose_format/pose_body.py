@@ -2,8 +2,8 @@ from random import sample
 from typing import List, Tuple, BinaryIO
 
 import numpy as np
-from .utils.reader import BufferReader, ConstStructs
-from .pose_header import PoseHeader
+from pose_format.utils.reader import BufferReader, ConstStructs
+from pose_format.pose_header import PoseHeader
 
 POINTS_DIMS = (2, 1, 0, 3)
 
@@ -32,9 +32,6 @@ class PoseBody:
     @classmethod
     def read_v0_1(cls, header: PoseHeader, reader: BufferReader):
         fps, _frames = reader.unpack(ConstStructs.double_ushort)
-
-        _dims = max([len(c.format) for c in header.components]) - 1
-        _points = sum([len(c.points) for c in header.components])
 
         _people = reader.unpack(ConstStructs.ushort)
         _points = sum([len(c.points) for c in header.components])
@@ -105,6 +102,37 @@ class PoseBody:
 
         return self.__class__(fps=self.fps / by, data=new_data, confidence=new_confidence)
 
+    def augment2d(self, rotation_std=0.2, shear_std=0.2, scale_std=0.2):
+        """
+        :param rotation_std: Rotation in radians
+        :param shear_std: Shear X in percent
+        :param scale_std: Scale X in percent
+        :return:
+        """
+        matrix = np.eye(2)
+
+        # Based on https://en.wikipedia.org/wiki/Shear_matrix
+        if shear_std > 0:
+            shear_matrix = np.eye(2)
+            shear_matrix[0][1] = np.random.normal(loc=0, scale=shear_std, size=1)[0]
+            matrix = np.dot(matrix, shear_matrix)
+
+        # Based on https://en.wikipedia.org/wiki/Rotation_matrix
+        if rotation_std > 0:
+            rotation_angle = np.random.normal(loc=0, scale=rotation_std, size=1)[0]
+            rotation_cos = np.cos(rotation_angle)
+            rotation_sin = np.sin(rotation_angle)
+            rotation_matrix = np.array([[rotation_cos, -rotation_sin], [rotation_sin, rotation_cos]])
+            matrix = np.dot(matrix, rotation_matrix)
+
+        # Based on https://en.wikipedia.org/wiki/Scaling_(geometry)
+        if scale_std > 0:
+            scale_matrix = np.eye(2)
+            scale_matrix[0][0] += np.random.normal(loc=0, scale=scale_std, size=1)[0]
+            matrix = np.dot(matrix, scale_matrix)
+
+        return self.matmul(matrix.astype(dtype=np.float32))
+
     def zero_filled(self) -> __qualname__:
         raise NotImplementedError("'zero_filled' not implemented on '%s'" % self.__class__)
 
@@ -122,7 +150,7 @@ class PoseBody:
     def frame_dropout(self, dropout_std: float) -> Tuple["PoseBody", List[int]]:
         dropout_percent = np.abs(np.random.normal(loc=0, scale=dropout_std, size=1))[0]
         data_len = len(self.data)
-        dropout_number = min(int(data_len * dropout_percent), data_len - 1)
+        dropout_number = min(int(data_len * dropout_percent), int(data_len * 0.99))
         dropout_indexes = set(sample(range(0, data_len), dropout_number))
         select_indexes = [i for i in range(0, data_len) if i not in dropout_indexes]
         return self.select_frames(select_indexes), select_indexes

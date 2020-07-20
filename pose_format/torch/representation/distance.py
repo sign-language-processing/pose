@@ -1,8 +1,8 @@
 import torch
 from torch import nn
 
-from ..masked.tensor import MaskedTensor
-from ..masked.torch import MaskedTorch
+from pose_format.torch.masked.tensor import MaskedTensor
+from pose_format.torch.masked.torch import MaskedTorch
 
 
 class DistanceRepresentation(nn.Module):

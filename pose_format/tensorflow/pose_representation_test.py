@@ -1,17 +1,14 @@
 from unittest import TestCase
-import os
-
-os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
 
 import tensorflow as tf
 
-from .pose_representation import TensorflowPoseRepresentation
-from .representation.angle import AngleRepresentation
-from .representation.distance import DistanceRepresentation
-from .representation.inner_angle import InnerAngleRepresentation
-from .representation.point_line_distance import PointLineDistanceRepresentation
-from ..pose_header import PoseHeaderDimensions, PoseHeader
-from ..utils.openpose import OpenPose_Hand_Component
+from pose_format.tensorflow.pose_representation import TensorflowPoseRepresentation
+from pose_format.tensorflow.representation.angle import AngleRepresentation
+from pose_format.tensorflow.representation.distance import DistanceRepresentation
+from pose_format.tensorflow.representation.inner_angle import InnerAngleRepresentation
+from pose_format.tensorflow.representation.point_line_distance import PointLineDistanceRepresentation
+from pose_format.pose_header import PoseHeaderDimensions, PoseHeader
+from pose_format.utils.openpose import OpenPose_Hand_Component
 
 dimensions = PoseHeaderDimensions(width=0, height=0, depth=0)
 components = [OpenPose_Hand_Component("hand_left_keypoints_2d")]
@@ -23,6 +20,7 @@ representation = TensorflowPoseRepresentation(
     rep_modules2=[AngleRepresentation(), DistanceRepresentation()],
     rep_modules3=[InnerAngleRepresentation(), PointLineDistanceRepresentation()]
 )
+
 
 class TestTensorflowPoseRepresentation(TestCase):
     def test_input_size(self):

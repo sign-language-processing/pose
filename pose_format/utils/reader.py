@@ -4,15 +4,6 @@ import numpy as np
 from dataclasses import dataclass
 from tqdm import tqdm
 
-try:
-    import tensorflow as tf
-except ImportError:
-    print("Failed to import tensorflow")
-
-try:
-    import torch
-except ImportError:
-    print("Failed to import torch")
 
 
 @dataclass
@@ -47,10 +38,14 @@ class BufferReader:
         return arr
 
     def unpack_torch(self, s: struct.Struct, shape: Tuple):
+        import torch
+
         arr = self.unpack_numpy(s, shape)  # Array is not writable
         return torch.from_numpy(np.array(arr))
 
     def unpack_tensorflow(self, s: struct.Struct, shape: Tuple):
+        import tensorflow as tf
+
         arr = self.unpack_numpy(s, shape)
         return tf.constant(arr)
 

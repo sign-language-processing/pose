@@ -5,7 +5,7 @@ import torch
 import os
 os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
 import tensorflow as tf
-from .reader import BufferReader, ConstStructs
+from pose_format.utils.reader import BufferReader, ConstStructs
 
 
 class TestBufferReader(TestCase):

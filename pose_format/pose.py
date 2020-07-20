@@ -1,14 +1,14 @@
 import inspect
 from typing import List, BinaryIO
 
-from .pose_body import PoseBody
-from .pose_header import PoseHeader, PoseHeaderDimensions, PoseNormalizationInfo
-from .utils.reader import BufferReader
+from pose_format.pose_body import PoseBody
+from pose_format.pose_header import PoseHeader, PoseHeaderDimensions, PoseNormalizationInfo
+from pose_format.utils.reader import BufferReader
 
 import numpy as np
 import numpy.ma as ma
 
-from .utils.fast_math import distance_batch
+from pose_format.utils.fast_math import distance_batch
 
 
 class Pose:
@@ -78,41 +78,11 @@ class Pose:
 
         self.body.data = ma.array(self.body.data, mask=mask)
 
+        return self
+
     def frame_dropout(self, dropout_std=0.1):
         body, selected_indexes = self.body.frame_dropout(dropout_std=dropout_std)
         return Pose(header=self.header, body=body), selected_indexes
-
-    def augment2d(self, rotation_std=0.2, shear_std=0.2, scale_std=0.2):
-        """
-        :param rotation_std: Rotation in radians
-        :param shear_std: Shear X in percent
-        :param scale_std: Scale X in percent
-        :return:
-        """
-        matrix = np.eye(2)
-
-        # Based on https://en.wikipedia.org/wiki/Shear_matrix
-        if shear_std > 0:
-            shear_matrix = np.eye(2)
-            shear_matrix[0][1] = np.random.normal(loc=0, scale=shear_std, size=1)[0]
-            matrix = np.dot(matrix, shear_matrix)
-
-        # Based on https://en.wikipedia.org/wiki/Rotation_matrix
-        if rotation_std > 0:
-            rotation_angle = np.random.normal(loc=0, scale=rotation_std, size=1)[0]
-            rotation_cos = np.cos(rotation_angle)
-            rotation_sin = np.sin(rotation_angle)
-            rotation_matrix = np.array([[rotation_cos, -rotation_sin], [rotation_sin, rotation_cos]])
-            matrix = np.dot(matrix, rotation_matrix)
-
-        # Based on https://en.wikipedia.org/wiki/Scaling_(geometry)
-        if scale_std > 0:
-            scale_matrix = np.eye(2)
-            scale_matrix[0][0] += np.random.normal(loc=0, scale=scale_std, size=1)[0]
-            matrix = np.dot(matrix, scale_matrix)
-
-        body = self.body.matmul(matrix.astype(dtype=np.float32))
-        return Pose(header=self.header, body=body)
 
     def get_components(self, components: List[str]):
         indexes = []
@@ -131,14 +101,15 @@ class Pose:
         return Pose(header=new_header, body=new_body)
 
     def bbox(self):
+        body = self.body.bbox(self.header)
         header = self.header.bbox()
-        body = self.body.bbox(header)
         return Pose(header=header, body=body)
 
     pass_through_methods = {
+        "augment2d",  # Augment 2D points
         "interpolate",  # Interpolate missing pose points
         "torch",  # Convert body to torch
-        # "bbox",  # Replace every component with its bounding box
+        "tensorflow",  # Convert body to tensorflow
         "slice_step",  # Step through the data
     }
 

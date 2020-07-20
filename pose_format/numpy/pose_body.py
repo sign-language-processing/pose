@@ -1,11 +1,9 @@
 from typing import BinaryIO, List, Union
 
-import torch
 from ..pose_body import PoseBody, POINTS_DIMS
 from scipy.interpolate import interp1d
 
 from ..pose_header import PoseHeader
-from ..torch.pose_body import TorchPoseBody
 from ..utils.reader import BufferReader, ConstStructs
 import numpy as np
 import numpy.ma as ma
@@ -72,18 +70,28 @@ class NumPyPoseBody(PoseBody):
         _frames = _frames if _frames < 65535 else 0  # TODO change from short to int
         buffer.write(ConstStructs.triple_ushort.pack(self.fps, _frames, _people))
 
-        buffer.write(self.data.data.tobytes())
-        buffer.write(self.confidence.tobytes())
+        buffer.write(self.data.data.astype(np.float32).tobytes())
+        buffer.write(self.confidence.astype(np.float32).tobytes())
 
     @property
     def mask(self):
         return self.data.mask
 
     def torch(self):
+        import torch
+        from ..torch.pose_body import TorchPoseBody
+
         torch_confidence = torch.from_numpy(self.confidence)
         torch_data = torch.from_numpy(self.data.data)
-
         return TorchPoseBody(self.fps, torch_data, torch_confidence)
+
+    def tensorflow(self):
+        import tensorflow
+        from ..tensorflow.pose_body import TensorflowPoseBody
+
+        tf_confidence = tensorflow.constant(self.confidence)
+        tf_data = tensorflow.constant(self.data.data)
+        return TensorflowPoseBody(self.fps, tf_data, tf_confidence)
 
     def zero_filled(self):
         self.data = self.data.filled(0)

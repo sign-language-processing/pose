@@ -7,7 +7,7 @@ from pose_format.torch.masked.torch import MaskedTorch
 
 class DistanceRepresentation(nn.Module):
     def distance(self, p1s: MaskedTensor, p2s: MaskedTensor) -> MaskedTensor:
-        diff = p1s - p2s  # (Points, Batch, Len, Dims)
+        diff = p1s - p2s  # (..., Len, Dims)
         square = diff.pow_(2)
         sum_squares = square.sum(dim=-1)
         return MaskedTorch.sqrt(sum_squares)

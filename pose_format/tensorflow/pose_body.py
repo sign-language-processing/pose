@@ -3,7 +3,7 @@ from typing import Union, List
 import tensorflow as tf
 import numpy as np
 
-from ..pose_body import PoseBody
+from ..pose_body import PoseBody, POINTS_DIMS
 from .masked.tensor import MaskedTensor
 
 TF_POSE_RECORD_DESCRIPTION = {
@@ -28,12 +28,35 @@ class TensorflowPoseBody(PoseBody):
         return self
 
     def select_frames(self, frame_indexes: List[int]):
-        data = self.data[frame_indexes]
+        data = self.data.gather(frame_indexes)
         confidence = tf.gather(self.confidence, frame_indexes)
         return self.__class__(fps=self.fps, data=data, confidence=confidence)
 
+    def frame_dropout(self, dropout_std: float):
+        data_len = tf.cast(tf.shape(self.data.tensor)[0], dtype=tf.float32)
+
+        select_percent = tf.random.uniform([1], minval=0.2, maxval=1)[0]
+        number_sample = tf.cast(tf.round(data_len * select_percent), dtype=tf.int32)
+
+        idxs = tf.range(data_len - 1, dtype=tf.int32)
+        select_indexes = tf.sort(tf.random.shuffle(idxs)[:number_sample])
+        select_indexes = tf.cast(select_indexes, dtype=tf.int32)
+
+        return self.select_frames(select_indexes), select_indexes
+
+    def get_points(self, indexes: List[int]):
+        data = self.data.transpose(perm=POINTS_DIMS)
+        new_data = data[indexes].transpose(perm=POINTS_DIMS)
+
+        confidence_reshape = [2, 1, 0]
+        confidence = tf.transpose(self.confidence, perm=confidence_reshape)
+        new_confidence = tf.transpose(tf.gather(confidence, indexes), perm=confidence_reshape)
+
+        return TensorflowPoseBody(self.fps, new_data, new_confidence)
+
     def matmul(self, matrix: np.ndarray) -> __qualname__:
-        data = self.data.matmul(tf.convert_to_tensor(matrix))
+        matrix = tf.convert_to_tensor(matrix, dtype=self.data.dtype)
+        data = self.data.matmul(matrix)
         return self.__class__(fps=self.fps, data=data, confidence=self.confidence)
 
     def as_tfrecord(self):
@@ -48,8 +71,7 @@ class TensorflowPoseBody(PoseBody):
 
     @classmethod
     def from_tfrecord(cls, tfrecord_dict: dict):
-        fps = tfrecord_dict['fps'].numpy()
+        fps = tf.cast(tfrecord_dict['fps'], dtype=tf.float32)
         data = tf.io.parse_tensor(tfrecord_dict['pose_data'], out_type=tf.float32)
         confidence = tf.io.parse_tensor(tfrecord_dict['pose_confidence'], out_type=tf.float32)
         return cls(fps=fps, data=data, confidence=confidence)
-

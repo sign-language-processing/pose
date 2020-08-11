@@ -73,7 +73,7 @@ class MaskedTensor:
         return MaskedTensor(tensor=tensor, mask=mask)
 
     def zero_filled(self) -> torch.Tensor:
-        return self.tensor.mul_(self.mask)  # In place multiplication
+        return self.tensor.mul(self.mask)
 
     def div(self, other: "MaskedTensor", in_place=False, update_mask=True):
         tensor = torch.div(self.tensor, other.tensor, out=self.tensor if in_place else None)

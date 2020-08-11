@@ -6,10 +6,10 @@ from torch import nn
 
 def get_vectors_norm(vectors: MaskedTensor):
     square = MaskedTorch.square(vectors)
-    summed = square.sum(dim=3)
+    summed = square.sum(dim=-1)
     v_mag = MaskedTorch.sqrt(summed)
-    v_norm = vectors / v_mag
-    return v_norm
+    v_norm = vectors.transpose(0, -1).div(v_mag)
+    return v_norm.transpose(0, -1)
 
 
 class InnerAngleRepresentation(nn.Module):
@@ -28,7 +28,7 @@ class InnerAngleRepresentation(nn.Module):
         v1_norm = get_vectors_norm(v1)
         v2_norm = get_vectors_norm(v2)
 
-        slopes = (v1_norm * v2_norm).sum(dim=3)
+        slopes = (v1_norm * v2_norm).sum(dim=-1)
         angles = MaskedTorch.acos(slopes)
 
         angles = angles.zero_filled()

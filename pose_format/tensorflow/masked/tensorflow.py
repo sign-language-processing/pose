@@ -48,3 +48,4 @@ class MaskedTensorflow(metaclass=TensorflowFallback):
         tensor = tensorflow.zeros(size, dtype=dtype)
         mask = tensorflow.zeros(size, dtype=tensorflow.bool)
         return MaskedTensor(tensor=tensor, mask=mask)
+

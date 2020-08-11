@@ -1,3 +1,5 @@
+from typing import List
+
 import tensorflow as tf
 
 
@@ -83,13 +85,9 @@ class MaskedTensor:
 
     def matmul(self, matrix: tf.Tensor):
         tensor = tf.matmul(self.tensor, matrix)
-        return MaskedTensor(tensor, self.mask)
+        return MaskedTensor(tensor=tensor, mask=self.mask)
 
-    def transpose(self, dim0, dim1):
-        perm = list(range(len(self.tensor.shape)))
-        perm[dim0] = dim1
-        perm[dim1] = dim0
-
+    def transpose(self, perm: List[int]):
         tensor = tf.transpose(self.tensor, perm=perm)
         mask = tf.transpose(self.mask, perm=perm)
         return MaskedTensor(tensor=tensor, mask=mask)
@@ -112,6 +110,11 @@ class MaskedTensor:
     def reshape(self, shape: tuple):
         tensor = self.tensor.reshape(shape=shape)
         mask = self.mask.reshape(shape=shape)
+        return MaskedTensor(tensor=tensor, mask=mask)
+
+    def gather(self, indexes):
+        tensor = tf.gather(self.tensor, indexes)
+        mask = tf.gather(self.mask, indexes)
         return MaskedTensor(tensor=tensor, mask=mask)
 
     def rename(self, *names):

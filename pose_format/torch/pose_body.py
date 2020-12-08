@@ -1,12 +1,12 @@
 from typing import List, Union
 
-import torch
 import numpy as np
+import torch
 
-from ..pose_header import PoseHeader
-from ..pose_body import PoseBody, POINTS_DIMS
-from ..utils.reader import BufferReader
 from .masked.tensor import MaskedTensor
+from ..pose_body import PoseBody, POINTS_DIMS
+from ..pose_header import PoseHeader
+from ..utils.reader import BufferReader
 
 
 class TorchPoseBody(PoseBody):

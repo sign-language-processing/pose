@@ -11,6 +11,9 @@ The main idea is having a `header` with instructions on how many points exists, 
 The binary spec can be found in [format/spec.md](format/spec.md).
 
 ### Python Usage
+```bash
+pip install pose-format
+```
 
 To load a `.pose` file, use the `PoseReader` class:
 ```python
@@ -20,16 +23,22 @@ p = Pose.read(buffer)
 By default, it uses NumPy for the data, but you can also use `torch` and `tensorflow` by writing:
 ```python
 p = Pose.read(buffer, TorchPoseBody)
+p = Pose.read(buffer, TensorflowPoseBody)
+```
+
+To load an OpenPose `directory`, use the `openpose` utility:
+```python
+p = load_openpose_directory(directory, fps=24, width=1000, height=1000)
 ```
 
 #### Data Normalization
 To normalize all of the data to be in the same scale, we can normalize every pose by a constant feature of their body.
 For example, for people we can use the the average span of their shoulders throughout the video to be a constant width.
 ```python
-p.normalize(
-    dist_p1=("pose_keypoints_2d", 2),  # RShoulder
-    dist_p2=("pose_keypoints_2d", 5),  # LShoulder
-)
+p.normalize(p.header.normalization_info(
+    p1=("pose_keypoints_2d", "RShoulder"),
+    p2=("pose_keypoints_2d", "LShoulder")
+))
 ```
 
 #### Data Augmentation
@@ -47,10 +56,6 @@ p.interpolate_fps(24, kind='linear')
 ### Testing
 Use bazel to run tests
 ```sh
+cd pose_format
 bazel test ... --test_output=errors
-```
-
-#### Local install
-```bash
-pip install -e /home/nlp/amit/PhD/PoseFormat/
 ```

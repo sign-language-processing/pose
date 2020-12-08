@@ -1,6 +1,6 @@
 import tensorflow as tf
-from .distance import DistanceRepresentation
 
+from .distance import DistanceRepresentation
 
 
 class PointLineDistanceRepresentation:

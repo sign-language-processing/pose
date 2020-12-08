@@ -3,8 +3,8 @@ from typing import Tuple, Iterator
 
 import cv2
 import math
-import numpy.ma as ma
 import numpy as np
+import numpy.ma as ma
 from tqdm import tqdm
 
 from .pose import Pose
@@ -14,24 +14,22 @@ class PoseVisualizer:
     def __init__(self, pose: Pose):
         self.pose = pose
 
-    def _draw_frame(self, frame: ma.MaskedArray, frame_confidence: np.ndarray,
-                    img=np.ndarray) -> np.ndarray:
-        avg_color = np.mean(img, axis=(0,1))
-        print("avg_color", avg_color)
+    def _draw_frame(self, frame: ma.MaskedArray, frame_confidence: np.ndarray, img) -> np.ndarray:
+        avg_color = np.mean(img, axis=(0, 1))
+        # print("avg_color", avg_color)
 
         for person, person_confidence in zip(frame, frame_confidence):
             c = person_confidence.tolist()
             idx = 0
             for component in self.pose.header.components:
-                colors = [c[::-1] for c in component.colors]
+                colors = [np.array(c[::-1]) for c in component.colors]
 
                 def _point_color(p_i: int):
                     opacity = c[p_i + idx]
-                    np_color = colors[p_i % len(component.colors)] * opacity + (1-opacity) * avg_color
+                    np_color = colors[p_i % len(component.colors)] * opacity + (1 - opacity) * avg_color
                     return tuple([int(c) for c in np_color])
 
-
-                    # Draw Points
+                # Draw Points
                 for i in range(len(component.points)):
                     if c[i + idx] > 0:
                         cv2.circle(img=img, center=tuple(person[i + idx]), radius=3,
@@ -67,12 +65,13 @@ class PoseVisualizer:
 
         return img
 
-    def draw(self, background: Tuple[int, int, int] = (255, 255, 255), max_frames: int = None):
+    def draw(self, background_color: Tuple[int, int, int] = (255, 255, 255), max_frames: int = None):
         int_data = np.array(np.around(self.pose.body.data.data), dtype="int32")
         for frame, confidence in itertools.islice(zip(int_data, self.pose.body.confidence), max_frames):
-            background = np.full((self.pose.header.dimensions.height, self.pose.header.dimensions.width, 3), background,
+            background = np.full((self.pose.header.dimensions.height, self.pose.header.dimensions.width, 3),
+                                 fill_value=background_color,
                                  dtype="uint8")
-            yield self._draw_frame(frame, confidence, background)
+            yield self._draw_frame(frame, confidence, img=background)
 
     def draw_on_video(self, background_video: str, max_frames: int = None, blur=False):
         int_data = np.array(np.around(self.pose.body.data.data), dtype="int32")
@@ -95,7 +94,6 @@ class PoseVisualizer:
         cv2.imwrite(f_name, frame)
 
     def save_video(self, f_name: str, frames: Iterator):
-        print("out f", f_name)
         image_size = (self.pose.header.dimensions.width, self.pose.header.dimensions.height)
         out = cv2.VideoWriter(f_name, cv2.VideoWriter_fourcc(*'MP4V'), self.pose.body.fps, image_size)
         for frame in tqdm(frames):

@@ -1,9 +1,9 @@
 import torch
 from torch import nn
 
+from .distance import DistanceRepresentation
 from ..masked.tensor import MaskedTensor
 from ..masked.torch import MaskedTorch
-from .distance import DistanceRepresentation
 
 
 class PointLineDistanceRepresentation(nn.Module):
@@ -24,7 +24,7 @@ class PointLineDistanceRepresentation(nn.Module):
         b = self.distance.distance(p2s, p3s)
         c = self.distance.distance(p1s, p3s)
         s: MaskedTensor = (a + b + c) / 2
-        squared = s * (s-a) * (s-b) * (s-c)
+        squared = s * (s - a) * (s - b) * (s - c)
         area = MaskedTorch.sqrt(squared)
 
         # Calc "height" of the triangle

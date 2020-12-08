@@ -3,8 +3,8 @@ from unittest import TestCase
 import math
 import torch
 
-from pose_format.torch.representation.point_line_distance import PointLineDistanceRepresentation
 from pose_format.torch.masked.tensor import MaskedTensor
+from pose_format.torch.representation.point_line_distance import PointLineDistanceRepresentation
 
 representation = PointLineDistanceRepresentation()
 

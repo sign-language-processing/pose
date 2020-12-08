@@ -2,12 +2,12 @@ from unittest import TestCase
 
 import tensorflow as tf
 
+from pose_format.pose_header import PoseHeaderDimensions, PoseHeader
 from pose_format.tensorflow.pose_representation import TensorflowPoseRepresentation
 from pose_format.tensorflow.representation.angle import AngleRepresentation
 from pose_format.tensorflow.representation.distance import DistanceRepresentation
 from pose_format.tensorflow.representation.inner_angle import InnerAngleRepresentation
 from pose_format.tensorflow.representation.point_line_distance import PointLineDistanceRepresentation
-from pose_format.pose_header import PoseHeaderDimensions, PoseHeader
 from pose_format.utils.openpose import OpenPose_Hand_Component
 
 dimensions = PoseHeaderDimensions(width=0, height=0, depth=0)

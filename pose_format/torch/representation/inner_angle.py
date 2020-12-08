@@ -1,7 +1,8 @@
 import torch
+from torch import nn
+
 from ..masked.tensor import MaskedTensor
 from ..masked.torch import MaskedTorch
-from torch import nn
 
 
 def get_vectors_norm(vectors: MaskedTensor):

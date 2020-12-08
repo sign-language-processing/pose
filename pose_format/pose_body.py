@@ -2,8 +2,9 @@ from random import sample
 from typing import List, Tuple, BinaryIO
 
 import numpy as np
-from pose_format.utils.reader import BufferReader, ConstStructs
+
 from pose_format.pose_header import PoseHeader
+from pose_format.utils.reader import BufferReader, ConstStructs
 
 POINTS_DIMS = (2, 1, 0, 3)
 
@@ -154,3 +155,4 @@ class PoseBody:
         dropout_indexes = set(sample(range(0, data_len), dropout_number))
         select_indexes = [i for i in range(0, data_len) if i not in dropout_indexes]
         return self.select_frames(select_indexes), select_indexes
+

@@ -1,6 +1,7 @@
 import torch
-from ..masked.tensor import MaskedTensor
 from torch import nn
+
+from ..masked.tensor import MaskedTensor
 
 
 class AngleRepresentation(nn.Module):

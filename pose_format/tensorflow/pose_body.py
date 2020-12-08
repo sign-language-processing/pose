@@ -1,10 +1,10 @@
 from typing import Union, List
 
-import tensorflow as tf
 import numpy as np
+import tensorflow as tf
 
-from ..pose_body import PoseBody, POINTS_DIMS
 from .masked.tensor import MaskedTensor
+from ..pose_body import PoseBody, POINTS_DIMS
 
 TF_POSE_RECORD_DESCRIPTION = {
     'fps': tf.io.FixedLenFeature([], tf.int64, default_value=0),

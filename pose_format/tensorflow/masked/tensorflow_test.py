@@ -1,6 +1,7 @@
 from unittest import TestCase
 
 import tensorflow as tf
+
 from pose_format.tensorflow.masked.tensor import MaskedTensor
 from pose_format.tensorflow.masked.tensorflow import MaskedTensorflow
 

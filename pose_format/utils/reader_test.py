@@ -1,8 +1,10 @@
+import os
 import struct
 from unittest import TestCase
+
 import numpy as np
 import torch
-import os
+
 os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
 import tensorflow as tf
 from pose_format.utils.reader import BufferReader, ConstStructs
@@ -65,6 +67,5 @@ class TestBufferReader(TestCase):
         arr = reader.unpack_tensorflow(ConstStructs.float, (2, 2))
 
         res = tf.constant([[1., 2.5], [3.5, 4.5]])
-        self.assertTrue(tf.reduce_all(tf.equal(arr, res)), msg="Tensorflow unpacked array is not equal to expected array")
-
-
+        self.assertTrue(tf.reduce_all(tf.equal(arr, res)),
+                        msg="Tensorflow unpacked array is not equal to expected array")

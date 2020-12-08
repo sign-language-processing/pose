@@ -1,14 +1,13 @@
-import inspect
 from typing import List, BinaryIO
-
-from pose_format.pose_body import PoseBody
-from pose_format.pose_header import PoseHeader, PoseHeaderDimensions, PoseNormalizationInfo
-from pose_format.utils.reader import BufferReader
 
 import numpy as np
 import numpy.ma as ma
 
+from pose_format.numpy import NumPyPoseBody
+from pose_format.pose_body import PoseBody
+from pose_format.pose_header import PoseHeader, PoseHeaderDimensions, PoseNormalizationInfo
 from pose_format.utils.fast_math import distance_batch
+from pose_format.utils.reader import BufferReader
 
 
 class Pose:
@@ -23,7 +22,7 @@ class Pose:
         self.body = body
 
     @staticmethod
-    def read(buffer: bytes, pose_body: PoseBody):
+    def read(buffer: bytes, pose_body: PoseBody = NumPyPoseBody):
         reader = BufferReader(buffer)
         header = PoseHeader.read(reader)
         body = pose_body.read(header, reader)
@@ -64,12 +63,11 @@ class Pose:
             p1s = ma.concatenate(p1s)
             p2s = ma.concatenate(p2s)
 
-        # try:
+        # Move all points so center is (0,0)
+        center = np.mean((p2s + p1s) / 2, axis=0)
+        self.body.data -= center
+
         mean_distance = np.mean(distance_batch(p1s, p2s))
-        # except FloatingPointError:
-        #     print(self.body.data)
-        #     print(p1s)
-        #     print(p2s)
 
         scale = scale_factor / mean_distance  # scale all points to dist/scale
 

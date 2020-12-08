@@ -3,8 +3,8 @@ from unittest import TestCase
 import math
 import torch
 
-from pose_format.torch.representation.angle import AngleRepresentation
 from pose_format.torch.masked.tensor import MaskedTensor
+from pose_format.torch.representation.angle import AngleRepresentation
 
 representation = AngleRepresentation()
 
@@ -22,4 +22,3 @@ class TestAngleRepresentation(TestCase):
         p2s = MaskedTensor(torch.tensor([[[[4, 5, 6]]]], dtype=torch.float))
         angles = representation(p1s, p2s)
         self.assertEqual(float(angles[0][0][0]), 0)
-

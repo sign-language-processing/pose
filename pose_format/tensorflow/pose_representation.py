@@ -1,4 +1,5 @@
 from typing import List
+
 import tensorflow as tf
 
 from ..pose_representation import PoseRepresentation

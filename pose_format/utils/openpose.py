@@ -1,11 +1,13 @@
+import json
+import os
 from typing import List, Tuple
 
 import math
 import numpy as np
 from numpy import ma
 
-from ..pose import Pose
 from ..numpy.pose_body import NumPyPoseBody
+from ..pose import Pose
 from ..pose_header import PoseHeader, PoseHeaderDimensions, PoseHeaderComponent
 
 BODY_POINTS = ["Nose", "Neck", "RShoulder", "RElbow", "RWrist", "LShoulder", "LElbow", "LWrist", "MidHip",
@@ -183,3 +185,12 @@ def load_openpose(frames: list, fps: float = 24, width=1000, height=1000, depth=
     body = NumPyPoseBody(fps=int(fps), data=masked_data, confidence=confidence)
 
     return Pose(header, body)
+
+
+def load_openpose_directory(directory: str, fps: float = 24, width=1000, height=1000, depth=0):
+    frames = []
+    for entry in os.scandir(directory):
+        with open(entry.path, "r") as f:
+            frames.append(json.load(f))
+
+    return load_openpose(frames, fps=fps, width=width, height=height, depth=depth)

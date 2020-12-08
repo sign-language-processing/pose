@@ -6,18 +6,18 @@
  */
 
 
-import { HTMLStencilElement, JSXBase } from '@stencil/core/internal';
+import {HTMLStencilElement, JSXBase} from '@stencil/core/internal';
 
 
 export namespace Components {
   interface PoseViewer {
     /**
-    * Allow editing the img
-    */
+     * Allow editing the img
+     */
     'edit': boolean;
     /**
-    * Pose Img Source
-    */
+     * Pose Img Source
+     */
     'src': string;
   }
 }
@@ -25,11 +25,14 @@ export namespace Components {
 declare global {
 
 
-  interface HTMLPoseViewerElement extends Components.PoseViewer, HTMLStencilElement {}
+  interface HTMLPoseViewerElement extends Components.PoseViewer, HTMLStencilElement {
+  }
+
   var HTMLPoseViewerElement: {
     prototype: HTMLPoseViewerElement;
-    new (): HTMLPoseViewerElement;
+    new(): HTMLPoseViewerElement;
   };
+
   interface HTMLElementTagNameMap {
     'pose-viewer': HTMLPoseViewerElement;
   }
@@ -38,12 +41,12 @@ declare global {
 declare namespace LocalJSX {
   interface PoseViewer {
     /**
-    * Allow editing the img
-    */
+     * Allow editing the img
+     */
     'edit'?: boolean;
     /**
-    * Pose Img Source
-    */
+     * Pose Img Source
+     */
     'src'?: string;
   }
 
@@ -52,7 +55,7 @@ declare namespace LocalJSX {
   }
 }
 
-export { LocalJSX as JSX };
+export {LocalJSX as JSX};
 
 
 declare module "@stencil/core" {

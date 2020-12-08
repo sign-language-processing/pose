@@ -1,9 +1,9 @@
 import struct
 from typing import Tuple
+
 import numpy as np
 from dataclasses import dataclass
 from tqdm import tqdm
-
 
 
 @dataclass

@@ -1,13 +1,6 @@
-import {Component, Prop, h, State} from '@stencil/core';
+import {Component, h, Prop, State} from '@stencil/core';
 
-import {
-  Pose,
-  PoseBodyFrameModel,
-  PoseLimb,
-  PoseModel,
-  PosePointModel,
-  RGBColor
-} from "pose-utils";
+import {Pose, PoseBodyFrameModel, PoseLimb, PoseModel, PosePointModel, RGBColor} from "pose-utils";
 
 
 @Component({

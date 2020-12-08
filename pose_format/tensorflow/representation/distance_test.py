@@ -1,7 +1,7 @@
+import os
 from unittest import TestCase
 
 import math
-import os
 
 os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
 

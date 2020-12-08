@@ -1,12 +1,12 @@
 from typing import BinaryIO, List, Union
 
-from ..pose_body import PoseBody, POINTS_DIMS
-from scipy.interpolate import interp1d
-
-from ..pose_header import PoseHeader
-from ..utils.reader import BufferReader, ConstStructs
 import numpy as np
 import numpy.ma as ma
+from scipy.interpolate import interp1d
+
+from ..pose_body import PoseBody, POINTS_DIMS
+from ..pose_header import PoseHeader
+from ..utils.reader import BufferReader, ConstStructs
 
 
 # import numpy as np
@@ -22,7 +22,6 @@ class NumPyPoseBody(PoseBody):
             data = ma.masked_array(data, mask=stacked_mask)
 
         super().__init__(fps, data, confidence)
-
 
     @classmethod
     def read_v0_0(cls, header: PoseHeader, reader: BufferReader):
@@ -70,8 +69,8 @@ class NumPyPoseBody(PoseBody):
         _frames = _frames if _frames < 65535 else 0  # TODO change from short to int
         buffer.write(ConstStructs.triple_ushort.pack(self.fps, _frames, _people))
 
-        buffer.write(self.data.data.astype(np.float32).tobytes())
-        buffer.write(self.confidence.astype(np.float32).tobytes())
+        buffer.write(np.array(self.data.data, dtype=np.float32).tobytes())
+        buffer.write(np.array(self.confidence, dtype=np.float32).tobytes())
 
     @property
     def mask(self):
@@ -126,7 +125,7 @@ class NumPyPoseBody(PoseBody):
 
         boxes = [ma.stack([ma.min(c, axis=0), ma.max(c, axis=0)]) for c in components]
         boxes_cat = ma.concatenate(boxes)
-        if type(boxes_cat.mask) == np.bool_: # Sometimes, it doesn't concatenate the mask...
+        if type(boxes_cat.mask) == np.bool_:  # Sometimes, it doesn't concatenate the mask...
             boxes_mask = ma.concatenate([b.mask for b in boxes])
             boxes_cat = ma.array(boxes_cat, mask=boxes_mask)
 
@@ -138,7 +137,10 @@ class NumPyPoseBody(PoseBody):
 
         return NumPyPoseBody(self.fps, new_data, confidence)
 
-    def interpolate(self, new_fps: int, kind='cubic'):
+    def interpolate(self, new_fps: int = None, kind='cubic'):
+        if new_fps is None:
+            new_fps = self.fps
+
         _frames = self.data.shape[0]
         if _frames == 1:
             raise ValueError("Can't interpolate single frame")

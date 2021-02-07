@@ -18,7 +18,7 @@ class NumPyPoseBody(PoseBody):
     def __init__(self, fps: int, data: Union[ma.MaskedArray, np.ndarray], confidence: np.ndarray):
         if isinstance(data, np.ndarray):  # If array is not masked
             mask = confidence == 0  # 0 means no-mask, 1 means with-mask
-            stacked_mask = np.stack([mask, mask], axis=3)
+            stacked_mask = np.stack([mask] * data.shape[-1], axis=3)
             data = ma.masked_array(data, mask=stacked_mask)
 
         super().__init__(fps, data, confidence)
@@ -98,6 +98,13 @@ class NumPyPoseBody(PoseBody):
 
     def matmul(self, matrix: np.ndarray):
         data = ma.dot(self.data, matrix)
+        return NumPyPoseBody(self.fps, data, self.confidence)
+
+    def flip(self, axis=0):
+        vec = np.ones(self.data.shape[-1])
+        vec[axis] = -1
+
+        data = self.data * vec
         return NumPyPoseBody(self.fps, data, self.confidence)
 
     def points_perspective(self):
@@ -201,11 +208,7 @@ class NumPyPoseBody(PoseBody):
         dimensions, confidence = np.split(new_data, [-1], axis=3)
         confidence = np.squeeze(confidence, axis=3)
 
-        mask = confidence == 0
-        stacked_confidence = np.stack([mask, mask], axis=3)
-        masked_data = ma.masked_array(dimensions, mask=stacked_confidence)
-
-        return NumPyPoseBody(fps=new_fps, data=masked_data, confidence=confidence)
+        return NumPyPoseBody(fps=new_fps, data=dimensions, confidence=confidence)
 
     def flatten(self):
         shape = self.data.shape

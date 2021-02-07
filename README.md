@@ -8,7 +8,7 @@ The format supports any type of poses, arbitrary number of people, and arbitrary
 
 The main idea is having a `header` with instructions on how many points exists, where, and how to connect them.
 
-The binary spec can be found in [format/spec.md](format/spec.md).
+The binary spec can be found in [lib/specs/v0.1.md](lib/specs/v0.1.md).
 
 ### Python Usage
 ```bash

@@ -129,10 +129,14 @@ class PoseBody:
         # Based on https://en.wikipedia.org/wiki/Scaling_(geometry)
         if scale_std > 0:
             scale_matrix = np.eye(2)
-            scale_matrix[0][0] += np.random.normal(loc=0, scale=scale_std, size=1)[0]
+            scale_matrix[1][1] += np.random.normal(loc=0, scale=scale_std, size=1)[0]
             matrix = np.dot(matrix, scale_matrix)
 
-        return self.matmul(matrix.astype(dtype=np.float32))
+        # Cast to matrix the correct size
+        dim_matrix = np.eye(self.data.shape[-1])
+        dim_matrix[0:2,0:2] = matrix
+
+        return self.matmul(dim_matrix.astype(dtype=np.float32))
 
     def zero_filled(self) -> __qualname__:
         raise NotImplementedError("'zero_filled' not implemented on '%s'" % self.__class__)

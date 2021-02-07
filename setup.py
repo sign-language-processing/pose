@@ -5,10 +5,13 @@ from setuptools import setup, find_packages
 with open('README.md', 'r') as fh:
     long_description = fh.read()
 
+packages = [p for p in find_packages() if "tensorflow" not in p and "torch" not in p and "third_party" not in p]
+print(packages)
+
 setup(
     name='pose_format',
-    packages=find_packages(),
-    version='0.0.1',
+    packages=packages,
+    version='0.0.2',
     description='Library for viewing, augmenting, and handling .pose files',
     author='Amit Moryossef',
     author_email='amitmoryossef@gmail.com',

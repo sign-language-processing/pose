@@ -16,8 +16,7 @@ class AngleRepresentation(nn.Module):
 
         d = p2s - p1s  # (Points, Batch, Len, Dims)
         xs, ys = d.split([1] * dims, dim=3)[:2]  # (Points, Batch, Len, 1)
-        slopes = ys.div(xs, in_place=True).zero_filled().squeeze(axis=3)
-        slopes[slopes != slopes] = 0  # Fix NaN, TODO think of faster way
+        slopes = ys.div(xs).fix_nan().zero_filled().squeeze(axis=3)
 
         return torch.atan(slopes)
 

@@ -7,7 +7,7 @@ from pose_format.torch.masked.tensor import MaskedTensor
 
 class TorchFallback(type):
     doesnt_change_mask = {
-        "sqrt", "square",
+        "sqrt", "square", "unsqueeze",
         "cos", "sin", "tan", "acos", "asin", "atan"
     }
 
@@ -48,4 +48,10 @@ class MaskedTorch(metaclass=TorchFallback):
     def zeros(*size, dtype=None) -> MaskedTensor:
         tensor = torch.zeros(*size, dtype=dtype)
         mask = torch.zeros(*size, dtype=torch.bool)
+        return MaskedTensor(tensor=tensor, mask=mask)
+
+    @staticmethod
+    def squeeze(masked_tensor: MaskedTensor) -> MaskedTensor:
+        tensor = torch.squeeze(masked_tensor.tensor)
+        mask = torch.squeeze(masked_tensor.mask)
         return MaskedTensor(tensor=tensor, mask=mask)

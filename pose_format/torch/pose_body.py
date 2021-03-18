@@ -15,7 +15,8 @@ class TorchPoseBody(PoseBody):
     def __init__(self, fps: int, data: Union[MaskedTensor, torch.Tensor], confidence: torch.Tensor):
         if isinstance(data, torch.Tensor):  # If array is not masked
             mask = confidence > 0
-            data = MaskedTensor(data, torch.stack([mask] * 2, dim=3))
+            stacked_mask = torch.stack([mask] * data.shape[-1], dim=3)
+            data = MaskedTensor(data, stacked_mask)
 
         super().__init__(fps, data, confidence)
 

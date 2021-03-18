@@ -65,7 +65,7 @@ class PoseHeaderComponent:
 
 
 class PoseHeaderDimensions:
-    def __init__(self, width: int, height: int, depth: int = 0):
+    def __init__(self, width: int, height: int, depth: int = 0, *args):
         self.width = math.ceil(width)
         self.height = math.ceil(height)
         self.depth = math.ceil(depth)

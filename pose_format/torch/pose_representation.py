@@ -8,7 +8,7 @@ from ..pose_representation import PoseRepresentation
 
 class TorchPoseRepresentation(PoseRepresentation):
     def __init__(self, header: PoseHeader, rep_modules1: List = [], rep_modules2: List = [], rep_modules3: List = []):
-        super(TorchPoseRepresentation).__init__(header, rep_modules1, rep_modules2, rep_modules3)
+        super(TorchPoseRepresentation, self).__init__(header, rep_modules1, rep_modules2, rep_modules3)
 
         # Change limb points to torch
         self.limb_pt1s = torch.tensor(self.limb_pt1s, dtype=torch.long)

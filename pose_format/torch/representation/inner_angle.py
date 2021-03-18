@@ -9,8 +9,8 @@ def get_vectors_norm(vectors: MaskedTensor):
     square = MaskedTorch.square(vectors)
     summed = square.sum(dim=-1)
     v_mag = MaskedTorch.sqrt(summed)
-    v_norm = vectors.transpose(0, -1).div(v_mag)
-    return v_norm.transpose(0, -1)
+    mag_stack = MaskedTorch.stack([v_mag] * vectors.shape[-1], dim=-1)
+    return vectors.div(mag_stack)
 
 
 class InnerAngleRepresentation(nn.Module):

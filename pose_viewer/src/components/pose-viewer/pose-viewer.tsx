@@ -23,7 +23,7 @@ export class PoseViewer {
 
   nextFrameId = 0;
   @State() frame: PoseBodyFrameModel;
-  private loopInterval: NodeJS.Timeout;
+  private loopInterval: any;
 
   constructor() {
   }
@@ -49,7 +49,7 @@ export class PoseViewer {
     }
   }
 
-  componentDidUnload() {
+  disconnectedCallback() {
     this.clearInterval();
   }
 

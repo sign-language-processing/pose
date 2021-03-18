@@ -8,10 +8,11 @@ class PoseRepresentation:
         self.header = header
 
         self.input_size = sum([len(c.points) for c in header.components])
+        dims = len(header.components[0].format)
 
         # Modules relying on points
         self.rep_modules1 = rep_modules1
-        self.rep_modules1_size = self.input_size
+        self.rep_modules1_size = self.input_size * dims
 
         # Modules relying on limbs
         self.rep_modules2 = rep_modules2

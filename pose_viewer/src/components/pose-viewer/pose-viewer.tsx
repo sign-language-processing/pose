@@ -59,7 +59,7 @@ export class PoseViewer {
   }
 
   @Method()
-  syncMedia(media: HTMLMediaElement) {
+  async syncMedia(media: HTMLMediaElement): Promise<void> {
     this.media = media;
 
     this.media.addEventListener('pause', this.pause.bind(this));

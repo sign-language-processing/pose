@@ -11,5 +11,17 @@
 <body>
 <pose-viewer src="sample-data/video/sample.pose"></pose-viewer>
 <video src="sample-data/video/video.mp4" autoplay loop controls></video>
+
+<script>
+  (async () => {
+    await customElements.whenDefined('pose-viewer');
+
+    // the component is registered now, so its methods are immediately available
+    const poseViewer = document.querySelector('pose-viewer');
+    const video = document.querySelector('video');
+
+    poseViewer.syncMedia(video)
+  })();
+</script>
 </body>
 </html>

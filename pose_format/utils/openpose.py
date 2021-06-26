@@ -189,7 +189,7 @@ def load_openpose(frames: list, fps: float = 24, width=1000, height=1000, depth=
 
 def load_openpose_directory(directory: str, fps: float = 24, width=1000, height=1000, depth=0):
     frames = []
-    for entry in os.scandir(directory):
+    for entry in sorted(os.scandir(directory), key=lambda x: x.name):
         with open(entry.path, "r") as f:
             frames.append(json.load(f))
 

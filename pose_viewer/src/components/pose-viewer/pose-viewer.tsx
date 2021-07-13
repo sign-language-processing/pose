@@ -1,6 +1,6 @@
 import {Component, Event, EventEmitter, h, Method, Prop, State} from '@stencil/core';
 
-import {Pose, PoseLimb, PoseModel, PosePointModel, RGBColor} from "pose-utils";
+import {Pose, PoseLimb, PoseModel, PosePointModel, RGBColor} from "pose-format";
 
 
 @Component({
@@ -59,7 +59,7 @@ export class PoseViewer {
   }
 
   @Method()
-  syncMedia(media: HTMLMediaElement) {
+  async syncMedia(media: HTMLMediaElement) {
     this.media = media;
 
     this.media.addEventListener('pause', this.pause.bind(this));

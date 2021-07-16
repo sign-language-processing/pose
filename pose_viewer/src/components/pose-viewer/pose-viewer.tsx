@@ -17,7 +17,6 @@ export class PoseViewer {
   // Dimensions
   @Prop() width: string = null;
   @Prop() height: string = null;
-  @Prop() aspectRatio: string = null;
 
   elWidth: number;
   elHeight: number;
@@ -60,7 +59,6 @@ export class PoseViewer {
     this.resizeObserver = new ResizeObserver(this.setDimensions.bind(this));
     this.resizeObserver.observe(this.element);
   }
-
 
   @Watch('src')
   async srcChange() {

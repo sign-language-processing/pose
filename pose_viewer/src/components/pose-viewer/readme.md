@@ -10,9 +10,11 @@
 | Property       | Attribute       | Description | Type      | Default     |
 | -------------- | --------------- | ----------- | --------- | ----------- |
 | `autoplay`     | `autoplay`      |             | `boolean` | `true`      |
+| `height`       | `height`        |             | `string`  | `null`      |
 | `loop`         | `loop`          |             | `boolean` | `false`     |
 | `playbackRate` | `playback-rate` |             | `number`  | `1`         |
 | `src`          | `src`           |             | `string`  | `undefined` |
+| `width`        | `width`         |             | `string`  | `null`      |
 
 
 ## Events

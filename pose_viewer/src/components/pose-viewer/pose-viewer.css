@@ -1,6 +1,10 @@
 :host {
-  width: attr(width);
-  height: attr(height);
+  display: inline-block;
+}
+
+svg {
+  /* required for proper resizing in mobile devices */
+  max-width: 100%;
 }
 
 svg circle {

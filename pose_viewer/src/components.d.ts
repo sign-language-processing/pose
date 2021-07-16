@@ -7,7 +7,6 @@
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 export namespace Components {
     interface PoseViewer {
-        "aspectRatio": string;
         "autoplay": boolean;
         "height": string;
         "loop": boolean;
@@ -30,7 +29,6 @@ declare global {
 }
 declare namespace LocalJSX {
     interface PoseViewer {
-        "aspectRatio"?: string;
         "autoplay"?: boolean;
         "height"?: string;
         "loop"?: boolean;

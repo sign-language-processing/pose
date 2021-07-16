@@ -9,7 +9,7 @@
   <script nomodule src="/build/pose-viewer.js"></script>
 </head>
 <body>
-<pose-viewer src="sample-data/video/sample.pose"></pose-viewer>
+<pose-viewer src="sample-data/video/sample.pose" width="500px"></pose-viewer>
 <video src="sample-data/video/video.mp4" autoplay loop controls></video>
 
 <script>
@@ -20,7 +20,7 @@
     const poseViewer = document.querySelector('pose-viewer');
     const video = document.querySelector('video');
 
-    poseViewer.syncMedia(video)
+    await poseViewer.syncMedia(video)
   })();
 </script>
 </body>

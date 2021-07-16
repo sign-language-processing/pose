@@ -1,4 +1,4 @@
-import {Component, Event, EventEmitter, h, Method, Prop, State} from '@stencil/core';
+import {Component, Element, Event, EventEmitter, h, Method, Prop, State, Watch} from '@stencil/core';
 
 import {Pose, PoseLimb, PoseModel, PosePointModel, RGBColor} from "pose-format";
 
@@ -9,7 +9,18 @@ import {Pose, PoseLimb, PoseModel, PosePointModel, RGBColor} from "pose-format";
   shadow: true
 })
 export class PoseViewer {
+  @Element() element: HTMLElement;
+  private resizeObserver: ResizeObserver;
+
   @Prop() src: string; // Source URL for .pose file
+
+  // Dimensions
+  @Prop() width: string = null;
+  @Prop() height: string = null;
+  @Prop() aspectRatio: string = null;
+
+  elWidth: number;
+  elHeight: number;
 
   // MediaElement-like properties
   @Prop({mutable: true}) loop: boolean = false;
@@ -41,10 +52,31 @@ export class PoseViewer {
 
   private loopInterval: any;
 
-  async componentWillLoad() {
+  componentWillLoad() {
+    return this.srcChange();
+  }
+
+  componentDidLoad() {
+    this.resizeObserver = new ResizeObserver(this.setDimensions.bind(this));
+    this.resizeObserver.observe(this.element);
+  }
+
+
+  @Watch('src')
+  async srcChange() {
+    // Clear previous pose
+    this.clearInterval();
+    this.setDimensions();
+    delete this.pose;
+    if (!this.src) {
+      return;
+    }
+    // Load new pose
     this.loadstart$.emit();
     this.pose = await Pose.fromRemote(this.src);
-    console.log(this.pose);
+
+    this.setDimensions();
+
     // Loaded done events
     this.loadedmetadata$.emit();
     this.loadeddata$.emit();
@@ -55,6 +87,36 @@ export class PoseViewer {
 
     if (this.autoplay) {
       this.play();
+    }
+  }
+
+  setDimensions() {
+    if (!this.pose) {
+      this.elWidth = 0;
+      this.elHeight = 0;
+      return;
+    }
+
+    // When nothing is marked, use pose dimensions
+    if (!this.width && !this.height) {
+      this.elWidth = this.pose.header.width;
+      this.elHeight = this.pose.header.height;
+      return;
+    }
+
+    const rect = this.element.getBoundingClientRect();
+    const parseSize = (size, by) => size.endsWith("px") ? Number(size.slice(0, -2)) : (size.endsWith("%") ? by * size.slice(0, -1) / 100 : Number(size));
+
+    // When both are marked,
+    if (this.width && this.height) {
+      this.elWidth = parseSize(this.width, rect.width);
+      this.elHeight = parseSize(this.height, rect.height);
+    } else if (this.width) {
+      this.elWidth = parseSize(this.width, rect.width);
+      this.elHeight = (this.pose.header.height / this.pose.header.width) * this.elWidth;
+    } else if (this.height) {
+      this.elHeight = parseSize(this.height, rect.height);
+      this.elWidth = (this.pose.header.width / this.pose.header.height) * this.elHeight;
     }
   }
 
@@ -83,6 +145,9 @@ export class PoseViewer {
   }
 
   frameTime(time: number) {
+    if (!this.pose) {
+      return 0;
+    }
     return Math.floor(time * this.pose.body.fps) / this.pose.body.fps;
   }
 
@@ -99,8 +164,7 @@ export class PoseViewer {
       this.currentTime = 0;
     }
 
-    const intervalTime = 1000 / (this.pose.body.fps * this.playbackRate)
-    console.log("intervalTime", intervalTime)
+    const intervalTime = 1000 / (this.pose.body.fps * this.playbackRate);
     if (this.media) {
       this.loopInterval = setInterval(() => this.currentTime = this.frameTime(this.media.currentTime), intervalTime);
     } else {
@@ -141,6 +205,13 @@ export class PoseViewer {
   }
 
   // Render functions
+  x(v: number) {
+    return v * this.elWidth / this.pose.header.width;
+  }
+
+  y(v: number) {
+    return v * this.elHeight / this.pose.header.height;
+  }
 
   isJointValid(joint: PosePointModel) {
     return joint.C > 0;
@@ -152,8 +223,8 @@ export class PoseViewer {
       .map((joint, i) => {
         const {R, G, B} = colors[i % colors.length];
         return (<circle
-          cx={joint.X}
-          cy={joint.Y}
+          cx={this.x(joint.X)}
+          cy={this.y(joint.Y)}
           r={4}
           class="joint draggable"
           style={{
@@ -182,10 +253,10 @@ export class PoseViewer {
       };
 
       return (<line
-        x1={joints[from].X}
-        y1={joints[from].Y}
-        x2={joints[to].X}
-        y2={joints[to].Y}
+        x1={this.x(joints[from].X)}
+        y1={this.y(joints[from].Y)}
+        x2={this.x(joints[to].X)}
+        y2={this.y(joints[to].Y)}
         style={{
           stroke: `rgb(${R}, ${G}, ${B})`,
           opacity: String((joints[from].C + joints[to].C) / 2)
@@ -206,7 +277,7 @@ export class PoseViewer {
     const frame = this.pose.body.frames[frameId];
 
     return (
-      <svg xmlns="http://www.w3.org/2000/svg" width={this.pose.header.width} height={this.pose.header.height}>
+      <svg xmlns="http://www.w3.org/2000/svg" width={this.elWidth} height={this.elHeight}>
         <g>
           {frame.people.map(person => this.pose.header.components.map(component => {
             const joints = person[component.name];

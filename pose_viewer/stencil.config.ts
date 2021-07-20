@@ -3,6 +3,7 @@ import nodePolyfills from 'rollup-plugin-node-polyfills';
 
 export const config: Config = {
   namespace: 'pose-viewer',
+  buildEs5: 'prod',
   plugins: [
     nodePolyfills(),
   ],

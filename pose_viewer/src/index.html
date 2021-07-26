@@ -9,8 +9,13 @@
   <script nomodule src="/build/pose-viewer.js"></script>
 </head>
 <body>
-<pose-viewer src="sample-data/video/sample.pose" width="500px"></pose-viewer>
 <video src="sample-data/video/video.mp4" autoplay loop controls></video>
+<br />
+<pose-viewer src="sample-data/video/sample.pose" width="500px" height="500px"></pose-viewer>
+<pose-viewer src="sample-data/video/sample.pose" width="500px" autoplay="false"></pose-viewer>
+
+<pose-viewer svg="true" src="sample-data/video/sample.pose"  width="500px"></pose-viewer>
+
 
 <script>
   (async () => {

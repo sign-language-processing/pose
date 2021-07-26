@@ -8,10 +8,18 @@ import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 export namespace Components {
     interface PoseViewer {
         "autoplay": boolean;
+        "background": string;
+        "currentTime": number;
+        "duration": number;
+        "ended": boolean;
         "height": string;
         "loop": boolean;
+        "nextFrame": () => Promise<void>;
+        "paused": boolean;
         "playbackRate": number;
+        "readyState": number;
         "src": string;
+        "svg": boolean;
         "syncMedia": (media: HTMLMediaElement) => Promise<void>;
         "width": string;
     }
@@ -30,6 +38,10 @@ declare global {
 declare namespace LocalJSX {
     interface PoseViewer {
         "autoplay"?: boolean;
+        "background"?: string;
+        "currentTime"?: number;
+        "duration"?: number;
+        "ended"?: boolean;
         "height"?: string;
         "loop"?: boolean;
         "onCanplaythrough$"?: (event: CustomEvent<void>) => void;
@@ -39,8 +51,11 @@ declare namespace LocalJSX {
         "onLoadstart$"?: (event: CustomEvent<void>) => void;
         "onPause$"?: (event: CustomEvent<void>) => void;
         "onPlay$"?: (event: CustomEvent<void>) => void;
+        "paused"?: boolean;
         "playbackRate"?: number;
+        "readyState"?: number;
         "src"?: string;
+        "svg"?: boolean;
         "width"?: string;
     }
     interface IntrinsicElements {

@@ -10,10 +10,17 @@
 | Property       | Attribute       | Description | Type      | Default     |
 | -------------- | --------------- | ----------- | --------- | ----------- |
 | `autoplay`     | `autoplay`      |             | `boolean` | `true`      |
+| `background`   | `background`    |             | `string`  | `null`      |
+| `currentTime`  | `current-time`  |             | `number`  | `NaN`       |
+| `duration`     | `duration`      |             | `number`  | `NaN`       |
+| `ended`        | `ended`         |             | `boolean` | `false`     |
 | `height`       | `height`        |             | `string`  | `null`      |
 | `loop`         | `loop`          |             | `boolean` | `false`     |
+| `paused`       | `paused`        |             | `boolean` | `true`      |
 | `playbackRate` | `playback-rate` |             | `number`  | `1`         |
+| `readyState`   | `ready-state`   |             | `number`  | `0`         |
 | `src`          | `src`           |             | `string`  | `undefined` |
+| `svg`          | `svg`           |             | `boolean` | `false`     |
 | `width`        | `width`         |             | `string`  | `null`      |
 
 
@@ -31,6 +38,16 @@
 
 
 ## Methods
+
+### `nextFrame() => Promise<void>`
+
+
+
+#### Returns
+
+Type: `Promise<void>`
+
+
 
 ### `syncMedia(media: HTMLMediaElement) => Promise<void>`
 

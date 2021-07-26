@@ -18,3 +18,7 @@ svg line {
   opacity: 0.8;
   stroke: black;
 }
+
+canvas {
+  display: block;
+}

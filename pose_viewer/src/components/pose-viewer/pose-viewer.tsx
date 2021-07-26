@@ -1,6 +1,12 @@
-import {Component, Element, Event, EventEmitter, h, Method, Prop, State, Watch} from '@stencil/core';
+// @ts-ignore
+import {Component, Element, Event, EventEmitter, h, Host, Method, Prop, Watch} from '@stencil/core';
+import {Pose, PoseModel} from "pose-format";
+import {PoseRenderer} from "./renderers/pose-renderer";
+import {SVGPoseRenderer} from "./renderers/svg.pose-renderer";
+import {CanvasPoseRenderer} from "./renderers/canvas.pose-renderer";
 
-import {Pose, PoseLimb, PoseModel, PosePointModel, RGBColor} from "pose-format";
+declare type ResizeObserver = any;
+declare var ResizeObserver: ResizeObserver;
 
 
 @Component({
@@ -13,24 +19,28 @@ export class PoseViewer {
   private resizeObserver: ResizeObserver;
 
   @Prop() src: string; // Source URL for .pose file
+  @Prop() svg: boolean = false; // Render in an SVG instead of a canvas
 
   // Dimensions
   @Prop() width: string = null;
   @Prop() height: string = null;
 
+  @Prop() background: string = null;
+
   elWidth: number;
   elHeight: number;
+  elPadding: { width: number, height: number };
 
   // MediaElement-like properties
   @Prop({mutable: true}) loop: boolean = false;
   @Prop() autoplay: boolean = true;
   @Prop({mutable: true}) playbackRate: number = 1;
 
-  @State() currentTime: number = NaN; // This affects re-rendering
-  duration: number = NaN;
-  ended: boolean = false;
-  paused: boolean = true;
-  readyState: number = 0;
+  @Prop({mutable: true}) currentTime: number = NaN; // This affects re-rendering
+  @Prop({mutable: true}) duration: number = NaN;
+  @Prop({mutable: true}) ended: boolean = false;
+  @Prop({mutable: true}) paused: boolean = true;
+  @Prop({mutable: true}) readyState: number = 0;
 
   // MediaElement-like events
   @Event() canplaythrough$: EventEmitter<void>;
@@ -45,6 +55,7 @@ export class PoseViewer {
   // @Event() seeking$: EventEmitter<void>;
   // @Event() timeupdate$: EventEmitter<void>;
 
+  renderer!: PoseRenderer;
 
   media: HTMLMediaElement;
   pose: PoseModel;
@@ -52,6 +63,8 @@ export class PoseViewer {
   private loopInterval: any;
 
   componentWillLoad() {
+    this.renderer = this.svg ? new SVGPoseRenderer(this) : new CanvasPoseRenderer(this);
+
     return this.srcChange();
   }
 
@@ -89,6 +102,7 @@ export class PoseViewer {
   }
 
   setDimensions() {
+    this.elPadding = {width: 0, height: 0};
     if (!this.pose) {
       this.elWidth = 0;
       this.elHeight = 0;
@@ -109,6 +123,15 @@ export class PoseViewer {
     if (this.width && this.height) {
       this.elWidth = parseSize(this.width, rect.width);
       this.elHeight = parseSize(this.height, rect.height);
+
+      const elAR = this.elWidth / this.elHeight;
+      const poseAR = this.pose.header.width / this.pose.header.height;
+      if (poseAR > elAR) {
+        this.elPadding.height = (poseAR - elAR) * this.elHeight / 2;
+      } else {
+        this.elPadding.width = (1 / elAR - 1 / poseAR) * this.elWidth / 2;
+      }
+
     } else if (this.width) {
       this.elWidth = parseSize(this.width, rect.width);
       this.elHeight = (this.pose.header.height / this.pose.header.width) * this.elWidth;
@@ -139,6 +162,21 @@ export class PoseViewer {
       this.pause();
     } else {
       this.play();
+    }
+  }
+
+  @Method()
+  async nextFrame() {
+    const newTime = this.currentTime + 1 / this.pose.body.fps
+    if (newTime > this.duration) {
+      if (this.loop) {
+        this.currentTime = newTime % this.duration;
+      } else {
+        this.ended$.emit();
+        this.ended = true;
+      }
+    } else {
+      this.currentTime = newTime;
     }
   }
 
@@ -202,70 +240,8 @@ export class PoseViewer {
     this.clearInterval();
   }
 
-  // Render functions
-  x(v: number) {
-    return v * this.elWidth / this.pose.header.width;
-  }
-
-  y(v: number) {
-    return v * this.elHeight / this.pose.header.height;
-  }
-
-  isJointValid(joint: PosePointModel) {
-    return joint.C > 0;
-  }
-
-  renderJoints(joints: PosePointModel[], colors: RGBColor[]) {
-    return joints
-      .filter(this.isJointValid.bind(this))
-      .map((joint, i) => {
-        const {R, G, B} = colors[i % colors.length];
-        return (<circle
-          cx={this.x(joint.X)}
-          cy={this.y(joint.Y)}
-          r={4}
-          class="joint draggable"
-          style={{
-            fill: `rgb(${R}, ${G}, ${B})`,
-            opacity: String(joint.C)
-          }}
-          data-id={i}>
-        </circle>);
-      });
-  }
-
-  renderLimbs(limbs: PoseLimb[], joints: PosePointModel[], colors: RGBColor[]) {
-    return limbs.map(({from, to}) => {
-      const a = joints[from];
-      const b = joints[to];
-      if (!this.isJointValid(a) || !this.isJointValid(b)) {
-        return "";
-      }
-
-      const c1 = colors[from % colors.length];
-      const c2 = colors[to % colors.length];
-      const {R, G, B} = {
-        R: (c1.R + c2.R) / 2,
-        G: (c1.G + c2.G) / 2,
-        B: (c1.B + c2.B) / 2,
-      };
-
-      return (<line
-        x1={this.x(joints[from].X)}
-        y1={this.y(joints[from].Y)}
-        x2={this.x(joints[to].X)}
-        y2={this.y(joints[to].Y)}
-        style={{
-          stroke: `rgb(${R}, ${G}, ${B})`,
-          opacity: String((joints[from].C + joints[to].C) / 2)
-        }}>
-      </line>);
-    });
-  }
-
-
   render() {
-    if (!this.pose || isNaN(this.currentTime)) {
+    if (!this.pose || isNaN(this.currentTime) || !this.renderer) {
       return "";
     }
 
@@ -275,18 +251,10 @@ export class PoseViewer {
     const frame = this.pose.body.frames[frameId];
 
     return (
-      <svg xmlns="http://www.w3.org/2000/svg" width={this.elWidth} height={this.elHeight}>
-        <g>
-          {frame.people.map(person => this.pose.header.components.map(component => {
-            const joints = person[component.name];
-            return [
-              this.renderLimbs(component.limbs, joints, component.colors),
-              this.renderJoints(joints, component.colors),
-            ]
-          }))}
-        </g>
-      </svg>
-    )
+      <Host>
+        {this.renderer.render(frame)}
+      </Host>
+    );
   }
 }
 

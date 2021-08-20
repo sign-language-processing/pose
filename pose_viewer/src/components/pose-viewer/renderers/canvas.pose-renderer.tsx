@@ -8,9 +8,6 @@ export class CanvasPoseRenderer extends PoseRenderer {
   thickness!: number;
 
   renderJoint(_: number, joint: PosePointModel, color: RGBColor) {
-    this.ctx.lineWidth = 0;
-    console.log(this.ctx.lineWidth);
-
     const {R, G, B} = color;
     this.ctx.strokeStyle = `rgba(0, 0, 0, 0)`;
     this.ctx.fillStyle = `rgba(${R}, ${G}, ${B}, ${joint.C})`;

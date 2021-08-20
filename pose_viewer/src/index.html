@@ -9,13 +9,24 @@
   <script nomodule src="/build/pose-viewer.js"></script>
 </head>
 <body>
-<video src="sample-data/video/video.mp4" autoplay loop controls></video>
-<br />
-<pose-viewer src="sample-data/video/sample.pose" width="500px" height="500px"></pose-viewer>
-<pose-viewer src="sample-data/video/sample.pose" width="500px" autoplay="false"></pose-viewer>
-<pose-viewer src="sample-data/video/sample.pose" width="500px" padding="15%" autoplay="false"></pose-viewer>
 
-<pose-viewer svg="true" src="sample-data/video/sample.pose"  width="500px"></pose-viewer>
+<br />
+<h2>Generated with Python vs JS width=256</h2>
+<img src="sample-data/video/test.png" width="256px"/>
+<pose-viewer src="sample-data/video/sample.pose" width="256px" autoplay="false"></pose-viewer>
+
+<br/>
+<br/>
+<br/>
+
+<h2>Video Sync</h2>
+<video src="sample-data/video/video.mp4" autoplay loop controls></video>
+<br/>
+<pose-viewer src="sample-data/video/sample.pose" id="sync" width="500px" height="500px"></pose-viewer>
+<pose-viewer src="sample-data/video/sample.pose" width="500px" autoplay="false"></pose-viewer>
+<pose-viewer src="sample-data/video/sample.pose" width="500px" padding="20%" autoplay="false"></pose-viewer>
+
+<pose-viewer svg="true" src="sample-data/video/sample.pose" width="500px"></pose-viewer>
 
 
 <script>
@@ -23,7 +34,7 @@
     await customElements.whenDefined('pose-viewer');
 
     // the component is registered now, so its methods are immediately available
-    const poseViewer = document.querySelector('pose-viewer');
+    const poseViewer = document.querySelector('pose-viewer#sync');
     const video = document.querySelector('video');
 
     await poseViewer.syncMedia(video)

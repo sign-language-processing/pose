@@ -5,15 +5,19 @@ import {h} from "@stencil/core";
 
 export class CanvasPoseRenderer extends PoseRenderer {
   ctx!: CanvasRenderingContext2D;
+  thickness!: number;
 
   renderJoint(_: number, joint: PosePointModel, color: RGBColor) {
-    const {R, G, B} = color;
-    this.ctx.strokeStyle = `rgba(0, 0, 0, ${joint.C})`;
-    this.ctx.fillStyle = `rgba(${R}, ${G}, ${B}, ${joint.C})`;
-    this.ctx.lineWidth = 1;
+    this.ctx.lineWidth = 0;
+    console.log(this.ctx.lineWidth);
 
+    const {R, G, B} = color;
+    this.ctx.strokeStyle = `rgba(0, 0, 0, 0)`;
+    this.ctx.fillStyle = `rgba(${R}, ${G}, ${B}, ${joint.C})`;
+
+    const radius = Math.round(this.thickness / 2);
     this.ctx.beginPath();
-    this.ctx.arc(this.x(joint.X), this.y(joint.Y), 4, 0, 2 * Math.PI);
+    this.ctx.arc(this.x(joint.X), this.y(joint.Y), radius, 0, 2 * Math.PI);
     this.ctx.fill();
     this.ctx.stroke();
   }
@@ -21,7 +25,7 @@ export class CanvasPoseRenderer extends PoseRenderer {
   renderLimb(from: PosePointModel, to: PosePointModel, color: RGBColor) {
     const {R, G, B} = color;
     this.ctx.strokeStyle = `rgba(${R}, ${G}, ${B}, ${(from.C + to.C) / 2})`;
-    this.ctx.lineWidth = 8;
+    this.ctx.lineWidth = this.thickness*2.5;
 
     this.ctx.beginPath();
     this.ctx.moveTo(this.x(from.X), this.y(from.Y));
@@ -29,8 +33,25 @@ export class CanvasPoseRenderer extends PoseRenderer {
     this.ctx.stroke();
   }
 
-  render(frame: PoseBodyFrameModel) {
+  // renderLimb(from: PosePointModel, to: PosePointModel, color: RGBColor) {
+  //   const {R, G, B} = color;
+  //   this.ctx.fillStyle = `rgba(${R}, ${G}, ${B}, ${(from.C + to.C) / 2})`;
+  //
+  //   const x = this.x((from.X + to.X) / 2);
+  //   const y = this.y((from.Y + to.Y) / 2);
+  //
+  //   const sub = {x: this.x(from.X - to.X), y: this.y(from.Y - to.Y)}
+  //
+  //   const length = Math.sqrt(Math.pow(sub.x, 2) + Math.pow(sub.y, 2));
+  //   const radiusX = Math.floor(length / 2);
+  //   const radiusY = this.thickness;
+  //   const rotation = Math.floor(Math.atan2(sub.y, sub.x) * 180 / Math.PI);
+  //   this.ctx.beginPath();
+  //   this.ctx.ellipse(x, y, radiusX, radiusY, rotation, 0, 360);
+  //   this.ctx.fill();
+  // }
 
+  render(frame: PoseBodyFrameModel) {
     const drawCanvas = () => {
       const canvas = this.viewer.element.shadowRoot.querySelector('canvas');
       if (canvas) {
@@ -46,6 +67,8 @@ export class CanvasPoseRenderer extends PoseRenderer {
         } else {
           this.ctx.clearRect(0, 0, canvas.width, canvas.height);
         }
+
+        this.thickness = Math.round(Math.sqrt(canvas.width * canvas.height) / 300);
         this.renderFrame(frame);
       } else {
         throw new Error("Canvas isn't available before first render")

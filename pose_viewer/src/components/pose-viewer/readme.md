@@ -16,6 +16,7 @@
 | `ended`        | `ended`         |             | `boolean` | `false`     |
 | `height`       | `height`        |             | `string`  | `null`      |
 | `loop`         | `loop`          |             | `boolean` | `false`     |
+| `padding`      | `padding`       |             | `string`  | `null`      |
 | `paused`       | `paused`        |             | `boolean` | `true`      |
 | `playbackRate` | `playback-rate` |             | `number`  | `1`         |
 | `readyState`   | `ready-state`   |             | `number`  | `0`         |

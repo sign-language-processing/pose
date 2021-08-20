@@ -2,7 +2,7 @@
   display: inline-block;
 }
 
-svg {
+svg, canvas {
   /* required for proper resizing in mobile devices */
   max-width: 100%;
 }

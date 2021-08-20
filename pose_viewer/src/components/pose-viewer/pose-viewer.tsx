@@ -24,6 +24,7 @@ export class PoseViewer {
   // Dimensions
   @Prop() width: string = null;
   @Prop() height: string = null;
+  @Prop() padding: string = null;
 
   @Prop() background: string = null;
 
@@ -138,6 +139,11 @@ export class PoseViewer {
     } else if (this.height) {
       this.elHeight = parseSize(this.height, rect.height);
       this.elWidth = (this.pose.header.width / this.pose.header.height) * this.elHeight;
+    }
+
+    if (this.padding) {
+      this.elPadding.width += parseSize(this.padding, this.elWidth);
+      this.elPadding.height += parseSize(this.padding, this.elHeight);
     }
   }
 

@@ -15,6 +15,7 @@ export namespace Components {
         "height": string;
         "loop": boolean;
         "nextFrame": () => Promise<void>;
+        "padding": string;
         "paused": boolean;
         "playbackRate": number;
         "readyState": number;
@@ -51,6 +52,7 @@ declare namespace LocalJSX {
         "onLoadstart$"?: (event: CustomEvent<void>) => void;
         "onPause$"?: (event: CustomEvent<void>) => void;
         "onPlay$"?: (event: CustomEvent<void>) => void;
+        "padding"?: string;
         "paused"?: boolean;
         "playbackRate"?: number;
         "readyState"?: number;

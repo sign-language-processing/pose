@@ -10,7 +10,7 @@
 </head>
 <body>
 
-<br />
+<br/>
 <h2>Generated with Python vs JS width=256</h2>
 <img src="sample-data/video/test.png" width="256px"/>
 <pose-viewer src="sample-data/video/sample.pose" width="256px" autoplay="false"></pose-viewer>
@@ -18,27 +18,41 @@
 <br/>
 <br/>
 <br/>
+<h2>Ratio</h2>
+<pose-viewer src="sample-data/video/sample.pose"
+             width="512px" autoplay="false"></pose-viewer>
 
-<h2>Video Sync</h2>
-<video src="sample-data/video/video.mp4" autoplay loop controls></video>
+<pose-viewer src="sample-data/video/sample.pose"
+             width="512px" height="512px" autoplay="false" padding="100px"></pose-viewer>
+<pose-viewer src="sample-data/video/sample.pose"
+             width="312px" height="312px" autoplay="false"></pose-viewer>
+<!--<pose-viewer src="sample-data/video/sample.pose"-->
+<!--             width="512px" height="512px"  autoplay="false"></pose-viewer>-->
+
 <br/>
-<pose-viewer src="sample-data/video/sample.pose" id="sync" width="500px" height="500px"></pose-viewer>
-<pose-viewer src="sample-data/video/sample.pose" width="500px" autoplay="false"></pose-viewer>
-<pose-viewer src="sample-data/video/sample.pose" width="500px" padding="20%" autoplay="false"></pose-viewer>
+<br/>
+<br/>
 
-<pose-viewer svg="true" src="sample-data/video/sample.pose" width="500px"></pose-viewer>
+<!--<h2>Video Sync</h2>-->
+<!--<video src="sample-data/video/video.mp4" autoplay loop controls></video>-->
+<!--<br/>-->
+<!--<pose-viewer src="sample-data/video/sample.pose" id="sync" width="500px" height="500px"></pose-viewer>-->
+<!--<pose-viewer src="sample-data/video/sample.pose" width="500px" autoplay="false"></pose-viewer>-->
+<!--<pose-viewer src="sample-data/video/sample.pose" width="500px" padding="20%" autoplay="false"></pose-viewer>-->
+
+<!--<pose-viewer svg="true" src="sample-data/video/sample.pose" width="500px"></pose-viewer>-->
 
 
-<script>
-  (async () => {
-    await customElements.whenDefined('pose-viewer');
+<!--<script>-->
+<!--  (async () => {-->
+<!--    await customElements.whenDefined('pose-viewer');-->
 
-    // the component is registered now, so its methods are immediately available
-    const poseViewer = document.querySelector('pose-viewer#sync');
-    const video = document.querySelector('video');
+<!--    // the component is registered now, so its methods are immediately available-->
+<!--    const poseViewer = document.querySelector('pose-viewer#sync');-->
+<!--    const video = document.querySelector('video');-->
 
-    await poseViewer.syncMedia(video)
-  })();
-</script>
+<!--    await poseViewer.syncMedia(video)-->
+<!--  })();-->
+<!--</script>-->
 </body>
 </html>

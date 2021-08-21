@@ -22,7 +22,7 @@ export class CanvasPoseRenderer extends PoseRenderer {
   renderLimb(from: PosePointModel, to: PosePointModel, color: RGBColor) {
     const {R, G, B} = color;
     this.ctx.strokeStyle = `rgba(${R}, ${G}, ${B}, ${(from.C + to.C) / 2})`;
-    this.ctx.lineWidth = this.thickness*2.5;
+    this.ctx.lineWidth = this.thickness * 2.5;
 
     this.ctx.beginPath();
     this.ctx.moveTo(this.x(from.X), this.y(from.Y));
@@ -65,7 +65,9 @@ export class CanvasPoseRenderer extends PoseRenderer {
           this.ctx.clearRect(0, 0, canvas.width, canvas.height);
         }
 
-        this.thickness = Math.round(Math.sqrt(canvas.width * canvas.height) / 300);
+        const w = this.viewer.elWidth - 2 * this.viewer.elPadding.width;
+        const h = this.viewer.elHeight - 2 * this.viewer.elPadding.height;
+        this.thickness = Math.round(Math.sqrt(w * h) / 300);
         this.renderFrame(frame);
       } else {
         throw new Error("Canvas isn't available before first render")

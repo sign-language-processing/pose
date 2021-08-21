@@ -120,18 +120,28 @@ export class PoseViewer {
     const rect = this.element.getBoundingClientRect();
     const parseSize = (size, by) => size.endsWith("px") ? Number(size.slice(0, -2)) : (size.endsWith("%") ? by * size.slice(0, -1) / 100 : Number(size));
 
-    if (this.padding) {
-      this.elPadding.width += parseSize(this.padding, rect.width);
-      this.elPadding.height += parseSize(this.padding, rect.height);
-    }
-
     // When both are marked,
     if (this.width && this.height) {
       this.elWidth = parseSize(this.width, rect.width);
       this.elHeight = parseSize(this.height, rect.height);
+    } else if (this.width) {
+      this.elWidth = parseSize(this.width, rect.width);
+      this.elHeight = (this.pose.header.height / this.pose.header.width) * this.elWidth;
+    } else if (this.height) {
+      this.elHeight = parseSize(this.height, rect.height);
+      this.elWidth = (this.pose.header.width / this.pose.header.height) * this.elHeight;
+    }
 
-      const ratioWidth = this.elWidth - this.elPadding.width * 2
-      const ratioHeight = this.elHeight - this.elPadding.height * 2
+    // General padding
+    if (this.padding) {
+      this.elPadding.width += parseSize(this.padding, this.elWidth);
+      this.elPadding.height += parseSize(this.padding, this.elHeight);
+    }
+
+    // Aspect ratio padding
+    if (this.width && this.height) {
+      const ratioWidth = this.elWidth - this.elPadding.width * 2;
+      const ratioHeight = this.elHeight - this.elPadding.height * 2;
       const elAR = ratioWidth / ratioHeight;
       const poseAR = this.pose.header.width / this.pose.header.height;
       if (poseAR > elAR) {
@@ -139,12 +149,6 @@ export class PoseViewer {
       } else {
         this.elPadding.width += (1 / poseAR - 1 / elAR) * ratioWidth / 2;
       }
-    } else if (this.width) {
-      this.elWidth = parseSize(this.width, rect.width);
-      this.elHeight = (this.pose.header.height / this.pose.header.width) * this.elWidth;
-    } else if (this.height) {
-      this.elHeight = parseSize(this.height, rect.height);
-      this.elWidth = (this.pose.header.width / this.pose.header.height) * this.elHeight;
     }
   }
 

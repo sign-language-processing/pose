@@ -13,13 +13,14 @@
 <br/>
 <h2>Generated with Python vs JS width=256</h2>
 <img src="sample-data/video/test.png" width="256px"/>
-<pose-viewer src="sample-data/video/sample.pose" width="256px" autoplay="false"></pose-viewer>
+<pose-viewer src="sample-data/video/sample.pose" width="256px" autoplay="false" background="white"></pose-viewer>
 
 <br/>
 <br/>
 <br/>
 <h2>Ratio</h2>
-<pose-viewer autoplay="false" width="512px" height="512px" padding="20%" src="https://nlp.biu.ac.il/~ccohenya8/sign/sentence/?slang=en.gb&amp;dlang=en.gb&amp;sentence=Absolutely"></pose-viewer>
+<pose-viewer autoplay="false" width="512px" height="512px" padding="20%"
+             src="https://nlp.biu.ac.il/~ccohenya8/sign/sentence/?slang=en.gb&amp;dlang=en.gb&amp;sentence=Absolutely"></pose-viewer>
 
 <br/>
 <br/>
@@ -34,17 +35,26 @@
 
 <!--<pose-viewer svg="true" src="sample-data/video/sample.pose" width="500px"></pose-viewer>-->
 
+<pose-viewer id="sync" src="sample-data/video/sample.pose"
+             autoplay="false"
+             loop="false"
+             background="red"
+             padding="10%"
+             width="512px"
+             aspect-ratio="1"></pose-viewer>
 
-<!--<script>-->
-<!--  (async () => {-->
-<!--    await customElements.whenDefined('pose-viewer');-->
 
-<!--    // the component is registered now, so its methods are immediately available-->
-<!--    const poseViewer = document.querySelector('pose-viewer#sync');-->
-<!--    const video = document.querySelector('video');-->
+<script>
+  (async () => {
+    await customElements.whenDefined('pose-viewer');
 
-<!--    await poseViewer.syncMedia(video)-->
-<!--  })();-->
-<!--</script>-->
+    // the component is registered now, so its methods are immediately available
+    const poseViewer = document.querySelector('pose-viewer#sync');
+
+    // const video = document.querySelector('video');
+    //
+    // await poseViewer.syncMedia(video)
+  })();
+</script>
 </body>
 </html>

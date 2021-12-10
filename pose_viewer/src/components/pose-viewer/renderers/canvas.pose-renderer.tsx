@@ -12,7 +12,7 @@ export class CanvasPoseRenderer extends PoseRenderer {
     this.ctx.strokeStyle = `rgba(0, 0, 0, 0)`;
     this.ctx.fillStyle = `rgba(${R}, ${G}, ${B}, ${joint.C})`;
 
-    const radius = Math.round(this.thickness / 2);
+    const radius = this.thickness;
     this.ctx.beginPath();
     this.ctx.arc(this.x(joint.X), this.y(joint.Y), radius, 0, 2 * Math.PI);
     this.ctx.fill();
@@ -21,8 +21,9 @@ export class CanvasPoseRenderer extends PoseRenderer {
 
   renderLimb(from: PosePointModel, to: PosePointModel, color: RGBColor) {
     const {R, G, B} = color;
+
+    this.ctx.lineWidth = this.thickness * 3;
     this.ctx.strokeStyle = `rgba(${R}, ${G}, ${B}, ${(from.C + to.C) / 2})`;
-    this.ctx.lineWidth = this.thickness * 2.5;
 
     this.ctx.beginPath();
     this.ctx.moveTo(this.x(from.X), this.y(from.Y));

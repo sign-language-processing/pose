@@ -9,6 +9,7 @@
 
 | Property       | Attribute       | Description | Type      | Default     |
 | -------------- | --------------- | ----------- | --------- | ----------- |
+| `aspectRatio`  | `aspect-ratio`  |             | `number`  | `null`      |
 | `autoplay`     | `autoplay`      |             | `boolean` | `true`      |
 | `background`   | `background`    |             | `string`  | `null`      |
 | `currentTime`  | `current-time`  |             | `number`  | `NaN`       |
@@ -31,6 +32,7 @@
 | ----------------- | ----------- | ------------------- |
 | `canplaythrough$` |             | `CustomEvent<void>` |
 | `ended$`          |             | `CustomEvent<void>` |
+| `firstRender$`    |             | `CustomEvent<void>` |
 | `loadeddata$`     |             | `CustomEvent<void>` |
 | `loadedmetadata$` |             | `CustomEvent<void>` |
 | `loadstart$`      |             | `CustomEvent<void>` |
@@ -40,7 +42,37 @@
 
 ## Methods
 
+### `getPose() => Promise<any>`
+
+
+
+#### Returns
+
+Type: `Promise<any>`
+
+
+
 ### `nextFrame() => Promise<void>`
+
+
+
+#### Returns
+
+Type: `Promise<void>`
+
+
+
+### `pause() => Promise<void>`
+
+
+
+#### Returns
+
+Type: `Promise<void>`
+
+
+
+### `play() => Promise<void>`
 
 
 

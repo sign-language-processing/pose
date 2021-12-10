@@ -56,8 +56,8 @@ export abstract class PoseRenderer {
     return frame.people.map(person => this.viewer.pose.header.components.map(component => {
       const joints = person[component.name];
       return [
-        this.renderLimbs(component.limbs, joints, component.colors),
         this.renderJoints(joints, component.colors),
+        this.renderLimbs(component.limbs, joints, component.colors),
       ]
     }))
   }

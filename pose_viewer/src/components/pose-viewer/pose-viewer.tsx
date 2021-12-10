@@ -18,12 +18,14 @@ export class PoseViewer {
   @Element() element: HTMLElement;
   private resizeObserver: ResizeObserver;
 
+  private lastSrc: string;
   @Prop() src: string; // Source URL for .pose file
   @Prop() svg: boolean = false; // Render in an SVG instead of a canvas
 
   // Dimensions
   @Prop() width: string = null;
   @Prop() height: string = null;
+  @Prop() aspectRatio: number = null;
   @Prop() padding: string = null;
 
   @Prop() background: string = null;
@@ -51,10 +53,13 @@ export class PoseViewer {
   @Event() loadstart$: EventEmitter<void>;
   @Event() pause$: EventEmitter<void>;
   @Event() play$: EventEmitter<void>;
+  @Event() firstRender$: EventEmitter<void>;
   // @Event() ratechange$: EventEmitter<void>;
   // @Event() seeked$: EventEmitter<void>;
   // @Event() seeking$: EventEmitter<void>;
   // @Event() timeupdate$: EventEmitter<void>;
+
+  hasRendered = false;
 
   renderer!: PoseRenderer;
 
@@ -76,14 +81,25 @@ export class PoseViewer {
 
   @Watch('src')
   async srcChange() {
+    // Can occur from both an attribute change AND componentWillLoad event
+    if (this.src === this.lastSrc) {
+      return;
+    }
+    this.lastSrc = this.src;
+
     // Clear previous pose
     this.clearInterval();
     this.setDimensions();
     delete this.pose;
+    this.currentTime = NaN;
+    this.duration = NaN;
+    this.hasRendered = false;
+
     if (!this.src) {
       return;
     }
     // Load new pose
+    this.ended = false;
     this.loadstart$.emit();
     this.pose = await Pose.fromRemote(this.src);
 
@@ -126,10 +142,12 @@ export class PoseViewer {
       this.elHeight = parseSize(this.height, rect.height);
     } else if (this.width) {
       this.elWidth = parseSize(this.width, rect.width);
-      this.elHeight = (this.pose.header.height / this.pose.header.width) * this.elWidth;
+      this.elHeight = this.aspectRatio ? this.elWidth * this.aspectRatio :
+        (this.pose.header.height / this.pose.header.width) * this.elWidth;
     } else if (this.height) {
       this.elHeight = parseSize(this.height, rect.height);
-      this.elWidth = (this.pose.header.width / this.pose.header.height) * this.elHeight;
+      this.elWidth = this.aspectRatio ? this.elHeight / this.aspectRatio :
+        (this.pose.header.width / this.pose.header.height) * this.elHeight;
     }
 
     // General padding
@@ -139,16 +157,14 @@ export class PoseViewer {
     }
 
     // Aspect ratio padding
-    if (this.width && this.height) {
-      const ratioWidth = this.elWidth - this.elPadding.width * 2;
-      const ratioHeight = this.elHeight - this.elPadding.height * 2;
-      const elAR = ratioWidth / ratioHeight;
-      const poseAR = this.pose.header.width / this.pose.header.height;
-      if (poseAR > elAR) {
-        this.elPadding.height += (poseAR - elAR) * ratioHeight / 2;
-      } else {
-        this.elPadding.width += (1 / poseAR - 1 / elAR) * ratioWidth / 2;
-      }
+    const ratioWidth = this.elWidth - this.elPadding.width * 2;
+    const ratioHeight = this.elHeight - this.elPadding.height * 2;
+    const elAR = ratioWidth / ratioHeight;
+    const poseAR = this.pose.header.width / this.pose.header.height;
+    if (poseAR > elAR) {
+      this.elPadding.height += (poseAR - elAR) * ratioHeight / 2;
+    } else {
+      this.elPadding.width += (1 / poseAR - 1 / elAR) * ratioWidth / 2;
     }
   }
 
@@ -177,6 +193,12 @@ export class PoseViewer {
   }
 
   @Method()
+  async getPose() {
+    return this.pose;
+  }
+
+
+  @Method()
   async nextFrame() {
     const newTime = this.currentTime + 1 / this.pose.body.fps
     if (newTime > this.duration) {
@@ -198,7 +220,8 @@ export class PoseViewer {
     return Math.floor(time * this.pose.body.fps) / this.pose.body.fps;
   }
 
-  play() {
+  @Method()
+  async play() {
     if (!this.paused) {
       this.clearInterval();
     }
@@ -235,7 +258,8 @@ export class PoseViewer {
     }
   }
 
-  pause() {
+  @Method()
+  async pause() {
     this.paused = true;
     this.pause$.emit();
     this.clearInterval();
@@ -260,6 +284,13 @@ export class PoseViewer {
 
     const frameId = Math.floor(currentTime * this.pose.body.fps);
     const frame = this.pose.body.frames[frameId];
+
+    if (!this.hasRendered) {
+      requestAnimationFrame(() => {
+        this.hasRendered = true;
+        this.firstRender$.emit();
+      });
+    }
 
     return (
       <Host>

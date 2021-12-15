@@ -14,7 +14,7 @@ BODY_POINTS = ["Nose", "Neck", "RShoulder", "RElbow", "RWrist", "LShoulder", "LE
                "RHip", "RKnee", "RAnkle", "LHip", "LKnee", "LAnkle", "REye", "LEye", "REar", "LEar", "LBigToe",
                "LSmallToe", "LHeel", "RBigToe", "RSmallToe", "RHeel"]
 
-# Based on https://github.com/CMU-Perceptual-Computing-Lab/openpose/raw/master/doc/media/keypoints_pose_25.png
+# Based on https://github.com/CMU-Perceptual-Computing-Lab/openpose/blob/master/.github/media/keypoints_pose_25.png
 # Everything sprouts out of the neck
 BODY_LIMBS = [
     # Body
@@ -60,7 +60,7 @@ BODY_LIMBS = [
 #       \    \   /
 #        ------0-
 
-# Anatomy guide http://blog.handcare.org/blog/2017/10/26/anatomy-101-finger-joints/
+# Anatomy guide https://www.assh.org/handcare/blog/anatomy-101-finger-joints
 HAND_POINTS = [
     "BASE",
     "T_STT", "T_BCMC", "T_MCP", "T_IP",  # Thumb
@@ -70,7 +70,7 @@ HAND_POINTS = [
     "P_CMC", "P_MCP", "P_PIP", "P_DIP",  # Pinky
 ]
 
-# Based on https://github.com/CMU-Perceptual-Computing-Lab/openpose/raw/master/doc/media/keypoints_hand.png
+# Based on https://github.com/CMU-Perceptual-Comput ing-Lab/openpose/blob/master/.github/media/keypoints_hand.png
 # Everything sprouts out of the base
 HAND_LIMBS = [
     ("BASE", "T_STT"), ("BASE", "I_CMC"), ("BASE", "M_CMC"), ("BASE", "R_CMC"), ("BASE", "P_CMC"),  # Base
@@ -81,7 +81,7 @@ HAND_LIMBS = [
     ("P_CMC", "P_MCP"), ("P_MCP", "P_PIP"), ("P_PIP", "P_DIP"),  # Pinky
 ]
 
-# Based on https://github.com/CMU-Perceptual-Computing-Lab/openpose/raw/master/doc/media/keypoints_face.png
+# Based on https://github.com/CMU-Perceptual-Computing-Lab/openpose/blob/master/.github/media/keypoints_face.png
 # Border
 FACE_BORDER_POINTS = ["FB_" + str(i) for i in range(17)]
 FACE_BORDER_LIMBS_LEFT = [("FB_" + str(i), "FB_" + str(i - 1)) for i in reversed(range(1, 9))]

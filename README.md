@@ -59,3 +59,9 @@ Use bazel to run tests
 cd pose_format
 bazel test ... --test_output=errors
 ```
+
+Alternatively, use a different testing framework to run tests, such as regular Python unit testing. To run an individual
+test file:
+```sh
+python -m unittest discover -s pose_format/utils -p 'openpose_test.py'
+```

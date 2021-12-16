@@ -1,6 +1,7 @@
 import json
 import os
-from typing import List, Tuple
+import re
+from typing import List, Tuple, Dict, Any
 
 import math
 import numpy as np
@@ -157,25 +158,46 @@ OpenPose_Components = [
 ]
 
 
-def load_openpose(frames: list, fps: float = 24, width=1000, height=1000, depth=0):
+OpenPoseFrame = Dict[str, Any]
+OpenPoseFrames = Dict[int, OpenPoseFrame]
+
+
+def load_openpose(frames: OpenPoseFrames, fps: float = 24, width: int = 1000, height: int = 1000, depth: int = 0) -> Pose:
+    """
+    Loads a dictionary of OpenPose frames. If pose features of several people are present in a frame, only the first
+    person is extracted.
+
+    :param frames: A dictionary where keys are frame IDs, and values are individual frames. Each individual frame
+                   is also a dictionary.
+    :param fps: Framerate.
+    :param width: Width of pose space.
+    :param height: Height of pose space.
+    :param depth: Depth of pose space.
+    :return: Pose objects with a header specific to OpenPose and a body that contains a single array.
+    """
     dimensions = PoseHeaderDimensions(width=width, height=height, depth=depth)
 
     header: PoseHeader = PoseHeader(version=0.1, dimensions=dimensions, components=OpenPose_Components)
 
     total_points = header.total_points()
 
-    data = np.zeros(shape=(len(frames), 1, total_points, 2), dtype=np.float32)
-    confidence = np.zeros(shape=(len(frames), 1, total_points), dtype=np.float32)
-    for i, frame in enumerate(frames):
-        for j, person in enumerate(frame["people"][:1]):
-            idx = 0
+    # take the maximum of all frame IDs because some frames could be missing
+    num_frames = max(frames.keys()) + 1
+
+    # array dimensions: (frames, person, points, dimensions)
+    data = np.zeros(shape=(num_frames, 1, total_points, 2), dtype=np.float32)
+    confidence = np.zeros(shape=(num_frames, 1, total_points), dtype=np.float32)
+
+    for frame_id, frame in frames.items():
+        for person_id, person in enumerate(frame["people"][:1]):
+            keypoint_id = 0
             for component in header.components:
                 numbers = person[component.name]
                 for k in range(0, len(numbers), len(component.format)):
-                    data[i, j, idx, 0] = numbers[k + 0]
-                    data[i, j, idx, 1] = numbers[k + 1]
-                    confidence[i, j, idx] = numbers[k + 2]
-                    idx += 1
+                    data[frame_id, person_id, keypoint_id, 0] = numbers[k + 0]
+                    data[frame_id, person_id, keypoint_id, 1] = numbers[k + 1]
+                    confidence[frame_id, person_id, keypoint_id] = numbers[k + 2]
+                    keypoint_id += 1
 
     # Mask data
     mask = confidence == 0  # 0 means no-mask, 1 means with-mask
@@ -187,10 +209,41 @@ def load_openpose(frames: list, fps: float = 24, width=1000, height=1000, depth=
     return Pose(header, body)
 
 
-def load_openpose_directory(directory: str, fps: float = 24, width=1000, height=1000, depth=0):
-    frames = []
-    for entry in sorted(os.scandir(directory), key=lambda x: x.name):
-        with open(entry.path, "r") as f:
-            frames.append(json.load(f))
+def get_frame_id(filename: str) -> int:
+    """
+    Parses a filename to find the ID of a frame. Example file name for frame with ID 17:
+    `CAM2_000000000017_keypoints.json`.
+
+    :param filename: Name of openpose frame file.
+    :return: Frame ID as an integer.
+    """
+    pattern = "(?:^|\D)(\d+)\\_keypoints.json"
+    m = re.findall(pattern, filename)
+    frame_id = int(m[-1])
+
+    return frame_id
+
+
+def load_openpose_directory(directory: str, fps: float = 24, width: int = 1000, height: int = 1000, depth: int = 0) -> Pose:
+    """
+    Loads an Openpose directory where the poses of each frame are stored in a separate file, with a specific naming
+    scheme. The filename must follow this template: `[ARBITRARY CHARACTERS]_[FRAME_ID]_keypoints.json`.
+    Example file name for frame with ID 17: `CAM2_000000000017_keypoints.json`.
+
+    :param directory: Path to folder that contains pose files.
+    :param fps: Framerate.
+    :param width: Width of pose space.
+    :param height: Height of pose space.
+    :param depth: Depth of pose space.
+    :return: Pose objects with a header specific to OpenPose and a body that contains a single array.
+    """
+    frames = {}  # type: OpenPoseFrames
+
+    with os.scandir(directory) as entry_iterator:
+        for entry in entry_iterator:
+            with open(entry.path, "r") as f:
+                frame_id = get_frame_id(entry.name)
+                frame_dict = json.load(f)
+                frames[frame_id] = frame_dict
 
     return load_openpose(frames, fps=fps, width=width, height=height, depth=depth)

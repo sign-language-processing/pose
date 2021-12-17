@@ -2,14 +2,14 @@ import math
 import torch
 from pose_format.torch.representation.inner_angle import InnerAngleRepresentation
 
-from pose_format.pose_visualizer import PoseVisualizer
 
 from pose_format import Pose
+from pose_format.pose_visualizer import PoseVisualizer
+from pose_format.numpy.pose_body import NumPyPoseBody
 
 # import tensorflow as tf
 import numpy as np
 
-from pose_format.numpy.pose_body import NumPyPoseBody
 # from pose_format.tensorflow.pose_body import TensorflowPoseBody, TF_POSE_RECORD_DESCRIPTION
 from pose_format.torch.masked import MaskedTensor
 

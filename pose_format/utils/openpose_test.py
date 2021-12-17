@@ -213,6 +213,40 @@ class TestLoadOpenpose(TestCase):
 
         self.assertEqual(actual_shape, expected_shape)
 
+    def test_load_openpose_fixed_num_frames(self):
+
+        num_frames_openpose = 8
+        num_frames_video = 10
+        num_people = 1
+        num_dimensions = 2
+        num_missing_frames = 0
+
+        expected_shape = (num_frames_video, 1, OPENPOSE_TOTAL_KEYPOINTS, num_dimensions)
+
+        frames = _generate_random_frames_dict(num_frames_openpose, num_people, num_dimensions, num_missing_frames)
+        pose = load_openpose(frames, num_frames=num_frames_video)
+
+        actual_shape = pose.body.data.shape
+
+        self.assertEqual(actual_shape, expected_shape)
+
+    def test_load_openpose_fixed_num_frames_and_missing_frames(self):
+
+        num_frames_openpose = 14
+        num_frames_video = 17
+        num_people = 1
+        num_dimensions = 2
+        num_missing_frames = 3
+
+        expected_shape = (num_frames_video, 1, OPENPOSE_TOTAL_KEYPOINTS, num_dimensions)
+
+        frames = _generate_random_frames_dict(num_frames_openpose, num_people, num_dimensions, num_missing_frames)
+        pose = load_openpose(frames, num_frames=num_frames_video)
+
+        actual_shape = pose.body.data.shape
+
+        self.assertEqual(actual_shape, expected_shape)
+
 
 class TestLoadOpenposeDirectory(TestCase):
 

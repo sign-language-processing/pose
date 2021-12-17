@@ -1,7 +1,7 @@
 import json
 import os
 import re
-from typing import List, Tuple, Dict, Any
+from typing import List, Tuple, Dict, Any, Optional
 
 import math
 import numpy as np
@@ -162,7 +162,8 @@ OpenPoseFrame = Dict[str, Any]
 OpenPoseFrames = Dict[int, OpenPoseFrame]
 
 
-def load_openpose(frames: OpenPoseFrames, fps: float = 24, width: int = 1000, height: int = 1000, depth: int = 0) -> Pose:
+def load_openpose(frames: OpenPoseFrames, fps: float = 24, width: int = 1000, height: int = 1000,
+                  depth: int = 0, num_frames: Optional[int] = None) -> Pose:
     """
     Loads a dictionary of OpenPose frames. If pose features of several people are present in a frame, only the first
     person is extracted.
@@ -173,6 +174,8 @@ def load_openpose(frames: OpenPoseFrames, fps: float = 24, width: int = 1000, he
     :param width: Width of pose space.
     :param height: Height of pose space.
     :param depth: Depth of pose space.
+    :param num_frames: Number of frames when it is known and cannot be derived from OpenPose files. That is the case if
+                       the last frame(s) of a video are missing from the OpenPose output.
     :return: Pose objects with a header specific to OpenPose and a body that contains a single array.
     """
     dimensions = PoseHeaderDimensions(width=width, height=height, depth=depth)
@@ -181,8 +184,9 @@ def load_openpose(frames: OpenPoseFrames, fps: float = 24, width: int = 1000, he
 
     total_points = header.total_points()
 
-    # take the maximum of all frame IDs because some frames could be missing
-    num_frames = max(frames.keys()) + 1
+    if num_frames is None:
+        # take the maximum of all frame IDs because some frames could be missing
+        num_frames = max(frames.keys()) + 1
 
     # array dimensions: (frames, person, points, dimensions)
     data = np.zeros(shape=(num_frames, 1, total_points, 2), dtype=np.float32)
@@ -224,7 +228,8 @@ def get_frame_id(filename: str) -> int:
     return frame_id
 
 
-def load_openpose_directory(directory: str, fps: float = 24, width: int = 1000, height: int = 1000, depth: int = 0) -> Pose:
+def load_openpose_directory(directory: str, fps: float = 24, width: int = 1000, height: int = 1000,
+                            depth: int = 0, num_frames: Optional[int] = None) -> Pose:
     """
     Loads an Openpose directory where the poses of each frame are stored in a separate file, with a specific naming
     scheme. The filename must follow this template: `[ARBITRARY CHARACTERS]_[FRAME_ID]_keypoints.json`.
@@ -235,15 +240,17 @@ def load_openpose_directory(directory: str, fps: float = 24, width: int = 1000, 
     :param width: Width of pose space.
     :param height: Height of pose space.
     :param depth: Depth of pose space.
+    :param num_frames: Number of frames when it is known and cannot be derived from OpenPose files. That is the case if
+                       the last frame(s) of a video are missing from the OpenPose output.
     :return: Pose objects with a header specific to OpenPose and a body that contains a single array.
     """
     frames = {}  # type: OpenPoseFrames
 
     with os.scandir(directory) as entry_iterator:
-        for entry in entry_iterator:
+        for entry in entry_iterator:  # type: os.DirEntry
             with open(entry.path, "r") as f:
                 frame_id = get_frame_id(entry.name)
                 frame_dict = json.load(f)
                 frames[frame_id] = frame_dict
 
-    return load_openpose(frames, fps=fps, width=width, height=height, depth=depth)
+    return load_openpose(frames, fps=fps, width=width, height=height, depth=depth, num_frames=num_frames)

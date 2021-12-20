@@ -13,13 +13,14 @@ from .pose import Pose
 
 
 class PoseVisualizer:
-  def __init__(self, pose: Pose):
+  def __init__(self, pose: Pose, thickness=None):
     self.pose = pose
+    self.thickness = thickness
 
   def _draw_frame(self, frame: ma.MaskedArray, frame_confidence: np.ndarray, img) -> np.ndarray:
     background_color = img[0][0]  # Estimation of background color for opacity. `mean` is slow
 
-    thickness = round(math.sqrt(img.shape[0] * img.shape[1]) / 300)
+    thickness = self.thickness if self.thickness is not None else round(math.sqrt(img.shape[0] * img.shape[1]) / 150)
     radius = round(thickness / 2)
 
     for person, person_confidence in zip(frame, frame_confidence):
@@ -58,7 +59,7 @@ class PoseVisualizer:
 
               color = tuple(np.mean([_point_color(p1), _point_color(p2)], axis=0))
 
-              cv2.line(img, point1, point2, color, thickness * 2, lineType=16)
+              cv2.line(img, point1, point2, color, thickness, lineType=cv2.LINE_AA)
 
 
               # deg = math.degrees(math.atan2(point1[1] - point2[1], point1[0] - point2[0]))

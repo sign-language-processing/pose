@@ -17,23 +17,36 @@ pip install pose-format
 
 To load a `.pose` file, use the `PoseReader` class:
 ```python
+from pose_format.pose import Pose
+
 buffer = open("file.pose", "rb").read()
 p = Pose.read(buffer)
 ```
 By default, it uses NumPy for the data, but you can also use `torch` and `tensorflow` by writing:
 ```python
+from pose_format.pose import Pose
+from pose_format.torch.pose_body import TorchPoseBody
+from pose_format.tensorflow.pose_body import TensorflowPoseBody
+
+buffer = open("file.pose", "rb").read()
+
 p = Pose.read(buffer, TorchPoseBody)
 p = Pose.read(buffer, TensorflowPoseBody)
 ```
 
-To load an OpenPose `directory`, use the `openpose` utility:
+### Loading OpenPose data
+
+To load an OpenPose `directory`, use the `load_openpose_directory` utility:
 ```python
+from pose_format.utils.openpose import load_openpose_directory
+
+directory = "/path/to/openpose/directory"
 p = load_openpose_directory(directory, fps=24, width=1000, height=1000)
 ```
 
 #### Data Normalization
 To normalize all of the data to be in the same scale, we can normalize every pose by a constant feature of their body.
-For example, for people we can use the the average span of their shoulders throughout the video to be a constant width.
+For example, for people we can use the average span of their shoulders throughout the video to be a constant width.
 ```python
 p.normalize(p.header.normalization_info(
     p1=("pose_keypoints_2d", "RShoulder"),

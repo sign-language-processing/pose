@@ -60,17 +60,20 @@ from pose_format.torch.masked import MaskedTensor
 # p = p.bbox()
 #
 #
-buffer = open("/home/nlp/amit/PhD/PoseFormat/sample-data/video/sample.pose", "rb").read()
+buffer = open("video/sample.pose", "rb").read()
 p = Pose.read(buffer, NumPyPoseBody)
+p.focus()
 ratio = 256 / p.header.dimensions.width
 p.body.data *= np.array([ratio, ratio])
 p.header.dimensions.width = 256
 p.header.dimensions.height *= ratio
 p.header.dimensions.height = int(p.header.dimensions.height)
 
-visualizer = PoseVisualizer(p)
+visualizer = PoseVisualizer(p, thickness=1)
 frame = next(iter(visualizer.draw(background_color=(255, 255, 255))))
-visualizer.save_frame("test.png", frame)
+visualizer.save_frame("test_256.png", frame)
+with open("test_256.pose", "wb") as f:
+    p.write(f)
 #
 # frames = list(visualizer.draw_on_video(video))
 # visualizer.save_video("test.mp4", frames)

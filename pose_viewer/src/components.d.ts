@@ -26,6 +26,7 @@ export namespace Components {
         "src": string;
         "svg": boolean;
         "syncMedia": (media: HTMLMediaElement) => Promise<void>;
+        "thickness": number;
         "width": string;
     }
 }
@@ -64,6 +65,7 @@ declare namespace LocalJSX {
         "readyState"?: number;
         "src"?: string;
         "svg"?: boolean;
+        "thickness"?: number;
         "width"?: string;
     }
     interface IntrinsicElements {

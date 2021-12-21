@@ -27,6 +27,7 @@ export class PoseViewer {
   @Prop() height: string = null;
   @Prop() aspectRatio: number = null;
   @Prop() padding: string = null;
+  @Prop() thickness: number = null;
 
   @Prop() background: string = null;
 

@@ -7,11 +7,26 @@
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 export namespace Components {
     interface PoseViewer {
+        "aspectRatio": number;
         "autoplay": boolean;
+        "background": string;
+        "currentTime": number;
+        "duration": number;
+        "ended": boolean;
+        "getPose": () => Promise<any>;
+        "height": string;
         "loop": boolean;
+        "nextFrame": () => Promise<void>;
+        "padding": string;
+        "pause": () => Promise<void>;
+        "paused": boolean;
+        "play": () => Promise<void>;
         "playbackRate": number;
+        "readyState": number;
         "src": string;
+        "svg": boolean;
         "syncMedia": (media: HTMLMediaElement) => Promise<void>;
+        "width": string;
     }
 }
 declare global {
@@ -27,17 +42,29 @@ declare global {
 }
 declare namespace LocalJSX {
     interface PoseViewer {
+        "aspectRatio"?: number;
         "autoplay"?: boolean;
+        "background"?: string;
+        "currentTime"?: number;
+        "duration"?: number;
+        "ended"?: boolean;
+        "height"?: string;
         "loop"?: boolean;
         "onCanplaythrough$"?: (event: CustomEvent<void>) => void;
         "onEnded$"?: (event: CustomEvent<void>) => void;
+        "onFirstRender$"?: (event: CustomEvent<void>) => void;
         "onLoadeddata$"?: (event: CustomEvent<void>) => void;
         "onLoadedmetadata$"?: (event: CustomEvent<void>) => void;
         "onLoadstart$"?: (event: CustomEvent<void>) => void;
         "onPause$"?: (event: CustomEvent<void>) => void;
         "onPlay$"?: (event: CustomEvent<void>) => void;
+        "padding"?: string;
+        "paused"?: boolean;
         "playbackRate"?: number;
+        "readyState"?: number;
         "src"?: string;
+        "svg"?: boolean;
+        "width"?: string;
     }
     interface IntrinsicElements {
         "pose-viewer": PoseViewer;

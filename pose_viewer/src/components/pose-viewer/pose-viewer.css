@@ -1,3 +1,12 @@
+:host {
+  display: inline-block;
+}
+
+svg, canvas {
+  /* required for proper resizing in mobile devices */
+  max-width: 100%;
+}
+
 svg circle {
   stroke: black;
   stroke-width: 1px;
@@ -8,4 +17,8 @@ svg line {
   stroke-width: 8px;
   opacity: 0.8;
   stroke: black;
+}
+
+canvas {
+  display: block;
 }

@@ -2,25 +2,26 @@ import math
 import torch
 from pose_format.torch.representation.inner_angle import InnerAngleRepresentation
 
-from pose_format.pose_visualizer import PoseVisualizer
 
 from pose_format import Pose
-
-import tensorflow as tf
-
+from pose_format.pose_visualizer import PoseVisualizer
 from pose_format.numpy.pose_body import NumPyPoseBody
-from pose_format.tensorflow.pose_body import TensorflowPoseBody, TF_POSE_RECORD_DESCRIPTION
+
+# import tensorflow as tf
+import numpy as np
+
+# from pose_format.tensorflow.pose_body import TensorflowPoseBody, TF_POSE_RECORD_DESCRIPTION
 from pose_format.torch.masked import MaskedTensor
 
-p1s = MaskedTensor(tensor=torch.tensor([[0, -1, 0], [0, -1, 0]], dtype=torch.float32))
-p2s = MaskedTensor(tensor=torch.tensor([[0, 0, 0], [0, 0, 0]], dtype=torch.float32))
-p3s = MaskedTensor(tensor=torch.tensor([[-1, 1, 0], [-1, 1, 0]], dtype=torch.float32))
-
-print(p1s.shape)
-
-inner_angle = InnerAngleRepresentation()
-print(inner_angle(p1s, p2s, p3s))
-print(math.pi * 135 / 180)
+# p1s = MaskedTensor(tensor=torch.tensor([[0, -1, 0], [0, -1, 0]], dtype=torch.float32))
+# p2s = MaskedTensor(tensor=torch.tensor([[0, 0, 0], [0, 0, 0]], dtype=torch.float32))
+# p3s = MaskedTensor(tensor=torch.tensor([[-1, 1, 0], [-1, 1, 0]], dtype=torch.float32))
+#
+# print(p1s.shape)
+#
+# inner_angle = InnerAngleRepresentation()
+# print(inner_angle(p1s, p2s, p3s))
+# print(math.pi * 135 / 180)
 
 #
 # pose = "1.pose"
@@ -59,9 +60,17 @@ print(math.pi * 135 / 180)
 # p = p.bbox()
 #
 #
-# visualizer = PoseVisualizer(p)
-# frame = next(iter(visualizer.draw_on_video(video)))
-# visualizer.save_frame("test.png", frame)
+buffer = open("/home/nlp/amit/PhD/PoseFormat/sample-data/video/sample.pose", "rb").read()
+p = Pose.read(buffer, NumPyPoseBody)
+ratio = 256 / p.header.dimensions.width
+p.body.data *= np.array([ratio, ratio])
+p.header.dimensions.width = 256
+p.header.dimensions.height *= ratio
+p.header.dimensions.height = int(p.header.dimensions.height)
+
+visualizer = PoseVisualizer(p)
+frame = next(iter(visualizer.draw(background_color=(255, 255, 255))))
+visualizer.save_frame("test.png", frame)
 #
 # frames = list(visualizer.draw_on_video(video))
 # visualizer.save_video("test.mp4", frames)

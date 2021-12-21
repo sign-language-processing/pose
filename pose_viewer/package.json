@@ -1,6 +1,6 @@
 {
   "name": "pose-viewer",
-  "version": "0.0.3",
+  "version": "0.2.3",
   "description": "Stencil Component Starter",
   "main": "dist/index.cjs.js",
   "module": "dist/index.js",
@@ -15,15 +15,15 @@
     "loader/"
   ],
   "scripts": {
-    "build": "stencil build --docs",
+    "build": "stencil build --docs --prod",
     "start": "stencil build --dev --watch --serve",
     "test": "stencil test --spec --e2e",
     "test.watch": "stencil test --spec --e2e --watchAll",
     "generate": "stencil generate"
   },
   "dependencies": {
-    "@stencil/core": "^2.5.2",
-    "pose-utils": "file:../lib/typescript"
+    "@stencil/core": "^2.6.0",
+    "pose-format": "^1.0.0"
   },
   "license": "MIT",
   "devDependencies": {

@@ -1,6 +1,12 @@
-import {Component, Event, EventEmitter, h, Method, Prop, State} from '@stencil/core';
+// @ts-ignore
+import {Component, Element, Event, EventEmitter, h, Host, Method, Prop, Watch} from '@stencil/core';
+import {Pose, PoseModel} from "pose-format";
+import {PoseRenderer} from "./renderers/pose-renderer";
+import {SVGPoseRenderer} from "./renderers/svg.pose-renderer";
+import {CanvasPoseRenderer} from "./renderers/canvas.pose-renderer";
 
-import {Pose, PoseLimb, PoseModel, PosePointModel, RGBColor} from "pose-utils";
+declare type ResizeObserver = any;
+declare var ResizeObserver: ResizeObserver;
 
 
 @Component({
@@ -9,18 +15,35 @@ import {Pose, PoseLimb, PoseModel, PosePointModel, RGBColor} from "pose-utils";
   shadow: true
 })
 export class PoseViewer {
+  @Element() element: HTMLElement;
+  private resizeObserver: ResizeObserver;
+
+  private lastSrc: string;
   @Prop() src: string; // Source URL for .pose file
+  @Prop() svg: boolean = false; // Render in an SVG instead of a canvas
+
+  // Dimensions
+  @Prop() width: string = null;
+  @Prop() height: string = null;
+  @Prop() aspectRatio: number = null;
+  @Prop() padding: string = null;
+
+  @Prop() background: string = null;
+
+  elWidth: number;
+  elHeight: number;
+  elPadding: { width: number, height: number };
 
   // MediaElement-like properties
   @Prop({mutable: true}) loop: boolean = false;
   @Prop() autoplay: boolean = true;
   @Prop({mutable: true}) playbackRate: number = 1;
 
-  @State() currentTime: number = NaN; // This affects re-rendering
-  duration: number = NaN;
-  ended: boolean = false;
-  paused: boolean = true;
-  readyState: number = 0;
+  @Prop({mutable: true}) currentTime: number = NaN; // This affects re-rendering
+  @Prop({mutable: true}) duration: number = NaN;
+  @Prop({mutable: true}) ended: boolean = false;
+  @Prop({mutable: true}) paused: boolean = true;
+  @Prop({mutable: true}) readyState: number = 0;
 
   // MediaElement-like events
   @Event() canplaythrough$: EventEmitter<void>;
@@ -30,21 +53,58 @@ export class PoseViewer {
   @Event() loadstart$: EventEmitter<void>;
   @Event() pause$: EventEmitter<void>;
   @Event() play$: EventEmitter<void>;
+  @Event() firstRender$: EventEmitter<void>;
   // @Event() ratechange$: EventEmitter<void>;
   // @Event() seeked$: EventEmitter<void>;
   // @Event() seeking$: EventEmitter<void>;
   // @Event() timeupdate$: EventEmitter<void>;
 
+  hasRendered = false;
+
+  renderer!: PoseRenderer;
 
   media: HTMLMediaElement;
   pose: PoseModel;
 
   private loopInterval: any;
 
-  async componentWillLoad() {
+  componentWillLoad() {
+    this.renderer = this.svg ? new SVGPoseRenderer(this) : new CanvasPoseRenderer(this);
+
+    return this.srcChange();
+  }
+
+  componentDidLoad() {
+    this.resizeObserver = new ResizeObserver(this.setDimensions.bind(this));
+    this.resizeObserver.observe(this.element);
+  }
+
+  @Watch('src')
+  async srcChange() {
+    // Can occur from both an attribute change AND componentWillLoad event
+    if (this.src === this.lastSrc) {
+      return;
+    }
+    this.lastSrc = this.src;
+
+    // Clear previous pose
+    this.clearInterval();
+    this.setDimensions();
+    delete this.pose;
+    this.currentTime = NaN;
+    this.duration = NaN;
+    this.hasRendered = false;
+
+    if (!this.src) {
+      return;
+    }
+    // Load new pose
+    this.ended = false;
     this.loadstart$.emit();
     this.pose = await Pose.fromRemote(this.src);
-    console.log(this.pose);
+
+    this.setDimensions();
+
     // Loaded done events
     this.loadedmetadata$.emit();
     this.loadeddata$.emit();
@@ -58,8 +118,58 @@ export class PoseViewer {
     }
   }
 
+  setDimensions() {
+    this.elPadding = {width: 0, height: 0};
+    if (!this.pose) {
+      this.elWidth = 0;
+      this.elHeight = 0;
+      return;
+    }
+
+    // When nothing is marked, use pose dimensions
+    if (!this.width && !this.height) {
+      this.elWidth = this.pose.header.width;
+      this.elHeight = this.pose.header.height;
+      return;
+    }
+
+    const rect = this.element.getBoundingClientRect();
+    const parseSize = (size, by) => size.endsWith("px") ? Number(size.slice(0, -2)) : (size.endsWith("%") ? by * size.slice(0, -1) / 100 : Number(size));
+
+    // When both are marked,
+    if (this.width && this.height) {
+      this.elWidth = parseSize(this.width, rect.width);
+      this.elHeight = parseSize(this.height, rect.height);
+    } else if (this.width) {
+      this.elWidth = parseSize(this.width, rect.width);
+      this.elHeight = this.aspectRatio ? this.elWidth * this.aspectRatio :
+        (this.pose.header.height / this.pose.header.width) * this.elWidth;
+    } else if (this.height) {
+      this.elHeight = parseSize(this.height, rect.height);
+      this.elWidth = this.aspectRatio ? this.elHeight / this.aspectRatio :
+        (this.pose.header.width / this.pose.header.height) * this.elHeight;
+    }
+
+    // General padding
+    if (this.padding) {
+      this.elPadding.width += parseSize(this.padding, this.elWidth);
+      this.elPadding.height += parseSize(this.padding, this.elHeight);
+    }
+
+    // Aspect ratio padding
+    const ratioWidth = this.elWidth - this.elPadding.width * 2;
+    const ratioHeight = this.elHeight - this.elPadding.height * 2;
+    const elAR = ratioWidth / ratioHeight;
+    const poseAR = this.pose.header.width / this.pose.header.height;
+    if (poseAR > elAR) {
+      this.elPadding.height += (poseAR - elAR) * ratioHeight / 2;
+    } else {
+      this.elPadding.width += (1 / poseAR - 1 / elAR) * ratioWidth / 2;
+    }
+  }
+
   @Method()
-  async syncMedia(media: HTMLMediaElement): Promise<void> {
+  async syncMedia(media: HTMLMediaElement) {
     this.media = media;
 
     this.media.addEventListener('pause', this.pause.bind(this));
@@ -82,11 +192,36 @@ export class PoseViewer {
     }
   }
 
+  @Method()
+  async getPose() {
+    return this.pose;
+  }
+
+
+  @Method()
+  async nextFrame() {
+    const newTime = this.currentTime + 1 / this.pose.body.fps
+    if (newTime > this.duration) {
+      if (this.loop) {
+        this.currentTime = newTime % this.duration;
+      } else {
+        this.ended$.emit();
+        this.ended = true;
+      }
+    } else {
+      this.currentTime = newTime;
+    }
+  }
+
   frameTime(time: number) {
+    if (!this.pose) {
+      return 0;
+    }
     return Math.floor(time * this.pose.body.fps) / this.pose.body.fps;
   }
 
-  play() {
+  @Method()
+  async play() {
     if (!this.paused) {
       this.clearInterval();
     }
@@ -99,8 +234,7 @@ export class PoseViewer {
       this.currentTime = 0;
     }
 
-    const intervalTime = 1000 / (this.pose.body.fps * this.playbackRate)
-    console.log("intervalTime", intervalTime)
+    const intervalTime = 1000 / (this.pose.body.fps * this.playbackRate);
     if (this.media) {
       this.loopInterval = setInterval(() => this.currentTime = this.frameTime(this.media.currentTime), intervalTime);
     } else {
@@ -124,7 +258,8 @@ export class PoseViewer {
     }
   }
 
-  pause() {
+  @Method()
+  async pause() {
     this.paused = true;
     this.pause$.emit();
     this.clearInterval();
@@ -140,63 +275,8 @@ export class PoseViewer {
     this.clearInterval();
   }
 
-  // Render functions
-
-  isJointValid(joint: PosePointModel) {
-    return joint.C > 0;
-  }
-
-  renderJoints(joints: PosePointModel[], colors: RGBColor[]) {
-    return joints
-      .filter(this.isJointValid.bind(this))
-      .map((joint, i) => {
-        const {R, G, B} = colors[i % colors.length];
-        return (<circle
-          cx={joint.X}
-          cy={joint.Y}
-          r={4}
-          class="joint draggable"
-          style={{
-            fill: `rgb(${R}, ${G}, ${B})`,
-            opacity: String(joint.C)
-          }}
-          data-id={i}>
-        </circle>);
-      });
-  }
-
-  renderLimbs(limbs: PoseLimb[], joints: PosePointModel[], colors: RGBColor[]) {
-    return limbs.map(({from, to}) => {
-      const a = joints[from];
-      const b = joints[to];
-      if (!this.isJointValid(a) || !this.isJointValid(b)) {
-        return "";
-      }
-
-      const c1 = colors[from % colors.length];
-      const c2 = colors[to % colors.length];
-      const {R, G, B} = {
-        R: (c1.R + c2.R) / 2,
-        G: (c1.G + c2.G) / 2,
-        B: (c1.B + c2.B) / 2,
-      };
-
-      return (<line
-        x1={joints[from].X}
-        y1={joints[from].Y}
-        x2={joints[to].X}
-        y2={joints[to].Y}
-        style={{
-          stroke: `rgb(${R}, ${G}, ${B})`,
-          opacity: String((joints[from].C + joints[to].C) / 2)
-        }}>
-      </line>);
-    });
-  }
-
-
   render() {
-    if (!this.pose || isNaN(this.currentTime)) {
+    if (!this.pose || isNaN(this.currentTime) || !this.renderer) {
       return "";
     }
 
@@ -205,19 +285,18 @@ export class PoseViewer {
     const frameId = Math.floor(currentTime * this.pose.body.fps);
     const frame = this.pose.body.frames[frameId];
 
+    if (!this.hasRendered) {
+      requestAnimationFrame(() => {
+        this.hasRendered = true;
+        this.firstRender$.emit();
+      });
+    }
+
     return (
-      <svg xmlns="http://www.w3.org/2000/svg" width={this.pose.header.width} height={this.pose.header.height}>
-        <g>
-          {frame.people.map(person => this.pose.header.components.map(component => {
-            const joints = person[component.name];
-            return [
-              this.renderLimbs(component.limbs, joints, component.colors),
-              this.renderJoints(joints, component.colors),
-            ]
-          }))}
-        </g>
-      </svg>
-    )
+      <Host>
+        {this.renderer.render(frame)}
+      </Host>
+    );
   }
 }
 

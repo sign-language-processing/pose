@@ -16,7 +16,7 @@ HAND_POINTS = mp_holistic.HandLandmark._member_names_
 HAND_LIMBS = [(int(a), int(b)) for a, b in mp_holistic.HAND_CONNECTIONS]
 
 FACE_POINTS = [str(i) for i in range(468)]
-FACE_LIMBS = [(int(a), int(b)) for a, b in mp_holistic.FACE_CONNECTIONS]
+FACE_LIMBS = [(int(a), int(b)) for a, b in mp_holistic.FACEMESH_TESSELATION]
 
 FLIPPED_BODY_POINTS = ['NOSE', 'RIGHT_EYE_INNER', 'RIGHT_EYE', 'RIGHT_EYE_OUTER', 'LEFT_EYE_INNER', 'LEFT_EYE',
                        'LEFT_EYE_OUTER', 'RIGHT_EAR', 'LEFT_EAR', 'MOUTH_RIGHT', 'MOUTH_LEFT', 'RIGHT_SHOULDER',

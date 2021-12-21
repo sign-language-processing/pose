@@ -1,10 +1,13 @@
 {
-  "name": "pose-utils",
+  "name": "pose-format",
   "version": "1.0.0",
   "description": "Library for handling .pose files",
   "scripts": {
     "start": "tsc -w"
   },
+  "files": [
+    "dist/"
+  ],
   "main": "dist/index.js",
   "module": "dist/index.js",
   "author": "Amit Moryossef",

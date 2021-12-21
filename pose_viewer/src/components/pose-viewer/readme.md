@@ -23,6 +23,7 @@
 | `readyState`   | `ready-state`   |             | `number`  | `0`         |
 | `src`          | `src`           |             | `string`  | `undefined` |
 | `svg`          | `svg`           |             | `boolean` | `false`     |
+| `thickness`    | `thickness`     |             | `number`  | `null`      |
 | `width`        | `width`         |             | `string`  | `null`      |
 
 

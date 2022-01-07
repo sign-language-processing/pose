@@ -112,8 +112,8 @@ class MaskedTensor:
         return [MaskedTensor(tensor=tensor, mask=mask) for tensor, mask in zip(tensors, masks)]
 
     def reshape(self, shape: tuple):
-        tensor = self.tensor.reshape(shape=shape)
-        mask = self.mask.reshape(shape=shape)
+        tensor = tf.reshape(self.tensor, shape=shape)
+        mask = tf.reshape(self.mask, shape=shape)
         return MaskedTensor(tensor=tensor, mask=mask)
 
     def gather(self, indexes):

@@ -1,5 +1,5 @@
 from itertools import chain
-from typing import List, BinaryIO, Dict
+from typing import List, BinaryIO, Dict, Type
 
 import numpy as np
 import numpy.ma as ma
@@ -23,7 +23,7 @@ class Pose:
     self.body = body
 
   @staticmethod
-  def read(buffer: bytes, pose_body: PoseBody = NumPyPoseBody):
+  def read(buffer: bytes, pose_body: Type[PoseBody] = NumPyPoseBody):
     reader = BufferReader(buffer)
     header = PoseHeader.read(reader)
     body = pose_body.read(header, reader)

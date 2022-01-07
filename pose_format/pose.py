@@ -64,12 +64,7 @@ class Pose:
 
     scale = scale_factor / float(mean_distance)  # scale all points to dist/scale
 
-    print("scale", scale)
-    # print("mean_distance", mean_distance.tensor)
-    print("float(mean_distance)", float(mean_distance))
-
     if round(scale, 5) != 1:
-      print("rounding")
       self.body.data = self.body.data * scale
 
     return self

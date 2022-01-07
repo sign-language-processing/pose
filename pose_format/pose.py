@@ -1,5 +1,5 @@
 from itertools import chain
-from typing import List, BinaryIO, Dict
+from typing import List, BinaryIO, Dict, Type
 
 import numpy as np
 import numpy.ma as ma
@@ -23,7 +23,7 @@ class Pose:
     self.body = body
 
   @staticmethod
-  def read(buffer: bytes, pose_body: PoseBody = NumPyPoseBody):
+  def read(buffer: bytes, pose_body: Type[PoseBody] = NumPyPoseBody):
     reader = BufferReader(buffer)
     header = PoseHeader.read(reader)
     body = pose_body.read(header, reader)
@@ -64,12 +64,7 @@ class Pose:
 
     scale = scale_factor / float(mean_distance)  # scale all points to dist/scale
 
-    print("scale", scale)
-    # print("mean_distance", mean_distance.tensor)
-    print("float(mean_distance)", float(mean_distance))
-
-    if round(scale, 5) != 1:
-      print("rounding")
+    if round(scale, 5) != 1: # scale in numpy is often 0.99999..., presumably because of over-precision
       self.body.data = self.body.data * scale
 
     return self

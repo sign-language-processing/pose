@@ -9,8 +9,8 @@ import numpy as np
 
 class TestMaskedTensor(TestCase):
     def test_mean(self):
-        tensor = np.array([[1, 2], [3, 4]], dtype=np.float)
-        mask = np.array([[1, 1], [0, 1]], dtype=np.bool)
+        tensor = np.array([[1, 2], [3, 4], [5, 6]], dtype=np.float)
+        mask = np.array([[1, 1], [0, 1], [1, 1]], dtype=np.bool)
 
         masked_np = ma.array(tensor, mask=np.logical_not(mask))
         mean_ma = masked_np.mean(axis=(0))
@@ -24,8 +24,8 @@ class TestMaskedTensor(TestCase):
         self.assertTrue(np.allclose(np_tf, np_ma), msg="Mean is not equal to expected")
 
     def test_std(self):
-        tensor = np.array([[1, 2], [3, 4]], dtype=np.float)
-        mask = np.array([[1, 1], [0, 1]], dtype=np.bool)
+        tensor = np.array([[1, 2], [3, 4], [5, 6]], dtype=np.float)
+        mask = np.array([[1, 1], [0, 1], [1, 1]], dtype=np.bool)
 
         masked_np = ma.array(tensor, mask=np.logical_not(mask))
         std_ma = masked_np.std(axis=(0))

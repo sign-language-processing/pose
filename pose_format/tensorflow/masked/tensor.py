@@ -56,7 +56,7 @@ class MaskedTensor:
     def __eq__(self, other):
         return self.tensor == other
 
-    def __pow__(self, power, modulo=None):
+    def __pow__(self, power):
         return self.arithmetic("__pow__", power)
 
     def square(self):
@@ -67,7 +67,7 @@ class MaskedTensor:
         tensor = tf.math.sqrt(self.tensor)
         return MaskedTensor(tensor=tensor, mask=self.mask)
 
-    def sum(self, axis: int):
+    def sum(self, axis):
         tensor = tf.math.reduce_sum(self.tensor, axis=axis)
         mask = tf.cast(tf.math.reduce_prod(tf.cast(self.mask, tf.int32), axis=axis), tf.bool)
         return MaskedTensor(tensor=tensor, mask=mask)

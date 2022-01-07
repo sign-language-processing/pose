@@ -64,7 +64,7 @@ class Pose:
 
     scale = scale_factor / float(mean_distance)  # scale all points to dist/scale
 
-    if round(scale, 5) != 1:
+    if round(scale, 5) != 1: # scale in numpy is often 0.99999..., presumably because of over-precision
       self.body.data = self.body.data * scale
 
     return self

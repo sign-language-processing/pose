@@ -93,7 +93,7 @@ class NumPyPoseBody(PoseBody):
         return TensorflowPoseBody(self.fps, tf_data, tf_confidence)
 
     def zero_filled(self):
-        self.data = self.data.filled(0)
+        self.data = ma.array(self.data.filled(0), mask=self.data.mask)
         return self
 
     def matmul(self, matrix: np.ndarray):

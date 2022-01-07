@@ -34,17 +34,25 @@ p = Pose.read(buffer, TorchPoseBody)
 p = Pose.read(buffer, TensorflowPoseBody)
 ```
 
-### Loading OpenPose data
-
-To load an OpenPose `directory`, use the `load_openpose_directory` utility:
+After creating a pose object that holds numpy data, it can also be converted to torch or tensorflow:
 ```python
-from pose_format.utils.openpose import load_openpose_directory
+from pose_format.numpy import NumPyPoseBody
 
-directory = "/path/to/openpose/directory"
-p = load_openpose_directory(directory, fps=24, width=1000, height=1000)
+# create a pose object that internally stores the data as a numpy array
+p = Pose.read(buffer, NumPyPoseBody)
+
+# return stored data as a torch tensor
+p.torch()
+
+# return stored data as a tensorflow tensor
+p.tensorflow()
 ```
 
-#### Data Normalization
+### Common pose processing operations
+
+Once poses are loaded, the library offers many ways to manipulate `Pose` objects.
+
+#### Data normalization (skeleton scale)
 To normalize all of the data to be in the same scale, we can normalize every pose by a constant feature of their body.
 For example, for people we can use the average span of their shoulders throughout the video to be a constant width.
 ```python
@@ -54,16 +62,40 @@ p.normalize(p.header.normalization_info(
 ))
 ```
 
-#### Data Augmentation
+#### Data normalization (keypoint distribution)
+Keypoint values can be standardized to have a mean of zero and unit variance:
+```python
+p.normalize_distribution()
+```
+
+The default behaviour is to compute a separate mean and standard deviation for each keypoint and each dimension (usually x and y).
+The `axis` argument can be used to customize this. For instance, to compute only two global means and standard deviations for the
+x and y dimension:
+
+```python
+p.normalize_distribution(axis=(0, 1, 2))
+```
+
+#### Data augmentation
 ```python
 p.augment2d(rotation_std=0.2, shear_std=0.2, scale_std=0.2)
 ```
 
-#### Data Interpolation
+#### Data interpolation
 To change the frame rate of a video, using data interpolation, use the `interpolate_fps` method which gets a new `fps` and a interpolation `kind`.
 ```python
 p.interpolate_fps(24, kind='cubic')
 p.interpolate_fps(24, kind='linear')
+```
+
+### Loading OpenPose data
+
+To load an OpenPose `directory`, use the `load_openpose_directory` utility:
+```python
+from pose_format.utils.openpose import load_openpose_directory
+
+directory = "/path/to/openpose/directory"
+p = load_openpose_directory(directory, fps=24, width=1000, height=1000)
 ```
 
 ### Testing

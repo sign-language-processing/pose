@@ -51,37 +51,27 @@ class Pose:
     """
     Normalize the point to a fixed distance between two points
     """
-    mask = self.body.data.mask
     transposed = self.body.zero_filled().points_perspective()
 
     p1s = transposed[info.p1]
     p2s = transposed[info.p2]
 
-    if transposed.shape[1] == 0:
-      p1s = p1s[0]
-      p2s = p2s[0]
-    else:
-      p1s = ma.concatenate(p1s)
-      p2s = ma.concatenate(p2s)
-
     # Move all points so center is (0,0)
-    center = np.mean((p2s + p1s) / 2, axis=0)
+    center = ((p2s + p1s) / 2).mean(axis=(0, 1))
     self.body.data -= center
 
-    mean_distance = np.mean(distance_batch(p1s, p2s))
+    mean_distance = distance_batch(p1s, p2s).mean()
 
-    scale = scale_factor / mean_distance  # scale all points to dist/scale
+    scale = scale_factor / float(mean_distance)  # scale all points to dist/scale
 
-    if round(scale, 5) != 1:
-      self.body.data = ma.multiply(self.body.data, scale)
-
-    self.body.data = ma.array(self.body.data, mask=mask)
+    if round(scale, 5) != 1: # scale in numpy is often 0.99999..., presumably because of over-precision
+      self.body.data = self.body.data * scale
 
     return self
 
-  def normalize_distribution(self, mu=None, std=None):
-    mu = mu if mu is not None else ma.mean(self.body.data, axis=(0, 1))
-    std = std if std is not None else ma.std(self.body.data, axis=(0, 1))
+  def normalize_distribution(self, mu=None, std=None, axis=(0, 1)):
+    mu = mu if mu is not None else self.body.data.mean(axis=axis)
+    std = std if std is not None else self.body.data.std(axis=axis)
 
     self.body.data = (self.body.data - mu) / std
 

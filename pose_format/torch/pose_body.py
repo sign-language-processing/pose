@@ -36,7 +36,7 @@ class TorchPoseBody(PoseBody):
         return self.data.permute(POINTS_DIMS)
 
     def get_points(self, indexes: List[int]):
-        data = self.data.permute(POINTS_DIMS)
+        data = self.points_perspective()
         new_data = data[indexes].permute(POINTS_DIMS)
 
         confidence_reshape = (2, 1, 0)

@@ -1,5 +1,4 @@
-import numpy as np
-
-
 def distance_batch(p1s, p2s):
-    return np.sqrt(((p1s - p2s) ** 2).sum(axis=-1))
+    squared = (p1s - p2s) ** 2
+    summed = squared.sum(axis=-1)
+    return summed ** 0.5

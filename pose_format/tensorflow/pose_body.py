@@ -44,6 +44,9 @@ class TensorflowPoseBody(PoseBody):
 
         return self.select_frames(select_indexes), select_indexes
 
+    def points_perspective(self):
+        return self.data.transpose(perm=POINTS_DIMS)
+
     def get_points(self, indexes: List[int]):
         data = self.data.transpose(perm=POINTS_DIMS)
         new_data = data[indexes].transpose(perm=POINTS_DIMS)

@@ -105,8 +105,8 @@ cd pose_format
 bazel test ... --test_output=errors
 ```
 
-Alternatively, use a different testing framework to run tests, such as regular Python unit testing. To run an individual
+Alternatively, use a different testing framework to run tests, such as pytest. To run an individual
 test file:
 ```sh
-python -m unittest discover -s pose_format/utils -p 'openpose_test.py'
+pytest pose_format/tensorflow/masked/tensor_test.py
 ```

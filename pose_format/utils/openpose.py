@@ -189,11 +189,12 @@ def load_openpose(frames: OpenPoseFrames, fps: float = 24, width: int = 1000, he
         num_frames = max(frames.keys()) + 1
 
     # array dimensions: (frames, person, points, dimensions)
-    data = np.zeros(shape=(num_frames, 1, total_points, 2), dtype=np.float32)
-    confidence = np.zeros(shape=(num_frames, 1, total_points), dtype=np.float32)
+    people = max([len(frame["people"]) for frame in frames.values()])
+    data = np.zeros(shape=(num_frames, people, total_points, 2), dtype=np.float32)
+    confidence = np.zeros(shape=(num_frames, people, total_points), dtype=np.float32)
 
     for frame_id, frame in frames.items():
-        for person_id, person in enumerate(frame["people"][:1]):
+        for person_id, person in enumerate(frame["people"]):
             keypoint_id = 0
             for component in header.components:
                 numbers = person[component.name]

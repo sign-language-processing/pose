@@ -53,14 +53,25 @@ class MaskedTensor:
     def __truediv__(self, other):
         return self.arithmetic("__truediv__", other)
 
+    def __rtruediv__(self, other):
+        return self.arithmetic("__rtruediv__", other)
+
     def __eq__(self, other):
         return self.tensor == other
 
     def __pow__(self, power):
         return self.arithmetic("__pow__", power)
 
+    def __round__(self, ndigits):
+        multiplier = tf.constant(10**ndigits, dtype=tf.float32)
+        return tf.round(self.tensor * multiplier) / multiplier
+
     def square(self):
         tensor = tf.math.square(self.tensor)
+        return MaskedTensor(tensor=tensor, mask=self.mask)
+
+    def float(self):
+        tensor = tf.cast(self.tensor, dtype=tf.float32)
         return MaskedTensor(tensor=tensor, mask=self.mask)
 
     def sqrt(self):
@@ -87,21 +98,21 @@ class MaskedTensor:
         mask = self.mask & other.mask if update_mask else self.mask
         return MaskedTensor(tensor, mask)
 
-    def matmul(self, matrix: tf.Tensor):
+    def matmul(self, matrix: tf.Tensor) -> "MaskedTensor":
         tensor = tf.matmul(self.tensor, matrix)
         return MaskedTensor(tensor=tensor, mask=self.mask)
 
-    def transpose(self, perm: List[int]):
+    def transpose(self, perm: List[int]) -> "MaskedTensor":
         tensor = tf.transpose(self.tensor, perm=perm)
         mask = tf.transpose(self.mask, perm=perm)
         return MaskedTensor(tensor=tensor, mask=mask)
 
-    def permute(self, dims: tuple):
+    def permute(self, dims: tuple) -> "MaskedTensor":
         tensor = self.tensor.permute(dims=dims)
         mask = self.mask.permute(dims=dims)
         return MaskedTensor(tensor=tensor, mask=mask)
 
-    def squeeze(self, axis):
+    def squeeze(self, axis) -> "MaskedTensor":
         tensor = tf.squeeze(self.tensor, axis=axis)
         mask = tf.squeeze(self.mask, axis=axis)
         return MaskedTensor(tensor=tensor, mask=mask)
@@ -111,7 +122,7 @@ class MaskedTensor:
         masks = tf.split(self.mask, split_size_or_sections, axis)
         return [MaskedTensor(tensor=tensor, mask=mask) for tensor, mask in zip(tensors, masks)]
 
-    def reshape(self, shape: tuple):
+    def reshape(self, shape: tuple) -> "MaskedTensor":
         tensor = tf.reshape(self.tensor, shape=shape)
         mask = tf.reshape(self.mask, shape=shape)
         return MaskedTensor(tensor=tensor, mask=mask)
@@ -121,12 +132,12 @@ class MaskedTensor:
         mask = tf.gather(self.mask, indexes)
         return MaskedTensor(tensor=tensor, mask=mask)
 
-    def rename(self, *names):
+    def rename(self, *names) -> "MaskedTensor":
         tensor = self.tensor.rename(*names)
         mask = self.mask.rename(*names)
         return MaskedTensor(tensor=tensor, mask=mask)
 
-    def mean(self, axis=None):
+    def mean(self, axis=None) -> "MaskedTensor":
         mt_sum = tf.math.reduce_sum(self.zero_filled(), axis=axis)
         mt_count = tf.math.reduce_sum(tf.cast(self.mask, mt_sum.dtype), axis=axis)
         tensor = tf.math.divide(mt_sum, mt_count)
@@ -134,12 +145,12 @@ class MaskedTensor:
         mt = MaskedTensor(tensor=tensor, mask=mask)
         return mt.fix_nan()
 
-    def variance(self, axis=None):
+    def variance(self, axis=None) -> "MaskedTensor":
         means = self.mean(axis=axis)
         diff = self - means
         squared_deviations = diff.square()
         return squared_deviations.mean(axis=axis)
 
-    def std(self, axis=None):
+    def std(self, axis=None) -> "MaskedTensor":
         variance = self.variance(axis=axis)
         return variance.sqrt()

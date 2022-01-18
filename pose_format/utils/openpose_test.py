@@ -197,14 +197,14 @@ class TestLoadOpenpose(TestCase):
 
         self.assertEqual(actual_shape, expected_shape)
 
-    def test_load_openpose_first_person_is_extracted_only(self):
+    def test_load_openpose_extracts_correct_number_of_people(self):
 
         num_frames = 10
         num_people = 2
         num_dimensions = 2
         num_missing_frames = 0
 
-        expected_shape = (num_frames, 1, OPENPOSE_TOTAL_KEYPOINTS, num_dimensions)
+        expected_shape = (num_frames, num_people, OPENPOSE_TOTAL_KEYPOINTS, num_dimensions)
 
         frames = _generate_random_frames_dict(num_frames, num_people, num_dimensions, num_missing_frames)
         pose = load_openpose(frames)
@@ -336,14 +336,14 @@ class TestLoadOpenposeDirectory(TestCase):
 
             self.assertEqual(actual_shape, expected_shape)
 
-    def test_load_openpose_directory_first_person_is_extracted_only(self):
+    def test_load_openpose_directory_extracts_correct_number_of_people(self):
 
         num_frames = 10
         num_people = 2
         num_dimensions = 2
         num_missing_frames = 3
 
-        expected_shape = (num_frames, 1, OPENPOSE_TOTAL_KEYPOINTS, num_dimensions)
+        expected_shape = (num_frames, num_people, OPENPOSE_TOTAL_KEYPOINTS, num_dimensions)
 
         with _create_tmp_openpose_directory(num_files=num_frames,
                                             num_people=num_people,

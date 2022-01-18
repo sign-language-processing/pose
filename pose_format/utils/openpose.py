@@ -165,8 +165,7 @@ OpenPoseFrames = Dict[int, OpenPoseFrame]
 def load_openpose(frames: OpenPoseFrames, fps: float = 24, width: int = 1000, height: int = 1000,
                   depth: int = 0, num_frames: Optional[int] = None) -> Pose:
     """
-    Loads a dictionary of OpenPose frames. If pose features of several people are present in a frame, only the first
-    person is extracted.
+    Loads a dictionary of OpenPose frames.
 
     :param frames: A dictionary where keys are frame IDs, and values are individual frames. Each individual frame
                    is also a dictionary.

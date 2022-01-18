@@ -24,7 +24,7 @@ class TensorflowPoseBody(PoseBody):
         super().__init__(fps, data, confidence)
 
     def zero_filled(self):
-        self.data.zero_filled()
+        self.data = self.data.zero_filled()
         return self
 
     def select_frames(self, frame_indexes: List[int]):
@@ -44,7 +44,7 @@ class TensorflowPoseBody(PoseBody):
 
         return self.select_frames(select_indexes), select_indexes
 
-    def points_perspective(self):
+    def points_perspective(self) -> MaskedTensor:
         return self.data.transpose(perm=POINTS_DIMS)
 
     def get_points(self, indexes: List[int]):

@@ -63,8 +63,6 @@ class Pose:
 
         mean_distance = distance_batch(p1s, p2s).mean()
 
-        mean_distance += 0.01
-
         if mean_distance == 0.0:
             scale = scale_factor
         else:

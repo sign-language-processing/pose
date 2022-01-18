@@ -45,7 +45,7 @@ class MaskedTensorflow(metaclass=TensorflowFallback):
         return MaskedTensor(tensor=tensor, mask=mask)
 
     @staticmethod
-    def zeros(size, dtype=None) -> MaskedTensor:
+    def zeros(size, dtype=tensorflow.float32) -> MaskedTensor:
         tensor = tensorflow.zeros(size, dtype=dtype)
         mask = tensorflow.zeros(size, dtype=tensorflow.bool)
         return MaskedTensor(tensor=tensor, mask=mask)

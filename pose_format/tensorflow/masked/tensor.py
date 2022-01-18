@@ -57,7 +57,8 @@ class MaskedTensor:
         return self.arithmetic("__rtruediv__", other)
 
     def __eq__(self, other):
-        return self.tensor == other
+        other_tensor = other.tensor if isinstance(other, MaskedTensor) else other
+        return self.tensor == other_tensor
 
     def __pow__(self, power):
         return self.arithmetic("__pow__", power)

@@ -44,10 +44,11 @@ class TestMaskedTensorflow(TestCase):
 
     def test_zeros_mask_value(self):
         zeros = MaskedTensorflow.zeros((1, 2, 3))
-        self.assertTrue(tf.reduce_all(zeros.mask == 0), msg="Zeros mask are not all zeros")
+        self.assertTrue(tf.reduce_all(zeros.mask == tf.zeros((1, 2, 3), dtype=tf.dtypes.bool)),
+                        msg="Zeros mask are not all zeros")
 
     # Fallback
     def test_not_implemented_method(self):
         tensor = MaskedTensor(tensor=tf.constant([1, 2, 3]))
-        torch_sum = MaskedTensorflow.sum(tensor)
-        self.assertEqual(torch_sum, tf.constant(6))
+        tensor_square = MaskedTensorflow.square(tensor)
+        self.assertTrue(tf.reduce_all(tensor_square == tf.constant([1, 4, 9])), msg="Square is not equal to expected")

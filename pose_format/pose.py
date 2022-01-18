@@ -1,5 +1,5 @@
 from itertools import chain
-from typing import List, BinaryIO, Dict, Type
+from typing import List, BinaryIO, Dict, Type, Tuple
 
 import numpy as np
 import numpy.ma as ma
@@ -47,9 +47,11 @@ class Pose:
         dimensions = (maxs - mins).tolist()
         self.header.dimensions = PoseHeaderDimensions(*dimensions)
 
-    def normalize(self, info: PoseNormalizationInfo, scale_factor: float = 1):
+    def normalize(self, info: PoseNormalizationInfo, scale_factor: float = 1) -> "Pose":
         """
-        Normalize the point to a fixed distance between two points
+        Normalize the points to a fixed distance between two particular points.
+
+        TODO: This code will fail if the mean distance between the points is zero.
         """
         transposed = self.body.points_perspective()
 
@@ -63,13 +65,10 @@ class Pose:
 
         mean_distance = distance_batch(p1s, p2s).mean()
 
-        if mean_distance == 0.0:
-            scale = scale_factor
-        else:
-            scale = scale_factor / mean_distance  # scale all points to dist/scale
+        # scale all points to dist/scale
+        scale = scale_factor / mean_distance
 
-        if round(scale, 5) != 1:  # scale in numpy is often 0.99999..., presumably because of over-precision
-            self.body.data = self.body.data * scale
+        self.body.data = self.body.data * scale
 
         return self
 
@@ -84,8 +83,16 @@ class Pose:
     def unnormalize_distribution(self, mu, std):
         self.body.data = (self.body.data * std) + mu
 
-    def frame_dropout(self, dropout_std=0.1):
-        body, selected_indexes = self.body.frame_dropout(dropout_std=dropout_std)
+    def frame_dropout_uniform(self,
+                             dropout_min: float = 0.2,
+                             dropout_max: float = 1.0) -> Tuple["Pose", List[int]]:
+        body, selected_indexes = self.body.frame_dropout_uniform(dropout_min=dropout_min, dropout_max=dropout_max)
+        return Pose(header=self.header, body=body), selected_indexes
+
+    def frame_dropout_normal(self,
+                             dropout_mean: float = 0.5,
+                             dropout_std: float = 0.1) -> Tuple["Pose", List[int]]:
+        body, selected_indexes = self.body.frame_dropout_normal(dropout_mean=dropout_mean, dropout_std=dropout_std)
         return Pose(header=self.header, body=body), selected_indexes
 
     def get_components(self, components: List[str], points: Dict[str, List[str]] = None):

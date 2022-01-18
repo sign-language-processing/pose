@@ -134,7 +134,7 @@ class PoseBody:
 
         # Cast to matrix the correct size
         dim_matrix = np.eye(self.data.shape[-1])
-        dim_matrix[0:2,0:2] = matrix
+        dim_matrix[0:2, 0:2] = matrix
 
         return self.matmul(dim_matrix.astype(dtype=np.float32))
 
@@ -152,11 +152,24 @@ class PoseBody:
         confidence = self.confidence[frame_indexes]
         return self.__class__(fps=self.fps, data=data, confidence=confidence)
 
-    def frame_dropout(self, dropout_std: float) -> Tuple["PoseBody", List[int]]:
-        dropout_percent = np.abs(np.random.normal(loc=0, scale=dropout_std, size=1))[0]
+    def frame_dropout_given_percent(self, dropout_percent: float) -> Tuple["PoseBody", List[int]]:
         data_len = len(self.data)
         dropout_number = min(int(data_len * dropout_percent), int(data_len * 0.99))
         dropout_indexes = set(sample(range(0, data_len), dropout_number))
         select_indexes = [i for i in range(0, data_len) if i not in dropout_indexes]
+
         return self.select_frames(select_indexes), select_indexes
 
+    def frame_dropout_uniform(self,
+                              dropout_min: float = 0.2,
+                              dropout_max: float = 1.0) -> Tuple["PoseBody", List[int]]:
+        dropout_percent = np.random.uniform(low=dropout_min, high=dropout_max, size=1)[0]
+
+        return self.frame_dropout_given_percent(dropout_percent)
+
+    def frame_dropout_normal(self,
+                             dropout_mean: float = 0.5,
+                             dropout_std: float = 0.1) -> Tuple["PoseBody", List[int]]:
+        dropout_percent = np.abs(np.random.normal(loc=dropout_mean, scale=dropout_std, size=1))[0]
+
+        return self.frame_dropout_given_percent(dropout_percent)

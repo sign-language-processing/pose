@@ -11,7 +11,7 @@ print(packages)
 setup(
   name='pose_format',
   packages=packages,
-  version='0.0.8',
+  version='0.0.9',
   description='Library for viewing, augmenting, and handling .pose files',
   author='Amit Moryossef',
   author_email='amitmoryossef@gmail.com',

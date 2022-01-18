@@ -11,8 +11,7 @@ class MaskedTensor:
     def __getattr__(self, item):
         val = self.tensor.__getattribute__(item)
         if hasattr(val, '__call__'):  # If is a function
-            # return getattr(MaskedTorch, item)(self)
-            raise NotImplementedError("callbable '%s' not defined" % item)
+            raise NotImplementedError("callable '%s' not defined" % item)
         else:
             return val
 

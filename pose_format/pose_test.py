@@ -240,3 +240,72 @@ class TestPose(TestCase):
         num_frames = pose_after_dropout.body.data.shape[0]
 
         self.assertNotEqual(num_frames, 0, "Number of frames after dropout can never be 0.")
+
+    # test if pose object methods can be used as tf.data.Dataset operations
+
+    def test_pose_normalize_can_be_used_in_tf_dataset_map(self):
+
+        num_examples = 10
+
+        dataset = tf.data.Dataset.range(num_examples)
+
+        def create_and_normalize_pose(example: tf.Tensor) -> tf.Tensor:
+
+            pose = _get_random_pose_object_with_tf_posebody(num_keypoints=5)
+
+            _ = pose.normalize(pose.header.normalization_info(
+                p1=("0", "0_a"),
+                p2=("0", "0_b")
+            ))
+
+            return example
+
+        dataset.map(create_and_normalize_pose)
+
+    def test_pose_normalize_distribution_can_be_used_in_tf_dataset_map(self):
+
+        num_examples = 10
+
+        dataset = tf.data.Dataset.range(num_examples)
+
+        def create_pose_and_normalize_distribution(example: tf.Tensor) -> tf.Tensor:
+
+            pose = _get_random_pose_object_with_tf_posebody(num_keypoints=5)
+
+            _ = pose.normalize_distribution(axis=(0, 1))
+
+            return example
+
+        dataset.map(create_pose_and_normalize_distribution)
+
+    def test_pose_frame_dropout_normal_can_be_used_in_tf_dataset_map(self):
+
+        num_examples = 10
+
+        dataset = tf.data.Dataset.range(num_examples)
+
+        def create_pose_and_frame_dropout_normal(example: tf.Tensor) -> tf.Tensor:
+
+            pose = _get_random_pose_object_with_tf_posebody(num_keypoints=5)
+
+            _, _ = pose.frame_dropout_normal()
+
+            return example
+
+        dataset.map(create_pose_and_frame_dropout_normal)
+
+    def test_pose_frame_dropout_uniform_can_be_used_in_tf_dataset_map(self):
+
+        num_examples = 10
+
+        dataset = tf.data.Dataset.range(num_examples)
+
+        def create_pose_and_frame_dropout_uniform(example: tf.Tensor) -> tf.Tensor:
+
+            pose = _get_random_pose_object_with_tf_posebody(num_keypoints=5)
+
+            _, _ = pose.frame_dropout_uniform()
+
+            return example
+
+        dataset.map(create_pose_and_frame_dropout_uniform)

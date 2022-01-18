@@ -47,9 +47,11 @@ class Pose:
         dimensions = (maxs - mins).tolist()
         self.header.dimensions = PoseHeaderDimensions(*dimensions)
 
-    def normalize(self, info: PoseNormalizationInfo, scale_factor: float = 1):
+    def normalize(self, info: PoseNormalizationInfo, scale_factor: float = 1) -> "Pose":
         """
-        Normalize the point to a fixed distance between two points
+        Normalize the points to a fixed distance between two particular points.
+
+        TODO: This code will fail if the mean distance between the points is zero.
         """
         transposed = self.body.points_perspective()
 
@@ -63,13 +65,10 @@ class Pose:
 
         mean_distance = distance_batch(p1s, p2s).mean()
 
-        if mean_distance == 0.0:
-            scale = scale_factor
-        else:
-            scale = scale_factor / mean_distance  # scale all points to dist/scale
+        # scale all points to dist/scale
+        scale = scale_factor / mean_distance
 
-        if round(scale, 5) != 1:  # scale in numpy is often 0.99999..., presumably because of over-precision
-            self.body.data = self.body.data * scale
+        self.body.data = self.body.data * scale
 
         return self
 

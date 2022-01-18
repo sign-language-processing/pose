@@ -33,6 +33,14 @@ class TensorflowPoseBody(PoseBody):
         return self.__class__(fps=self.fps, data=data, confidence=confidence)
 
     def frame_dropout_given_percent(self, dropout_percent: float):
+        """
+        Remove some frames from the data at random.
+
+        TODO: The code does not return the correct result if the input data has only one frame.
+
+        :param dropout_percent:
+        :return:
+        """
 
         data_len = tf.cast(tf.shape(self.data.tensor)[0], dtype=tf.float32)
 
@@ -44,9 +52,6 @@ class TensorflowPoseBody(PoseBody):
         number_sample = tf.cast(number_sample, dtype=tf.int32)
 
         idxs = tf.range(data_len - 1, dtype=tf.int32)
-
-        if data_len == 0.0:
-            return self.select_frames(idxs), idxs
 
         select_indexes = tf.sort(tf.random.shuffle(idxs)[:number_sample])
         select_indexes = tf.cast(select_indexes, dtype=tf.int32)

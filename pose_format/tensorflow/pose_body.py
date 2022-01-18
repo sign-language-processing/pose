@@ -32,17 +32,45 @@ class TensorflowPoseBody(PoseBody):
         confidence = tf.gather(self.confidence, frame_indexes)
         return self.__class__(fps=self.fps, data=data, confidence=confidence)
 
-    def frame_dropout(self, dropout_std: float):
+    def frame_dropout_given_percent(self, dropout_percent: float):
+
         data_len = tf.cast(tf.shape(self.data.tensor)[0], dtype=tf.float32)
 
-        select_percent = tf.random.uniform([1], minval=0.2, maxval=1)[0]
-        number_sample = tf.cast(tf.round(data_len * select_percent), dtype=tf.int32)
+        number_sample = tf.squeeze(tf.round(data_len * dropout_percent))
+
+        # never drop out all the frames, at most data_len - 1 frames
+        number_sample = tf.minimum(data_len - 1, number_sample)
+
+        number_sample = tf.cast(number_sample, dtype=tf.int32)
 
         idxs = tf.range(data_len - 1, dtype=tf.int32)
+
+        if data_len == 0.0:
+            return self.select_frames(idxs), idxs
+
         select_indexes = tf.sort(tf.random.shuffle(idxs)[:number_sample])
         select_indexes = tf.cast(select_indexes, dtype=tf.int32)
 
         return self.select_frames(select_indexes), select_indexes
+
+    def frame_dropout_uniform(self,
+                              dropout_min: float = 0.2,
+                              dropout_max: float = 1.0):
+
+        dropout_percent = tf.random.uniform([1], minval=dropout_min, maxval=dropout_max)[0]
+
+        return self.frame_dropout_given_percent(dropout_percent)
+
+    def frame_dropout_normal(self,
+                             dropout_mean: float = 0.5,
+                             dropout_std: float = 0.1):
+
+        dropout_percent = tf.random.normal([1], mean=dropout_mean, stddev=dropout_std)[0]
+
+        # clip negative values to zero
+        dropout_percent = tf.maximum(dropout_percent, tf.constant([0.0]))
+
+        return self.frame_dropout_given_percent(dropout_percent)
 
     def points_perspective(self) -> MaskedTensor:
         return self.data.transpose(perm=POINTS_DIMS)

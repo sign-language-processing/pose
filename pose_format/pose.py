@@ -1,5 +1,5 @@
 from itertools import chain
-from typing import List, BinaryIO, Dict, Type
+from typing import List, BinaryIO, Dict, Type, Tuple
 
 import numpy as np
 import numpy.ma as ma
@@ -84,8 +84,16 @@ class Pose:
     def unnormalize_distribution(self, mu, std):
         self.body.data = (self.body.data * std) + mu
 
-    def frame_dropout(self, dropout_std=0.1):
-        body, selected_indexes = self.body.frame_dropout(dropout_std=dropout_std)
+    def frame_dropout_uniform(self,
+                             dropout_min: float = 0.2,
+                             dropout_max: float = 1.0) -> Tuple["Pose", List[int]]:
+        body, selected_indexes = self.body.frame_dropout_uniform(dropout_min=dropout_min, dropout_max=dropout_max)
+        return Pose(header=self.header, body=body), selected_indexes
+
+    def frame_dropout_normal(self,
+                             dropout_mean: float = 0.5,
+                             dropout_std: float = 0.1) -> Tuple["Pose", List[int]]:
+        body, selected_indexes = self.body.frame_dropout_normal(dropout_mean=dropout_mean, dropout_std=dropout_std)
         return Pose(header=self.header, body=body), selected_indexes
 
     def get_components(self, components: List[str], points: Dict[str, List[str]] = None):

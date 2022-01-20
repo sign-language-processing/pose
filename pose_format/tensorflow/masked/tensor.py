@@ -87,7 +87,7 @@ class MaskedTensor:
         return self.tensor.size(*args)
 
     def fix_nan(self):
-        self.tensor = tf.where(tf.math.is_nan(self.tensor), tf.zeros_like(self.tensor), self.tensor)
+        self.tensor = tf.where(tf.math.is_finite(self.tensor), self.tensor, tf.zeros_like(self.tensor))
         return self
 
     def zero_filled(self) -> tf.Tensor:

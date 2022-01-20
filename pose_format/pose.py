@@ -51,7 +51,6 @@ class Pose:
         """
         Normalize the points to a fixed distance between two particular points.
 
-        TODO: This code will fail if the mean distance between the points is zero.
         """
         transposed = self.body.points_perspective()
 
@@ -73,6 +72,14 @@ class Pose:
         return self
 
     def normalize_distribution(self, mu=None, std=None, axis=(0, 1)):
+        """
+
+        :param mu:
+        :param std:
+        :param axis:
+        :return:
+        """
+
         mu = mu if mu is not None else self.body.data.mean(axis=axis)
         std = std if std is not None else self.body.data.std(axis=axis)
 
@@ -84,8 +91,8 @@ class Pose:
         self.body.data = (self.body.data * std) + mu
 
     def frame_dropout_uniform(self,
-                             dropout_min: float = 0.2,
-                             dropout_max: float = 1.0) -> Tuple["Pose", List[int]]:
+                              dropout_min: float = 0.2,
+                              dropout_max: float = 1.0) -> Tuple["Pose", List[int]]:
         body, selected_indexes = self.body.frame_dropout_uniform(dropout_min=dropout_min, dropout_max=dropout_max)
         return Pose(header=self.header, body=body), selected_indexes
 

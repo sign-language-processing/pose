@@ -12,7 +12,7 @@ POINTS_DIMS = (2, 1, 0, 3)
 class PoseBody:
     tensor_reader = 'ABSTRACT-DO-NOT-USE'
 
-    def __init__(self, fps: float, data, confidence):
+    def __init__(self, fps: int, data, confidence):
         self.fps = fps
         self.data = data  # Shape (Frames, People, Points, Dims) - eg (93, 1, 137, 2)
         self.confidence = confidence  # Shape (Frames, People, Points) - eg (93, 1, 137)
@@ -101,7 +101,9 @@ class PoseBody:
         new_data = self.data[::by]
         new_confidence = self.confidence[::by]
 
-        return self.__class__(fps=self.fps / by, data=new_data, confidence=new_confidence)
+        new_fps = int(self.fps / by)
+
+        return self.__class__(fps=new_fps, data=new_data, confidence=new_confidence)
 
     def augment2d(self, rotation_std=0.2, shear_std=0.2, scale_std=0.2):
         """
@@ -143,6 +145,12 @@ class PoseBody:
 
     def matmul(self, matrix: np.ndarray) -> __qualname__:
         raise NotImplementedError("'matmul' not implemented on '%s'" % self.__class__)
+
+    def get_points(self, indexes: List[int]) -> __qualname__:
+        raise NotImplementedError("'get_points' not implemented on '%s'" % self.__class__)
+
+    def bbox(self, header: PoseHeader) -> __qualname__:
+        raise NotImplementedError("'bbox' not implemented on '%s'" % self.__class__)
 
     def points_perspective(self):
         raise NotImplementedError("'points_perspective' not implemented on '%s'" % self.__class__)

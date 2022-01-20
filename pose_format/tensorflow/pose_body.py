@@ -36,18 +36,15 @@ class TensorflowPoseBody(PoseBody):
         """
         Remove some frames from the data at random.
 
-        TODO: The code does not return the correct result if the input data has only one frame.
-
         :param dropout_percent:
         :return:
         """
-
         data_len = tf.cast(tf.shape(self.data.tensor)[0], dtype=tf.float32)
 
         number_sample = tf.squeeze(tf.round(data_len * dropout_percent))
 
-        # never drop out all the frames, at most data_len - 1 frames
-        number_sample = tf.minimum(data_len - 1, number_sample)
+        # always keep at least 1 frame
+        number_sample = tf.maximum(1.0, number_sample)
 
         number_sample = tf.cast(number_sample, dtype=tf.int32)
 

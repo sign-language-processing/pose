@@ -15,7 +15,7 @@ from ..utils.reader import BufferReader, ConstStructs
 class NumPyPoseBody(PoseBody):
     tensor_reader = 'unpack_numpy'
 
-    def __init__(self, fps: int, data: Union[ma.MaskedArray, np.ndarray], confidence: np.ndarray):
+    def __init__(self, fps: float, data: Union[ma.MaskedArray, np.ndarray], confidence: np.ndarray):
         if isinstance(data, np.ndarray):  # If array is not masked
             mask = confidence == 0  # 0 means no-mask, 1 means with-mask
             stacked_mask = np.stack([mask] * data.shape[-1], axis=3)

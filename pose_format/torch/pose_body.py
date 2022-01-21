@@ -12,7 +12,7 @@ from ..utils.reader import BufferReader
 class TorchPoseBody(PoseBody):
     tensor_reader = 'unpack_torch'
 
-    def __init__(self, fps: int, data: Union[MaskedTensor, torch.Tensor], confidence: torch.Tensor):
+    def __init__(self, fps: float, data: Union[MaskedTensor, torch.Tensor], confidence: torch.Tensor):
         if isinstance(data, torch.Tensor):  # If array is not masked
             mask = confidence > 0
             stacked_mask = torch.stack([mask] * data.shape[-1], dim=3)

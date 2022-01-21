@@ -12,7 +12,7 @@ POINTS_DIMS = (2, 1, 0, 3)
 class PoseBody:
     tensor_reader = 'ABSTRACT-DO-NOT-USE'
 
-    def __init__(self, fps: int, data, confidence):
+    def __init__(self, fps: float, data, confidence):
         self.fps = fps
         self.data = data  # Shape (Frames, People, Points, Dims) - eg (93, 1, 137, 2)
         self.confidence = confidence  # Shape (Frames, People, Points) - eg (93, 1, 137)
@@ -100,8 +100,7 @@ class PoseBody:
         """
         new_data = self.data[::by]
         new_confidence = self.confidence[::by]
-
-        new_fps = int(self.fps / by)
+        new_fps = self.fps / by
 
         return self.__class__(fps=new_fps, data=new_data, confidence=new_confidence)
 

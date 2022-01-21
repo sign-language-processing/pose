@@ -16,7 +16,7 @@ TF_POSE_RECORD_DESCRIPTION = {
 class TensorflowPoseBody(PoseBody):
     tensor_reader = 'unpack_tensorflow'
 
-    def __init__(self, fps: int, data: Union[MaskedTensor, tf.Tensor], confidence: tf.Tensor):
+    def __init__(self, fps: float, data: Union[MaskedTensor, tf.Tensor], confidence: tf.Tensor):
         if isinstance(data, tf.Tensor):  # If array is not masked
             mask = confidence > 0
             data = MaskedTensor(data, tf.stack([mask] * 2, axis=3))

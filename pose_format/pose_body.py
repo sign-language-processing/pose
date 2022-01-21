@@ -100,8 +100,9 @@ class PoseBody:
         """
         new_data = self.data[::by]
         new_confidence = self.confidence[::by]
+        new_fps = self.fps / by
 
-        return self.__class__(fps=self.fps / by, data=new_data, confidence=new_confidence)
+        return self.__class__(fps=new_fps, data=new_data, confidence=new_confidence)
 
     def augment2d(self, rotation_std=0.2, shear_std=0.2, scale_std=0.2):
         """
@@ -143,6 +144,12 @@ class PoseBody:
 
     def matmul(self, matrix: np.ndarray) -> __qualname__:
         raise NotImplementedError("'matmul' not implemented on '%s'" % self.__class__)
+
+    def get_points(self, indexes: List[int]) -> __qualname__:
+        raise NotImplementedError("'get_points' not implemented on '%s'" % self.__class__)
+
+    def bbox(self, header: PoseHeader) -> __qualname__:
+        raise NotImplementedError("'bbox' not implemented on '%s'" % self.__class__)
 
     def points_perspective(self):
         raise NotImplementedError("'points_perspective' not implemented on '%s'" % self.__class__)

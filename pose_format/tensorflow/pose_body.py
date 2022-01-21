@@ -16,7 +16,7 @@ TF_POSE_RECORD_DESCRIPTION = {
 class TensorflowPoseBody(PoseBody):
     tensor_reader = 'unpack_tensorflow'
 
-    def __init__(self, fps: int, data: Union[MaskedTensor, tf.Tensor], confidence: tf.Tensor):
+    def __init__(self, fps: float, data: Union[MaskedTensor, tf.Tensor], confidence: tf.Tensor):
         if isinstance(data, tf.Tensor):  # If array is not masked
             mask = confidence > 0
             data = MaskedTensor(data, tf.stack([mask] * 2, axis=3))
@@ -36,18 +36,15 @@ class TensorflowPoseBody(PoseBody):
         """
         Remove some frames from the data at random.
 
-        TODO: The code does not return the correct result if the input data has only one frame.
-
         :param dropout_percent:
         :return:
         """
-
         data_len = tf.cast(tf.shape(self.data.tensor)[0], dtype=tf.float32)
 
         number_sample = tf.squeeze(tf.round(data_len * dropout_percent))
 
-        # never drop out all the frames, at most data_len - 1 frames
-        number_sample = tf.minimum(data_len - 1, number_sample)
+        # always keep at least 1 frame
+        number_sample = tf.maximum(1.0, number_sample)
 
         number_sample = tf.cast(number_sample, dtype=tf.int32)
 

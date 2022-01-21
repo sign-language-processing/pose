@@ -10,15 +10,36 @@ from typing import Tuple
 from pose_format.tensorflow.masked.tensor import MaskedTensor
 
 
-def create_random_numpy_tensor_and_mask(shape: Tuple, probability_for_masked: float) -> Tuple[np.array, np.array]:
+def create_random_numpy_tensor_and_mask(shape: Tuple,
+                                        probability_for_masked: float,
+                                        num_nans: int = 0) -> Tuple[np.array, np.array]:
 
     tensor = np.random.random_sample(size=shape)
+
+    if num_nans > 0:
+        index = np.random.choice(tensor.size, num_nans, replace=False)
+        tensor.ravel()[index] = np.nan
+
     mask = np.random.choice(a=[False, True], size=shape, p=[probability_for_masked, 1 - probability_for_masked])
 
     return tensor, mask
 
 
 class TestMaskedTensor(TestCase):
+
+    def test_fix_nan(self):
+
+        tensor, mask = create_random_numpy_tensor_and_mask(shape=(5, 7, 11),
+                                                           probability_for_masked=0.2,
+                                                           num_nans=20)
+
+        masked_tf = MaskedTensor(tensor=tf.constant(tensor), mask=tf.constant(mask))
+
+        nan_fixed = masked_tf.fix_nan()
+        result_as_numpy = nan_fixed.zero_filled().numpy()
+
+        self.assertFalse(np.isnan(result_as_numpy).any(), msg="Function fix_nan did not remove all nan values.")
+
     def test_mean(self):
 
         tensor, mask = create_random_numpy_tensor_and_mask(shape=(5, 7), probability_for_masked=0.2)

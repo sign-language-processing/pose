@@ -177,6 +177,9 @@ class TestPose(TestCase):
     def test_pose_object_should_be_callable(self):
         assert callable(Pose)
 
+
+class TestPoseTensorflowPoseBody(TestCase):
+
     def test_pose_tf_posebody_normalize_eager_mode_preserves_shape(self):
 
         pose = _get_random_pose_object_with_tf_posebody(num_keypoints=5)
@@ -193,6 +196,30 @@ class TestPose(TestCase):
         shape_after = pose.body.data.tensor.shape
 
         self.assertEqual(shape_before, shape_after, "Normalize did not preserve tensor shape.")
+
+    def test_pose_tf_posebody_normalize_distribution_eager_mode_correct_result(self):
+
+        pose = _get_random_pose_object_with_tf_posebody(num_keypoints=5, frames_min=2)
+
+        tensor_as_numpy = pose.body.data.tensor.numpy()
+        mask_as_numpy = pose.body.data.mask.numpy()
+        masked_numpy_array = ma.array(tensor_as_numpy, mask=np.logical_not(mask_as_numpy))
+
+        axis = (0, 1)
+
+        numpy_mean = ma.mean(masked_numpy_array, axis=axis)
+        numpy_std = ma.std(masked_numpy_array, axis=axis)
+        expected_tensor = (masked_numpy_array - numpy_mean) / numpy_std
+        expected_tensor = expected_tensor.filled(0)
+
+        pose.normalize_distribution(axis=axis)
+
+        actual_tensor_nan_fixed = pose.body.data.fix_nan()
+        actual_tensor_zero_filled = actual_tensor_nan_fixed.zero_filled()
+        actual_tensor_as_numpy = actual_tensor_zero_filled.numpy()
+
+        self.assertTrue(np.allclose(actual_tensor_as_numpy, expected_tensor),
+                        "Normalize distribution did not return the expected result.")
 
     def test_pose_tf_posebody_frame_dropout_normal_eager_mode_num_frames_not_zero(self):
 
@@ -211,45 +238,6 @@ class TestPose(TestCase):
         pose_after_dropout, _ = pose.frame_dropout_uniform()
 
         num_frames = pose_after_dropout.body.data.tensor.shape[0]
-
-        self.assertNotEqual(num_frames, 0, "Number of frames after dropout can never be 0.")
-
-    # below: numpy pose body tests
-
-    def test_pose_numpy_posebody_normalize_preserves_shape(self):
-
-        pose = _get_random_pose_object_with_numpy_posebody(num_keypoints=5, frames_min=3)
-
-        shape_before = pose.body.data.shape
-
-        # in the mock data header components are named 0, 1, and so on
-        # individual points are named 0_a, 0_b, and so on
-        pose.normalize(pose.header.normalization_info(
-            p1=("0", "0_a"),
-            p2=("0", "0_b")
-        ))
-
-        shape_after = pose.body.data.shape
-
-        self.assertEqual(shape_before, shape_after, "Normalize did not preserve tensor shape.")
-
-    def test_pose_numpy_posebody_frame_dropout_normal_eager_mode_num_frames_not_zero(self):
-
-        pose = _get_random_pose_object_with_numpy_posebody(num_keypoints=5, frames_min=3)
-
-        pose_after_dropout, _ = pose.frame_dropout_normal()
-
-        num_frames = pose_after_dropout.body.data.shape[0]
-
-        self.assertNotEqual(num_frames, 0, "Number of frames after dropout can never be 0.")
-
-    def test_pose_numpy_posebody_frame_dropout_uniform_eager_mode_num_frames_not_zero(self):
-
-        pose = _get_random_pose_object_with_numpy_posebody(num_keypoints=5, frames_min=3)
-
-        pose_after_dropout, _ = pose.frame_dropout_uniform()
-
-        num_frames = pose_after_dropout.body.data.shape[0]
 
         self.assertNotEqual(num_frames, 0, "Number of frames after dropout can never be 0.")
 
@@ -321,3 +309,43 @@ class TestPose(TestCase):
             return example
 
         dataset.map(create_pose_and_frame_dropout_uniform)
+
+
+class TestPoseNumpyPoseBody(TestCase):
+
+    def test_pose_numpy_posebody_normalize_preserves_shape(self):
+
+        pose = _get_random_pose_object_with_numpy_posebody(num_keypoints=5, frames_min=3)
+
+        shape_before = pose.body.data.shape
+
+        # in the mock data header components are named 0, 1, and so on
+        # individual points are named 0_a, 0_b, and so on
+        pose.normalize(pose.header.normalization_info(
+            p1=("0", "0_a"),
+            p2=("0", "0_b")
+        ))
+
+        shape_after = pose.body.data.shape
+
+        self.assertEqual(shape_before, shape_after, "Normalize did not preserve tensor shape.")
+
+    def test_pose_numpy_posebody_frame_dropout_normal_eager_mode_num_frames_not_zero(self):
+
+        pose = _get_random_pose_object_with_numpy_posebody(num_keypoints=5, frames_min=3)
+
+        pose_after_dropout, _ = pose.frame_dropout_normal()
+
+        num_frames = pose_after_dropout.body.data.shape[0]
+
+        self.assertNotEqual(num_frames, 0, "Number of frames after dropout can never be 0.")
+
+    def test_pose_numpy_posebody_frame_dropout_uniform_eager_mode_num_frames_not_zero(self):
+
+        pose = _get_random_pose_object_with_numpy_posebody(num_keypoints=5, frames_min=3)
+
+        pose_after_dropout, _ = pose.frame_dropout_uniform()
+
+        num_frames = pose_after_dropout.body.data.shape[0]
+
+        self.assertNotEqual(num_frames, 0, "Number of frames after dropout can never be 0.")

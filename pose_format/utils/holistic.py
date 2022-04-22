@@ -85,10 +85,8 @@ def holistic_hand_component(name, pf="XYZC"):
     return PoseHeaderComponent(name=name, points=HAND_POINTS, limbs=HAND_LIMBS, colors=hand_colors, point_format=pf)
 
 
-def load_holistic(frames: list, fps: float = 24, width=1000, height=1000, depth=0, kinect=None, progress=False):
-    pf = "XYZC" if kinect is None else "XYZKC"
-
-    Holistic_Components = [
+def holistic_components(pf="XYZC"):
+    return [
         PoseHeaderComponent(name="POSE_LANDMARKS", points=BODY_POINTS, limbs=BODY_LIMBS,
                             colors=[(255, 0, 0)], point_format=pf),
         PoseHeaderComponent(name="FACE_LANDMARKS", points=FACE_POINTS, limbs=FACE_LIMBS,
@@ -97,9 +95,13 @@ def load_holistic(frames: list, fps: float = 24, width=1000, height=1000, depth=
         holistic_hand_component("RIGHT_HAND_LANDMARKS", pf),
     ]
 
+
+def load_holistic(frames: list, fps: float = 24, width=1000, height=1000, depth=0, kinect=None, progress=False):
+    pf = "XYZC" if kinect is None else "XYZKC"
+
     dimensions = PoseHeaderDimensions(width=width, height=height, depth=depth)
 
-    header: PoseHeader = PoseHeader(version=0.1, dimensions=dimensions, components=Holistic_Components)
+    header: PoseHeader = PoseHeader(version=0.1, dimensions=dimensions, components=holistic_components(pf))
     body: NumPyPoseBody = process_holistic(frames, fps, width, height, kinect, progress)
 
     return Pose(header, body)

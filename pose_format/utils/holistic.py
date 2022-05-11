@@ -53,7 +53,7 @@ def process_holistic(frames: list, fps: float, w: int, h: int, kinect=None, prog
         results = holistic.process(frame)
 
         body_data, body_confidence = body_points(results.pose_landmarks, w, h, 33)
-        face_data, face_confidence = component_points(results.face_landmarks, w, h, 468 + additional_face_points)
+        face_data, face_confidence = component_points(results.face_landmarks, w, h, FACE_POINTS_NUM(additional_face_points))
         lh_data, lh_confidence = component_points(results.left_hand_landmarks, w, h, 21)
         rh_data, rh_confidence = component_points(results.right_hand_landmarks, w, h, 21)
         body_world_data, body_world_confidence = body_points(results.pose_world_landmarks, w, h, 33)

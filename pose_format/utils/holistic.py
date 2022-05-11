@@ -15,7 +15,8 @@ BODY_LIMBS = [(int(a), int(b)) for a, b in mp_holistic.POSE_CONNECTIONS]
 HAND_POINTS = mp_holistic.HandLandmark._member_names_
 HAND_LIMBS = [(int(a), int(b)) for a, b in mp_holistic.HAND_CONNECTIONS]
 
-FACE_POINTS = [str(i) for i in range(468)] # TODO: removed?
+FACE_POINTS_NUM = lambda additional_points=0: additional_points + 468
+FACE_POINTS = lambda additional_points=0: [str(i) for i in range(FACE_POINTS_NUM(additional_points))]
 FACE_LIMBS = [(int(a), int(b)) for a, b in mp_holistic.FACEMESH_TESSELATION]
 
 FLIPPED_BODY_POINTS = ['NOSE', 'RIGHT_EYE_INNER', 'RIGHT_EYE', 'RIGHT_EYE_OUTER', 'LEFT_EYE_INNER', 'LEFT_EYE',
@@ -42,7 +43,7 @@ def body_points(component, width: int, height: int, num: int):
     return np.zeros((num, 3)), np.zeros(num)
 
 
-def process_holistic(frames: list, fps: float, w: int, h: int, kinect=None, progress=False, face_num=468, additional_holistic_config={}):
+def process_holistic(frames: list, fps: float, w: int, h: int, kinect=None, progress=False, additional_face_points=0, additional_holistic_config={}):
     holistic = mp_holistic.Holistic(static_image_mode=False, **additional_holistic_config)
 
     datas = []
@@ -52,7 +53,7 @@ def process_holistic(frames: list, fps: float, w: int, h: int, kinect=None, prog
         results = holistic.process(frame)
 
         body_data, body_confidence = body_points(results.pose_landmarks, w, h, 33)
-        face_data, face_confidence = component_points(results.face_landmarks, w, h, face_num)
+        face_data, face_confidence = component_points(results.face_landmarks, w, h, 468 + additional_face_points)
         lh_data, lh_confidence = component_points(results.left_hand_landmarks, w, h, 21)
         rh_data, rh_confidence = component_points(results.right_hand_landmarks, w, h, 21)
         body_world_data, body_world_confidence = body_points(results.pose_world_landmarks, w, h, 33)
@@ -87,11 +88,11 @@ def holistic_hand_component(name, pf="XYZC"):
     return PoseHeaderComponent(name=name, points=HAND_POINTS, limbs=HAND_LIMBS, colors=hand_colors, point_format=pf)
 
 
-def holistic_components(pf="XYZC", face_num=468):
+def holistic_components(pf="XYZC", additional_face_points=0):
     return [
         PoseHeaderComponent(name="POSE_LANDMARKS", points=BODY_POINTS, limbs=BODY_LIMBS,
                             colors=[(255, 0, 0)], point_format=pf),
-        PoseHeaderComponent(name="FACE_LANDMARKS", points=[str(i) for i in range(face_num)], limbs=FACE_LIMBS,
+        PoseHeaderComponent(name="FACE_LANDMARKS", points=FACE_POINTS(additional_face_points), limbs=FACE_LIMBS,
                             colors=[(128, 0, 0)], point_format=pf),
         holistic_hand_component("LEFT_HAND_LANDMARKS", pf),
         holistic_hand_component("RIGHT_HAND_LANDMARKS", pf),
@@ -105,8 +106,8 @@ def load_holistic(frames: list, fps: float = 24, width=1000, height=1000, depth=
 
     dimensions = PoseHeaderDimensions(width=width, height=height, depth=depth)
 
-    face_num = 478 if additional_holistic_config['refine_face_landmarks'] else 468
-    header: PoseHeader = PoseHeader(version=0.1, dimensions=dimensions, components=holistic_components(pf, face_num))
-    body: NumPyPoseBody = process_holistic(frames, fps, width, height, kinect, progress, face_num, additional_holistic_config)
+    additional_face_points = 10 if additional_holistic_config['refine_face_landmarks'] else 0
+    header: PoseHeader = PoseHeader(version=0.1, dimensions=dimensions, components=holistic_components(pf, additional_face_points))
+    body: NumPyPoseBody = process_holistic(frames, fps, width, height, kinect, progress, additional_face_points, additional_holistic_config)
 
     return Pose(header, body)

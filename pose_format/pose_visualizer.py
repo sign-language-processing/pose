@@ -27,8 +27,6 @@ class PoseVisualizer:
       c = person_confidence.tolist()
       idx = 0
       for component in self.pose.header.components:
-        if component.name == 'POSE_WORLD_LANDMARKS':
-          continue
         colors = [np.array(c[::-1]) for c in component.colors]
 
         @lru_cache(maxsize=None)

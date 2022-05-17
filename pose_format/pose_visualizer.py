@@ -16,6 +16,7 @@ class PoseVisualizer:
   def __init__(self, pose: Pose, thickness=None):
     self.pose = pose
     self.thickness = thickness
+    self.pose_fps = float(self.pose.body.fps)
 
   def _draw_frame(self, frame: ma.MaskedArray, frame_confidence: np.ndarray, img) -> np.ndarray:
     background_color = img[0][0]  # Estimation of background color for opacity. `mean` is slow
@@ -90,6 +91,11 @@ class PoseVisualizer:
     def get_frames(video_path):
 
       cap = cv2.VideoCapture(video_path)
+      video_fps = cap.get(cv2.CAP_PROP_FPS)
+
+      assert math.isclose(video_fps, self.pose_fps), \
+        "Fps of pose and video do not match: %f != %f" % (self.pose_fps, video_fps)
+
       while True:
         ret, vf = cap.read()
         if not ret:

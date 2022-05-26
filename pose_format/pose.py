@@ -112,8 +112,13 @@ class Pose:
                 new_component = PoseHeaderComponent(component.name, component.points,
                                                     component.limbs, component.colors, component.format)
                 if points is not None and component.name in points:  # copy and permute points
+                    # print(component.points)
+                    # print(component.limbs)
                     new_component.points = points[component.name]
                     indexes[component.name] = [component.points.index(p) for p in new_component.points]
+                    new_component.limbs = [(a, b) for a, b in new_component.limbs if str(a) in new_component.points and str(b) in new_component.points]
+                    # print(new_component.points)
+                    # print(new_component.limbs)
                 else:  # Copy component as is
                     indexes[component.name] = list(range(idx, len(component.points) + idx))
 

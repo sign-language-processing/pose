@@ -114,6 +114,7 @@ class Pose:
                 if points is not None and component.name in points:  # copy and permute points
                     new_component.points = points[component.name]
                     indexes[component.name] = [component.points.index(p) for p in new_component.points]
+                    new_component.limbs = [(l1,l2) for l1,l2 in component.limbs if (l1 in indexes[component.name] and l2 in indexes[component.name])]
                 else:  # Copy component as is
                     indexes[component.name] = list(range(idx, len(component.points) + idx))
 

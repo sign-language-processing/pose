@@ -104,7 +104,7 @@ class Pose:
 
     def get_components(self, components: List[str], points: Dict[str, List[str]] = None):
         indexes = {}
-        new_components = []
+        new_components = {}
 
         idx = 0
         for component in self.header.components:
@@ -112,17 +112,24 @@ class Pose:
                 new_component = PoseHeaderComponent(component.name, component.points,
                                                     component.limbs, component.colors, component.format)
                 if points is not None and component.name in points:  # copy and permute points
-                    new_component.points = points[component.name]
-                    indexes[component.name] = [component.points.index(p) for p in new_component.points]
+                    new_component.points = points[component.name] 
+                    point_index_mapping = {component.points.index(point): i for i, point in enumerate(new_component.points)}
+                    old_indexes_set = set(point_index_mapping.keys())
+                    new_component.limbs = [(point_index_mapping[l1], point_index_mapping[l2]) for l1, l2 in component.limbs if l1 in old_indexes_set and l2 in old_indexes_set]
+
+                    indexes[component.name] = [idx + component.points.index(p) for p in new_component.points]
                 else:  # Copy component as is
                     indexes[component.name] = list(range(idx, len(component.points) + idx))
 
-                new_components.append(new_component)
+                new_components[component.name] = new_component
 
             idx += len(component.points)
 
-        new_header = PoseHeader(self.header.version, self.header.dimensions, new_components)
-        flat_indexes = list(chain.from_iterable([indexes[c] for c in components]))
+        new_components_order = [new_components[c] for c in components]
+        indexes_order = [indexes[c] for c in components]
+
+        new_header = PoseHeader(self.header.version, self.header.dimensions, new_components_order)
+        flat_indexes = list(chain.from_iterable(indexes_order))
         new_body = self.body.get_points(flat_indexes)
 
         return Pose(header=new_header, body=new_body)

@@ -57,7 +57,6 @@ def process_holistic(frames: list, fps: float, w: int, h: int, kinect=None, prog
         lh_data, lh_confidence = component_points(results.left_hand_landmarks, w, h, 21)
         rh_data, rh_confidence = component_points(results.right_hand_landmarks, w, h, 21)
         body_world_data, body_world_confidence = body_points(results.pose_world_landmarks, w, h, 33)
-        # TODO: reduce the face landmarks?
 
         data = np.concatenate([body_data, face_data, lh_data, rh_data, body_world_data])
         conf = np.concatenate([body_confidence, face_confidence, lh_confidence, rh_confidence, body_world_confidence])

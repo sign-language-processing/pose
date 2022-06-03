@@ -7,7 +7,7 @@ import os
 import json
 import numpy as np
 
-from pose_format.utils.openpose import get_frame_id, load_openpose, load_openpose_directory
+from pose_format.utils.openpose import get_frame_id, load_openpose, load_openpose_directory, OPENPOSE_FRAME_PATTERN
 from pose_format.utils.openpose import OpenPoseFrames, OpenPose_Components
 from pose_format.pose import Pose
 
@@ -255,7 +255,7 @@ class TestLoadOpenposeDirectory(TestCase):
         filename = "CAM2_000000000000_keypoints.json"
         expected_output = 0
 
-        actual_output = get_frame_id(filename)
+        actual_output = get_frame_id(filename, pattern=OPENPOSE_FRAME_PATTERN)
         self.assertEqual(actual_output, expected_output)
 
     def test_get_frame_id_nonzero(self):
@@ -263,7 +263,7 @@ class TestLoadOpenposeDirectory(TestCase):
         filename = "CAM2_000000000007_keypoints.json"
         expected_output = 7
 
-        actual_output = get_frame_id(filename)
+        actual_output = get_frame_id(filename, pattern=OPENPOSE_FRAME_PATTERN)
         self.assertEqual(actual_output, expected_output)
 
     def test_get_frame_id_several_digits(self):
@@ -271,7 +271,7 @@ class TestLoadOpenposeDirectory(TestCase):
         filename = "CAM2_000000000457_keypoints.json"
         expected_output = 457
 
-        actual_output = get_frame_id(filename)
+        actual_output = get_frame_id(filename, pattern=OPENPOSE_FRAME_PATTERN)
         self.assertEqual(actual_output, expected_output)
 
     def test_get_frame_id_no_prefix(self):
@@ -279,7 +279,7 @@ class TestLoadOpenposeDirectory(TestCase):
         filename = "000000000013_keypoints.json"
         expected_output = 13
 
-        actual_output = get_frame_id(filename)
+        actual_output = get_frame_id(filename, pattern=OPENPOSE_FRAME_PATTERN)
         self.assertEqual(actual_output, expected_output)
 
     def test_load_openpose_directory_returns_pose_object(self):

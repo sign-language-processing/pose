@@ -126,6 +126,8 @@ HAND_POINTS_COLOR = [
     [127, 127, 127]
 ]
 
+OPENPOSE_FRAME_PATTERN = "(?:^|\D)(\d+)\\_keypoints.json"
+
 
 # Definition of OpenPose Components
 
@@ -256,6 +258,6 @@ def load_openpose_directory(directory: str, fps: float = 24, width: int = 1000, 
                        the last frame(s) of a video are missing from the OpenPose output.
     :return: Pose objects with a header specific to OpenPose and a body that contains a single array.
     """
-    frames = load_frames_directory_dict(directory=directory, pattern="(?:^|\D)(\d+)\\_keypoints.json")
+    frames = load_frames_directory_dict(directory=directory, pattern=OPENPOSE_FRAME_PATTERN)
 
     return load_openpose(frames, fps=fps, width=width, height=height, depth=depth, num_frames=num_frames)

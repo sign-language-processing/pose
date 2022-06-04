@@ -1,5 +1,6 @@
+from pose_format import Pose
 from pose_format.pose_header import PoseHeader, PoseHeaderComponent, PoseHeaderDimensions
-from pose_format.utils.openpose import limbs_index
+from pose_format.utils.openpose import limbs_index, load_openpose_directory
 
 BODY_POINTS = ["Nose", "LEye", "REye", "LEar", "REar", "LShoulder", "RShoulder", "LElbow", "RElbow", "LWrist", "RWrist",
                "LHip", "RHip", "LKnee", "RKnee", "LAnkle", "RAnkle", "UpperNeck", "HeadTop", "LBigToe", "LSmallToe",
@@ -70,6 +71,16 @@ OpenPose_Components = [PoseHeaderComponent(name="BODY_135",
                                            points=BODY_135_POINTS,
                                            limbs=limbs_index(BODY_135_LIMBS, BODY_135_POINTS),
                                            colors=[(255, 0, 0)], point_format="XYC")]
+
+
+def load_openpose_135_directory(*args, **kwargs) -> Pose:
+    pose = load_openpose_directory(*args, **kwargs)
+
+    pose.body.data = pose.body.data[:, :, :135, :]
+    pose.body.confidence = pose.body.confidence[:, :, :135]
+    pose.header.components = OpenPose_Components
+
+    return pose
 
 if __name__ == "__main__":
     dimensions = PoseHeaderDimensions(width=512, height=512, depth=0)

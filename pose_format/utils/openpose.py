@@ -126,6 +126,8 @@ HAND_POINTS_COLOR = [
     [127, 127, 127]
 ]
 
+OPENPOSE_FRAME_PATTERN = "(?:^|\D)(\d+)\\_keypoints.json"
+
 
 # Definition of OpenPose Components
 
@@ -156,7 +158,6 @@ OpenPose_Components = [
     OpenPose_Hand_Component("hand_left_keypoints_2d"),
     OpenPose_Hand_Component("hand_right_keypoints_2d"),
 ]
-
 
 OpenPoseFrame = Dict[str, Any]
 OpenPoseFrames = Dict[int, OpenPoseFrame]
@@ -213,7 +214,7 @@ def load_openpose(frames: OpenPoseFrames, fps: float = 24, width: int = 1000, he
     return Pose(header, body)
 
 
-def get_frame_id(filename: str) -> int:
+def get_frame_id(filename: str, pattern: str) -> int:
     """
     Parses a filename to find the ID of a frame. Example file name for frame with ID 17:
     `CAM2_000000000017_keypoints.json`.
@@ -221,20 +222,33 @@ def get_frame_id(filename: str) -> int:
     :param filename: Name of openpose frame file.
     :return: Frame ID as an integer.
     """
-    pattern = "(?:^|\D)(\d+)\\_keypoints.json"
     m = re.findall(pattern, filename)
     frame_id = int(m[-1])
 
     return frame_id
 
 
+def load_frames_directory_dict(directory: str, pattern: str) -> OpenPoseFrames:
+    """
+    Loads a pose directory where the poses of each frame are stored in a separate file, with a specific naming
+    scheme. The filename must follow this template: `[ARBITRARY CHARACTERS]_[FRAME_ID]_keypoints.json`.
+    Example file name for frame with ID 17: `CAM2_000000000017_keypoints.json`.
+    """
+    frames = {}  # type: OpenPoseFrames
+
+    with os.scandir(directory) as entry_iterator:
+        for entry in entry_iterator:  # type: os.DirEntry
+            with open(entry.path, "r") as f:
+                frame_id = get_frame_id(entry.name, pattern=pattern)
+                frame_dict = json.load(f)
+                frames[frame_id] = frame_dict
+
+    return frames
+
+
 def load_openpose_directory(directory: str, fps: float = 24, width: int = 1000, height: int = 1000,
                             depth: int = 0, num_frames: Optional[int] = None) -> Pose:
     """
-    Loads an Openpose directory where the poses of each frame are stored in a separate file, with a specific naming
-    scheme. The filename must follow this template: `[ARBITRARY CHARACTERS]_[FRAME_ID]_keypoints.json`.
-    Example file name for frame with ID 17: `CAM2_000000000017_keypoints.json`.
-
     :param directory: Path to folder that contains pose files.
     :param fps: Framerate.
     :param width: Width of pose space.
@@ -244,13 +258,6 @@ def load_openpose_directory(directory: str, fps: float = 24, width: int = 1000, 
                        the last frame(s) of a video are missing from the OpenPose output.
     :return: Pose objects with a header specific to OpenPose and a body that contains a single array.
     """
-    frames = {}  # type: OpenPoseFrames
-
-    with os.scandir(directory) as entry_iterator:
-        for entry in entry_iterator:  # type: os.DirEntry
-            with open(entry.path, "r") as f:
-                frame_id = get_frame_id(entry.name)
-                frame_dict = json.load(f)
-                frames[frame_id] = frame_dict
+    frames = load_frames_directory_dict(directory=directory, pattern=OPENPOSE_FRAME_PATTERN)
 
     return load_openpose(frames, fps=fps, width=width, height=height, depth=depth, num_frames=num_frames)

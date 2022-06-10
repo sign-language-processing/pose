@@ -43,13 +43,13 @@
 
 ## Methods
 
-### `getPose() => Promise<any>`
+### `getPose() => Promise<PoseModel>`
 
 
 
 #### Returns
 
-Type: `Promise<any>`
+Type: `Promise<PoseModel>`
 
 
 

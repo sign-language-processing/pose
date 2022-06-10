@@ -5,6 +5,7 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
+import { PoseModel } from "pose-format";
 export namespace Components {
     interface PoseViewer {
         "aspectRatio": number;
@@ -13,7 +14,7 @@ export namespace Components {
         "currentTime": number;
         "duration": number;
         "ended": boolean;
-        "getPose": () => Promise<any>;
+        "getPose": () => Promise<PoseModel>;
         "height": string;
         "loop": boolean;
         "nextFrame": () => Promise<void>;
@@ -29,6 +30,10 @@ export namespace Components {
         "thickness": number;
         "width": string;
     }
+}
+export interface PoseViewerCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLPoseViewerElement;
 }
 declare global {
     interface HTMLPoseViewerElement extends Components.PoseViewer, HTMLStencilElement {
@@ -51,14 +56,14 @@ declare namespace LocalJSX {
         "ended"?: boolean;
         "height"?: string;
         "loop"?: boolean;
-        "onCanplaythrough$"?: (event: CustomEvent<void>) => void;
-        "onEnded$"?: (event: CustomEvent<void>) => void;
-        "onFirstRender$"?: (event: CustomEvent<void>) => void;
-        "onLoadeddata$"?: (event: CustomEvent<void>) => void;
-        "onLoadedmetadata$"?: (event: CustomEvent<void>) => void;
-        "onLoadstart$"?: (event: CustomEvent<void>) => void;
-        "onPause$"?: (event: CustomEvent<void>) => void;
-        "onPlay$"?: (event: CustomEvent<void>) => void;
+        "onCanplaythrough$"?: (event: PoseViewerCustomEvent<void>) => void;
+        "onEnded$"?: (event: PoseViewerCustomEvent<void>) => void;
+        "onFirstRender$"?: (event: PoseViewerCustomEvent<void>) => void;
+        "onLoadeddata$"?: (event: PoseViewerCustomEvent<void>) => void;
+        "onLoadedmetadata$"?: (event: PoseViewerCustomEvent<void>) => void;
+        "onLoadstart$"?: (event: PoseViewerCustomEvent<void>) => void;
+        "onPause$"?: (event: PoseViewerCustomEvent<void>) => void;
+        "onPlay$"?: (event: PoseViewerCustomEvent<void>) => void;
         "padding"?: string;
         "paused"?: boolean;
         "playbackRate"?: number;

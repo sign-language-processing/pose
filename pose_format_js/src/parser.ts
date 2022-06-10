@@ -142,11 +142,14 @@ function parseBodyV0_1(header: PoseHeaderModel, buffer: Buffer): PoseBodyModel {
 
                 for (let l = 0; l < component.points.length; l++) {
                     const offset = i * (info._people * _points) + j * _points;
-                    person[component.name].push({
-                        "X": data.data[offset * 2 + (k + l) * 2],
-                        "Y": data.data[offset * 2 + (k + l) * 2 + 1],
-                        "C": confidence.confidence[offset + k + l]
-                    })
+                    const place = offset + k + l;
+                    const point: any = {"C": confidence.confidence[place]};
+                    [...component.format].forEach((dim, dimIndex) => {
+                        if (dim !== "C") {
+                            point[dim] = data.data[place * _dims + dimIndex];
+                        }
+                    });
+                    person[component.name].push(point)
                 }
                 k += component.points.length;
             });

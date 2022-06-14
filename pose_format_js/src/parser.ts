@@ -1,5 +1,5 @@
-import {Parser} from 'binary-parser';
-import {PoseBodyModel, PoseHeaderModel, PoseModel} from "./types";
+import {Parser} from "binary-parser";
+import {PoseBodyFrameModel, PoseBodyModel, PoseHeaderModel, PoseModel} from "./types";
 
 
 function newParser() {
@@ -109,16 +109,32 @@ function parseBodyV0_1(header: PoseHeaderModel, buffer: Buffer): PoseBodyModel {
 
     const info = infoParser.parse(buffer);
 
-    const dataParser = newParser()
-        .seek(header.headerLength + 6)
-        .array("data", {
-            type: "floatle",
-            length: info._frames * info._people * _points * _dims
-        })
-        // @ts-ignore
-        .saveOffset('dataLength');
+    // Issue https://github.com/keichi/binary-parser/issues/208
+    // const dataParser = newParser()
+    //     .seek(header.headerLength + 6)
+    //     .array("data", {
+    //         type: "floatle",
+    //         length: info._frames * info._people * _points * _dims
+    //     })
+    //     .saveOffset('dataLength');
+    //
+    // const data = dataParser.parse(buffer);
 
-    const data = dataParser.parse(buffer);
+    // TODO remove temporary hack
+    const data = (function () {
+        const dataView = new DataView(buffer.buffer, buffer.byteOffset, buffer.length);
+        let offset = header.headerLength + 6;
+        const vars: any = {};
+
+        vars.data = new Float32Array(info._frames * info._people * _points * _dims);
+        for (let $tmp0 = 0; $tmp0 < vars.data.length; $tmp0++) {
+            let $tmp1 = dataView.getFloat32(offset, true);
+            offset += 4;
+            vars.data[$tmp0] = $tmp1
+        }
+        vars.dataLength = offset
+        return vars;
+    })();
 
     const confidenceParser = newParser()
         .seek(data.dataLength)
@@ -129,13 +145,11 @@ function parseBodyV0_1(header: PoseHeaderModel, buffer: Buffer): PoseBodyModel {
 
     const confidence = confidenceParser.parse(buffer);
 
-    const frames: any[] = [];
-    for (let i = 0; i < info._frames; i++) {
-        const people: any[] = [];
-        frames.push({people});
+    function frameRepresentation(i: number) {
+        const people: any[] = new Array(info._people);
         for (let j = 0; j < info._people; j++) {
             const person: any = {};
-            people.push(person);
+            people[j] = person;
             let k = 0;
             header.components.forEach(component => {
                 person[component.name] = [];
@@ -154,7 +168,18 @@ function parseBodyV0_1(header: PoseHeaderModel, buffer: Buffer): PoseBodyModel {
                 k += component.points.length;
             });
         }
+        return {people}
     }
+
+    const frames = new Proxy({}, {
+        get: function(target: any, name: any) {
+            if(name === 'length') {
+                return info._frames
+            }
+            return frameRepresentation(name);
+        }
+    }) as PoseBodyFrameModel[];
+
 
     return {
         ...info,

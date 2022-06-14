@@ -105,7 +105,8 @@ def load_holistic(frames: list, fps: float = 24, width=1000, height=1000, depth=
 
     dimensions = PoseHeaderDimensions(width=width, height=height, depth=depth)
 
-    additional_face_points = 10 if additional_holistic_config['refine_face_landmarks'] else 0
+    refine_face_landmarks = 'refine_face_landmarks' in additional_holistic_config and additional_holistic_config['refine_face_landmarks']
+    additional_face_points = 10 if refine_face_landmarks else 0
     header: PoseHeader = PoseHeader(version=0.1, dimensions=dimensions, components=holistic_components(pf, additional_face_points))
     body: NumPyPoseBody = process_holistic(frames, fps, width, height, kinect, progress, additional_face_points, additional_holistic_config)
 

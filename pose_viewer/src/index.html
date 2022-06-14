@@ -9,10 +9,10 @@
   <script nomodule src="/build/pose-viewer.js"></script>
 </head>
 <body>
-<h2>Weird poses from Zifan</h2>
 <pose-viewer src="sample-data/example.pose"></pose-viewer>
 <pose-viewer src="sample-data/example.reduced.pose"></pose-viewer>
 <pose-viewer src="sample-data/test.pose"></pose-viewer>
+<!--<pose-viewer src="sample-data/000000.2021-04-01.masked.pose"></pose-viewer>-->
 <!--<br/>-->
 <!--<br/>-->
 <!--<br/>-->
@@ -33,23 +33,23 @@
 
 <!--<br/>-->
 <!--<br/>-->
-<!--<br/>-->
-
-<!--&lt;!&ndash;<h2>Video Sync</h2>&ndash;&gt;-->
-<!--&lt;!&ndash;<video src="sample-data/video/video.mp4" autoplay loop controls></video>&ndash;&gt;-->
 <!--&lt;!&ndash;<br/>&ndash;&gt;-->
-<!--&lt;!&ndash;<pose-viewer src="sample-data/video/sample.pose" id="sync" width="500px" height="500px"></pose-viewer>&ndash;&gt;-->
+
+<!--<h2>Video Sync</h2>-->
+<!--<video src="sample-data/video/video.mp4" autoplay loop controls></video>-->
+<!--<br/>-->
+<!--<pose-viewer src="sample-data/video/sample.pose" svg="true" id="sync" width="1280px" height="720px"></pose-viewer>-->
 <!--&lt;!&ndash;<pose-viewer src="sample-data/video/sample.pose" width="500px" autoplay="false"></pose-viewer>&ndash;&gt;-->
 <!--&lt;!&ndash;<pose-viewer src="sample-data/video/sample.pose" width="500px" padding="20%" autoplay="false"></pose-viewer>&ndash;&gt;-->
 
-<!--&lt;!&ndash;<pose-viewer svg="true" src="sample-data/video/sample.pose" width="500px"></pose-viewer>&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;<pose-viewer svg="true" src="sample-data/video/sample.pose" width="500px"></pose-viewer>&ndash;&gt;&ndash;&gt;-->
 
-<!--<pose-viewer id="sync" src="sample-data/video/sample.pose"-->
-<!--             autoplay="false"-->
-<!--             loop="false"-->
-<!--             padding="10%"-->
-<!--             width="512px"-->
-<!--             aspect-ratio="1"></pose-viewer>-->
+<!--&lt;!&ndash;<pose-viewer id="sync" src="sample-data/video/sample.pose"&ndash;&gt;-->
+<!--&lt;!&ndash;             autoplay="false"&ndash;&gt;-->
+<!--&lt;!&ndash;             loop="false"&ndash;&gt;-->
+<!--&lt;!&ndash;             padding="10%"&ndash;&gt;-->
+<!--&lt;!&ndash;             width="512px"&ndash;&gt;-->
+<!--&lt;!&ndash;             aspect-ratio="1"></pose-viewer>&ndash;&gt;-->
 
 
 <!--<script>-->
@@ -59,9 +59,9 @@
 <!--    // the component is registered now, so its methods are immediately available-->
 <!--    const poseViewer = document.querySelector('pose-viewer#sync');-->
 
-<!--    // const video = document.querySelector('video');-->
-<!--    //-->
-<!--    // await poseViewer.syncMedia(video)-->
+<!--    const video = document.querySelector('video');-->
+
+<!--    await poseViewer.syncMedia(video)-->
 <!--  })();-->
 <!--</script>-->
 </body>

@@ -1,6 +1,7 @@
 // @ts-ignore
 import {Component, Element, Event, EventEmitter, h, Host, Method, Prop, Watch} from '@stencil/core';
 import {Pose, PoseModel} from "pose-format";
+// import {Pose, PoseModel} from "../../../../pose_format_js/dist";
 import {PoseRenderer} from "./renderers/pose-renderer";
 import {SVGPoseRenderer} from "./renderers/svg.pose-renderer";
 import {CanvasPoseRenderer} from "./renderers/canvas.pose-renderer";

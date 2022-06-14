@@ -6,9 +6,13 @@
     "outDir": "dist",
     "sourceMap": true,
     "strict": true,
-    "target": "es2017"
+    "target": "es2017",
+    "moduleResolution": "node"
   },
   "compileOnSave": true,
+  "files": [
+    "node_modules/binary-parser/dist/binary_parser.d.ts"
+  ],
   "include": [
     "src/**/*",
     "src/**/*.json"

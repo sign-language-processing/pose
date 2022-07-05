@@ -110,40 +110,26 @@ function parseBodyV0_1(header: PoseHeaderModel, buffer: Buffer): PoseBodyModel {
     const info = infoParser.parse(buffer);
 
     // Issue https://github.com/keichi/binary-parser/issues/208
-    // const dataParser = newParser()
-    //     .seek(header.headerLength + 6)
-    //     .array("data", {
-    //         type: "floatle",
-    //         length: info._frames * info._people * _points * _dims
-    //     })
-    //     .saveOffset('dataLength');
-    //
-    // const data = dataParser.parse(buffer);
-
-    // TODO remove temporary hack
-    const data = (function () {
+    const parseFloat32Array = (length: number, offset: number) => {
         const dataView = new DataView(buffer.buffer, buffer.byteOffset, buffer.length);
-        let offset = header.headerLength + 6;
-        const vars: any = {};
+        let currentOffset = offset;
+        const vars = {
+            data: new Float32Array(length),
+            offset: 0
+        };
 
-        vars.data = new Float32Array(info._frames * info._people * _points * _dims);
-        for (let $tmp0 = 0; $tmp0 < vars.data.length; $tmp0++) {
-            let $tmp1 = dataView.getFloat32(offset, true);
-            offset += 4;
-            vars.data[$tmp0] = $tmp1
+        for (let i = 0; i < vars.data.length; i++) {
+            let $tmp1 = dataView.getFloat32(currentOffset, true);
+            currentOffset += 4;
+            vars.data[i] = $tmp1
         }
-        vars.dataLength = offset
+        vars.offset = currentOffset;
+
         return vars;
-    })();
+    };
 
-    const confidenceParser = newParser()
-        .seek(data.dataLength)
-        .array("confidence", {
-            type: "floatle",
-            length: info._frames * info._people * _points
-        });
-
-    const confidence = confidenceParser.parse(buffer);
+    const data = parseFloat32Array(info._frames * info._people * _points * _dims, header.headerLength + 6)
+    const confidence = parseFloat32Array(info._frames * info._people * _points, data.offset)
 
     function frameRepresentation(i: number) {
         const people: any[] = new Array(info._people);
@@ -157,7 +143,7 @@ function parseBodyV0_1(header: PoseHeaderModel, buffer: Buffer): PoseBodyModel {
                 for (let l = 0; l < component.points.length; l++) {
                     const offset = i * (info._people * _points) + j * _points;
                     const place = offset + k + l;
-                    const point: any = {"C": confidence.confidence[place]};
+                    const point: any = {"C": confidence.data[place]};
                     [...component.format].forEach((dim, dimIndex) => {
                         if (dim !== "C") {
                             point[dim] = data.data[place * _dims + dimIndex];
@@ -172,8 +158,8 @@ function parseBodyV0_1(header: PoseHeaderModel, buffer: Buffer): PoseBodyModel {
     }
 
     const frames = new Proxy({}, {
-        get: function(target: any, name: any) {
-            if(name === 'length') {
+        get: function (target: any, name: any) {
+            if (name === 'length') {
                 return info._frames
             }
             return frameRepresentation(name);

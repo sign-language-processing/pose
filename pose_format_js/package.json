@@ -1,6 +1,6 @@
 {
   "name": "pose-format",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Library for handling .pose files",
   "scripts": {
     "start": "tsc -w"

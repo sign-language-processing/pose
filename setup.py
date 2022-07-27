@@ -19,7 +19,7 @@ setup(
   keywords=['Pose Files', 'Pose Interpolation', 'Pose Augmentation'],
   install_requires=['numpy', 'scipy', 'tqdm'],
   extras_require={
-    'dev': ['pytest', 'opencv-python', 'vidgear', 'mediapipe', 'torch', 'tensorflow']
+    'dev': ['pytest', 'opencv-python==4.5.5.64', 'vidgear', 'mediapipe', 'torch', 'tensorflow']
   },
   long_description=long_description,
   long_description_content_type='text/markdown',

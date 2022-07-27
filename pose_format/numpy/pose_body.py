@@ -77,6 +77,13 @@ class NumPyPoseBody(PoseBody):
         return self.data.mask
 
     def torch(self):
+        try:
+            import torch
+        except ImportError:
+            raise ImportError(
+                "Please install torch. https://pytorch.org/"
+            )
+
         import torch
         from ..torch.pose_body import TorchPoseBody
 

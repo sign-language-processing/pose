@@ -1,4 +1,3 @@
-import mediapipe as mp
 import numpy as np
 from tqdm import tqdm
 
@@ -6,6 +5,11 @@ from .openpose import hand_colors
 from ..numpy.pose_body import NumPyPoseBody
 from ..pose import Pose
 from ..pose_header import PoseHeader, PoseHeaderComponent, PoseHeaderDimensions
+
+try:
+    import mediapipe as mp
+except ImportError:
+    raise ImportError("Please install mediapipe with: pip install mediapipe")
 
 mp_holistic = mp.solutions.holistic
 
@@ -43,7 +47,8 @@ def body_points(component, width: int, height: int, num: int):
     return np.zeros((num, 3)), np.zeros(num)
 
 
-def process_holistic(frames: list, fps: float, w: int, h: int, kinect=None, progress=False, additional_face_points=0, additional_holistic_config={}):
+def process_holistic(frames: list, fps: float, w: int, h: int, kinect=None, progress=False, additional_face_points=0,
+                     additional_holistic_config={}):
     holistic = mp_holistic.Holistic(static_image_mode=False, **additional_holistic_config)
 
     datas = []
@@ -53,7 +58,8 @@ def process_holistic(frames: list, fps: float, w: int, h: int, kinect=None, prog
         results = holistic.process(frame)
 
         body_data, body_confidence = body_points(results.pose_landmarks, w, h, 33)
-        face_data, face_confidence = component_points(results.face_landmarks, w, h, FACE_POINTS_NUM(additional_face_points))
+        face_data, face_confidence = component_points(results.face_landmarks, w, h,
+                                                      FACE_POINTS_NUM(additional_face_points))
         lh_data, lh_confidence = component_points(results.left_hand_landmarks, w, h, 21)
         rh_data, rh_confidence = component_points(results.right_hand_landmarks, w, h, 21)
         body_world_data, body_world_confidence = body_points(results.pose_world_landmarks, w, h, 33)
@@ -100,14 +106,18 @@ def holistic_components(pf="XYZC", additional_face_points=0):
     ]
 
 
-def load_holistic(frames: list, fps: float = 24, width=1000, height=1000, depth=0, kinect=None, progress=False, additional_holistic_config={}):
+def load_holistic(frames: list, fps: float = 24, width=1000, height=1000, depth=0, kinect=None, progress=False,
+                  additional_holistic_config={}):
     pf = "XYZC" if kinect is None else "XYZKC"
 
     dimensions = PoseHeaderDimensions(width=width, height=height, depth=depth)
 
-    refine_face_landmarks = 'refine_face_landmarks' in additional_holistic_config and additional_holistic_config['refine_face_landmarks']
+    refine_face_landmarks = 'refine_face_landmarks' in additional_holistic_config and additional_holistic_config[
+        'refine_face_landmarks']
     additional_face_points = 10 if refine_face_landmarks else 0
-    header: PoseHeader = PoseHeader(version=0.1, dimensions=dimensions, components=holistic_components(pf, additional_face_points))
-    body: NumPyPoseBody = process_holistic(frames, fps, width, height, kinect, progress, additional_face_points, additional_holistic_config)
+    header: PoseHeader = PoseHeader(version=0.1, dimensions=dimensions,
+                                    components=holistic_components(pf, additional_face_points))
+    body: NumPyPoseBody = process_holistic(frames, fps, width, height, kinect, progress, additional_face_points,
+                                           additional_holistic_config)
 
     return Pose(header, body)

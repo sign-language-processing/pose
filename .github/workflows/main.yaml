@@ -1,6 +1,11 @@
 name: Build
 
-on: [push, pull_request]
+on:
+  push:
+    branches: [ master, main ]
+  pull_request:
+    branches: [ master, main ]
+
 
 jobs:
   test:
@@ -18,8 +23,7 @@ jobs:
 
       - name: Install Requirements
         run: |
-          pip install -e .
-          pip install torch tensorflow
+          pip install -e .[dev]
 
       - name: Run tests
         run: pytest pose_format

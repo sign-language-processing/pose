@@ -40,7 +40,7 @@ class BufferReader:
     def unpack_torch(self, s: struct.Struct, shape: Tuple):
         import torch
 
-        arr = self.unpack_numpy(s, shape)  # Array is not writable
+        arr = self.unpack_numpy(s, shape)
         return torch.from_numpy(arr)
 
     def unpack_tensorflow(self, s: struct.Struct, shape: Tuple):

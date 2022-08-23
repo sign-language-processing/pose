@@ -33,15 +33,15 @@ class BufferReader:
         return self.unpack(getattr(ConstStructs, s_format))
 
     def unpack_numpy(self, s: struct.Struct, shape: Tuple):
-        arr = np.ndarray(shape, s.format, self.buffer, self.read_offset)
+        arr = np.ndarray(shape, s.format, self.buffer, self.read_offset).copy()
         self.advance(s, int(np.prod(shape)))
         return arr
 
     def unpack_torch(self, s: struct.Struct, shape: Tuple):
         import torch
 
-        arr = self.unpack_numpy(s, shape)  # Array is not writable
-        return torch.from_numpy(np.array(arr))
+        arr = self.unpack_numpy(s, shape)
+        return torch.from_numpy(arr)
 
     def unpack_tensorflow(self, s: struct.Struct, shape: Tuple):
         import tensorflow as tf

@@ -51,6 +51,16 @@ class TestBufferReader(TestCase):
         res = np.array([[1., 2.5], [3.5, 4.5]])
         self.assertTrue(np.all(arr == res), msg="Numpy unpacked array is not equal to expected array")
 
+    def test_unpack_numpy_writeable(self):
+        buffer = struct.pack("<ffff", 1., 2.5, 3.5, 4.5)
+        reader = BufferReader(buffer)
+
+        arr = reader.unpack_numpy(ConstStructs.float, (2, 2))
+
+        # if array is read-only, this will raise a ValueError
+
+        arr -= 0.1
+
     def test_unpack_torch(self):
         buffer = struct.pack("<ffff", 1., 2.5, 3.5, 4.5)
         reader = BufferReader(buffer)

@@ -33,7 +33,7 @@ class BufferReader:
         return self.unpack(getattr(ConstStructs, s_format))
 
     def unpack_numpy(self, s: struct.Struct, shape: Tuple):
-        arr = np.ndarray(shape, s.format, self.buffer, self.read_offset)
+        arr = np.ndarray(shape, s.format, self.buffer, self.read_offset).copy()
         self.advance(s, int(np.prod(shape)))
         return arr
 

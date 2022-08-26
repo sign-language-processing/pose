@@ -110,3 +110,14 @@ test file:
 ```sh
 pytest pose_format/tensorflow/masked/tensor_test.py
 ```
+
+## Cite
+
+```bibtex
+@misc{moryossef2021pose-format, 
+    title={pose-format: Library for viewing, augmenting, and handling .pose files},
+    author={Moryossef, Amit and M\"{u}ller, Mathias},
+    howpublished={\url{https://github.com/AmitMY/pose-format}},
+    year={2021}
+}
+```

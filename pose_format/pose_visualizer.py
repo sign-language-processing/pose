@@ -138,9 +138,9 @@ class PoseVisualizer:
 
         output_params = {
             "-vcodec": "libx264",
-            "-crf": 0,
             "-preset": "fast",
-            "-input_framerate": self.pose.body.fps
+            "-input_framerate": self.pose.body.fps,
+            "-pix_fmt": "yuv420p",
         }
 
         # Define writer with defined parameters and suitable output filename for e.g. `Output.mp4`

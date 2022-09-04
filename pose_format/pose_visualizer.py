@@ -1,7 +1,7 @@
 import itertools
 import math
 from functools import lru_cache
-from typing import Tuple, Iterator
+from typing import Tuple, Iterable
 
 import numpy as np
 import numpy.ma as ma
@@ -126,7 +126,19 @@ class PoseVisualizer:
     def save_frame(self, f_name: str, frame: np.ndarray):
         self.cv2.imwrite(f_name, frame)
 
-    def save_video(self, f_name: str, frames: Iterator, custom_ffmpeg=None):
+    def save_gif(self, f_name: str, frames: Iterable[np.ndarray]):
+        try:
+            from PIL import Image
+        except ImportError:
+            raise ImportError(
+                "Please install Pillow with: pip install Pillow"
+            )
+
+        images = [Image.fromarray(self.cv2.cvtColor(frame, self.cv2.COLOR_BGR2RGB)) for frame in frames]
+        images[0].save(f_name, format="GIF", append_images=images,
+                       save_all=True, duration=1000 / self.pose.body.fps, loop=0)
+
+    def save_video(self, f_name: str, frames: Iterable[np.ndarray], custom_ffmpeg=None):
         try:
             from vidgear.gears import WriteGear
         except ImportError:

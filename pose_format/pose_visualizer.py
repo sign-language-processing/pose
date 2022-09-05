@@ -24,23 +24,6 @@ class PoseVisualizer:
                 "Please install OpenCV with: pip install opencv-python"
             )
 
-    def _draw_frame_fast_and_ugly(self, frame: ma.MaskedArray, img, color: int):
-        # Note: this can be made faster by drawing polylines instead of lines
-        thickness = 1
-        for person in frame:
-            points_2d = [tuple(p[:2]) for p in person.tolist()]
-            idx = 0
-            for component in self.pose.header.components:
-                for (p1, p2) in component.limbs:
-                    point1 = points_2d[p1 + idx]
-                    point2 = points_2d[p2 + idx]
-
-                    # Antialiasing is a bit slow, but necessary
-                    self.cv2.line(img, point1, point2, color, thickness, lineType=self.cv2.LINE_AA)
-
-                idx += len(component.points)
-        return img
-
     def _draw_frame(self, frame: ma.MaskedArray, frame_confidence: np.ndarray, img) -> np.ndarray:
         background_color = img[0][0]  # Estimation of background color for opacity. `mean` is slow
 
@@ -96,16 +79,6 @@ class PoseVisualizer:
                              fill_value=background_color, dtype="uint8")
         for frame, confidence in itertools.islice(zip(int_frames, self.pose.body.confidence), max_frames):
             yield self._draw_frame(frame, confidence, img=background.copy())
-
-    def draw_fast_and_ugly(self, background_color: int=0, foreground_color:int=255):
-        """
-        This function draws all frames as grayscale, without confidence
-        """
-        int_frames = np.array(np.around(self.pose.body.data.data), dtype="int32")
-        background = np.full((self.pose.header.dimensions.height, self.pose.header.dimensions.width),
-                             fill_value=background_color, dtype="uint8")
-        for frame in int_frames:
-            yield self._draw_frame_fast_and_ugly(frame, img=background.copy(), color=foreground_color)
 
     def draw_on_video(self, background_video, max_frames: int = None, blur=False):
         int_data = np.array(np.around(self.pose.body.data.data), dtype="int32")
@@ -169,3 +142,33 @@ class PoseVisualizer:
             out.write(frame)
 
         out.close()
+
+
+class FastAndUglyPoseVisualizer(PoseVisualizer):
+
+    def _draw_frame(self, frame: ma.MaskedArray, img, color: int):
+        # Note: this can be made faster by drawing polylines instead of lines
+        thickness = 1
+        for person in frame:
+            points_2d = [tuple(p[:2]) for p in person.tolist()]
+            idx = 0
+            for component in self.pose.header.components:
+                for (p1, p2) in component.limbs:
+                    point1 = points_2d[p1 + idx]
+                    point2 = points_2d[p2 + idx]
+
+                    # Antialiasing is a bit slow, but necessary
+                    self.cv2.line(img, point1, point2, color, thickness, lineType=self.cv2.LINE_AA)
+
+                idx += len(component.points)
+        return img
+
+    def draw(self, background_color: int = 0, foreground_color: int = 255):
+        """
+        This function draws all frames as grayscale, without confidence
+        """
+        int_frames = np.array(np.around(self.pose.body.data.data), dtype="int32")
+        background = np.full((self.pose.header.dimensions.height, self.pose.header.dimensions.width),
+                             fill_value=background_color, dtype="uint8")
+        for frame in int_frames:
+            yield self._draw_frame(frame, img=background.copy(), color=foreground_color)

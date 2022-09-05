@@ -145,6 +145,9 @@ class PoseVisualizer:
 
 
 class FastAndUglyPoseVisualizer(PoseVisualizer):
+    """
+    This class draws all frames as grayscale, without opacity based on confidence
+    """
 
     def _draw_frame(self, frame: ma.MaskedArray, img, color: int):
         # Note: this can be made faster by drawing polylines instead of lines
@@ -164,9 +167,6 @@ class FastAndUglyPoseVisualizer(PoseVisualizer):
         return img
 
     def draw(self, background_color: int = 0, foreground_color: int = 255):
-        """
-        This function draws all frames as grayscale, without confidence
-        """
         int_frames = np.array(np.around(self.pose.body.data.data), dtype="int32")
         background = np.full((self.pose.header.dimensions.height, self.pose.header.dimensions.width),
                              fill_value=background_color, dtype="uint8")

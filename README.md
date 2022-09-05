@@ -88,6 +88,40 @@ p.interpolate_fps(24, kind='cubic')
 p.interpolate_fps(24, kind='linear')
 ```
 
+### Visualization
+
+Visualize an existing pose file:
+
+```python
+from pose_format import Pose
+from pose_format.pose_visualizer import PoseVisualizer
+
+with open("example.pose", "rb") as f:
+    p = Pose.read(f.read())
+
+v = PoseVisualizer(p)
+
+v.save_video("example.mp4", v.draw())
+```
+
+Draw pose on top of video:
+
+```python
+v.save_video("example.mp4", v.draw_on_video("background_video_path.mp4"))
+```
+
+Convert pose to gif to easily inspect the result in Colab:
+
+```python
+# in a Colab notebook
+
+from IPython.display import Image
+
+v.save_gif("test.gif", v.draw())
+
+display(Image(open('test.gif','rb').read()))
+```
+
 ### Loading OpenPose data
 
 To load an OpenPose `directory`, use the `load_openpose_directory` utility:

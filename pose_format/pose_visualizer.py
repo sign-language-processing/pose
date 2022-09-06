@@ -33,7 +33,7 @@ class PoseVisualizer:
 
         for person, person_confidence in zip(frame, frame_confidence):
             c = person_confidence.tolist()
-            points_2d = [tuple(p[:2]) for p in person.tolist()]
+            points_2d = [tuple(p) for p in person[:, :2].tolist()]
             idx = 0
             for component in self.pose.header.components:
                 colors = [np.array(c[::-1]) for c in component.colors]
@@ -150,18 +150,19 @@ class FastAndUglyPoseVisualizer(PoseVisualizer):
     """
 
     def _draw_frame(self, frame: ma.MaskedArray, img, color: int):
+        ignored_point = (0, 0)
         # Note: this can be made faster by drawing polylines instead of lines
         thickness = 1
         for person in frame:
-            points_2d = [tuple(p[:2]) for p in person.tolist()]
+            points_2d = [tuple(p) for p in person[:, :2].tolist()]
             idx = 0
             for component in self.pose.header.components:
                 for (p1, p2) in component.limbs:
                     point1 = points_2d[p1 + idx]
                     point2 = points_2d[p2 + idx]
-
-                    # Antialiasing is a bit slow, but necessary
-                    self.cv2.line(img, point1, point2, color, thickness, lineType=self.cv2.LINE_AA)
+                    if point1 != ignored_point and point2 != ignored_point:
+                        # Antialiasing is a bit slow, but necessary
+                        self.cv2.line(img, point1, point2, color, thickness, lineType=self.cv2.LINE_AA)
 
                 idx += len(component.points)
         return img

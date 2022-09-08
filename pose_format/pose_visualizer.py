@@ -33,6 +33,7 @@ class PoseVisualizer:
 
         for person, person_confidence in zip(frame, frame_confidence):
             c = person_confidence.tolist()
+            points_2d = [tuple(p) for p in person[:, :2].tolist()]
             idx = 0
             for component in self.pose.header.components:
                 colors = [np.array(c[::-1]) for c in component.colors]
@@ -50,18 +51,17 @@ class PoseVisualizer:
                                         color=_point_color(i), thickness=-1, lineType=16)
 
                 if self.pose.header.is_bbox:
-                    point1 = tuple(person[0 + idx].tolist())
-                    point2 = tuple(person[1 + idx].tolist())
+                    point1 = points_2d[0 + idx]
+                    point2 = points_2d[1 + idx]
                     color = tuple(np.mean([_point_color(0), _point_color(1)], axis=0))
 
                     self.cv2.rectangle(img=img, pt1=point1, pt2=point2, color=color, thickness=thickness)
                 else:
-                    int_person = person.astype(np.int32)
                     # Draw Limbs
                     for (p1, p2) in component.limbs:
                         if c[p1 + idx] > 0 and c[p2 + idx] > 0:
-                            point1 = tuple(int_person[p1 + idx].tolist()[:2])
-                            point2 = tuple(int_person[p2 + idx].tolist()[:2])
+                            point1 = points_2d[p1 + idx]
+                            point2 = points_2d[p2 + idx]
 
                             # length = ((point1[0] - point2[0]) ** 2 + (point1[1] - point2[1]) ** 2) ** 0.5
 
@@ -69,23 +69,15 @@ class PoseVisualizer:
 
                             self.cv2.line(img, point1, point2, color, thickness, lineType=self.cv2.LINE_AA)
 
-                            # deg = math.degrees(math.atan2(point1[1] - point2[1], point1[0] - point2[0]))
-                            # polygon = cv2.ellipse2Poly(
-                            #   (int((point1[0] + point2[0]) / 2), int((point1[1] + point2[1]) / 2)),
-                            #   (int(length / 2), thickness),
-                            #   int(deg),
-                            #   0, 360, 1)
-                            # cv2.fillConvexPoly(img=img, points=polygon, color=color)
-
                 idx += len(component.points)
 
         return img
 
     def draw(self, background_color: Tuple[int, int, int] = (255, 255, 255), max_frames: int = None):
-        int_data = np.array(np.around(self.pose.body.data.data), dtype="int32")
+        int_frames = np.array(np.around(self.pose.body.data.data), dtype="int32")
         background = np.full((self.pose.header.dimensions.height, self.pose.header.dimensions.width, 3),
                              fill_value=background_color, dtype="uint8")
-        for frame, confidence in itertools.islice(zip(int_data, self.pose.body.confidence), max_frames):
+        for frame, confidence in itertools.islice(zip(int_frames, self.pose.body.confidence), max_frames):
             yield self._draw_frame(frame, confidence, img=background.copy())
 
     def draw_on_video(self, background_video, max_frames: int = None, blur=False):
@@ -162,3 +154,34 @@ class PoseVisualizer:
             out.write(frame)
 
         out.close()
+
+
+class FastAndUglyPoseVisualizer(PoseVisualizer):
+    """
+    This class draws all frames as grayscale, without opacity based on confidence
+    """
+
+    def _draw_frame(self, frame: ma.MaskedArray, img, color: int):
+        ignored_point = (0, 0)
+        # Note: this can be made faster by drawing polylines instead of lines
+        thickness = 1
+        for person in frame:
+            points_2d = [tuple(p) for p in person[:, :2].tolist()]
+            idx = 0
+            for component in self.pose.header.components:
+                for (p1, p2) in component.limbs:
+                    point1 = points_2d[p1 + idx]
+                    point2 = points_2d[p2 + idx]
+                    if point1 != ignored_point and point2 != ignored_point:
+                        # Antialiasing is a bit slow, but necessary
+                        self.cv2.line(img, point1, point2, color, thickness, lineType=self.cv2.LINE_AA)
+
+                idx += len(component.points)
+        return img
+
+    def draw(self, background_color: int = 0, foreground_color: int = 255):
+        int_frames = np.array(np.around(self.pose.body.data.data), dtype="int32")
+        background = np.full((self.pose.header.dimensions.height, self.pose.header.dimensions.width),
+                             fill_value=background_color, dtype="uint8")
+        for frame in int_frames:
+            yield self._draw_frame(frame, img=background.copy(), color=foreground_color)

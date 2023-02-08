@@ -1,0 +1,3 @@
+[submodule "examples/pose-pipelines"]
+	path = examples/pose-pipelines
+	url = git@github.com:J22Melody/pose-pipelines.git

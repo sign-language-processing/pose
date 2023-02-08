@@ -303,7 +303,7 @@ export class PoseViewer {
 
   render() {
     if (this.error) {
-      return this.error.message;
+      return this.error.name !== "AbortError" ? this.error.message : "";
     }
 
     if (!this.pose || isNaN(this.currentTime) || !this.renderer) {

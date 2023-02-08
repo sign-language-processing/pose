@@ -18,6 +18,7 @@ declare var ResizeObserver: ResizeObserver;
 export class PoseViewer {
   @Element() element: HTMLElement;
   private resizeObserver: ResizeObserver;
+  private fetchAbortController: AbortController;
 
   private lastSrc: string;
   @Prop() src: string; // Source URL for .pose file
@@ -68,6 +69,8 @@ export class PoseViewer {
   media: HTMLMediaElement;
   pose: PoseModel;
 
+  error: Error;
+
   private loopInterval: any;
 
   componentWillLoad() {
@@ -79,6 +82,34 @@ export class PoseViewer {
   componentDidLoad() {
     this.resizeObserver = new ResizeObserver(this.setDimensions.bind(this));
     this.resizeObserver.observe(this.element);
+  }
+
+  private async getRemotePose() {
+    delete this.error;
+    // Abort previous request
+    if (this.fetchAbortController) {
+      this.fetchAbortController.abort();
+    }
+
+    this.fetchAbortController = new AbortController();
+    this.pose = await Pose.fromRemote(this.src, this.fetchAbortController);
+    delete this.error;
+  }
+
+  private initPose() {
+    this.setDimensions();
+
+    // Loaded done events
+    this.loadedmetadata$.emit();
+    this.loadeddata$.emit();
+    this.canplaythrough$.emit();
+
+    this.duration = (this.pose.body.frames.length - 1) / this.pose.body.fps;
+    this.currentTime = 0;
+
+    if (this.autoplay) {
+      this.play();
+    }
   }
 
   @Watch('src')
@@ -103,20 +134,13 @@ export class PoseViewer {
     // Load new pose
     this.ended = false;
     this.loadstart$.emit();
-    this.pose = await Pose.fromRemote(this.src);
 
-    this.setDimensions();
-
-    // Loaded done events
-    this.loadedmetadata$.emit();
-    this.loadeddata$.emit();
-    this.canplaythrough$.emit();
-
-    this.duration = (this.pose.body.frames.length - 1) / this.pose.body.fps;
-    this.currentTime = 0;
-
-    if (this.autoplay) {
-      this.play();
+    try {
+      await this.getRemotePose();
+      this.initPose();
+    } catch (e) {
+      console.error(e);
+      this.error = e;
     }
   }
 
@@ -202,7 +226,7 @@ export class PoseViewer {
 
   @Method()
   async nextFrame() {
-    const newTime = this.currentTime + 1 / this.pose.body.fps
+    const newTime = this.currentTime + 1 / this.pose.body.fps;
     if (newTime > this.duration) {
       if (this.loop) {
         this.currentTime = newTime % this.duration;
@@ -278,6 +302,10 @@ export class PoseViewer {
   }
 
   render() {
+    if (this.error) {
+      return this.error.message;
+    }
+
     if (!this.pose || isNaN(this.currentTime) || !this.renderer) {
       return "";
     }

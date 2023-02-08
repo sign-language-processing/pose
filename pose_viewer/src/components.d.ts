@@ -6,6 +6,7 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { PoseModel } from "pose-format";
+export { PoseModel } from "pose-format";
 export namespace Components {
     interface PoseViewer {
         "aspectRatio": number;

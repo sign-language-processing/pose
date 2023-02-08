@@ -9,10 +9,8 @@
   <script nomodule src="/build/pose-viewer.js"></script>
 </head>
 <body>
-<pose-viewer src="sample-data/example.pose"></pose-viewer>
-<pose-viewer src="sample-data/example.reduced.pose"></pose-viewer>
-<pose-viewer src="sample-data/test.pose"></pose-viewer>
-<pose-viewer src="sample-data/000000.2021-04-01.masked.pose"></pose-viewer>
+<pose-viewer src="bad.pose"></pose-viewer>
+<pose-viewer src="sample-data/example.pose" id="example" loop="true"></pose-viewer>
 <!--<br/>-->
 <!--<br/>-->
 <!--<br/>-->
@@ -64,5 +62,24 @@
 <!--    await poseViewer.syncMedia(video)-->
 <!--  })();-->
 <!--</script>-->
+
+<script>
+  (async () => {
+    await customElements.whenDefined('pose-viewer');
+
+    // the component is registered now, so its methods are immediately available
+    const poseViewer = document.querySelector('pose-viewer#example');
+
+    const url = 'https://spoken-to-signed-sxie2r74ua-uc.a.run.app/?slang=en&dlang=us&sentence=';
+    const sentence = 'testing';
+
+    for(let i = 0; i < sentence.length; i++) {
+      setTimeout(() => {
+        const u = url + sentence.substring(0, i + 1);
+        poseViewer.setAttribute('src', u);
+      }, 300 * i);
+    }
+  })();
+</script>
 </body>
 </html>

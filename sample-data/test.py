@@ -1,17 +1,15 @@
-import math
-import torch
-from pose_format.torch.representation.inner_angle import InnerAngleRepresentation
+
+from tqdm import tqdm
+
 
 
 from pose_format import Pose
-from pose_format.pose_visualizer import PoseVisualizer
+from pose_format.pose_visualizer import PoseVisualizer, FastAndUglyPoseVisualizer
 from pose_format.numpy.pose_body import NumPyPoseBody
 
-# import tensorflow as tf
 import numpy as np
 
 # from pose_format.tensorflow.pose_body import TensorflowPoseBody, TF_POSE_RECORD_DESCRIPTION
-from pose_format.torch.masked import MaskedTensor
 
 # p1s = MaskedTensor(tensor=torch.tensor([[0, -1, 0], [0, -1, 0]], dtype=torch.float32))
 # p2s = MaskedTensor(tensor=torch.tensor([[0, 0, 0], [0, 0, 0]], dtype=torch.float32))
@@ -69,8 +67,17 @@ p.header.dimensions.width = 256
 p.header.dimensions.height *= ratio
 p.header.dimensions.height = int(p.header.dimensions.height)
 
+
+
+visualizer = FastAndUglyPoseVisualizer(p, thickness=1)
+for i in tqdm(range(100)):
+    list(visualizer.draw())
+
 visualizer = PoseVisualizer(p, thickness=1)
-frame = next(iter(visualizer.draw(background_color=(255, 255, 255))))
+for i in tqdm(range(100)):
+    list(visualizer.draw())
+
+frame = next(iter(visualizer.draw()))
 visualizer.save_frame("test_256.png", frame)
 with open("test_256.pose", "wb") as f:
     p.write(f)

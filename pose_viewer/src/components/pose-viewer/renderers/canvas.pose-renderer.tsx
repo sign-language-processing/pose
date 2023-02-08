@@ -53,7 +53,7 @@ export class CanvasPoseRenderer extends PoseRenderer {
     const drawCanvas = () => {
       const canvas = this.viewer.element.shadowRoot.querySelector('canvas');
       if (canvas) {
-        // TODO: this is unnecessary, but stencil doesn't apply attributes
+        // TODO: this should be unnecessary, but stencil doesn't apply attributes
         canvas.width = this.viewer.elWidth;
         canvas.height = this.viewer.elHeight;
 

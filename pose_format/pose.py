@@ -23,10 +23,10 @@ class Pose:
         self.body = body
 
     @staticmethod
-    def read(buffer: bytes, pose_body: Type[PoseBody] = NumPyPoseBody):
+    def read(buffer: bytes, pose_body: Type[PoseBody] = NumPyPoseBody, **kwargs):
         reader = BufferReader(buffer)
         header = PoseHeader.read(reader)
-        body = pose_body.read(header, reader)
+        body = pose_body.read(header, reader, **kwargs)
 
         return Pose(header, body)
 

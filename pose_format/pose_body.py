@@ -18,11 +18,11 @@ class PoseBody:
         self.confidence = confidence  # Shape (Frames, People, Points) - eg (93, 1, 137)
 
     @classmethod
-    def read(cls, header: PoseHeader, reader: BufferReader):
+    def read(cls, header: PoseHeader, reader: BufferReader, **kwargs):
         if header.version == 0:
-            return cls.read_v0_0(header, reader)
+            return cls.read_v0_0(header, reader, **kwargs)
         elif round(header.version, 3) == 0.1:
-            return cls.read_v0_1(header, reader)
+            return cls.read_v0_1(header, reader, **kwargs)
 
         raise NotImplementedError("Unknown version - %f" % header.version)
 

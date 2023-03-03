@@ -72,13 +72,15 @@
 
     const url = 'https://spoken-to-signed-sxie2r74ua-uc.a.run.app/?slang=en&dlang=us&sentence=';
     const sentence = 'testing';
+    poseViewer.setAttribute('src', url + sentence);
 
-    for(let i = 0; i < sentence.length; i++) {
-      setTimeout(() => {
-        const u = url + sentence.substring(0, i + 1);
-        poseViewer.setAttribute('src', u);
-      }, 300 * i);
-    }
+
+    // for(let i = 0; i < sentence.length; i++) {
+    //   setTimeout(() => {
+    //     const u = url + sentence.substring(0, i + 1);
+    //     poseViewer.setAttribute('src', u);
+    //   }, 300 * i);
+    // }
   })();
 </script>
 </body>

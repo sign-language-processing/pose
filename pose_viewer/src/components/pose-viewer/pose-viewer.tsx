@@ -85,7 +85,6 @@ export class PoseViewer {
   }
 
   private async getRemotePose() {
-    delete this.error;
     // Abort previous request
     if (this.fetchAbortController) {
       this.fetchAbortController.abort();
@@ -93,7 +92,6 @@ export class PoseViewer {
 
     this.fetchAbortController = new AbortController();
     this.pose = await Pose.fromRemote(this.src, this.fetchAbortController);
-    delete this.error;
   }
 
   private initPose() {
@@ -135,11 +133,13 @@ export class PoseViewer {
     this.ended = false;
     this.loadstart$.emit();
 
+    delete this.error;
     try {
       await this.getRemotePose();
       this.initPose();
+      delete this.error;
     } catch (e) {
-      console.error(e);
+      console.error('PoseViewer error', e);
       this.error = e;
     }
   }

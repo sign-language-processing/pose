@@ -148,7 +148,7 @@ class PoseVisualizer:
         }
 
         # Define writer with defined parameters and suitable output filename for e.g. `Output.mp4`
-        out = WriteGear(output_filename=f_name, logging=False, custom_ffmpeg=custom_ffmpeg, **output_params)
+        out = WriteGear(output=f_name, logging=False, custom_ffmpeg=custom_ffmpeg, **output_params)
         # out = cv2.VideoWriter(f_name, cv2.VideoWriter_fourcc(*'MP4V'), self.pose.body.fps, image_size)
         for frame in tqdm(frames):
             out.write(frame)

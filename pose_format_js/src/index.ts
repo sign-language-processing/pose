@@ -25,8 +25,14 @@ export class Pose {
       init.signal = abortController.signal;
     }
     const res = await fetch(url, init);
-    if(!res.ok) {
-      throw new Error(res.statusText);
+    if (!res.ok) {
+      let message = res.statusText ?? res.status;
+      try {
+        const json = await res.json();
+        message = json.message;
+      } catch (e) {
+      }
+      throw new Error(message);
     }
     const buffer = Buffer.from(await res.arrayBuffer());
     return Pose.from(buffer);

@@ -24,7 +24,7 @@ class NumPyPoseBody(PoseBody):
         super().__init__(fps, data, confidence)
 
     @classmethod
-    def read_v0_0(cls, header: PoseHeader, reader: BufferReader):
+    def read_v0_0(cls, header: PoseHeader, reader: BufferReader, **unused_kwargs):
         fps, _frames = reader.unpack(ConstStructs.double_ushort)
 
         _dims = max([len(c.format) for c in header.components]) - 1

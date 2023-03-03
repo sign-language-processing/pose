@@ -27,11 +27,39 @@ class PoseBody:
         raise NotImplementedError("Unknown version - %f" % header.version)
 
     @classmethod
-    def read_v0_0(cls, header: PoseHeader, reader: BufferReader):
+    def read_v0_0(cls, header: PoseHeader, reader: BufferReader, **unused_kwargs):
         raise NotImplementedError("'read_v0_0' not implemented on '%s'" % cls.__class__)
 
     @classmethod
-    def read_v0_1(cls, header: PoseHeader, reader: BufferReader):
+    def read_v0_1_frames(cls, frames: int, shape: List[int], reader: BufferReader,
+                         start_frame: int = None, end_frame: int = None):
+        tensor_reader = reader.__getattribute__(cls.tensor_reader)
+        s = ConstStructs.float
+
+        _frames = frames
+        if start_frame is not None and start_frame > 0:
+            if start_frame >= frames:
+                raise ValueError("Start frame is greater than the number of frames")
+            # Advance to the start frame
+            reader.advance(s, int(np.prod((start_frame, *shape))))
+            _frames -= start_frame
+
+        remove_frames = None
+        if end_frame is not None:
+            end_frame = min(end_frame, frames)  # Do not allow overflow
+            remove_frames = frames - end_frame
+            _frames -= remove_frames
+
+        tensor = tensor_reader(ConstStructs.float, shape=(_frames, *shape))
+
+        if remove_frames is not None:
+            reader.advance(s, int(np.prod((remove_frames, *shape))))
+
+        return tensor
+
+    @classmethod
+    def read_v0_1(cls, header: PoseHeader, reader: BufferReader,
+                  start_frame: int = None, end_frame: int = None, **unused_kwargs):
         fps, _frames = reader.unpack(ConstStructs.double_ushort)
 
         _people = reader.unpack(ConstStructs.ushort)
@@ -41,9 +69,8 @@ class PoseBody:
         # _frames is defined as short, which sometimes is not enough! TODO change to int
         _frames = int(reader.bytes_left() / (_people * _points * (_dims + 1) * 4))
 
-        tensor_reader = reader.__getattribute__(cls.tensor_reader)
-        data = tensor_reader(ConstStructs.float, shape=(_frames, _people, _points, _dims))
-        confidence = tensor_reader(ConstStructs.float, shape=(_frames, _people, _points))
+        data = cls.read_v0_1_frames(_frames, (_people, _points, _dims), reader, start_frame, end_frame)
+        confidence = cls.read_v0_1_frames(_frames, (_people, _points), reader, start_frame, end_frame)
 
         return cls(fps, data, confidence)
 
@@ -54,6 +81,14 @@ class PoseBody:
         :param buffer: BinaryIO
         """
         raise NotImplementedError("'write' not implemented on '%s'" % self.__class__)
+
+    def __getitem__(self, index):
+        # Get the sliced data and confidence
+        sliced_data = self.data[index]
+        sliced_confidence = self.confidence[index]
+
+        # Create a new PoseBody object with the sliced data and confidence
+        return type(self)(self.fps, sliced_data, sliced_confidence)
 
     def numpy(self):
         """

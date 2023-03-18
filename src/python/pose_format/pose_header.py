@@ -9,9 +9,10 @@ VERSION = 0.1
 
 
 class PoseNormalizationInfo:
-    def __init__(self, p1: int, p2: int):
+    def __init__(self, p1: int, p2: int, p3: int = None):
         self.p1 = p1
         self.p2 = p2
+        self.p3 = p3
 
 
 class PoseHeaderComponent:
@@ -122,8 +123,10 @@ class PoseHeader:
 
         raise ValueError("Couldn't find component")
 
-    def normalization_info(self, p1: Tuple[str, str], p2: Tuple[str, str]):
-        return PoseNormalizationInfo(p1=self._get_point_index(*p1), p2=self._get_point_index(*p2))
+    def normalization_info(self, p1: Tuple[str, str], p2: Tuple[str, str], p3: Tuple[str, str] = None):
+        return PoseNormalizationInfo(p1=self._get_point_index(*p1),
+                                     p2=self._get_point_index(*p2),
+                                     p3=None if p3 is None else self._get_point_index(*p3))
 
     def bbox(self):
         # Convert Header to boxes

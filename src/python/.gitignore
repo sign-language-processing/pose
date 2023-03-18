@@ -2,3 +2,4 @@
 __pycache__
 pose_format.egg-info
 dist
+build

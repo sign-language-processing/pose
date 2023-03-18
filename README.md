@@ -8,7 +8,7 @@ The format supports any type of poses, arbitrary number of people, and arbitrary
 
 The main idea is having a `header` with instructions on how many points exists, where, and how to connect them.
 
-The binary spec can be found in [specs/v0.1.md](specs/v0.1.md).
+The binary spec can be found in [docs/specs/v0.1.md](docs/specs/v0.1.md).
 
 ### Python Usage
 ```bash
@@ -16,17 +16,19 @@ pip install pose-format
 ```
 
 To load a `.pose` file, use the `PoseReader` class:
+
 ```python
-from pose_format.pose import Pose
+from pose_format.python.pose import Pose
 
 buffer = open("file.pose", "rb").read()
 p = Pose.read(buffer)
 ```
 By default, it uses NumPy for the data, but you can also use `torch` and `tensorflow` by writing:
+
 ```python
-from pose_format.pose import Pose
-from pose_format.torch.pose_body import TorchPoseBody
-from pose_format.tensorflow.pose_body import TensorflowPoseBody
+from pose_format.python.pose import Pose
+from pose_format.python.torch import TorchPoseBody
+from pose_format.python.tensorflow.pose_body import TensorflowPoseBody
 
 buffer = open("file.pose", "rb").read()
 
@@ -35,8 +37,9 @@ p = Pose.read(buffer, TensorflowPoseBody)
 ```
 
 After creating a pose object that holds numpy data, it can also be converted to torch or tensorflow:
+
 ```python
-from pose_format.numpy import NumPyPoseBody
+from pose_format.python.numpy import NumPyPoseBody
 
 # create a pose object that internally stores the data as a numpy array
 p = Pose.read(buffer, NumPyPoseBody)
@@ -94,7 +97,7 @@ Visualize an existing pose file:
 
 ```python
 from pose_format import Pose
-from pose_format.pose_visualizer import PoseVisualizer
+from pose_format.python.pose_visualizer import PoseVisualizer
 
 with open("example.pose", "rb") as f:
     p = Pose.read(f.read())
@@ -125,8 +128,9 @@ display(Image(open('test.gif','rb').read()))
 ### Loading OpenPose data
 
 To load an OpenPose `directory`, use the `load_openpose_directory` utility:
+
 ```python
-from pose_format.utils.openpose import load_openpose_directory
+from pose_format.python.utils.openpose import load_openpose_directory
 
 directory = "/path/to/openpose/directory"
 p = load_openpose_directory(directory, fps=24, width=1000, height=1000)

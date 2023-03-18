@@ -3,7 +3,6 @@ from typing import Tuple
 
 import numpy as np
 from dataclasses import dataclass
-from tqdm import tqdm
 
 
 @dataclass
@@ -66,6 +65,8 @@ class BufferReader:
 
 
 if __name__ == "__main__":
+    from tqdm import tqdm
+
     buffer = struct.pack("<H5s", 5, bytes("hello", 'utf8'))
     reader = BufferReader(buffer)
 

@@ -14,8 +14,8 @@
     "node_modules/binary-parser/dist/binary_parser.d.ts"
   ],
   "include": [
-    "src/**/*",
-    "src/**/*.json"
+    "pose_format/src/**/*",
+    "pose_format/src/**/*.json"
   ],
   "exclude": [
     "node_modules",

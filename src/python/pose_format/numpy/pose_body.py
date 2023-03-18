@@ -2,7 +2,6 @@ from typing import BinaryIO, List, Union
 
 import numpy as np
 import numpy.ma as ma
-from scipy.interpolate import interp1d
 
 from ..pose_body import PoseBody, POINTS_DIMS
 from ..pose_header import PoseHeader
@@ -152,6 +151,11 @@ class NumPyPoseBody(PoseBody):
         return NumPyPoseBody(self.fps, new_data, confidence)
 
     def interpolate(self, new_fps: int = None, kind='cubic'):
+        try:
+            from scipy.interpolate import interp1d
+        except ImportError:
+            raise ImportError("Please install scipy with: pip install scipy")
+
         if new_fps is None:
             new_fps = self.fps
 

@@ -1,8 +1,1 @@
 .idea/
-/sample-data/test.py
-pose-format.iml
-*egg-info
-__pycache__
-build/
-dist/
-.DS_Store

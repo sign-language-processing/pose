@@ -1,0 +1,31 @@
+name: Build
+
+on:
+  push:
+    branches: [ master, main ]
+  pull_request:
+    branches: [ master, main ]
+
+
+jobs:
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [ 3.9, "3.10" ]
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install Requirements
+        working-directory: src/python
+        run: |
+          pip install -e .[dev]
+
+      - name: Run tests
+        working-directory: src/python
+        run: pytest pose_format

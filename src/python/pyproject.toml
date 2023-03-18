@@ -1,0 +1,42 @@
+[project]
+name = "pose_format"
+description = "Library for viewing, augmenting, and handling .pose files"
+version = "0.1.2"
+keywords = ["Pose Files", "Pose Interpolation", "Pose Augmentation"]
+authors = [
+    { name = "Amit Moryossef", email = "amitmoryossef@gmail.com" }
+]
+dependencies = [
+    "numpy",
+    "scipy",
+    "tqdm"
+]
+
+[project.optional-dependencies]
+dev = [
+    "pylint",
+    "pytest",
+    "opencv-python==4.5.5.64",
+    "vidgear",
+    "mediapipe",
+    "torch",
+    "tensorflow"
+]
+
+[tool.setuptools]
+packages = [
+    "pose_format"
+]
+
+[tool.pytest.ini_options]
+addopts = "-v"
+filterwarnings = [
+    "ignore::DeprecationWarning:flatbuffers"
+]
+testpaths = [
+    "pose_format",
+]
+
+[tool.yapf]
+based_on_style = "google"
+column_limit = 120

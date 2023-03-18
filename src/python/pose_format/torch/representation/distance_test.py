@@ -20,5 +20,5 @@ class TestDistanceRepresentation(TestCase):
         mask = torch.tensor([[[[0, 1, 1]]]], dtype=torch.bool)
         p1s = MaskedTensor(torch.tensor([[[[1, 2, 3]]]], dtype=torch.float), mask)
         p2s = MaskedTensor(torch.tensor([[[[4, 5, 6]]]], dtype=torch.float))
-        angles = representation(p1s, p2s)
-        self.assertEqual(float(angles[0][0][0]), 0)
+        distances = representation(p1s, p2s)
+        self.assertEqual(float(distances[0][0][0]), 0)

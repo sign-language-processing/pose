@@ -47,8 +47,8 @@ def convert_pose(pose: Pose, pose_components: List[PoseHeaderComponent]) -> Pose
                              components=pose_components)
 
     base_shape = (pose.body.data.shape[0], pose.body.data.shape[1], pose_header.total_points())
-    data = np.zeros(shape=(*base_shape, len(pose_components[0].format) - 1), dtype=np.float)
-    conf = np.zeros(shape=base_shape, dtype=np.float)
+    data = np.zeros(shape=(*base_shape, len(pose_components[0].format) - 1), dtype=np.float32)
+    conf = np.zeros(shape=base_shape, dtype=np.float32)
 
     original_components = set([c.name for c in pose.header.components])
     new_components = set([c.name for c in pose_components])

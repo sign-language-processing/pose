@@ -20,7 +20,8 @@ dev = [
     "vidgear",
     "mediapipe",
     "torch",
-    "tensorflow"
+    "tensorflow",
+    "matplotlib"
 ]
 
 [tool.setuptools]

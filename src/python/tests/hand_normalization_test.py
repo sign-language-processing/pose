@@ -24,7 +24,7 @@ class Test3DNormalization(TestCase):
 
         plane = PoseNormalizationInfo(p1=0, p2=1, p3=2)
         normalizer = PoseNormalizer(plane=plane, line=None)
-        tensor = ma.array([p1, p2, p3], dtype=np.float)
+        tensor = ma.array([p1, p2, p3], dtype=np.float32)
         normal, _ = normalizer.get_normal(tensor)
 
         gold_vec = ma.array(gold_normal) / np.linalg.norm(gold_normal)

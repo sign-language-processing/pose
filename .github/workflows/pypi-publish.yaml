@@ -26,6 +26,11 @@ jobs:
           rm -rf dist
           python -m build
 
+      - name: Quick test of the built dist
+        run: |
+          pip install "src/python/dist/$(ls src/python/dist/ | head -1)"
+          python -c "import pose_format"
+
       - name: Publish distribution 📦 to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         with:

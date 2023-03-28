@@ -1,7 +1,7 @@
 [project]
 name = "pose_format"
 description = "Library for viewing, augmenting, and handling .pose files"
-version = "0.2.0"
+version = "0.2.1"
 keywords = ["Pose Files", "Pose Interpolation", "Pose Augmentation"]
 authors = [
     { name = "Amit Moryossef", email = "amitmoryossef@gmail.com" }
@@ -26,8 +26,19 @@ dev = [
 
 [tool.setuptools]
 packages = [
-    "pose_format"
+    "pose_format",
+    "pose_format.utils",
+    "pose_format.testing",
+    "pose_format.numpy",
+    "pose_format.numpy.representation",
+    "pose_format.torch",
+    "pose_format.torch.masked",
+    "pose_format.torch.representation",
+    "pose_format.tensorflow",
+    "pose_format.tensorflow.masked",
+    "pose_format.tensorflow.representation"
 ]
+
 
 [tool.pytest.ini_options]
 addopts = "-v"
@@ -36,6 +47,7 @@ filterwarnings = [
 ]
 testpaths = [
     "pose_format",
+    "tests"
 ]
 
 [tool.yapf]

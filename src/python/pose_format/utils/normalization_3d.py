@@ -75,6 +75,9 @@ class PoseNormalizer:
         # Scale pose such that the line is of size self.size
         pose = self.scale(pose)
 
+        # Filled with zeros
+        pose = ma.array(pose.filled(0), mask=pose.mask)
+
         return pose
 
     def __call__(self, poses: ma.masked_array) -> ma.masked_array:

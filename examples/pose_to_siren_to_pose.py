@@ -1,10 +1,10 @@
 import numpy as np
 from numpy import ma
 
-import pose_format.python.utils.siren as siren
+import pose_format.utils.siren as siren
 from pose_format import Pose
-from pose_format.python.numpy import NumPyPoseBody
-from pose_format.python.pose_visualizer import PoseVisualizer
+from pose_format.numpy import NumPyPoseBody
+from pose_format.pose_visualizer import PoseVisualizer
 
 
 def pose_to_siren_to_pose(p: Pose, fps=None) -> Pose:

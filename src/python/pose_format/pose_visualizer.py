@@ -1,4 +1,5 @@
 import itertools
+import logging
 import math
 from functools import lru_cache
 from typing import Tuple, Iterable
@@ -144,16 +145,20 @@ class PoseVisualizer:
             "-vcodec": "libx264",
             "-preset": "fast",
             "-input_framerate": self.pose.body.fps,
-            "-pix_fmt": "yuv420p",
         }
 
-        # Define writer with defined parameters and suitable output filename for e.g. `Output.mp4`
-        out = WriteGear(output=f_name, logging=False, custom_ffmpeg=custom_ffmpeg, **output_params)
-        # out = cv2.VideoWriter(f_name, cv2.VideoWriter_fourcc(*'MP4V'), self.pose.body.fps, image_size)
+        writer = None  # Define writer with defined parameters and suitable output filename for e.g. `Output.mp4`
         for frame in tqdm(frames):
-            out.write(frame)
+            if writer is None:  # Create writer on first frame
+                if frame.shape[0] % 2 == 0 and frame.shape[1] % 2 == 0:
+                    output_params["-pix_fmt"] = "yuv420p"  # H.264
+                else:
+                    logging.warning(
+                        "Video shape is not divisible by 2. Can not use H.264. Consider resizing to a divisible shape.")
+                writer = WriteGear(output=f_name, logging=False, custom_ffmpeg=custom_ffmpeg, **output_params)
+            writer.write(frame)
 
-        out.close()
+        writer.close()
 
 
 class FastAndUglyPoseVisualizer(PoseVisualizer):

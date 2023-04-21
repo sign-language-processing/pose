@@ -77,6 +77,13 @@ class PoseHeaderDimensions:
         return PoseHeaderDimensions(width, height, depth)
 
     def write(self, buffer: BinaryIO):
+        if not (0 <= self.width <= (0x7fff * 2 + 1)):
+            raise ValueError(f"Width must be between 0 and 65535. Got {self.width}")
+        if not (0 <= self.height <= (0x7fff * 2 + 1)):
+            raise ValueError(f"Height must be between 0 and 65535. Got {self.height}")
+        if not (0 <= self.depth <= (0x7fff * 2 + 1)):
+            raise ValueError(f"Depth must be between 0 and 65535. Got {self.depth}")
+
         buffer.write(ConstStructs.triple_ushort.pack(self.width, self.height, self.depth))
 
 

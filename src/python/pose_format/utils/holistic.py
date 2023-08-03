@@ -5,6 +5,7 @@ from .openpose import hand_colors
 from ..numpy.pose_body import NumPyPoseBody
 from ..pose import Pose
 from ..pose_header import PoseHeader, PoseHeaderComponent, PoseHeaderDimensions
+from ..utils.openpose import load_frames_directory_dict
 
 try:
     import mediapipe as mp
@@ -121,3 +122,56 @@ def load_holistic(frames: list, fps: float = 24, width=1000, height=1000, depth=
                                            additional_holistic_config)
 
     return Pose(header, body)
+
+
+def formatted_holistic_pose(width: int, height: int):
+    dimensions = PoseHeaderDimensions(width=width, height=height, depth=1000)
+    header = PoseHeader(version=0.1, dimensions=dimensions, components=holistic_components("XYZC", 10))
+    body = NumPyPoseBody(fps=10,
+                         data=np.zeros(shape=(1, 1, header.total_points(), 3)),
+                         confidence=np.zeros(shape=(1, 1, header.total_points())))
+    pose = Pose(header, body)
+    return pose
+
+
+def load_mediapipe_directory(directory: str, fps: int, width: int, height: int) -> Pose:
+    """
+    :param directory:
+    :param fps:
+    :param width:
+    :param height:
+    :return:
+    """
+
+    frames = load_frames_directory_dict(directory=directory, pattern="(?:^|\D)?(\d+).*?.json")
+
+    def load_mediapipe_frame(frame):
+        def load_landmarks(name, num_points: int):
+            points = [[float(p) for p in r.split(",")] for r in frame[name]["landmarks"]]
+            points = [(ps + [1.0])[:4] for ps in points]  # Add visibility to all points
+            if len(points) == 0:
+                points = [[0, 0, 0, 0] for _ in range(num_points)]
+            return np.array([[x, y, z] for x, y, z, c in points]), np.array([c for x, y, z, c in points])
+        face_data, face_confidence = load_landmarks("face_landmarks", 128)
+        body_data, body_confidence = load_landmarks("pose_landmarks", 33)
+        lh_data, lh_confidence = load_landmarks("left_hand_landmarks", 21)
+        rh_data, rh_confidence = load_landmarks("right_hand_landmarks", 21)
+        data = np.concatenate([body_data, face_data, lh_data, rh_data])
+        conf = np.concatenate([body_confidence, face_confidence, lh_confidence, rh_confidence])
+        return data, conf
+
+    def load_mediapipe_frames():
+        max_frames = int(max(frames.keys())) + 1
+        pose_body_data = np.zeros(shape=(max_frames, 1, 21 + 21 + 33 + 128, 3), dtype=float)
+        pose_body_conf = np.zeros(shape=(max_frames, 1, 21 + 21 + 33 + 128), dtype=float)
+        for frame_id, frame in frames.items():
+            data, conf = load_mediapipe_frame(frame)
+            pose_body_data[frame_id][0] = data
+            pose_body_conf[frame_id][0] = conf
+        return NumPyPoseBody(data=pose_body_data, confidence=pose_body_conf, fps=fps)
+
+    pose = formatted_holistic_pose(width=width, height=height)
+
+    pose.body = load_mediapipe_frames()
+
+    return pose

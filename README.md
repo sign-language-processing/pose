@@ -144,7 +144,7 @@ Similarly, to load a Mediapipe Holistic `directory`, use the `load_mediapipe_dir
 ```python
 from pose_format.utils.holistic import load_mediapipe_directory
 
-directory = "/path/to/openpose/directory"
+directory = "/path/to/holistic/directory"
 p = load_mediapipe_directory(directory, fps=24, width=1000, height=1000)
 ```
 

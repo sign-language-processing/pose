@@ -5,7 +5,7 @@ from .openpose import hand_colors
 from ..numpy.pose_body import NumPyPoseBody
 from ..pose import Pose
 from ..pose_header import PoseHeader, PoseHeaderComponent, PoseHeaderDimensions
-from ..utils.openpose import load_frames_directory_dict
+from .openpose import load_frames_directory_dict
 
 try:
     import mediapipe as mp
@@ -13,6 +13,9 @@ except ImportError:
     raise ImportError("Please install mediapipe with: pip install mediapipe")
 
 mp_holistic = mp.solutions.holistic
+
+FACEMESH_CONTOURS_POINTS = [str(p) for p in
+                            sorted(set([p for p_tup in list(mp_holistic.FACEMESH_CONTOURS) for p in p_tup]))]
 
 BODY_POINTS = mp_holistic.PoseLandmark._member_names_
 BODY_LIMBS = [(int(a), int(b)) for a, b in mp_holistic.POSE_CONNECTIONS]
@@ -126,23 +129,24 @@ def load_holistic(frames: list, fps: float = 24, width=1000, height=1000, depth=
 
 def formatted_holistic_pose(width: int, height: int):
     dimensions = PoseHeaderDimensions(width=width, height=height, depth=1000)
-    header = PoseHeader(version=0.1, dimensions=dimensions, components=holistic_components("XYZC", 10))
-    body = NumPyPoseBody(fps=10,
+    header = PoseHeader(version=0.1, dimensions=dimensions, components=holistic_components("XYZC"))
+    body = NumPyPoseBody(fps=0, # to be overridden later
                          data=np.zeros(shape=(1, 1, header.total_points(), 3)),
                          confidence=np.zeros(shape=(1, 1, header.total_points())))
     pose = Pose(header, body)
-    return pose
+    return pose.get_components(["POSE_LANDMARKS", "FACE_LANDMARKS", "LEFT_HAND_LANDMARKS", "RIGHT_HAND_LANDMARKS"],
+                               {"FACE_LANDMARKS": FACEMESH_CONTOURS_POINTS})
 
 
-def load_mediapipe_directory(directory: str, fps: int, width: int, height: int) -> Pose:
+def load_mediapipe_directory(directory: str, fps: int, width: int, height: int, num_face_points: int = 128) -> Pose:
     """
     :param directory:
     :param fps:
     :param width:
     :param height:
+    :pram num_face_points: ideally, we don't want to hard code the 128 for the face, since they can be 128 (reduced) or 118 (without refinement) or 468 (full) or 478 (with refinement)
     :return:
     """
-
     frames = load_frames_directory_dict(directory=directory, pattern="(?:^|\D)?(\d+).*?.json")
 
     def load_mediapipe_frame(frame):
@@ -152,7 +156,7 @@ def load_mediapipe_directory(directory: str, fps: int, width: int, height: int) 
             if len(points) == 0:
                 points = [[0, 0, 0, 0] for _ in range(num_points)]
             return np.array([[x, y, z] for x, y, z, c in points]), np.array([c for x, y, z, c in points])
-        face_data, face_confidence = load_landmarks("face_landmarks", 128)
+        face_data, face_confidence = load_landmarks("face_landmarks", num_face_points)
         body_data, body_confidence = load_landmarks("pose_landmarks", 33)
         lh_data, lh_confidence = load_landmarks("left_hand_landmarks", 21)
         rh_data, rh_confidence = load_landmarks("right_hand_landmarks", 21)
@@ -162,8 +166,8 @@ def load_mediapipe_directory(directory: str, fps: int, width: int, height: int) 
 
     def load_mediapipe_frames():
         max_frames = int(max(frames.keys())) + 1
-        pose_body_data = np.zeros(shape=(max_frames, 1, 21 + 21 + 33 + 128, 3), dtype=float)
-        pose_body_conf = np.zeros(shape=(max_frames, 1, 21 + 21 + 33 + 128), dtype=float)
+        pose_body_data = np.zeros(shape=(max_frames, 1, 21 + 21 + 33 + num_face_points, 3), dtype=float)
+        pose_body_conf = np.zeros(shape=(max_frames, 1, 21 + 21 + 33 + num_face_points), dtype=float)
         for frame_id, frame in frames.items():
             data, conf = load_mediapipe_frame(frame)
             pose_body_data[frame_id][0] = data

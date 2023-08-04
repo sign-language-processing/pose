@@ -15,13 +15,16 @@ The binary spec can be found in [docs/specs/v0.1.md](docs/specs/v0.1.md).
 pip install pose-format
 ```
 
-To load a `.pose` file, use the `PoseReader` class:
+To load a `.pose` file, use the `Pose` class:
 
 ```python
-from pose_format.pose import Pose
+from pose_format import Pose
 
 buffer = open("file.pose", "rb").read()
 p = Pose.read(buffer)
+
+numpy_data = p.body.data
+numpy_conf = p.body.confidence
 ```
 By default, it uses NumPy for the data, but you can also use `torch` and `tensorflow` by writing:
 
@@ -125,7 +128,7 @@ v.save_gif("test.gif", v.draw())
 display(Image(open('test.gif','rb').read()))
 ```
 
-### Loading OpenPose data
+### Loading OpenPose and Mediapipe Holistic data
 
 To load an OpenPose `directory`, use the `load_openpose_directory` utility:
 
@@ -134,6 +137,15 @@ from pose_format.utils.openpose import load_openpose_directory
 
 directory = "/path/to/openpose/directory"
 p = load_openpose_directory(directory, fps=24, width=1000, height=1000)
+```
+
+Similarly, to load a Mediapipe Holistic `directory`, use the `load_mediapipe_directory` utility:
+
+```python
+from pose_format.utils.holistic import load_mediapipe_directory
+
+directory = "/path/to/holistic/directory"
+p = load_mediapipe_directory(directory, fps=24, width=1000, height=1000)
 ```
 
 ### Testing

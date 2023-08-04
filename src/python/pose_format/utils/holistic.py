@@ -5,6 +5,7 @@ from .openpose import hand_colors
 from ..numpy.pose_body import NumPyPoseBody
 from ..pose import Pose
 from ..pose_header import PoseHeader, PoseHeaderComponent, PoseHeaderDimensions
+from .openpose import load_frames_directory_dict
 
 try:
     import mediapipe as mp
@@ -12,6 +13,9 @@ except ImportError:
     raise ImportError("Please install mediapipe with: pip install mediapipe")
 
 mp_holistic = mp.solutions.holistic
+
+FACEMESH_CONTOURS_POINTS = [str(p) for p in
+                            sorted(set([p for p_tup in list(mp_holistic.FACEMESH_CONTOURS) for p in p_tup]))]
 
 BODY_POINTS = mp_holistic.PoseLandmark._member_names_
 BODY_LIMBS = [(int(a), int(b)) for a, b in mp_holistic.POSE_CONNECTIONS]
@@ -121,3 +125,66 @@ def load_holistic(frames: list, fps: float = 24, width=1000, height=1000, depth=
                                            additional_holistic_config)
 
     return Pose(header, body)
+
+
+def formatted_holistic_pose(width: int, height: int, additional_face_points: int = 0):
+    dimensions = PoseHeaderDimensions(width=width, height=height, depth=1000)
+    header = PoseHeader(version=0.1, dimensions=dimensions, components=holistic_components("XYZC", additional_face_points))
+    body = NumPyPoseBody(fps=0, # to be overridden later
+                         data=np.zeros(shape=(1, 1, header.total_points(), 3)),
+                         confidence=np.zeros(shape=(1, 1, header.total_points())))
+    pose = Pose(header, body)
+    return pose.get_components(["POSE_LANDMARKS", "FACE_LANDMARKS", "LEFT_HAND_LANDMARKS", "RIGHT_HAND_LANDMARKS"],
+                               {"FACE_LANDMARKS": FACEMESH_CONTOURS_POINTS})
+
+
+def load_mediapipe_directory(directory: str, fps: int, width: int, height: int, num_face_points: int = 128) -> Pose:
+    """
+    :param directory:
+    :param fps:
+    :param width:
+    :pram num_face_points: ideally, we don't want to hard code the 128 for the face, since face points can be 128 (reduced with refinement) or 118 (reduced without refinement) or 478 (full with refinement) or 468 (full without refinement)
+    :return:
+    """
+    frames = load_frames_directory_dict(directory=directory, pattern="(?:^|\D)?(\d+).*?.json")
+
+    if len(frames) > 0:
+        first_frame = frames[0]
+        num_pose_points = first_frame["pose_landmarks"]["num_landmarks"]
+        num_left_hand_points = first_frame["left_hand_landmarks"]["num_landmarks"]
+        num_right_hand_points = first_frame["right_hand_landmarks"]["num_landmarks"]
+        additional_face_points = 10 if (num_face_points == 478 or num_face_points == 128) else 0
+    else:
+        return ValueError("No frames found in directory: {}".format(directory))
+
+    def load_mediapipe_frame(frame):
+        def load_landmarks(name, num_points: int):
+            points = [[float(p) for p in r.split(",")] for r in frame[name]["landmarks"]]
+            points = [(ps + [1.0])[:4] for ps in points]  # Add visibility to all points
+            if len(points) == 0:
+                points = [[0, 0, 0, 0] for _ in range(num_points)]
+            return np.array([[x, y, z] for x, y, z, c in points]), np.array([c for x, y, z, c in points])
+        face_data, face_confidence = load_landmarks("face_landmarks", num_face_points)
+        body_data, body_confidence = load_landmarks("pose_landmarks", num_pose_points)
+        lh_data, lh_confidence = load_landmarks("left_hand_landmarks", num_left_hand_points)
+        rh_data, rh_confidence = load_landmarks("right_hand_landmarks", num_right_hand_points)
+        data = np.concatenate([body_data, face_data, lh_data, rh_data])
+        conf = np.concatenate([body_confidence, face_confidence, lh_confidence, rh_confidence])
+        return data, conf
+
+    def load_mediapipe_frames():
+        max_frames = int(max(frames.keys())) + 1
+        pose_body_data = np.zeros(shape=(max_frames, 1, num_left_hand_points + num_right_hand_points + num_pose_points + num_face_points, 3), dtype=float)
+        pose_body_conf = np.zeros(shape=(max_frames, 1, num_left_hand_points + num_right_hand_points + num_pose_points + num_face_points), dtype=float)
+        for frame_id, frame in frames.items():
+            data, conf = load_mediapipe_frame(frame)
+            pose_body_data[frame_id][0] = data
+            pose_body_conf[frame_id][0] = conf
+        return NumPyPoseBody(data=pose_body_data, confidence=pose_body_conf, fps=fps)
+
+    pose = formatted_holistic_pose(width=width, height=height, additional_face_points=additional_face_points)
+
+    pose.body = load_mediapipe_frames()
+
+    return pose
+

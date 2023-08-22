@@ -12,9 +12,38 @@ from ..utils.reader import BufferReader, ConstStructs
 # np.seterr(all='raise')
 
 class NumPyPoseBody(PoseBody):
-    tensor_reader = 'unpack_numpy'
+    """Represents pose information leveraging NumPy operations and structures.
+
+     * Inherits from:  `PoseBody`
+     * Implements pose info using NumPy operations and structures.
+     * Provides method for operations:  matrix, multiplication, interpolation and data type conversions 
+
+    The `NumPyPoseBody` is an implementation of  `PoseBody` abstract base class. 
+    This subclass is optimized for NumPy operations, and utilizes NumPy masked arrays to 
+    handle pose data. Makes it suitable for applications where 
+    NumPy-based operations on pose data are used. The use of masked arrays 
+    allows for efficient handling of missing or invalid pose values
+
+    The class also comes with methods to transform, modify, and 
+    operate on pose data, including matrix multiplication, interpolation, 
+    and conversions to other popular data types like PyTorch tensors or TensorFlow tensors
+    
+    Parameters
+    ----------
+    fps : float
+        Frames per second, to represent the temporal aspect of pose data.
+    data : Union[ma.MaskedArray, np.ndarray]
+        Pose data either as a masked array or a regular numpy array.
+    confidence : np.ndarray
+        Confidence array indicating the reliability of the associated pose keypoints.
+    
+    """
+    tensor_reader = 'unpack_numpy' """str: Specifies the method name for unpacking a numpy array. (Value: 'unpack_numpy')."""
 
     def __init__(self, fps: float, data: Union[ma.MaskedArray, np.ndarray], confidence: np.ndarray):
+        """
+        Initializes the NumPyPoseBody instance
+        """   
         if isinstance(data, np.ndarray):  # If array is not masked
             mask = confidence == 0  # 0 means no-mask, 1 means with-mask
             stacked_mask = np.stack([mask] * data.shape[-1], axis=3)
@@ -24,6 +53,21 @@ class NumPyPoseBody(PoseBody):
 
     @classmethod
     def read_v0_0(cls, header: PoseHeader, reader: BufferReader, **unused_kwargs):
+        """
+        Reads pose data from a given buffer reader using a specified data format version (see: ``docs/specs``).
+
+        Parameters
+        ----------
+        header : PoseHeader
+            Pose header information.
+        reader : BufferReader
+            The binary buffer reader.
+
+        Returns
+        -------
+        NumPyPoseBody
+            Instance of the NumPyPoseBody containing the read pose data.
+        """
         fps, _frames = reader.unpack(ConstStructs.double_ushort)
 
         _dims = max([len(c.format) for c in header.components]) - 1
@@ -64,6 +108,16 @@ class NumPyPoseBody(PoseBody):
         return cls(fps, ma.stack(frames_d), ma.stack(frames_c))
 
     def write(self, version: float, buffer: BinaryIO):
+        """
+        Writes the pose data to a binary buffer using the specified data format version.
+
+        Parameters
+        ----------
+        version : float
+            Version of the data format.
+        buffer : BinaryIO
+            The binary buffer to write to.
+        """
         _frames, _people, _points, _dims = self.data.shape
         _frames = _frames if _frames < 65535 else 0  # TODO change from short to int
         buffer.write(ConstStructs.triple_ushort.pack(self.fps, _frames, _people))
@@ -73,9 +127,17 @@ class NumPyPoseBody(PoseBody):
 
     @property
     def mask(self):
+        """ Returns  mask associated the data. """
         return self.data.mask
 
     def torch(self):
+        """Converts the current instance into a TorchPoseBody instance.
+
+        Returns
+        -------
+        TorchPoseBody
+            The pose body data represented in PyTorch tensors.
+        """
         try:
             import torch
         except ImportError:
@@ -91,6 +153,14 @@ class NumPyPoseBody(PoseBody):
         return TorchPoseBody(self.fps, torch_data, torch_confidence)
 
     def tensorflow(self):
+        """
+        Converts the current instance into a TensorflowPoseBody instance.
+
+        Returns
+        -------
+        TensorflowPoseBody
+            pose body data represented in TensorFlow tensors
+        """
         import tensorflow
         from ..tensorflow.pose_body import TensorflowPoseBody
 
@@ -99,14 +169,48 @@ class NumPyPoseBody(PoseBody):
         return TensorflowPoseBody(self.fps, tf_data, tf_confidence)
 
     def zero_filled(self):
+        """
+        Modifies the data to fill missing values with zeros.
+
+        Returns
+        -------
+        NumPyPoseBody
+            The modified pose body data.
+        """
         self.data = ma.array(self.data.filled(0), mask=self.data.mask)
         return self
 
     def matmul(self, matrix: np.ndarray):
+        """
+        Performs matrix multiplication on the pose data.
+
+        Parameters
+        ----------
+        matrix : np.ndarray
+            The matrix to multiply the pose data with.
+
+        Returns
+        -------
+        NumPyPoseBody
+            The transformed pose body data.
+        """
         data = ma.dot(self.data, matrix)
         return NumPyPoseBody(self.fps, data, self.confidence)
 
     def flip(self, axis=0):
+        """
+        Flips pose data across a specified axis.
+
+        Parameters
+        ----------
+        axis : int, optional
+            axis along which the pose data should be flipped.
+
+        Returns
+        -------
+        NumPyPoseBody
+            flipped pose body data
+        """
         vec = np.ones(self.data.shape[-1])
         vec[axis] = -1
 
@@ -114,9 +218,30 @@ class NumPyPoseBody(PoseBody):
         return NumPyPoseBody(self.fps, data, self.confidence)
 
     def points_perspective(self):
+        """
+        Transforms pose data to get a perspective based on points.
+
+        Returns
+        -------
+        ma.MaskedArray
+            Transformed pose data
+        """
         return ma.transpose(self.data, axes=POINTS_DIMS)
 
     def get_points(self, indexes: List[int]):
+        """
+        Extracts keypoints based on provided indexes.
+
+        Parameters
+        ----------
+        indexes : List[int]
+             List of indices representing the keypoints to get.
+
+        Returns
+        -------
+        NumPyPoseBody
+            Pose body data containing only a specified points.
+        """
         data = ma.transpose(self.data, axes=POINTS_DIMS)
         new_data = ma.transpose(data[indexes], axes=POINTS_DIMS)
 
@@ -127,6 +252,19 @@ class NumPyPoseBody(PoseBody):
         return NumPyPoseBody(self.fps, new_data, new_confidence)
 
     def bbox(self, header: PoseHeader):
+        """
+        Computes the bounding boxes for each component based on the pose data.
+
+        Parameters
+        ----------
+        header : PoseHeader
+            Pose header information.
+
+        Returns
+        -------
+        NumPyPoseBody
+            Pose body data representing bounding boxes.
+        """
         data = ma.transpose(self.data, axes=POINTS_DIMS)
 
         # Split data by components, `ma` doesn't support ".split"
@@ -151,6 +289,21 @@ class NumPyPoseBody(PoseBody):
         return NumPyPoseBody(self.fps, new_data, confidence)
 
     def interpolate(self, new_fps: int = None, kind='cubic'):
+        """
+        Interpolates the pose data to match a new frame rate.
+
+        Parameters
+        ----------
+        new_fps : int, optional
+            The desired frame rate for interpolation.
+        kind : str, optional
+            The type of interpolation. Options include: "linear", "quadratic", and "cubic".
+
+        Returns
+        -------
+        NumPyPoseBody
+            Interpolated pose body data.
+        """
         try:
             from scipy.interpolate import interp1d
         except ImportError:
@@ -222,6 +375,17 @@ class NumPyPoseBody(PoseBody):
         return NumPyPoseBody(fps=new_fps, data=dimensions, confidence=confidence)
 
     def flatten(self):
+        """Flattens data and confidence arrays.
+
+        method reshapes data and confidence arrays to a two-dimensional array.
+        The flattened array is filtered to remove rows where confidence is zero.
+
+        Returns
+        --------
+        numpy.ndarray
+            flattened and filtered version of the data array.
+
+        """
         shape = self.data.shape
         data = self.data.data.reshape(-1, shape[-1])  # Not masked data
         confidence = self.confidence.flatten()

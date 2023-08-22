@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pose_format.utils.holistic module &mdash; Pose-Format Toolkit v1.0.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="_static/my.css" type="text/css" />
+      <link rel="stylesheet" href="_static/assets/jsonview.bundle.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sphinx-needs/libs/html/datatables.min.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sphinx-needs/common.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sphinx-needs/layouts.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sphinx-needs/modern.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sphinx-needs/styles.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script src="_static/assets/jsonview.bundle.js"></script>
+        <script src="_static/assets/jsonview_loader.js"></script>
+        <script src="_static/sphinx-needs/libs/html/datatables.min.js"></script>
+        <script src="_static/sphinx-needs/libs/html/datatables_loader.js"></script>
+        <script src="_static/sphinx-needs/libs/html/sphinx_needs_collapse.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="JavaScript" href="js_docs.html" />
+    <link rel="prev" title="pose_format.utils.pose_converter module" href="pose_format.utils.pose_converter.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Pose-Format Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="readme.html">Pose Format Introduction</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python Code Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pose_format.html">pose_format package</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Additional Material</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="js_docs.html">JavaScript</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="specs_v01.html">specs/v0.1.md</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Pose-Format Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="pose_format.html">pose_format package</a></li>
+          <li class="breadcrumb-item"><a href="pose_format.utils.html">pose_format.utils package</a></li>
+      <li class="breadcrumb-item active">pose_format.utils.holistic module</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/rfahrn/pose-master/blob/master//docs/pose_format.utils.holistic.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-pose_format.utils.holistic">
+<span id="pose-format-utils-holistic-module"></span><h1>pose_format.utils.holistic module<a class="headerlink" href="#module-pose_format.utils.holistic" title="Permalink to this heading"></a></h1>
+<p><strong>Functions:</strong></p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pose_format.utils.holistic.FACE_POINTS" title="pose_format.utils.holistic.FACE_POINTS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FACE_POINTS</span></code></a>([additional_points])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pose_format.utils.holistic.FACE_POINTS_NUM" title="pose_format.utils.holistic.FACE_POINTS_NUM"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FACE_POINTS_NUM</span></code></a>([additional_points])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pose_format.utils.holistic.body_points" title="pose_format.utils.holistic.body_points"><code class="xref py py-obj docutils literal notranslate"><span class="pre">body_points</span></code></a>(component, width, height, num)</p></td>
+<td><p>Get body points</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pose_format.utils.holistic.component_points" title="pose_format.utils.holistic.component_points"><code class="xref py py-obj docutils literal notranslate"><span class="pre">component_points</span></code></a>(component, width, height, num)</p></td>
+<td><p>Get component points</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pose_format.utils.holistic.formatted_holistic_pose" title="pose_format.utils.holistic.formatted_holistic_pose"><code class="xref py py-obj docutils literal notranslate"><span class="pre">formatted_holistic_pose</span></code></a>(width, height[, ...])</p></td>
+<td><p>Formatted holistic pose</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pose_format.utils.holistic.holistic_components" title="pose_format.utils.holistic.holistic_components"><code class="xref py py-obj docutils literal notranslate"><span class="pre">holistic_components</span></code></a>([pf, additional_face_points])</p></td>
+<td><p>Creates list of holistic components</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pose_format.utils.holistic.holistic_hand_component" title="pose_format.utils.holistic.holistic_hand_component"><code class="xref py py-obj docutils literal notranslate"><span class="pre">holistic_hand_component</span></code></a>(name[, pf])</p></td>
+<td><p>Creates holistic hand component</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pose_format.utils.holistic.load_holistic" title="pose_format.utils.holistic.load_holistic"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_holistic</span></code></a>(frames[, fps, width, height, ...])</p></td>
+<td><p>Loads holistic pose data</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pose_format.utils.holistic.load_mediapipe_directory" title="pose_format.utils.holistic.load_mediapipe_directory"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_mediapipe_directory</span></code></a>(directory, fps, ...)</p></td>
+<td><p>Load pose data from a directory of MediaPipe</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pose_format.utils.holistic.process_holistic" title="pose_format.utils.holistic.process_holistic"><code class="xref py py-obj docutils literal notranslate"><span class="pre">process_holistic</span></code></a>(frames, fps, w, h[, ...])</p></td>
+<td><p>Process frames using mediapipe holistic model</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py function">
+<dt class="sig sig-object py" id="pose_format.utils.holistic.FACE_POINTS">
+<span class="sig-prename descclassname"><span class="pre">pose_format.utils.holistic.</span></span><span class="sig-name descname"><span class="pre">FACE_POINTS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">additional_points</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pose_format.utils.holistic.FACE_POINTS" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pose_format.utils.holistic.FACE_POINTS_NUM">
+<span class="sig-prename descclassname"><span class="pre">pose_format.utils.holistic.</span></span><span class="sig-name descname"><span class="pre">FACE_POINTS_NUM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">additional_points</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pose_format.utils.holistic.FACE_POINTS_NUM" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pose_format.utils.holistic.body_points">
+<span class="sig-prename descclassname"><span class="pre">pose_format.utils.holistic.</span></span><span class="sig-name descname"><span class="pre">body_points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">component</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/utils/holistic.html#body_points"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.utils.holistic.body_points" title="Permalink to this definition"></a></dt>
+<dd><p>Get body points</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>component</strong> (<em>object</em>) – component containing landmarks.</p></li>
+<li><p><strong>width</strong> (<em>int</em>) – Width for normalization.</p></li>
+<li><p><strong>height</strong> (<em>int</em>) – Height for normalization.</p></li>
+<li><p><strong>num</strong> (<em>int</em>) – Number of landmarks.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Coordinates and visibility for each landmark.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple of np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pose_format.utils.holistic.component_points">
+<span class="sig-prename descclassname"><span class="pre">pose_format.utils.holistic.</span></span><span class="sig-name descname"><span class="pre">component_points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">component</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/utils/holistic.html#component_points"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.utils.holistic.component_points" title="Permalink to this definition"></a></dt>
+<dd><p>Get component points</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>component</strong> (<em>object</em>) – Component containing landmarks.</p></li>
+<li><p><strong>width</strong> (<em>int</em>) – Width for normalization.</p></li>
+<li><p><strong>height</strong> (<em>int</em>) – Height for normalization.</p></li>
+<li><p><strong>num</strong> (<em>int</em>) – Number of landmarks.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Coordinates and confidence for each landmark.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple of np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pose_format.utils.holistic.formatted_holistic_pose">
+<span class="sig-prename descclassname"><span class="pre">pose_format.utils.holistic.</span></span><span class="sig-name descname"><span class="pre">formatted_holistic_pose</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">additional_face_points</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/utils/holistic.html#formatted_holistic_pose"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.utils.holistic.formatted_holistic_pose" title="Permalink to this definition"></a></dt>
+<dd><p>Formatted holistic pose</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>width</strong> (<em>int</em>) – Pose width.</p></li>
+<li><p><strong>height</strong> (<em>int</em>) – Pose height.</p></li>
+<li><p><strong>additional_face_points</strong> (<em>int</em><em>, </em><em>optional</em>) – Additional face points/landmarks.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Formatted pose components</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pose_format.utils.holistic.holistic_components">
+<span class="sig-prename descclassname"><span class="pre">pose_format.utils.holistic.</span></span><span class="sig-name descname"><span class="pre">holistic_components</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pf</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'XYZC'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">additional_face_points</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/utils/holistic.html#holistic_components"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.utils.holistic.holistic_components" title="Permalink to this definition"></a></dt>
+<dd><p>Creates list of holistic components</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pf</strong> (<em>str</em><em>, </em><em>optional</em>) – Point format</p></li>
+<li><p><strong>additional_face_points</strong> (<em>int</em><em>, </em><em>optional</em>) – Additional face points/landmarks</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of holistic components.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of <a class="reference internal" href="pose_format.pose_header.html#pose_format.pose_header.PoseHeaderComponent" title="pose_format.pose_header.PoseHeaderComponent">PoseHeaderComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pose_format.utils.holistic.holistic_hand_component">
+<span class="sig-prename descclassname"><span class="pre">pose_format.utils.holistic.</span></span><span class="sig-name descname"><span class="pre">holistic_hand_component</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pf</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'XYZC'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/utils/holistic.html#holistic_hand_component"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.utils.holistic.holistic_hand_component" title="Permalink to this definition"></a></dt>
+<dd><p>Creates holistic hand component</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Component name</p></li>
+<li><p><strong>pf</strong> (<em>str</em><em>, </em><em>optional</em>) – Point format</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Hand component</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="pose_format.pose_header.html#pose_format.pose_header.PoseHeaderComponent" title="pose_format.pose_header.PoseHeaderComponent">PoseHeaderComponent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pose_format.utils.holistic.load_holistic">
+<span class="sig-prename descclassname"><span class="pre">pose_format.utils.holistic.</span></span><span class="sig-name descname"><span class="pre">load_holistic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frames</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">24</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">depth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kinect</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">additional_holistic_config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/utils/holistic.html#load_holistic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.utils.holistic.load_holistic" title="Permalink to this definition"></a></dt>
+<dd><p>Loads holistic pose data</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>frames</strong> (<em>list</em>) – List of frames.</p></li>
+<li><p><strong>fps</strong> (<em>float</em><em>, </em><em>optional</em>) – Frames per second.</p></li>
+<li><p><strong>width</strong> (<em>int</em><em>, </em><em>optional</em>) – Frame width.</p></li>
+<li><p><strong>height</strong> (<em>int</em><em>, </em><em>optional</em>) – Frame height.</p></li>
+<li><p><strong>depth</strong> (<em>int</em><em>, </em><em>optional</em>) – Depth data.</p></li>
+<li><p><strong>kinect</strong> (<em>object</em><em>, </em><em>optional</em>) – Kinect depth data.</p></li>
+<li><p><strong>progress</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, show the progress bar.</p></li>
+<li><p><strong>additional_holistic_config</strong> (<em>dict</em><em>, </em><em>optional</em>) – Additional configurations for the holistic model.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Loaded pose data with header and body</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="pose_format.pose.html#pose_format.pose.Pose" title="pose_format.pose.Pose">Pose</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pose_format.utils.holistic.load_mediapipe_directory">
+<span class="sig-prename descclassname"><span class="pre">pose_format.utils.holistic.</span></span><span class="sig-name descname"><span class="pre">load_mediapipe_directory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fps</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_face_points</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">128</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/utils/holistic.html#load_mediapipe_directory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.utils.holistic.load_mediapipe_directory" title="Permalink to this definition"></a></dt>
+<dd><p>Load pose data from a directory of MediaPipe</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>directory</strong> (<em>str</em>) – Directory path.</p></li>
+<li><p><strong>fps</strong> (<em>float</em>) – Frames per second.</p></li>
+<li><p><strong>width</strong> (<em>int</em>) – Frame width.</p></li>
+<li><p><strong>height</strong> (<em>int</em>) – Frame height.</p></li>
+<li><p><strong>num_face_points</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of face landmarks. Ideally, we don’t want to hard code the 128 for the face, since face points can be 128 (reduced with refinement) or 118 (reduced without refinement) or 478 (full with refinement) or 468 (full without refinement)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Loaded pose data</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="pose_format.pose.html#pose_format.pose.Pose" title="pose_format.pose.Pose">Pose</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pose_format.utils.holistic.process_holistic">
+<span class="sig-prename descclassname"><span class="pre">pose_format.utils.holistic.</span></span><span class="sig-name descname"><span class="pre">process_holistic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frames</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fps</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kinect</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">additional_face_points</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">additional_holistic_config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/utils/holistic.html#process_holistic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.utils.holistic.process_holistic" title="Permalink to this definition"></a></dt>
+<dd><p>Process frames using mediapipe holistic model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>frames</strong> (<em>list</em>) – List of frames to be processed.</p></li>
+<li><p><strong>fps</strong> (<em>float</em>) – Frames per second.</p></li>
+<li><p><strong>w</strong> (<em>int</em>) – Frame width.</p></li>
+<li><p><strong>h</strong> (<em>int</em>) – Frame height.</p></li>
+<li><p><strong>kinect</strong> (<em>object</em><em>, </em><em>optional</em>) – Kinect depth data.</p></li>
+<li><p><strong>progress</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, show the progress bar.</p></li>
+<li><p><strong>additional_face_points</strong> (<em>int</em><em>, </em><em>optional</em>) – Additional face landmarks.</p></li>
+<li><p><strong>additional_holistic_config</strong> (<em>dict</em><em>, </em><em>optional</em>) – Additional configurations for holistic model</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Processed pose data</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="pose_format.numpy.pose_body.html#pose_format.numpy.pose_body.NumPyPoseBody" title="pose_format.numpy.pose_body.NumPyPoseBody">NumPyPoseBody</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="pose_format.utils.pose_converter.html" class="btn btn-neutral float-left" title="pose_format.utils.pose_converter module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="js_docs.html" class="btn btn-neutral float-right" title="JavaScript" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Moryossef, Amit and Müller, Mathias.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

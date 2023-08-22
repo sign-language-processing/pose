@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pose_format.utils.reader module &mdash; Pose-Format Toolkit v1.0.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="_static/my.css" type="text/css" />
+      <link rel="stylesheet" href="_static/assets/jsonview.bundle.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sphinx-needs/libs/html/datatables.min.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sphinx-needs/common.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sphinx-needs/layouts.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sphinx-needs/modern.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sphinx-needs/styles.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script src="_static/assets/jsonview.bundle.js"></script>
+        <script src="_static/assets/jsonview_loader.js"></script>
+        <script src="_static/sphinx-needs/libs/html/datatables.min.js"></script>
+        <script src="_static/sphinx-needs/libs/html/datatables_loader.js"></script>
+        <script src="_static/sphinx-needs/libs/html/sphinx_needs_collapse.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="pose_format.utils.reader_test module" href="pose_format.utils.reader_test.html" />
+    <link rel="prev" title="pose_format.utils.optical_flow module" href="pose_format.utils.optical_flow.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Pose-Format Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="readme.html">Pose Format Introduction</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python Code Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pose_format.html">pose_format package</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Additional Material</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="js_docs.html">JavaScript</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="specs_v01.html">specs/v0.1.md</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Pose-Format Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="pose_format.html">pose_format package</a></li>
+          <li class="breadcrumb-item"><a href="pose_format.utils.html">pose_format.utils package</a></li>
+      <li class="breadcrumb-item active">pose_format.utils.reader module</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/rfahrn/pose-master/blob/master//docs/pose_format.utils.reader.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-pose_format.utils.reader">
+<span id="pose-format-utils-reader-module"></span><h1>pose_format.utils.reader module<a class="headerlink" href="#module-pose_format.utils.reader" title="Permalink to this heading"></a></h1>
+<p><strong>Classes:</strong></p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pose_format.utils.reader.BufferReader" title="pose_format.utils.reader.BufferReader"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BufferReader</span></code></a>(buffer)</p></td>
+<td><p>Class is used to read binary data from buffer</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pose_format.utils.reader.ConstStructs" title="pose_format.utils.reader.ConstStructs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ConstStructs</span></code></a>([float, short, ushort, ...])</p></td>
+<td><p>Class hold collection of predefined struct formats to reuse</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py class">
+<dt class="sig sig-object py" id="pose_format.utils.reader.BufferReader">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pose_format.utils.reader.</span></span><span class="sig-name descname"><span class="pre">BufferReader</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">buffer</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/utils/reader.html#BufferReader"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.utils.reader.BufferReader" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class is used to read binary data from buffer</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>buffer</strong> (<em>bytes</em>) – buffer from which to read data</p></li>
+<li><p><strong>read_offset</strong> (<em>int</em>) – current read offset in buffer</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>Methods:</strong></p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pose_format.utils.reader.BufferReader.advance" title="pose_format.utils.reader.BufferReader.advance"><code class="xref py py-obj docutils literal notranslate"><span class="pre">advance</span></code></a>(s[, times])</p></td>
+<td><p>Updates read_offset by number of times and size of given struct -&gt; advances read offset in buffer</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pose_format.utils.reader.BufferReader.bytes_left" title="pose_format.utils.reader.BufferReader.bytes_left"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bytes_left</span></code></a>()</p></td>
+<td><p>gives number of bytes left to read from buffer</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pose_format.utils.reader.BufferReader.unpack" title="pose_format.utils.reader.BufferReader.unpack"><code class="xref py py-obj docutils literal notranslate"><span class="pre">unpack</span></code></a>(s)</p></td>
+<td><p>Unpacks data from the buffer using a given struct format.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pose_format.utils.reader.BufferReader.unpack_f" title="pose_format.utils.reader.BufferReader.unpack_f"><code class="xref py py-obj docutils literal notranslate"><span class="pre">unpack_f</span></code></a>(s_format)</p></td>
+<td><p>unpacks data from buffer using given struct format</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pose_format.utils.reader.BufferReader.unpack_numpy" title="pose_format.utils.reader.BufferReader.unpack_numpy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">unpack_numpy</span></code></a>(s, shape)</p></td>
+<td><p>unpacks data from buffer into a numpy array using struct format and shape</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pose_format.utils.reader.BufferReader.unpack_str" title="pose_format.utils.reader.BufferReader.unpack_str"><code class="xref py py-obj docutils literal notranslate"><span class="pre">unpack_str</span></code></a>()</p></td>
+<td><p>Unpacks a string from the buffer.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pose_format.utils.reader.BufferReader.unpack_tensorflow" title="pose_format.utils.reader.BufferReader.unpack_tensorflow"><code class="xref py py-obj docutils literal notranslate"><span class="pre">unpack_tensorflow</span></code></a>(s, shape)</p></td>
+<td><p>Unpacks into a tensorflow tensor using struct format and shape</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pose_format.utils.reader.BufferReader.unpack_torch" title="pose_format.utils.reader.BufferReader.unpack_torch"><code class="xref py py-obj docutils literal notranslate"><span class="pre">unpack_torch</span></code></a>(s, shape)</p></td>
+<td><p>unpacks data from buffer into a torch tensor using struct format and shape</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="pose_format.utils.reader.BufferReader.advance">
+<span class="sig-name descname"><span class="pre">advance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">times</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/utils/reader.html#BufferReader.advance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.utils.reader.BufferReader.advance" title="Permalink to this definition"></a></dt>
+<dd><p>Updates read_offset by number of times and size of given struct -&gt; advances read offset in buffer</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s</strong> (<em>struct.Struct</em>) – The struct format that determines the data size.</p></li>
+<li><p><strong>times</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of times to advance the read offset. Default is 1.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pose_format.utils.reader.BufferReader.bytes_left">
+<span class="sig-name descname"><span class="pre">bytes_left</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/utils/reader.html#BufferReader.bytes_left"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.utils.reader.BufferReader.bytes_left" title="Permalink to this definition"></a></dt>
+<dd><p>gives number of bytes left to read from buffer</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The number of bytes left to read.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pose_format.utils.reader.BufferReader.unpack">
+<span class="sig-name descname"><span class="pre">unpack</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/utils/reader.html#BufferReader.unpack"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.utils.reader.BufferReader.unpack" title="Permalink to this definition"></a></dt>
+<dd><p>Unpacks data from the buffer using a given struct format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>s</strong> (<em>struct.Struct</em>) – The struct format to use for unpacking data.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Unpacked data as specified by the struct format.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pose_format.utils.reader.BufferReader.unpack_f">
+<span class="sig-name descname"><span class="pre">unpack_f</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s_format</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/utils/reader.html#BufferReader.unpack_f"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.utils.reader.BufferReader.unpack_f" title="Permalink to this definition"></a></dt>
+<dd><p>unpacks data from buffer using given struct format</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>s_format</strong> (<em>str</em>) – The struct format to use for unpacking data.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Unpacked data as specified by the struct format.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pose_format.utils.reader.BufferReader.unpack_numpy">
+<span class="sig-name descname"><span class="pre">unpack_numpy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/utils/reader.html#BufferReader.unpack_numpy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.utils.reader.BufferReader.unpack_numpy" title="Permalink to this definition"></a></dt>
+<dd><p>unpacks data from buffer into a numpy array using struct format and shape</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s</strong> (<em>struct.Struct</em>) – The struct format to use.</p></li>
+<li><p><strong>shape</strong> (<em>Tuple</em><em>[</em><em>int</em><em>, </em><em>...</em><em>]</em>) – The shape of the NumPy array.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The unpacked NumPy array.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pose_format.utils.reader.BufferReader.unpack_str">
+<span class="sig-name descname"><span class="pre">unpack_str</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/utils/reader.html#BufferReader.unpack_str"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.utils.reader.BufferReader.unpack_str" title="Permalink to this definition"></a></dt>
+<dd><p>Unpacks a string from the buffer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The unpacked string, encoded in UTF-8.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pose_format.utils.reader.BufferReader.unpack_tensorflow">
+<span class="sig-name descname"><span class="pre">unpack_tensorflow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/utils/reader.html#BufferReader.unpack_tensorflow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.utils.reader.BufferReader.unpack_tensorflow" title="Permalink to this definition"></a></dt>
+<dd><p>Unpacks into a tensorflow tensor using struct format and shape</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s</strong> (<em>struct.Struct</em>) – The struct format to use.</p></li>
+<li><p><strong>shape</strong> (<em>Tuple</em><em>[</em><em>int</em><em>, </em><em>...</em><em>]</em>) – The shape of the TensorFlow tensor.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The unpacked TensorFlow tensor.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tensorflow.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pose_format.utils.reader.BufferReader.unpack_torch">
+<span class="sig-name descname"><span class="pre">unpack_torch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/utils/reader.html#BufferReader.unpack_torch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.utils.reader.BufferReader.unpack_torch" title="Permalink to this definition"></a></dt>
+<dd><p>unpacks data from buffer into a torch tensor using struct format and shape</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s</strong> (<em>struct.Struct</em>) – The struct format to use.</p></li>
+<li><p><strong>shape</strong> (<em>Tuple</em><em>[</em><em>int</em><em>, </em><em>...</em><em>]</em>) – The shape of the PyTorch tensor.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The unpacked PyTorch tensor.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pose_format.utils.reader.ConstStructs">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pose_format.utils.reader.</span></span><span class="sig-name descname"><span class="pre">ConstStructs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">float=&lt;Struct</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">short=&lt;Struct</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ushort=&lt;Struct</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double_ushort=&lt;Struct</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">triple_ushort=&lt;Struct</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/utils/reader.html#ConstStructs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.utils.reader.ConstStructs" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class hold collection of predefined struct formats to reuse</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>float</strong> (<em>struct.Struct</em>) – Struct format for a float.</p></li>
+<li><p><strong>short</strong> (<em>struct.Struct</em>) – Struct format for a short integer.</p></li>
+<li><p><strong>ushort</strong> (<em>struct.Struct</em>) – Struct format for an unsigned short integer.</p></li>
+<li><p><strong>double_ushort</strong> (<em>struct.Struct</em>) – Struct format for two unsigned short integers.</p></li>
+<li><p><strong>triple_ushort</strong> (<em>struct.Struct</em>) – Struct format for three unsigned short integers.</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>Attributes:</strong></p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pose_format.utils.reader.ConstStructs.double_ushort" title="pose_format.utils.reader.ConstStructs.double_ushort"><code class="xref py py-obj docutils literal notranslate"><span class="pre">double_ushort</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pose_format.utils.reader.ConstStructs.float" title="pose_format.utils.reader.ConstStructs.float"><code class="xref py py-obj docutils literal notranslate"><span class="pre">float</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pose_format.utils.reader.ConstStructs.short" title="pose_format.utils.reader.ConstStructs.short"><code class="xref py py-obj docutils literal notranslate"><span class="pre">short</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pose_format.utils.reader.ConstStructs.triple_ushort" title="pose_format.utils.reader.ConstStructs.triple_ushort"><code class="xref py py-obj docutils literal notranslate"><span class="pre">triple_ushort</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pose_format.utils.reader.ConstStructs.ushort" title="pose_format.utils.reader.ConstStructs.ushort"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ushort</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pose_format.utils.reader.ConstStructs.double_ushort">
+<span class="sig-name descname"><span class="pre">double_ushort</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Struct</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;Struct</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#pose_format.utils.reader.ConstStructs.double_ushort" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pose_format.utils.reader.ConstStructs.float">
+<span class="sig-name descname"><span class="pre">float</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Struct</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;Struct</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#pose_format.utils.reader.ConstStructs.float" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pose_format.utils.reader.ConstStructs.short">
+<span class="sig-name descname"><span class="pre">short</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Struct</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;Struct</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#pose_format.utils.reader.ConstStructs.short" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pose_format.utils.reader.ConstStructs.triple_ushort">
+<span class="sig-name descname"><span class="pre">triple_ushort</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Struct</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;Struct</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#pose_format.utils.reader.ConstStructs.triple_ushort" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pose_format.utils.reader.ConstStructs.ushort">
+<span class="sig-name descname"><span class="pre">ushort</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Struct</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;Struct</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#pose_format.utils.reader.ConstStructs.ushort" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="pose_format.utils.optical_flow.html" class="btn btn-neutral float-left" title="pose_format.utils.optical_flow module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="pose_format.utils.reader_test.html" class="btn btn-neutral float-right" title="pose_format.utils.reader_test module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Moryossef, Amit and Müller, Mathias.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

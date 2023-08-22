@@ -1,0 +1,8 @@
+sphinx 
+sphinx_rtd_theme
+autodocsumm 
+sphinxcontrib-bibtex
+sphinx_needs 
+sphinxcontrib-plantuml
+
+

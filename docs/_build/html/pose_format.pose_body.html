@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pose_format.pose_body module &mdash; Pose-Format Toolkit v1.0.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="_static/my.css" type="text/css" />
+      <link rel="stylesheet" href="_static/assets/jsonview.bundle.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sphinx-needs/libs/html/datatables.min.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sphinx-needs/common.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sphinx-needs/layouts.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sphinx-needs/modern.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sphinx-needs/styles.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script src="_static/assets/jsonview.bundle.js"></script>
+        <script src="_static/assets/jsonview_loader.js"></script>
+        <script src="_static/sphinx-needs/libs/html/datatables.min.js"></script>
+        <script src="_static/sphinx-needs/libs/html/datatables_loader.js"></script>
+        <script src="_static/sphinx-needs/libs/html/sphinx_needs_collapse.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Pose-Format Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="readme.html">Pose Format Introduction</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python Code Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pose_format.html">pose_format package</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Additional Material</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="js_docs.html">JavaScript</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="specs_v01.html">specs/v0.1.md</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Pose-Format Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">pose_format.pose_body module</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/rfahrn/pose-master/blob/master//docs/pose_format.pose_body.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-pose_format.pose_body">
+<span id="pose-format-pose-body-module"></span><h1>pose_format.pose_body module<a class="headerlink" href="#module-pose_format.pose_body" title="Permalink to this heading"></a></h1>
+<p><strong>Classes:</strong></p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pose_format.pose_body.PoseBody" title="pose_format.pose_body.PoseBody"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PoseBody</span></code></a>(fps, data, confidence)</p></td>
+<td><p>Class for body data of a pose.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py class">
+<dt class="sig sig-object py" id="pose_format.pose_body.PoseBody">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pose_format.pose_body.</span></span><span class="sig-name descname"><span class="pre">PoseBody</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fps</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">confidence</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/pose_body.html#PoseBody"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.pose_body.PoseBody" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class for body data of a pose.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fps</strong> (<em>float</em>) – Frames per second.</p></li>
+<li><p><strong>data</strong> – Data in the format (Frames, People, Points, Dims) e.g., (93, 1, 137, 2).</p></li>
+<li><p><strong>confidence</strong> – Confidence data in the format (Frames, People, Points) e.g., (93, 1, 137).</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>Methods:</strong></p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pose_format.pose_body.PoseBody.augment2d" title="pose_format.pose_body.PoseBody.augment2d"><code class="xref py py-obj docutils literal notranslate"><span class="pre">augment2d</span></code></a>([rotation_std, shear_std, scale_std])</p></td>
+<td><p>Augment 2D data with given standard deviations.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pose_format.pose_body.PoseBody.bbox" title="pose_format.pose_body.PoseBody.bbox"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bbox</span></code></a>(header)</p></td>
+<td><p>For computing bounding box of PoseBody.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pose_format.pose_body.PoseBody.flatten" title="pose_format.pose_body.PoseBody.flatten"><code class="xref py py-obj docutils literal notranslate"><span class="pre">flatten</span></code></a>()</p></td>
+<td><p>Converts data from the (Frames, People, Points, Dims) masked representation to an array of points.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pose_format.pose_body.PoseBody.frame_dropout_given_percent" title="pose_format.pose_body.PoseBody.frame_dropout_given_percent"><code class="xref py py-obj docutils literal notranslate"><span class="pre">frame_dropout_given_percent</span></code></a>(dropout_percent)</p></td>
+<td><p>Drop of frames based on  given dropout percentage.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pose_format.pose_body.PoseBody.frame_dropout_normal" title="pose_format.pose_body.PoseBody.frame_dropout_normal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">frame_dropout_normal</span></code></a>([dropout_mean, dropout_std])</p></td>
+<td><p>drop frames depending on normal distribution with given mean and standard deviation.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pose_format.pose_body.PoseBody.frame_dropout_uniform" title="pose_format.pose_body.PoseBody.frame_dropout_uniform"><code class="xref py py-obj docutils literal notranslate"><span class="pre">frame_dropout_uniform</span></code></a>([dropout_min, dropout_max])</p></td>
+<td><p>Randomly drops frames depending on a uniform distribution - given minimum and maximum percentages.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pose_format.pose_body.PoseBody.get_points" title="pose_format.pose_body.PoseBody.get_points"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_points</span></code></a>(indexes)</p></td>
+<td><p>Get points from PoseBody.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pose_format.pose_body.PoseBody.matmul" title="pose_format.pose_body.PoseBody.matmul"><code class="xref py py-obj docutils literal notranslate"><span class="pre">matmul</span></code></a>(matrix)</p></td>
+<td><p>Multiplies PoseBody data with a numpy.ndarray matrix.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pose_format.pose_body.PoseBody.numpy" title="pose_format.pose_body.PoseBody.numpy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy</span></code></a>()</p></td>
+<td><p>Convert the current PoseBody representation to NumpyPoseBody.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pose_format.pose_body.PoseBody.points_perspective" title="pose_format.pose_body.PoseBody.points_perspective"><code class="xref py py-obj docutils literal notranslate"><span class="pre">points_perspective</span></code></a>()</p></td>
+<td><p>Give points in PoseBody as a perspective view.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pose_format.pose_body.PoseBody.read" title="pose_format.pose_body.PoseBody.read"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read</span></code></a>(header, reader, **kwargs)</p></td>
+<td><p>Reads pose data a buffer (BufferReader) based on the header's version.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pose_format.pose_body.PoseBody.read_v0_0" title="pose_format.pose_body.PoseBody.read_v0_0"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_v0_0</span></code></a>(header, reader, **unused_kwargs)</p></td>
+<td><p>Method to read version 0.0 pose data.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pose_format.pose_body.PoseBody.read_v0_1" title="pose_format.pose_body.PoseBody.read_v0_1"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_v0_1</span></code></a>(header, reader[, start_frame, ...])</p></td>
+<td><p>Reads pose data for version 0.1 from a buffer.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pose_format.pose_body.PoseBody.read_v0_1_frames" title="pose_format.pose_body.PoseBody.read_v0_1_frames"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_v0_1_frames</span></code></a>(frames, shape, reader[, ...])</p></td>
+<td><p>Reads frame data for version 0.1 from a buffer.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pose_format.pose_body.PoseBody.select_frames" title="pose_format.pose_body.PoseBody.select_frames"><code class="xref py py-obj docutils literal notranslate"><span class="pre">select_frames</span></code></a>(frame_indexes)</p></td>
+<td><p>Selects specific frames from PoseBody object.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pose_format.pose_body.PoseBody.slice_step" title="pose_format.pose_body.PoseBody.slice_step"><code class="xref py py-obj docutils literal notranslate"><span class="pre">slice_step</span></code></a>(by)</p></td>
+<td><p>Slices data by skipping rows.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pose_format.pose_body.PoseBody.tensorflow" title="pose_format.pose_body.PoseBody.tensorflow"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tensorflow</span></code></a>()</p></td>
+<td><p>Converts current PoseBody representation to TensorflowPoseBody.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pose_format.pose_body.PoseBody.torch" title="pose_format.pose_body.PoseBody.torch"><code class="xref py py-obj docutils literal notranslate"><span class="pre">torch</span></code></a>()</p></td>
+<td><p>Converts current PoseBody to TorchPoseBody.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pose_format.pose_body.PoseBody.write" title="pose_format.pose_body.PoseBody.write"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write</span></code></a>(version, buffer)</p></td>
+<td><p>Write the data to a file based on the version of the spec.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pose_format.pose_body.PoseBody.zero_filled" title="pose_format.pose_body.PoseBody.zero_filled"><code class="xref py py-obj docutils literal notranslate"><span class="pre">zero_filled</span></code></a>()</p></td>
+<td><p>Creates a new PoseBody instance with data replaced by zeros.</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Attributes:</strong></p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pose_format.pose_body.PoseBody.tensor_reader" title="pose_format.pose_body.PoseBody.tensor_reader"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tensor_reader</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="pose_format.pose_body.PoseBody.augment2d">
+<span class="sig-name descname"><span class="pre">augment2d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rotation_std</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shear_std</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_std</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/pose_body.html#PoseBody.augment2d"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.pose_body.PoseBody.augment2d" title="Permalink to this definition"></a></dt>
+<dd><p>Augment 2D data with given standard deviations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rotation_std</strong> (<em>float</em><em>, </em><em>optional</em>) – Rotation in radians. Default is 0.2.</p></li>
+<li><p><strong>shear_std</strong> (<em>float</em><em>, </em><em>optional</em>) – Shear X in percent. Default is 0.2.</p></li>
+<li><p><strong>scale_std</strong> (<em>float</em><em>, </em><em>optional</em>) – Scale X in percent. Default is 0.2.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Augmented PoseBody instance.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pose_format.pose_body.PoseBody" title="pose_format.pose_body.PoseBody">PoseBody</a></p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>The method modifies the PoseBody based on shear, rotation, and scaling.</p></li>
+<li><p><strong>shear_std</strong> based on <a class="reference external" href="https://en.wikipedia.org/wiki/Shear_matrix">https://en.wikipedia.org/wiki/Shear_matrix</a></p></li>
+<li><p><strong>rotation_std</strong> based on <a class="reference external" href="https://en.wikipedia.org/wiki/Rotation_matrix">https://en.wikipedia.org/wiki/Rotation_matrix</a></p></li>
+<li><p><strong>scale_std</strong> based on <a class="reference external" href="https://en.wikipedia.org/wiki/Scaling_(geometry">https://en.wikipedia.org/wiki/Scaling_(geometry</a>)</p></li>
+</ul>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pose_format.pose_body.PoseBody.bbox">
+<span class="sig-name descname"><span class="pre">bbox</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">header</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/pose_body.html#PoseBody.bbox"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.pose_body.PoseBody.bbox" title="Permalink to this definition"></a></dt>
+<dd><p>For computing bounding box of PoseBody.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>header</strong> (<a class="reference internal" href="pose_format.pose_header.html#pose_format.pose_header.PoseHeader" title="pose_format.pose_header.PoseHeader"><em>PoseHeader</em></a>) – Header containing the version of the pose data.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>PoseBody instance with bounding box.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pose_format.pose_body.PoseBody" title="pose_format.pose_body.PoseBody">PoseBody</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pose_format.pose_body.PoseBody.flatten">
+<span class="sig-name descname"><span class="pre">flatten</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/pose_body.html#PoseBody.flatten"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.pose_body.PoseBody.flatten" title="Permalink to this definition"></a></dt>
+<dd><p>Converts data from the (Frames, People, Points, Dims) masked representation to an array of points.</p>
+<p>Every item in the result array contains the following dimensions:
+0. Time in milliseconds
+1. Person ID
+2. Point ID
+3. X dimension
+4. Y dimension
+5. Z dimension (if exists)
+6. Pose estimation confidence</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Array of points with detailed dimensions.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>np.ndarray</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>NotImplementedError</strong> – If the method is not implemented for the specific class.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pose_format.pose_body.PoseBody.frame_dropout_given_percent">
+<span class="sig-name descname"><span class="pre">frame_dropout_given_percent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dropout_percent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/pose_body.html#PoseBody.frame_dropout_given_percent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.pose_body.PoseBody.frame_dropout_given_percent" title="Permalink to this definition"></a></dt>
+<dd><p>Drop of frames based on  given dropout percentage.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>dropout_percent</strong> (<em>float</em>) – Percentage of frames to drop. Between 0 and 1 (e.g., 0.2 means drop 20% of the frames).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>New PoseBody object with the gotten frames.</p></li>
+<li><p>List of frame indexes.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Tuple[<a class="reference internal" href="#pose_format.pose_body.PoseBody" title="pose_format.pose_body.PoseBody">PoseBody</a>, List[int]]</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Actual number of dropped frames might be slightly different due to rounding.</p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pose_format.pose_body.PoseBody.frame_dropout_normal">
+<span class="sig-name descname"><span class="pre">frame_dropout_normal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dropout_mean</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout_std</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/pose_body.html#PoseBody.frame_dropout_normal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.pose_body.PoseBody.frame_dropout_normal" title="Permalink to this definition"></a></dt>
+<dd><p>drop frames depending on normal distribution with given mean and standard deviation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dropout_mean</strong> (<em>float</em><em>, </em><em>optional</em>) – Mean percentage of frames to drop. Default is 0.5.</p></li>
+<li><p><strong>dropout_std</strong> (<em>float</em><em>, </em><em>optional</em>) – Standard deviation of percentage of frames to drop. Default is 0.1.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>New PoseBody object with dropped frames.</p></li>
+<li><p>List of retrieved frame indexes.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Tuple[<a class="reference internal" href="#pose_format.pose_body.PoseBody" title="pose_format.pose_body.PoseBody">PoseBody</a>, List[int]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pose_format.pose_body.PoseBody.frame_dropout_uniform">
+<span class="sig-name descname"><span class="pre">frame_dropout_uniform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dropout_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/pose_body.html#PoseBody.frame_dropout_uniform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.pose_body.PoseBody.frame_dropout_uniform" title="Permalink to this definition"></a></dt>
+<dd><p>Randomly drops frames depending on a uniform distribution - given minimum and maximum percentages.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dropout_min</strong> (<em>float</em><em>, </em><em>optional</em>) – Minimum percentage of frames to drop. Default is 0.2.</p></li>
+<li><p><strong>dropout_max</strong> (<em>float</em><em>, </em><em>optional</em>) – Maximum percentage of frames to drop. Default is 1.0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>New PoseBody object with dropped frames.</p></li>
+<li><p>List of frame indexes that were retained.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Tuple[<a class="reference internal" href="#pose_format.pose_body.PoseBody" title="pose_format.pose_body.PoseBody">PoseBody</a>, List[int]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pose_format.pose_body.PoseBody.get_points">
+<span class="sig-name descname"><span class="pre">get_points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">indexes</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/pose_body.html#PoseBody.get_points"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.pose_body.PoseBody.get_points" title="Permalink to this definition"></a></dt>
+<dd><p>Get points from PoseBody.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>indexes</strong> (<em>List</em><em>[</em><em>int</em><em>]</em>) – List of point indices to get from PoseBody.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>PoseBody instance containing only choosen points.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pose_format.pose_body.PoseBody" title="pose_format.pose_body.PoseBody">PoseBody</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pose_format.pose_body.PoseBody.matmul">
+<span class="sig-name descname"><span class="pre">matmul</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matrix</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/pose_body.html#PoseBody.matmul"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.pose_body.PoseBody.matmul" title="Permalink to this definition"></a></dt>
+<dd><p>Multiplies PoseBody data with a numpy.ndarray matrix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>matrix</strong> (<em>np.ndarray</em>) – The matrix to multiply the PoseBody data with.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>PoseBody instance with data multiplied by a numpy array.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pose_format.pose_body.PoseBody" title="pose_format.pose_body.PoseBody">PoseBody</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pose_format.pose_body.PoseBody.numpy">
+<span class="sig-name descname"><span class="pre">numpy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/pose_body.html#PoseBody.numpy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.pose_body.PoseBody.numpy" title="Permalink to this definition"></a></dt>
+<dd><p>Convert the current PoseBody representation to NumpyPoseBody.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The converted PoseBody object.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>NumpyPoseBody</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>NotImplementedError</strong> – If the method is not implemented.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pose_format.pose_body.PoseBody.points_perspective">
+<span class="sig-name descname"><span class="pre">points_perspective</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/pose_body.html#PoseBody.points_perspective"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.pose_body.PoseBody.points_perspective" title="Permalink to this definition"></a></dt>
+<dd><p>Give points in PoseBody as a perspective view.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>PoseBody instance with points adjusted for perspective.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#pose_format.pose_body.PoseBody" title="pose_format.pose_body.PoseBody">PoseBody</a></p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>NotImplementedError</strong> – If the method is not implemented for the specific class.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pose_format.pose_body.PoseBody.read">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">read</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">header</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reader</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/pose_body.html#PoseBody.read"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.pose_body.PoseBody.read" title="Permalink to this definition"></a></dt>
+<dd><p>Reads pose data a buffer (BufferReader) based on the header’s version.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>header</strong> (<a class="reference internal" href="pose_format.pose_header.html#pose_format.pose_header.PoseHeader" title="pose_format.pose_header.PoseHeader"><em>PoseHeader</em></a>) – Header containing the version of the pose data.</p></li>
+<li><p><strong>reader</strong> (<a class="reference internal" href="pose_format.utils.reader.html#pose_format.utils.reader.BufferReader" title="pose_format.utils.reader.BufferReader"><em>BufferReader</em></a>) – Buffer from which to read the pose data.</p></li>
+<li><p><strong>**kwargs</strong> (<em>dict</em>) – Additional parameters for reading specific versions.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A PoseBody object initialized with the read data.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pose_format.pose_body.PoseBody" title="pose_format.pose_body.PoseBody">PoseBody</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>NotImplementedError</strong> – If the header’s version is not supported.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pose_format.pose_body.PoseBody.read_v0_0">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">read_v0_0</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">header</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reader</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">unused_kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/pose_body.html#PoseBody.read_v0_0"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.pose_body.PoseBody.read_v0_0" title="Permalink to this definition"></a></dt>
+<dd><p>Method to read version 0.0 pose data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>header</strong> (<a class="reference internal" href="pose_format.pose_header.html#pose_format.pose_header.PoseHeader" title="pose_format.pose_header.PoseHeader"><em>PoseHeader</em></a>) – Header containing the version of the pose data.</p></li>
+<li><p><strong>reader</strong> (<a class="reference internal" href="pose_format.utils.reader.html#pose_format.utils.reader.BufferReader" title="pose_format.utils.reader.BufferReader"><em>BufferReader</em></a>) – Buffer from which to read the pose data.</p></li>
+<li><p><strong>unused_kwargs</strong> (<em>dict</em>) – Unused additional parameters for this version.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>NotImplementedError</strong> – Since method for this version is not implemented.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pose_format.pose_body.PoseBody.read_v0_1">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">read_v0_1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">header</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reader</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_frame</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_frame</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">unused_kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/pose_body.html#PoseBody.read_v0_1"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.pose_body.PoseBody.read_v0_1" title="Permalink to this definition"></a></dt>
+<dd><p>Reads pose data for version 0.1 from a buffer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>header</strong> (<a class="reference internal" href="pose_format.pose_header.html#pose_format.pose_header.PoseHeader" title="pose_format.pose_header.PoseHeader"><em>PoseHeader</em></a>) – Header containing the version of the pose data.</p></li>
+<li><p><strong>reader</strong> (<a class="reference internal" href="pose_format.utils.reader.html#pose_format.utils.reader.BufferReader" title="pose_format.utils.reader.BufferReader"><em>BufferReader</em></a>) – Buffer from which to read the pose data.</p></li>
+<li><p><strong>start_frame</strong> (<em>int</em><em>, </em><em>optional</em>) – Index of the first frame to read. Default is None.</p></li>
+<li><p><strong>end_frame</strong> (<em>int</em><em>, </em><em>optional</em>) – Index of the last frame to read. Default is None.</p></li>
+<li><p><strong>**unused_kwargs</strong> (<em>dict</em>) – Unused additional parameters for this version.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>PoseBody object initialized with the read data for version 0.1.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pose_format.pose_body.PoseBody" title="pose_format.pose_body.PoseBody">PoseBody</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pose_format.pose_body.PoseBody.read_v0_1_frames">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">read_v0_1_frames</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frames</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reader</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_frame</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_frame</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/pose_body.html#PoseBody.read_v0_1_frames"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.pose_body.PoseBody.read_v0_1_frames" title="Permalink to this definition"></a></dt>
+<dd><p>Reads frame data for version 0.1 from a buffer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>frames</strong> (<em>int</em>) – Number of frames in the pose data.</p></li>
+<li><p><strong>shape</strong> (<em>List</em><em>[</em><em>int</em><em>]</em>) – Shape of the pose data.</p></li>
+<li><p><strong>reader</strong> (<a class="reference internal" href="pose_format.utils.reader.html#pose_format.utils.reader.BufferReader" title="pose_format.utils.reader.BufferReader"><em>BufferReader</em></a>) – Buffer from which to read the pose data.</p></li>
+<li><p><strong>start_frame</strong> (<em>int</em><em>, </em><em>optional</em>) – Index of the first frame to read. Default is None.</p></li>
+<li><p><strong>end_frame</strong> (<em>int</em><em>, </em><em>optional</em>) – Index of the last frame to read. Default is None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Array containing the pose data for the specified frames.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If start_frame is greater than the number of frames.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pose_format.pose_body.PoseBody.select_frames">
+<span class="sig-name descname"><span class="pre">select_frames</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frame_indexes</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/pose_body.html#PoseBody.select_frames"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.pose_body.PoseBody.select_frames" title="Permalink to this definition"></a></dt>
+<dd><p>Selects specific frames from PoseBody object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>frame_indexes</strong> (<em>List</em><em>[</em><em>int</em><em>]</em>) – List of frame indexes to select.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>PoseBody object containing only the selected frames.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pose_format.pose_body.PoseBody" title="pose_format.pose_body.PoseBody">PoseBody</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>IndexError</strong> – If any of the specified frame indices are out of the valid range for the current PoseBody data.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pose_format.pose_body.PoseBody.slice_step">
+<span class="sig-name descname"><span class="pre">slice_step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">by</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/pose_body.html#PoseBody.slice_step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.pose_body.PoseBody.slice_step" title="Permalink to this definition"></a></dt>
+<dd><p>Slices data by skipping rows. This affects the fps (frames per seconds).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>by</strong> (<em>int</em>) – Take one row every “by” rows.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>PoseBody instance with sliced data.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pose_format.pose_body.PoseBody" title="pose_format.pose_body.PoseBody">PoseBody</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pose_format.pose_body.PoseBody.tensor_reader">
+<span class="sig-name descname"><span class="pre">tensor_reader</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'ABSTRACT-DO-NOT-USE'</span></em><a class="headerlink" href="#pose_format.pose_body.PoseBody.tensor_reader" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pose_format.pose_body.PoseBody.tensorflow">
+<span class="sig-name descname"><span class="pre">tensorflow</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/pose_body.html#PoseBody.tensorflow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.pose_body.PoseBody.tensorflow" title="Permalink to this definition"></a></dt>
+<dd><p>Converts current PoseBody representation to TensorflowPoseBody.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Converted PoseBody object.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="pose_format.tensorflow.pose_body.html#pose_format.tensorflow.pose_body.TensorflowPoseBody" title="pose_format.tensorflow.pose_body.TensorflowPoseBody">TensorflowPoseBody</a></p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>NotImplementedError</strong> – If the method is not implemented.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pose_format.pose_body.PoseBody.torch">
+<span class="sig-name descname"><span class="pre">torch</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/pose_body.html#PoseBody.torch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.pose_body.PoseBody.torch" title="Permalink to this definition"></a></dt>
+<dd><p>Converts current PoseBody to TorchPoseBody.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The converted PoseBody object.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="pose_format.torch.pose_body.html#pose_format.torch.pose_body.TorchPoseBody" title="pose_format.torch.pose_body.TorchPoseBody">TorchPoseBody</a></p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>NotImplementedError</strong> – If the method is not implemented.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pose_format.pose_body.PoseBody.write">
+<span class="sig-name descname"><span class="pre">write</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">version</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">buffer</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/pose_body.html#PoseBody.write"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.pose_body.PoseBody.write" title="Permalink to this definition"></a></dt>
+<dd><p>Write the data to a file based on the version of the spec.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>version</strong> (<em>float</em>) – Version of the pose data to write.</p></li>
+<li><p><strong>buffer</strong> (<em>BinaryIO</em>) – Buffer to write the pose data to.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pose_format.pose_body.PoseBody.zero_filled">
+<span class="sig-name descname"><span class="pre">zero_filled</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/pose_body.html#PoseBody.zero_filled"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.pose_body.PoseBody.zero_filled" title="Permalink to this definition"></a></dt>
+<dd><p>Creates a new PoseBody instance with data replaced by zeros.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>PoseBody instance with zero-filled data.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#pose_format.pose_body.PoseBody" title="pose_format.pose_body.PoseBody">PoseBody</a></p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>NotImplementedError</strong> – If the method is not implemented for the specific class.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Moryossef, Amit and Müller, Mathias.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

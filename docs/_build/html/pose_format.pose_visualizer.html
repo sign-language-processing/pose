@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pose_format.pose_visualizer module &mdash; Pose-Format Toolkit v1.0.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="_static/my.css" type="text/css" />
+      <link rel="stylesheet" href="_static/assets/jsonview.bundle.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sphinx-needs/libs/html/datatables.min.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sphinx-needs/common.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sphinx-needs/layouts.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sphinx-needs/modern.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sphinx-needs/styles.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script src="_static/assets/jsonview.bundle.js"></script>
+        <script src="_static/assets/jsonview_loader.js"></script>
+        <script src="_static/sphinx-needs/libs/html/datatables.min.js"></script>
+        <script src="_static/sphinx-needs/libs/html/datatables_loader.js"></script>
+        <script src="_static/sphinx-needs/libs/html/sphinx_needs_collapse.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Pose-Format Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="readme.html">Pose Format Introduction</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python Code Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pose_format.html">pose_format package</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Additional Material</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="js_docs.html">JavaScript</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="specs_v01.html">specs/v0.1.md</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Pose-Format Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">pose_format.pose_visualizer module</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/rfahrn/pose-master/blob/master//docs/pose_format.pose_visualizer.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-pose_format.pose_visualizer">
+<span id="pose-format-pose-visualizer-module"></span><h1>pose_format.pose_visualizer module<a class="headerlink" href="#module-pose_format.pose_visualizer" title="Permalink to this heading"></a></h1>
+<p><strong>Classes:</strong></p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pose_format.pose_visualizer.FastAndUglyPoseVisualizer" title="pose_format.pose_visualizer.FastAndUglyPoseVisualizer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FastAndUglyPoseVisualizer</span></code></a>(pose[, thickness])</p></td>
+<td><p>This class draws all frames as grayscale, without opacity based on confidence values.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pose_format.pose_visualizer.PoseVisualizer" title="pose_format.pose_visualizer.PoseVisualizer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PoseVisualizer</span></code></a>(pose[, thickness])</p></td>
+<td><p>A class for visualizing Pose objects using OpenCV.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py class">
+<dt class="sig sig-object py" id="pose_format.pose_visualizer.FastAndUglyPoseVisualizer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pose_format.pose_visualizer.</span></span><span class="sig-name descname"><span class="pre">FastAndUglyPoseVisualizer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pose</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thickness</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/pose_visualizer.html#FastAndUglyPoseVisualizer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.pose_visualizer.FastAndUglyPoseVisualizer" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pose_format.pose_visualizer.PoseVisualizer" title="pose_format.pose_visualizer.PoseVisualizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">PoseVisualizer</span></code></a></p>
+<p>This class draws all frames as grayscale, without opacity based on confidence values.
+It is a faster and less detailed class for visualizing Pose objects using OpenCV.</p>
+<ul class="simple">
+<li><p>Inherites from <code class="docutils literal notranslate"><span class="pre">PoseViszaizer</span></code></p></li>
+</ul>
+<p><strong>Methods:</strong></p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pose_format.pose_visualizer.FastAndUglyPoseVisualizer.draw" title="pose_format.pose_visualizer.FastAndUglyPoseVisualizer.draw"><code class="xref py py-obj docutils literal notranslate"><span class="pre">draw</span></code></a>([background_color, foreground_color])</p></td>
+<td><p>Draws the pose on plain background using a foreground (pose) color.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>pose</strong> (<a class="reference internal" href="pose_format.pose.html#pose_format.pose.Pose" title="pose_format.pose.Pose"><em>Pose</em></a>) – </p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pose_format.pose_visualizer.FastAndUglyPoseVisualizer.draw">
+<span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">background_color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">foreground_color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">255</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/pose_visualizer.html#FastAndUglyPoseVisualizer.draw"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.pose_visualizer.FastAndUglyPoseVisualizer.draw" title="Permalink to this definition"></a></dt>
+<dd><p>Draws the pose on plain background using a foreground (pose) color.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>background_color</strong> (<em>int</em>) – Grayscale value for background color.</p></li>
+<li><p><strong>foreground_color</strong> (<em>int</em>) – Grayscale value for the pose color.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Yields<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>np.ndarray</em> – frames with drawn pose</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pose_format.pose_visualizer.PoseVisualizer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pose_format.pose_visualizer.</span></span><span class="sig-name descname"><span class="pre">PoseVisualizer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pose</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thickness</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/pose_visualizer.html#PoseVisualizer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.pose_visualizer.PoseVisualizer" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class for visualizing Pose objects using OpenCV.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pose</strong> (<a class="reference internal" href="pose_format.pose.html#pose_format.pose.Pose" title="pose_format.pose.Pose"><em>Pose</em></a>) – The Pose object to visualize.</p></li>
+<li><p><strong>thickness</strong> (<em>int</em><em> or </em><em>None</em>) – Thickness for drawing. If not provided, it is estimated based on image size.</p></li>
+<li><p><strong>pose_fps</strong> (<em>float</em>) – Frame rate of the Pose data.</p></li>
+<li><p><strong>*cv2</strong> (<em>module</em>) – OpenCV Python binding.</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>Methods:</strong></p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pose_format.pose_visualizer.PoseVisualizer.draw" title="pose_format.pose_visualizer.PoseVisualizer.draw"><code class="xref py py-obj docutils literal notranslate"><span class="pre">draw</span></code></a>([background_color, max_frames])</p></td>
+<td><p>draws pose on plain background using the specified color - for a number of frames.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pose_format.pose_visualizer.PoseVisualizer.draw_on_video" title="pose_format.pose_visualizer.PoseVisualizer.draw_on_video"><code class="xref py py-obj docutils literal notranslate"><span class="pre">draw_on_video</span></code></a>(background_video[, ...])</p></td>
+<td><p>Draw pose on a background video.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pose_format.pose_visualizer.PoseVisualizer.save_frame" title="pose_format.pose_visualizer.PoseVisualizer.save_frame"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_frame</span></code></a>(f_name, frame)</p></td>
+<td><p>Save a single pose frame as im.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pose_format.pose_visualizer.PoseVisualizer.save_gif" title="pose_format.pose_visualizer.PoseVisualizer.save_gif"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_gif</span></code></a>(f_name, frames)</p></td>
+<td><p>Save series of pose frames as GIF.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pose_format.pose_visualizer.PoseVisualizer.save_video" title="pose_format.pose_visualizer.PoseVisualizer.save_video"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_video</span></code></a>(f_name, frames[, custom_ffmpeg])</p></td>
+<td><p>Save pose frames as a video.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="pose_format.pose_visualizer.PoseVisualizer.draw">
+<span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">background_color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(255,</span> <span class="pre">255,</span> <span class="pre">255)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_frames</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/pose_visualizer.html#PoseVisualizer.draw"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.pose_visualizer.PoseVisualizer.draw" title="Permalink to this definition"></a></dt>
+<dd><p>draws pose on plain background using the specified color - for a number of frames.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>background_color</strong> (<em>Tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>, </em><em>int</em><em>]</em><em>, </em><em>optional</em>) – RGB value for background color, default is white (255, 255, 255).</p></li>
+<li><p><strong>max_frames</strong> (<em>int</em><em>, </em><em>optional</em>) – Maximum number of frames to process, if it is None, it processes all frames.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Yields<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>np.ndarray</em> – Frames with the pose data drawn on a custom background color.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pose_format.pose_visualizer.PoseVisualizer.draw_on_video">
+<span class="sig-name descname"><span class="pre">draw_on_video</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">background_video</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_frames</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">blur</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/pose_visualizer.html#PoseVisualizer.draw_on_video"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.pose_visualizer.PoseVisualizer.draw_on_video" title="Permalink to this definition"></a></dt>
+<dd><p>Draw pose on a background video.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>background_video</strong> (<em>str</em><em> or </em><em>iterable</em>) – Path to video file or iterable of video frames.</p></li>
+<li><p><strong>max_frames</strong> (<em>int</em><em>, </em><em>optional</em>) – Maximum number of frames to process. If None, it will be processing all frames.</p></li>
+<li><p><strong>blur</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, applies a blur effect to the video.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Yields<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>np.ndarray</em> – Frames with overlaid pose data.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pose_format.pose_visualizer.PoseVisualizer.save_frame">
+<span class="sig-name descname"><span class="pre">save_frame</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frame</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/pose_visualizer.html#PoseVisualizer.save_frame"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.pose_visualizer.PoseVisualizer.save_frame" title="Permalink to this definition"></a></dt>
+<dd><p>Save a single pose frame as im.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>f_name</strong> (<em>str</em>) – filensmr where the frame will be saved.</p></li>
+<li><p><strong>frame</strong> (<em>np.ndarray</em>) – Pose frame to be saved</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pose_format.pose_visualizer.PoseVisualizer.save_gif">
+<span class="sig-name descname"><span class="pre">save_gif</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frames</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/pose_visualizer.html#PoseVisualizer.save_gif"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.pose_visualizer.PoseVisualizer.save_gif" title="Permalink to this definition"></a></dt>
+<dd><p>Save series of pose frames as GIF.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>f_name</strong> (<em>str</em>) – filename to save GIF to.</p></li>
+<li><p><strong>frames</strong> (<em>Iterable</em><em>[</em><em>np.ndarray</em><em>]</em>) – Iterable of pose frames to be included in GIF.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pose_format.pose_visualizer.PoseVisualizer.save_video">
+<span class="sig-name descname"><span class="pre">save_video</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frames</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">custom_ffmpeg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/pose_visualizer.html#PoseVisualizer.save_video"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.pose_visualizer.PoseVisualizer.save_video" title="Permalink to this definition"></a></dt>
+<dd><p>Save pose frames as a video.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>f_name</strong> (<em>str</em>) – Filename to which the generated video is saved to .</p></li>
+<li><p><strong>frames</strong> (<em>Iterable</em><em>[</em><em>np.ndarray</em><em>]</em>) – Iterable of pose frames include in the video.</p></li>
+<li><p><strong>custom_ffmpeg</strong> (<em>optional</em>) – Custom ffmpeg parameters for the “video writing”.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Moryossef, Amit and Müller, Mathias.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

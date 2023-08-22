@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pose_format.utils.openpose module &mdash; Pose-Format Toolkit v1.0.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="_static/my.css" type="text/css" />
+      <link rel="stylesheet" href="_static/assets/jsonview.bundle.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sphinx-needs/libs/html/datatables.min.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sphinx-needs/common.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sphinx-needs/layouts.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sphinx-needs/modern.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sphinx-needs/styles.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script src="_static/assets/jsonview.bundle.js"></script>
+        <script src="_static/assets/jsonview_loader.js"></script>
+        <script src="_static/sphinx-needs/libs/html/datatables.min.js"></script>
+        <script src="_static/sphinx-needs/libs/html/datatables_loader.js"></script>
+        <script src="_static/sphinx-needs/libs/html/sphinx_needs_collapse.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="pose_format.utils.openpose_135 module" href="pose_format.utils.openpose_135.html" />
+    <link rel="prev" title="pose_format.utils.normalization_3d module" href="pose_format.utils.normalization_3d.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Pose-Format Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="readme.html">Pose Format Introduction</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python Code Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pose_format.html">pose_format package</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Additional Material</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="js_docs.html">JavaScript</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="specs_v01.html">specs/v0.1.md</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Pose-Format Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="pose_format.html">pose_format package</a></li>
+          <li class="breadcrumb-item"><a href="pose_format.utils.html">pose_format.utils package</a></li>
+      <li class="breadcrumb-item active">pose_format.utils.openpose module</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/rfahrn/pose-master/blob/master//docs/pose_format.utils.openpose.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-pose_format.utils.openpose">
+<span id="pose-format-utils-openpose-module"></span><h1>pose_format.utils.openpose module<a class="headerlink" href="#module-pose_format.utils.openpose" title="Permalink to this heading"></a></h1>
+<p><strong>Functions:</strong></p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pose_format.utils.openpose.OpenPose_Hand_Component" title="pose_format.utils.openpose.OpenPose_Hand_Component"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OpenPose_Hand_Component</span></code></a>(name)</p></td>
+<td><p>This &quot;lambda&quot; function creates a PoseHeaderComponent using 'name' and a constants for points, limbs, colors, and format.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pose_format.utils.openpose.get_frame_id" title="pose_format.utils.openpose.get_frame_id"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_frame_id</span></code></a>(filename, pattern)</p></td>
+<td><p>Parses a filename to find the ID of a frame.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pose_format.utils.openpose.limbs_index" title="pose_format.utils.openpose.limbs_index"><code class="xref py py-obj docutils literal notranslate"><span class="pre">limbs_index</span></code></a>(limbs, points)</p></td>
+<td><p>convert limb names to indices based on a list of points.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pose_format.utils.openpose.load_frames_directory_dict" title="pose_format.utils.openpose.load_frames_directory_dict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_frames_directory_dict</span></code></a>(directory, pattern)</p></td>
+<td><p>Load a pose directory where each frame's pose data is stored in a separate file following a specific naming scheme.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pose_format.utils.openpose.load_openpose" title="pose_format.utils.openpose.load_openpose"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_openpose</span></code></a>(frames[, fps, width, height, ...])</p></td>
+<td><p>Loads a dictionary of OpenPose frames into a Pose object.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pose_format.utils.openpose.load_openpose_directory" title="pose_format.utils.openpose.load_openpose_directory"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_openpose_directory</span></code></a>(directory[, fps, ...])</p></td>
+<td><p>Loads pose data from a directory containing OpenPose files and return a <code class="xref py py-obj docutils literal notranslate"><span class="pre">Pose</span></code> object.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py function">
+<dt class="sig sig-object py" id="pose_format.utils.openpose.OpenPose_Hand_Component">
+<span class="sig-prename descclassname"><span class="pre">pose_format.utils.openpose.</span></span><span class="sig-name descname"><span class="pre">OpenPose_Hand_Component</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pose_format.utils.openpose.OpenPose_Hand_Component" title="Permalink to this definition"></a></dt>
+<dd><p>This “lambda” function creates a PoseHeaderComponent using ‘name’ and
+a constants for points, limbs, colors, and format.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pose_format.utils.openpose.get_frame_id">
+<span class="sig-prename descclassname"><span class="pre">pose_format.utils.openpose.</span></span><span class="sig-name descname"><span class="pre">get_frame_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pattern</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/utils/openpose.html#get_frame_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.utils.openpose.get_frame_id" title="Permalink to this definition"></a></dt>
+<dd><p>Parses a filename to find the ID of a frame. Example file name for frame with ID 17: <code class="xref py py-obj docutils literal notranslate"><span class="pre">CAM2_000000000017_keypoints.json</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em>) – Name of the openpose frame file.</p></li>
+<li><p><strong>pattern</strong> (<em>str</em><em>, </em><em>optional</em>) – Regex pattern to extract frame ID, default is OPENPOSE_FRAME_PATTERN.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Frame ID as an integer.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pose_format.utils.openpose.limbs_index">
+<span class="sig-prename descclassname"><span class="pre">pose_format.utils.openpose.</span></span><span class="sig-name descname"><span class="pre">limbs_index</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">limbs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">points</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/utils/openpose.html#limbs_index"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.utils.openpose.limbs_index" title="Permalink to this definition"></a></dt>
+<dd><p>convert limb names to indices based on a list of points.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>limbs</strong> (<em>list</em><em> of </em><em>tuple</em><em> of </em><em>str</em>) – limbs defined by point names</p></li>
+<li><p><strong>points</strong> (<em>list</em><em> of </em><em>str</em><em> (</em><em>List</em><em>[</em><em>str</em><em>]</em><em>)</em>) – list of point names</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of limbs defined by point indices</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of tuple of int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pose_format.utils.openpose.load_frames_directory_dict">
+<span class="sig-prename descclassname"><span class="pre">pose_format.utils.openpose.</span></span><span class="sig-name descname"><span class="pre">load_frames_directory_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pattern</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/utils/openpose.html#load_frames_directory_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.utils.openpose.load_frames_directory_dict" title="Permalink to this definition"></a></dt>
+<dd><p>Load a pose directory where each frame’s pose data is stored in a separate file
+following a specific naming scheme.
+Filenames must adhere to the format: <code class="xref py py-obj docutils literal notranslate"><span class="pre">[ARBITRARY</span> <span class="pre">CHARACTERS]_[FRAME_ID]_keypoints.json</span></code>.
+Example: For a frame with ID 17, the filename would be <code class="xref py py-obj docutils literal notranslate"><span class="pre">CAM2_000000000017_keypoints.json</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>directory</strong> (<em>str</em>) – Path to the folder containing pose files.</p></li>
+<li><p><strong>pattern</strong> (<em>str</em><em>, </em><em>optional</em>) – Regular expression pattern to identify and parse frame filenames. The default pattern expects
+filenames of the form <code class="xref py py-obj docutils literal notranslate"><span class="pre">[ARBITRARY</span> <span class="pre">CHARACTERS]_[FRAME_ID]_keypoints.json</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dictionary where keys are frame IDs (int) and values are the corresponding frames (dict).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>OpenPoseFrames</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">frames</span> <span class="o">=</span> <span class="n">load_frames_directory_dict</span><span class="p">(</span><span class="s2">&quot;path/to/frames&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">frames</span><span class="p">[</span><span class="mi">17</span><span class="p">])</span>
+<span class="go">{...}  # content of CAM2_000000000017_keypoints.json</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pose_format.utils.openpose.load_openpose">
+<span class="sig-prename descclassname"><span class="pre">pose_format.utils.openpose.</span></span><span class="sig-name descname"><span class="pre">load_openpose</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frames</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">24</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">depth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_frames</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/utils/openpose.html#load_openpose"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.utils.openpose.load_openpose" title="Permalink to this definition"></a></dt>
+<dd><p>Loads a dictionary of OpenPose frames into a Pose object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>frames</strong> (<em>dict</em>) – Dictionary where keys are frame IDs, and values are individual frames. Each individual frame is also a dictionary.</p></li>
+<li><p><strong>fps</strong> (<em>float</em><em>, </em><em>optional</em>) – Framerate, default is 24.</p></li>
+<li><p><strong>width</strong> (<em>int</em><em>, </em><em>optional</em>) – Width of pose space, default is 1000.</p></li>
+<li><p><strong>height</strong> (<em>int</em><em>, </em><em>optional</em>) – Height of pose space, default is 1000.</p></li>
+<li><p><strong>depth</strong> (<em>int</em><em>, </em><em>optional</em>) – Depth of pose space, default is 0.</p></li>
+<li><p><strong>num_frames</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of frames when it’s known and cannot be derived from OpenPose files. That is the case if the last frame(s) of a video are missing from the OpenPose output.
+Default is None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Pose object with a header specific to OpenPose and a body that contains a single array.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="pose_format.pose.html#pose_format.pose.Pose" title="pose_format.pose.Pose">Pose</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pose_format.utils.openpose.load_openpose_directory">
+<span class="sig-prename descclassname"><span class="pre">pose_format.utils.openpose.</span></span><span class="sig-name descname"><span class="pre">load_openpose_directory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">24</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">depth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_frames</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/utils/openpose.html#load_openpose_directory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.utils.openpose.load_openpose_directory" title="Permalink to this definition"></a></dt>
+<dd><p>Loads pose data from a directory containing OpenPose files and return a <code class="xref py py-obj docutils literal notranslate"><span class="pre">Pose</span></code> object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>directory</strong> (<em>str</em>) – Path to the folder that contains pose files.</p></li>
+<li><p><strong>fps</strong> (<em>float</em><em>, </em><em>optional</em>) – Framerate. Default is 24.</p></li>
+<li><p><strong>width</strong> (<em>int</em><em>, </em><em>optional</em>) – Width of pose space. Default 1000.</p></li>
+<li><p><strong>height</strong> (<em>int</em><em>, </em><em>optional</em>) – Height of pose space, default; 1000.</p></li>
+<li><p><strong>depth</strong> (<em>int</em><em>, </em><em>optional</em>) – Depth of pose space, default; 0.</p></li>
+<li><p><strong>num_frames</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of frames when known and cannot be derived from OpenPose files.
+This can be the case if the last frame(s) of a video are missing from the OpenPose output.
+Default is None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Pose object with a header specific to OpenPose and a body containing a single array.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="pose_format.pose.html#pose_format.pose.Pose" title="pose_format.pose.Pose">Pose</a></p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pose</span> <span class="o">=</span> <span class="n">load_openpose_directory</span><span class="p">(</span><span class="s2">&quot;path/to/frames&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">pose</span><span class="o">.</span><span class="n">header</span><span class="p">)</span>
+<span class="go">PoseHeader(...)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="pose_format.utils.normalization_3d.html" class="btn btn-neutral float-left" title="pose_format.utils.normalization_3d module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="pose_format.utils.openpose_135.html" class="btn btn-neutral float-right" title="pose_format.utils.openpose_135 module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Moryossef, Amit and Müller, Mathias.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

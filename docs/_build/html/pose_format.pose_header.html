@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pose_format.pose_header module &mdash; Pose-Format Toolkit v1.0.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="_static/my.css" type="text/css" />
+      <link rel="stylesheet" href="_static/assets/jsonview.bundle.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sphinx-needs/libs/html/datatables.min.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sphinx-needs/common.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sphinx-needs/layouts.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sphinx-needs/modern.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sphinx-needs/styles.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script src="_static/assets/jsonview.bundle.js"></script>
+        <script src="_static/assets/jsonview_loader.js"></script>
+        <script src="_static/sphinx-needs/libs/html/datatables.min.js"></script>
+        <script src="_static/sphinx-needs/libs/html/datatables_loader.js"></script>
+        <script src="_static/sphinx-needs/libs/html/sphinx_needs_collapse.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Pose-Format Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="readme.html">Pose Format Introduction</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python Code Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pose_format.html">pose_format package</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Additional Material</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="js_docs.html">JavaScript</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="specs_v01.html">specs/v0.1.md</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Pose-Format Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">pose_format.pose_header module</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/rfahrn/pose-master/blob/master//docs/pose_format.pose_header.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-pose_format.pose_header">
+<span id="pose-format-pose-header-module"></span><h1>pose_format.pose_header module<a class="headerlink" href="#module-pose_format.pose_header" title="Permalink to this heading"></a></h1>
+<p><strong>Classes:</strong></p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pose_format.pose_header.PoseHeader" title="pose_format.pose_header.PoseHeader"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PoseHeader</span></code></a>(version, dimensions, components)</p></td>
+<td><p>Main header for a pose.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pose_format.pose_header.PoseHeaderComponent" title="pose_format.pose_header.PoseHeaderComponent"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PoseHeaderComponent</span></code></a>(name, points, limbs, ...)</p></td>
+<td><p>Class for pose header component.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pose_format.pose_header.PoseHeaderDimensions" title="pose_format.pose_header.PoseHeaderDimensions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PoseHeaderDimensions</span></code></a>(width, height[, depth])</p></td>
+<td><p>Represents width, height, and depth dimensions for a pose header.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pose_format.pose_header.PoseNormalizationInfo" title="pose_format.pose_header.PoseNormalizationInfo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PoseNormalizationInfo</span></code></a>(p1, p2[, p3])</p></td>
+<td><p>This class represents is used for normalization info for pose.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py class">
+<dt class="sig sig-object py" id="pose_format.pose_header.PoseHeader">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pose_format.pose_header.</span></span><span class="sig-name descname"><span class="pre">PoseHeader</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">version</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dimensions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">components</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_bbox</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/pose_header.html#PoseHeader"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.pose_header.PoseHeader" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Main header for a pose.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>version</strong> (<em>float</em>) – Version of the pose header.</p></li>
+<li><p><strong>dimensions</strong> (<a class="reference internal" href="#pose_format.pose_header.PoseHeaderDimensions" title="pose_format.pose_header.PoseHeaderDimensions"><em>PoseHeaderDimensions</em></a>) – Dimensions of the pose header.</p></li>
+<li><p><strong>components</strong> (<em>List</em><em>[</em><a class="reference internal" href="#pose_format.pose_header.PoseHeaderComponent" title="pose_format.pose_header.PoseHeaderComponent"><em>PoseHeaderComponent</em></a><em>]</em>) – List of pose header components.</p></li>
+<li><p><strong>is_bbox</strong> (<em>bool</em><em>, </em><em>optional</em>) – If bounding box needed. Default is False.</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>Use the <a class="reference internal" href="#pose_format.pose_header.PoseHeader.read" title="pose_format.pose_header.PoseHeader.read"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read</span></code></a> method to generate an instance from a BufferReader.</p></li>
+<li><p><a class="reference internal" href="#pose_format.pose_header.PoseHeader.total_points" title="pose_format.pose_header.PoseHeader.total_points"><code class="xref py py-obj docutils literal notranslate"><span class="pre">total_points</span></code></a> method returns the total number of points across all components.</p></li>
+<li><p>Convert the header to bounding boxes using the <a class="reference internal" href="#pose_format.pose_header.PoseHeader.bbox" title="pose_format.pose_header.PoseHeader.bbox"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bbox</span></code></a> method.</p></li>
+</ul>
+</div>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">header</span> <span class="o">=</span> <span class="n">PoseHeader</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">PoseHeaderDimensions</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="p">[</span><span class="n">PoseHeaderComponent</span><span class="p">(</span><span class="o">...</span><span class="p">)],</span> <span class="n">is_bbox</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">is_bbox</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<p><strong>Methods:</strong></p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pose_format.pose_header.PoseHeader.bbox" title="pose_format.pose_header.PoseHeader.bbox"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bbox</span></code></a>()</p></td>
+<td><p>Converts header to bounding boxes (bbox).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pose_format.pose_header.PoseHeader.normalization_info" title="pose_format.pose_header.PoseHeader.normalization_info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">normalization_info</span></code></a>(p1, p2[, p3])</p></td>
+<td><p>Normalizates info for given points.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pose_format.pose_header.PoseHeader.read" title="pose_format.pose_header.PoseHeader.read"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read</span></code></a>(reader)</p></td>
+<td><p>Reads pose header data from a reader (BufferReader).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pose_format.pose_header.PoseHeader.total_points" title="pose_format.pose_header.PoseHeader.total_points"><code class="xref py py-obj docutils literal notranslate"><span class="pre">total_points</span></code></a>()</p></td>
+<td><p>Returns the total number of points.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pose_format.pose_header.PoseHeader.write" title="pose_format.pose_header.PoseHeader.write"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write</span></code></a>(buffer)</p></td>
+<td><p>Writes the pose header to a buffer (BinaryIO).</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="pose_format.pose_header.PoseHeader.bbox">
+<span class="sig-name descname"><span class="pre">bbox</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/pose_header.html#PoseHeader.bbox"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.pose_header.PoseHeader.bbox" title="Permalink to this definition"></a></dt>
+<dd><p>Converts header to bounding boxes (bbox).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>PoseHeader with bounding box information.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#pose_format.pose_header.PoseHeader" title="pose_format.pose_header.PoseHeader">PoseHeader</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pose_format.pose_header.PoseHeader.normalization_info">
+<span class="sig-name descname"><span class="pre">normalization_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p3</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/pose_header.html#PoseHeader.normalization_info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.pose_header.PoseHeader.normalization_info" title="Permalink to this definition"></a></dt>
+<dd><p>Normalizates info for given points.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>p1</strong> (<em>Tuple</em><em>[</em><em>str</em><em>, </em><em>str</em><em>]</em>) – First point.</p></li>
+<li><p><strong>p2</strong> (<em>Tuple</em><em>[</em><em>str</em><em>, </em><em>str</em><em>]</em>) – Second point.</p></li>
+<li><p><strong>p3</strong> (<em>Tuple</em><em>[</em><em>str</em><em>, </em><em>str</em><em>]</em><em>, </em><em>optional</em>) – Third point.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Normalization information for the points.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pose_format.pose_header.PoseNormalizationInfo" title="pose_format.pose_header.PoseNormalizationInfo">PoseNormalizationInfo</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pose_format.pose_header.PoseHeader.read">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">read</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reader</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/pose_header.html#PoseHeader.read"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.pose_header.PoseHeader.read" title="Permalink to this definition"></a></dt>
+<dd><p>Reads pose header data from a reader (BufferReader).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>reader</strong> (<a class="reference internal" href="pose_format.utils.reader.html#pose_format.utils.reader.BufferReader" title="pose_format.utils.reader.BufferReader"><em>BufferReader</em></a>) – Reader object.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An instance of PoseHeader.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pose_format.pose_header.PoseHeader" title="pose_format.pose_header.PoseHeader">PoseHeader</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pose_format.pose_header.PoseHeader.total_points">
+<span class="sig-name descname"><span class="pre">total_points</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/pose_header.html#PoseHeader.total_points"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.pose_header.PoseHeader.total_points" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the total number of points.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Total number of points.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pose_format.pose_header.PoseHeader.write">
+<span class="sig-name descname"><span class="pre">write</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">buffer</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/pose_header.html#PoseHeader.write"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.pose_header.PoseHeader.write" title="Permalink to this definition"></a></dt>
+<dd><p>Writes the pose header to a buffer (BinaryIO).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>buffer</strong> (<em>BinaryIO</em>) – Buffer to write data into.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pose_format.pose_header.PoseHeaderComponent">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pose_format.pose_header.</span></span><span class="sig-name descname"><span class="pre">PoseHeaderComponent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">points</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limbs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colors</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">point_format</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/pose_header.html#PoseHeaderComponent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.pose_header.PoseHeaderComponent" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class for pose header component.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Name of the pose header component.</p></li>
+<li><p><strong>points</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – List of point names.</p></li>
+<li><p><strong>limbs</strong> (<em>List</em><em>[</em><em>Tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>]</em><em>]</em>) – List of limb indices.</p></li>
+<li><p><strong>colors</strong> (<em>List</em><em>[</em><em>Tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>, </em><em>int</em><em>]</em><em>]</em>) – List of RGB colors for each limb.</p></li>
+<li><p><strong>point_format</strong> (<em>str</em>) – Format for the points.</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Limbs and colors should have the same length. The index in the limbs list corresponds to a color in the colors list.</p>
+</div>
+<p><strong>Methods:</strong></p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pose_format.pose_header.PoseHeaderComponent.get_relative_limbs" title="pose_format.pose_header.PoseHeaderComponent.get_relative_limbs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_relative_limbs</span></code></a>()</p></td>
+<td><p>Get relative limbs mapping.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pose_format.pose_header.PoseHeaderComponent.read" title="pose_format.pose_header.PoseHeaderComponent.read"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read</span></code></a>(version, reader)</p></td>
+<td><p>Reads pose header dimensions from reader (BufferReader).</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pose_format.pose_header.PoseHeaderComponent.write" title="pose_format.pose_header.PoseHeaderComponent.write"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write</span></code></a>(buffer)</p></td>
+<td><p>Writes pose header dimensions to a buffer (BinaryIO).</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="pose_format.pose_header.PoseHeaderComponent.get_relative_limbs">
+<span class="sig-name descname"><span class="pre">get_relative_limbs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/pose_header.html#PoseHeaderComponent.get_relative_limbs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.pose_header.PoseHeaderComponent.get_relative_limbs" title="Permalink to this definition"></a></dt>
+<dd><p>Get relative limbs mapping.</p>
+<p>Constructs a mapping from the second point in each limb tuple to its index in the limbs list.
+Then, it attempts to map each first point in the limbs tuple to its corresponding index.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List of relative limb indices or None if the limb does not have a relative mapping.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>List returned is based on the <code class="xref py py-obj docutils literal notranslate"><span class="pre">self.limbs</span></code> of the instance, its structure is expected to be a list of tuples, where each tuple represents a limb with two points.</p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pose_format.pose_header.PoseHeaderComponent.read">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">read</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">version</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reader</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/pose_header.html#PoseHeaderComponent.read"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.pose_header.PoseHeaderComponent.read" title="Permalink to this definition"></a></dt>
+<dd><p>Reads pose header dimensions from reader (BufferReader).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>version</strong> (<em>float</em>) – Version information.</p></li>
+<li><p><strong>reader</strong> (<a class="reference internal" href="pose_format.utils.reader.html#pose_format.utils.reader.BufferReader" title="pose_format.utils.reader.BufferReader"><em>BufferReader</em></a>) – Reader object.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>instance of PoseHeaderDimensions.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pose_format.pose_header.PoseHeaderDimensions" title="pose_format.pose_header.PoseHeaderDimensions">PoseHeaderDimensions</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pose_format.pose_header.PoseHeaderComponent.write">
+<span class="sig-name descname"><span class="pre">write</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">buffer</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/pose_header.html#PoseHeaderComponent.write"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.pose_header.PoseHeaderComponent.write" title="Permalink to this definition"></a></dt>
+<dd><p>Writes pose header dimensions to a buffer (BinaryIO).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>buffer</strong> (<em>BinaryIO</em>) – Buffer to write data info.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If dimension value is out of bounds.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pose_format.pose_header.PoseHeaderDimensions">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pose_format.pose_header.</span></span><span class="sig-name descname"><span class="pre">PoseHeaderDimensions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">depth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/pose_header.html#PoseHeaderDimensions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.pose_header.PoseHeaderDimensions" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Represents width, height, and depth dimensions for a pose header.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>width</strong> (<em>int</em>) – Width of the pose.</p></li>
+<li><p><strong>height</strong> (<em>int</em>) – Height of the pose.</p></li>
+<li><p><strong>depth</strong> (<em>int</em>) – Depth of the pose. Defaults to 0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If any dimension value is out of bounds (0 to 65535).</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dimensions</span> <span class="o">=</span> <span class="n">PoseHeaderDimensions</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">dimensions</span><span class="o">.</span><span class="n">width</span><span class="p">)</span>
+<span class="go">10</span>
+</pre></div>
+</div>
+<p><strong>Methods:</strong></p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pose_format.pose_header.PoseHeaderDimensions.read" title="pose_format.pose_header.PoseHeaderDimensions.read"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read</span></code></a>(version, reader)</p></td>
+<td><p>Reads and returns a PoseHeaderDimensions object from a buffer reader.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pose_format.pose_header.PoseHeaderDimensions.write" title="pose_format.pose_header.PoseHeaderDimensions.write"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write</span></code></a>(buffer)</p></td>
+<td><p>Writes dimensions to a buffer.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="pose_format.pose_header.PoseHeaderDimensions.read">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">read</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">version</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reader</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/pose_header.html#PoseHeaderDimensions.read"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.pose_header.PoseHeaderDimensions.read" title="Permalink to this definition"></a></dt>
+<dd><p>Reads and returns a PoseHeaderDimensions object from a buffer reader.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>version</strong> (<em>float</em>) – Version of the data being read.</p></li>
+<li><p><strong>reader</strong> (<a class="reference internal" href="pose_format.utils.reader.html#pose_format.utils.reader.BufferReader" title="pose_format.utils.reader.BufferReader"><em>BufferReader</em></a>) – The reader</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Instance of PoseHeaderDimensions with its read dimensions (width, height, depth).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pose_format.pose_header.PoseHeaderDimensions" title="pose_format.pose_header.PoseHeaderDimensions">PoseHeaderDimensions</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pose_format.pose_header.PoseHeaderDimensions.write">
+<span class="sig-name descname"><span class="pre">write</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">buffer</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/pose_header.html#PoseHeaderDimensions.write"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.pose_header.PoseHeaderDimensions.write" title="Permalink to this definition"></a></dt>
+<dd><p>Writes dimensions to a buffer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>buffer</strong> (<em>BinaryIO</em>) – Buffer to which dimensions (width, height, depth) will be written.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If any dimension value is out of bounds (0 to 65535).</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pose_format.pose_header.PoseNormalizationInfo">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pose_format.pose_header.</span></span><span class="sig-name descname"><span class="pre">PoseNormalizationInfo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p3</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/pose_header.html#PoseNormalizationInfo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.pose_header.PoseNormalizationInfo" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This class represents is used for normalization info for pose.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>p1</strong> (<em>int</em>) – First pose value.</p></li>
+<li><p><strong>p2</strong> (<em>int</em>) – Second pose value.</p></li>
+<li><p><strong>p3</strong> (<em>int</em><em>, </em><em>optional</em>) – Third pose value. Defaults to None.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Moryossef, Amit and Müller, Mathias.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

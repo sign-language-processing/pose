@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pose_format.utils.siren module &mdash; Pose-Format Toolkit v1.0.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="_static/my.css" type="text/css" />
+      <link rel="stylesheet" href="_static/assets/jsonview.bundle.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sphinx-needs/libs/html/datatables.min.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sphinx-needs/common.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sphinx-needs/layouts.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sphinx-needs/modern.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sphinx-needs/styles.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script src="_static/assets/jsonview.bundle.js"></script>
+        <script src="_static/assets/jsonview_loader.js"></script>
+        <script src="_static/sphinx-needs/libs/html/datatables.min.js"></script>
+        <script src="_static/sphinx-needs/libs/html/datatables_loader.js"></script>
+        <script src="_static/sphinx-needs/libs/html/sphinx_needs_collapse.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="pose_format.utils.pose_converter module" href="pose_format.utils.pose_converter.html" />
+    <link rel="prev" title="pose_format.utils.reader_test module" href="pose_format.utils.reader_test.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Pose-Format Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="readme.html">Pose Format Introduction</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python Code Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pose_format.html">pose_format package</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Additional Material</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="js_docs.html">JavaScript</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="specs_v01.html">specs/v0.1.md</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Pose-Format Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="pose_format.html">pose_format package</a></li>
+          <li class="breadcrumb-item"><a href="pose_format.utils.html">pose_format.utils package</a></li>
+      <li class="breadcrumb-item active">pose_format.utils.siren module</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/rfahrn/pose-master/blob/master//docs/pose_format.utils.siren.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-pose_format.utils.siren">
+<span id="pose-format-utils-siren-module"></span><h1>pose_format.utils.siren module<a class="headerlink" href="#module-pose_format.utils.siren" title="Permalink to this heading"></a></h1>
+<p><strong>Classes:</strong></p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pose_format.utils.siren.PoseDataset" title="pose_format.utils.siren.PoseDataset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PoseDataset</span></code></a>(pose)</p></td>
+<td><p>Dataset for pose</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pose_format.utils.siren.SineLayer" title="pose_format.utils.siren.SineLayer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SineLayer</span></code></a>(in_features, out_features[, bias, ...])</p></td>
+<td><p>A sine activation layer as described in the SIREN paper.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pose_format.utils.siren.Siren" title="pose_format.utils.siren.Siren"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Siren</span></code></a>(in_features, hidden_features, ...[, ...])</p></td>
+<td><p>SIREN network consisting of SineLayers.</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Functions:</strong></p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pose_format.utils.siren.get_pose_siren" title="pose_format.utils.siren.get_pose_siren"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_pose_siren</span></code></a>(pose[, hidden_features, ...])</p></td>
+<td><p>for training: returns a SIREN model for pose data</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pose_format.utils.siren.masked_mse_loss" title="pose_format.utils.siren.masked_mse_loss"><code class="xref py py-obj docutils literal notranslate"><span class="pre">masked_mse_loss</span></code></a>(model_output, ground_truth, ...)</p></td>
+<td><p>for calculating masked mean squared error loss</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py class">
+<dt class="sig sig-object py" id="pose_format.utils.siren.PoseDataset">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pose_format.utils.siren.</span></span><span class="sig-name descname"><span class="pre">PoseDataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pose</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/utils/siren.html#PoseDataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.utils.siren.PoseDataset" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Dataset</span></code></p>
+<p>Dataset for pose</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>pose</strong> (<a class="reference internal" href="pose_format.pose.html#pose_format.pose.Pose" title="pose_format.pose.Pose"><em>Pose</em></a>) – Pose object containing body data &amp; confidence scores</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>Assumes pose data is provided in a specific format with body data &amp; confidence scores.</p></li>
+</ul>
+</div>
+<p><strong>Methods:</strong></p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pose_format.utils.siren.PoseDataset.get_coords" title="pose_format.utils.siren.PoseDataset.get_coords"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_coords</span></code></a>(time, fps)</p></td>
+<td><p>gets coordinates based on time and frames per second (fps)</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="pose_format.utils.siren.PoseDataset.get_coords">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_coords</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fps</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/utils/siren.html#PoseDataset.get_coords"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.utils.siren.PoseDataset.get_coords" title="Permalink to this definition"></a></dt>
+<dd><p>gets coordinates based on time and frames per second (fps)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>time</strong> (<em>float</em>) – Time (duration)</p></li>
+<li><p><strong>fps</strong> (<em>float</em>) – frames per second</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tensor with coordinates</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pose_format.utils.siren.SineLayer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pose_format.utils.siren.</span></span><span class="sig-name descname"><span class="pre">SineLayer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_features</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_features</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bias</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_first</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">omega_0</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/utils/siren.html#SineLayer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.utils.siren.SineLayer" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
+<p>A sine activation layer as described in the SIREN paper.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>in_features</strong> (<em>int</em>) – number of input features.</p></li>
+<li><p><strong>out_features</strong> (<em>int</em>) – number of output features.</p></li>
+<li><p><strong>bias</strong> (<em>bool</em><em>, </em><em>optional</em>) – If set to False, the layer will not learn an additive bias. Default is True.</p></li>
+<li><p><strong>is_first</strong> (<em>bool</em><em>, </em><em>optional</em>) – If it’s the first layer in the network. Default is False.</p></li>
+<li><p><strong>omega_0</strong> (<em>float</em><em>, </em><em>optional</em>) – hyperparameter. Default is 30.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pose_format.utils.siren.SineLayer.omega_0">
+<span class="sig-name descname"><span class="pre">omega_0</span></span><a class="headerlink" href="#pose_format.utils.siren.SineLayer.omega_0" title="Permalink to this definition"></a></dt>
+<dd><p>hyperparameter for controlling the sine function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pose_format.utils.siren.SineLayer.is_first">
+<span class="sig-name descname"><span class="pre">is_first</span></span><a class="headerlink" href="#pose_format.utils.siren.SineLayer.is_first" title="Permalink to this definition"></a></dt>
+<dd><p>Determines how weights are initialized.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>See paper sec. 3.2, final paragraph, and supplement Sec. 1.5 for discussion of omega_0.</p></li>
+<li><p>If <code class="xref py py-obj docutils literal notranslate"><span class="pre">is_first=True</span></code>, omega_0 multiplies the activations before the nonlinearity.</p></li>
+<li><p>If <code class="xref py py-obj docutils literal notranslate"><span class="pre">is_first=False</span></code>, weights are divided by omega_0 to keep magnitude of activations constant.</p></li>
+</ul>
+</div>
+<p><strong>Methods:</strong></p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pose_format.utils.siren.SineLayer.forward" title="pose_format.utils.siren.SineLayer.forward"><code class="xref py py-obj docutils literal notranslate"><span class="pre">forward</span></code></a>(input)</p></td>
+<td><p>forward pass through layer</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pose_format.utils.siren.SineLayer.forward_with_intermediate" title="pose_format.utils.siren.SineLayer.forward_with_intermediate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">forward_with_intermediate</span></code></a>(input)</p></td>
+<td><p>forward pass with intermediate value, before sine act.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pose_format.utils.siren.SineLayer.init_weights" title="pose_format.utils.siren.SineLayer.init_weights"><code class="xref py py-obj docutils literal notranslate"><span class="pre">init_weights</span></code></a>()</p></td>
+<td><p>initializes weights</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Attributes:</strong></p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pose_format.utils.siren.SineLayer.training" title="pose_format.utils.siren.SineLayer.training"><code class="xref py py-obj docutils literal notranslate"><span class="pre">training</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="pose_format.utils.siren.SineLayer.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/utils/siren.html#SineLayer.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.utils.siren.SineLayer.forward" title="Permalink to this definition"></a></dt>
+<dd><p>forward pass through layer</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>input</strong> (<em>torch.Tensor</em>) – input tensor to layer</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Sine “activated” output tensor</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pose_format.utils.siren.SineLayer.forward_with_intermediate">
+<span class="sig-name descname"><span class="pre">forward_with_intermediate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/utils/siren.html#SineLayer.forward_with_intermediate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.utils.siren.SineLayer.forward_with_intermediate" title="Permalink to this definition"></a></dt>
+<dd><p>forward pass with intermediate value, before sine act. For visualization of activation distributions</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>input</strong> (<em>torch.Tensor</em>) – Input tensor to layer</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Sine activated output tensor along with an intermediate tensor</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pose_format.utils.siren.SineLayer.init_weights">
+<span class="sig-name descname"><span class="pre">init_weights</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/utils/siren.html#SineLayer.init_weights"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.utils.siren.SineLayer.init_weights" title="Permalink to this definition"></a></dt>
+<dd><p>initializes weights</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pose_format.utils.siren.SineLayer.training">
+<span class="sig-name descname"><span class="pre">training</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#pose_format.utils.siren.SineLayer.training" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pose_format.utils.siren.Siren">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pose_format.utils.siren.</span></span><span class="sig-name descname"><span class="pre">Siren</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_features</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hidden_features</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hidden_layers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_features</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outermost_linear</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">first_omega_0</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hidden_omega_0</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/utils/siren.html#Siren"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.utils.siren.Siren" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
+<p>SIREN network consisting of SineLayers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>in_features</strong> (<em>int</em>) – number of input features.</p></li>
+<li><p><strong>hidden_features</strong> (<em>int</em>) – number of hidden features.</p></li>
+<li><p><strong>hidden_layers</strong> (<em>int</em>) – number hidden layers.</p></li>
+<li><p><strong>out_features</strong> (<em>int</em>) – number output features.</p></li>
+<li><p><strong>outermost_linear</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, outermost layer is linear. Default- False.</p></li>
+<li><p><strong>first_omega_0</strong> (<em>float</em><em>, </em><em>optional</em>) – Omega_0 for the first layer. The default is 30</p></li>
+<li><p><strong>hidden_omega_0</strong> (<em>float</em><em>, </em><em>optional</em>) – Omega_0 for the hidden layers, default; 30</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>Methods:</strong></p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pose_format.utils.siren.Siren.forward" title="pose_format.utils.siren.Siren.forward"><code class="xref py py-obj docutils literal notranslate"><span class="pre">forward</span></code></a>(coords)</p></td>
+<td><p>forward pass through network</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pose_format.utils.siren.Siren.forward_with_activations" title="pose_format.utils.siren.Siren.forward_with_activations"><code class="xref py py-obj docutils literal notranslate"><span class="pre">forward_with_activations</span></code></a>(coords[, retain_grad])</p></td>
+<td><p>Returns not only model output, but also intermediate activations.</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Attributes:</strong></p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pose_format.utils.siren.Siren.training" title="pose_format.utils.siren.Siren.training"><code class="xref py py-obj docutils literal notranslate"><span class="pre">training</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="pose_format.utils.siren.Siren.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coords</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/utils/siren.html#Siren.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.utils.siren.Siren.forward" title="Permalink to this definition"></a></dt>
+<dd><p>forward pass through network</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>coords</strong> (<em>torch.Tensor</em>) – Input coordinates</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>output (network) and coordinates (input)</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pose_format.utils.siren.Siren.forward_with_activations">
+<span class="sig-name descname"><span class="pre">forward_with_activations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">retain_grad</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/utils/siren.html#Siren.forward_with_activations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.utils.siren.Siren.forward_with_activations" title="Permalink to this definition"></a></dt>
+<dd><p>Returns not only model output, but also intermediate activations.
+Only used for visualizing activations later!</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pose_format.utils.siren.Siren.training">
+<span class="sig-name descname"><span class="pre">training</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#pose_format.utils.siren.Siren.training" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pose_format.utils.siren.get_pose_siren">
+<span class="sig-prename descclassname"><span class="pre">pose_format.utils.siren.</span></span><span class="sig-name descname"><span class="pre">get_pose_siren</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pose</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hidden_features</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">256</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hidden_layers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">total_steps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">learning_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">steps_til_summary</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cuda</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/utils/siren.html#get_pose_siren"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.utils.siren.get_pose_siren" title="Permalink to this definition"></a></dt>
+<dd><p>for training: returns a SIREN model for pose data</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pose</strong> (<a class="reference internal" href="pose_format.pose.html#pose_format.pose.Pose" title="pose_format.pose.Pose"><em>Pose</em></a>) – Pose object with body data &amp; confidence</p></li>
+<li><p><strong>hidden_features</strong> (<em>int</em><em>, </em><em>optional</em>) – hidden features. Default 256.</p></li>
+<li><p><strong>hidden_layers</strong> (<em>int</em><em>, </em><em>optional</em>) – hidden layers, default  4.</p></li>
+<li><p><strong>total_steps</strong> (<em>int</em><em>, </em><em>optional</em>) – total (training) steps, default; 5000.</p></li>
+<li><p><strong>learning_rate</strong> (<em>float</em><em>, </em><em>optional</em>) – Learning rate (optimization) default; 1e-5.</p></li>
+<li><p><strong>batch_size</strong> (<em>int</em><em>, </em><em>optional</em>) – batch size (training) default; 1.</p></li>
+<li><p><strong>steps_til_summary</strong> (<em>int</em><em>, </em><em>optional</em>) – Steps until summary. If None, no summary is printed, default is None</p></li>
+<li><p><strong>cuda</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, training on GPU, default is True</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>prediction function with model output of trained SIREN model</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>function</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pose_format.utils.siren.masked_mse_loss">
+<span class="sig-prename descclassname"><span class="pre">pose_format.utils.siren.</span></span><span class="sig-name descname"><span class="pre">masked_mse_loss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_output</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ground_truth</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">confidence</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/utils/siren.html#masked_mse_loss"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.utils.siren.masked_mse_loss" title="Permalink to this definition"></a></dt>
+<dd><p>for calculating masked mean squared error loss</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model_output</strong> (<em>torch.FloatTensor</em>) – output of model</p></li>
+<li><p><strong>ground_truth</strong> (<em>torch.FloatTensor</em>) – Ground truth values</p></li>
+<li><p><strong>confidence</strong> (<em>torch.FloatTensor</em>) – Confidence scores for pose</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>computed masked mse loss</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="pose_format.utils.reader_test.html" class="btn btn-neutral float-left" title="pose_format.utils.reader_test module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="pose_format.utils.pose_converter.html" class="btn btn-neutral float-right" title="pose_format.utils.pose_converter module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Moryossef, Amit and Müller, Mathias.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

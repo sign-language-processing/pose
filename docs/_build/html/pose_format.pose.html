@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pose_format.pose module &mdash; Pose-Format Toolkit v1.0.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="_static/my.css" type="text/css" />
+      <link rel="stylesheet" href="_static/assets/jsonview.bundle.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sphinx-needs/libs/html/datatables.min.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sphinx-needs/common.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sphinx-needs/layouts.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sphinx-needs/modern.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sphinx-needs/styles.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script src="_static/assets/jsonview.bundle.js"></script>
+        <script src="_static/assets/jsonview_loader.js"></script>
+        <script src="_static/sphinx-needs/libs/html/datatables.min.js"></script>
+        <script src="_static/sphinx-needs/libs/html/datatables_loader.js"></script>
+        <script src="_static/sphinx-needs/libs/html/sphinx_needs_collapse.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Pose-Format Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="readme.html">Pose Format Introduction</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python Code Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pose_format.html">pose_format package</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Additional Material</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="js_docs.html">JavaScript</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="specs_v01.html">specs/v0.1.md</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Pose-Format Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">pose_format.pose module</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/rfahrn/pose-master/blob/master//docs/pose_format.pose.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-pose_format.pose">
+<span id="pose-format-pose-module"></span><h1>pose_format.pose module<a class="headerlink" href="#module-pose_format.pose" title="Permalink to this heading"></a></h1>
+<p><strong>Classes:</strong></p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pose_format.pose.Pose" title="pose_format.pose.Pose"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Pose</span></code></a>(header, body)</p></td>
+<td><p>File IO for '.pose' file format, including the header and body.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py class">
+<dt class="sig sig-object py" id="pose_format.pose.Pose">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pose_format.pose.</span></span><span class="sig-name descname"><span class="pre">Pose</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">header</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">body</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/pose.html#Pose"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.pose.Pose" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>File IO for ‘.pose’ file format, including the header and body.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>header</strong> (<a class="reference internal" href="pose_format.pose_header.html#pose_format.pose_header.PoseHeader" title="pose_format.pose_header.PoseHeader"><em>PoseHeader</em></a>) – Header information for the pose.</p></li>
+<li><p><strong>body</strong> (<a class="reference internal" href="pose_format.pose_body.html#pose_format.pose_body.PoseBody" title="pose_format.pose_body.PoseBody"><em>PoseBody</em></a>) – Body data for the pose.</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>Methods:</strong></p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pose_format.pose.Pose.bbox" title="pose_format.pose.Pose.bbox"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bbox</span></code></a>()</p></td>
+<td><p>Calculates bounding box for Pose.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pose_format.pose.Pose.focus" title="pose_format.pose.Pose.focus"><code class="xref py py-obj docutils literal notranslate"><span class="pre">focus</span></code></a>()</p></td>
+<td><p>Gets the pose to start at (0,0) and have dimensions as big as needed</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pose_format.pose.Pose.frame_dropout_normal" title="pose_format.pose.Pose.frame_dropout_normal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">frame_dropout_normal</span></code></a>([dropout_mean, dropout_std])</p></td>
+<td><p>Normal frame dropout on Pose.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pose_format.pose.Pose.frame_dropout_uniform" title="pose_format.pose.Pose.frame_dropout_uniform"><code class="xref py py-obj docutils literal notranslate"><span class="pre">frame_dropout_uniform</span></code></a>([dropout_min, dropout_max])</p></td>
+<td><p>Perform uniform frame dropout on Pose</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pose_format.pose.Pose.get_components" title="pose_format.pose.Pose.get_components"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_components</span></code></a>(components[, points])</p></td>
+<td><p>get pose components based on criteria.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pose_format.pose.Pose.normalize" title="pose_format.pose.Pose.normalize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">normalize</span></code></a>(info[, scale_factor])</p></td>
+<td><p>Normalize the points to a fixed distance between two particular points.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pose_format.pose.Pose.normalize_distribution" title="pose_format.pose.Pose.normalize_distribution"><code class="xref py py-obj docutils literal notranslate"><span class="pre">normalize_distribution</span></code></a>([mu, std, axis])</p></td>
+<td><p>Normalize points distribution.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pose_format.pose.Pose.read" title="pose_format.pose.Pose.read"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read</span></code></a>(buffer[, pose_body])</p></td>
+<td><p>Read Pose object from buffer.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pose_format.pose.Pose.unnormalize_distribution" title="pose_format.pose.Pose.unnormalize_distribution"><code class="xref py py-obj docutils literal notranslate"><span class="pre">unnormalize_distribution</span></code></a>(mu, std)</p></td>
+<td><p>Given mean, standard deviationn unnormalization applied to the pose points distribution.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pose_format.pose.Pose.write" title="pose_format.pose.Pose.write"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write</span></code></a>(buffer)</p></td>
+<td><p>Write Pose object to buffer.</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Attributes:</strong></p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pose_format.pose.Pose.pass_through_methods" title="pose_format.pose.Pose.pass_through_methods"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pass_through_methods</span></code></a></p></td>
+<td><p>A set of method names which define actions that can be applied to the pose data.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="pose_format.pose.Pose.bbox">
+<span class="sig-name descname"><span class="pre">bbox</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/pose.html#Pose.bbox"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.pose.Pose.bbox" title="Permalink to this definition"></a></dt>
+<dd><p>Calculates bounding box for Pose.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Pose object representing bounding box (bbox).</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#pose_format.pose.Pose" title="pose_format.pose.Pose">Pose</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pose_format.pose.Pose.focus">
+<span class="sig-name descname"><span class="pre">focus</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/pose.html#Pose.focus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.pose.Pose.focus" title="Permalink to this definition"></a></dt>
+<dd><p>Gets the pose to start at (0,0) and have dimensions as big as needed</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pose_format.pose.Pose.frame_dropout_normal">
+<span class="sig-name descname"><span class="pre">frame_dropout_normal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dropout_mean</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout_std</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/pose.html#Pose.frame_dropout_normal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.pose.Pose.frame_dropout_normal" title="Permalink to this definition"></a></dt>
+<dd><p>Normal frame dropout on Pose.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dropout_mean</strong> (<em>float</em><em>, </em><em>optional</em>) – Mean value for dropout. Defaults to 0.5.</p></li>
+<li><p><strong>dropout_std</strong> (<em>float</em><em>, </em><em>optional</em>) – Standard deviation for dropout. Defaults to 0.1.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>a tuple with Pose of dropped frames and a list of selected indexes.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pose_format.pose.Pose.frame_dropout_uniform">
+<span class="sig-name descname"><span class="pre">frame_dropout_uniform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dropout_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/pose.html#Pose.frame_dropout_uniform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.pose.Pose.frame_dropout_uniform" title="Permalink to this definition"></a></dt>
+<dd><p>Perform uniform frame dropout on Pose</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dropout_min</strong> (<em>float</em><em>, </em><em>optional</em>) – Minimum dropout value. Defaults to 0.2.</p></li>
+<li><p><strong>dropout_max</strong> (<em>float</em><em>, </em><em>optional</em>) – Maximum dropout value. Defaults to 1.0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>a tuple containing Pose with dropped frames and a list of selected indexes.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pose_format.pose.Pose.get_components">
+<span class="sig-name descname"><span class="pre">get_components</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">components</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">points</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/pose.html#Pose.get_components"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.pose.Pose.get_components" title="Permalink to this definition"></a></dt>
+<dd><p>get pose components based on criteria.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>components</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – List of component names to get.</p></li>
+<li><p><strong>points</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>List</em><em>[</em><em>str</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – Mapping of component names to lists of point names to get.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Pose object containing new components</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pose_format.pose.Pose" title="pose_format.pose.Pose">Pose</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pose_format.pose.Pose.normalize">
+<span class="sig-name descname"><span class="pre">normalize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_factor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/pose.html#Pose.normalize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.pose.Pose.normalize" title="Permalink to this definition"></a></dt>
+<dd><p>Normalize the points to a fixed distance between two particular points.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>info</strong> (<a class="reference internal" href="pose_format.pose_header.html#pose_format.pose_header.PoseNormalizationInfo" title="pose_format.pose_header.PoseNormalizationInfo"><em>PoseNormalizationInfo</em></a>) – Information for normalization.</p></li>
+<li><p><strong>scale_factor</strong> (<em>float</em><em>, </em><em>optional</em>) – Scaling factor. Defaults to 1.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The normalized Pose object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pose_format.pose.Pose" title="pose_format.pose.Pose">Pose</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pose_format.pose.Pose.normalize_distribution">
+<span class="sig-name descname"><span class="pre">normalize_distribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">std</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0,</span> <span class="pre">1)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/pose.html#Pose.normalize_distribution"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.pose.Pose.normalize_distribution" title="Permalink to this definition"></a></dt>
+<dd><p>Normalize points distribution.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mu</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Mean values for normalization. If None, it will be computed.</p></li>
+<li><p><strong>std</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Standard deviation values for normalization. If None, it will be computed.</p></li>
+<li><p><strong>axis</strong> (<em>tuple</em><em> of </em><em>int</em><em>, </em><em>optional</em>) – Axes for mean and std computation. Defaults to (0, 1).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Calculated mean and standard deviation.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple of np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pose_format.pose.Pose.pass_through_methods">
+<span class="sig-name descname"><span class="pre">pass_through_methods</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'augment2d',</span> <span class="pre">'flip',</span> <span class="pre">'interpolate',</span> <span class="pre">'slice_step',</span> <span class="pre">'tensorflow',</span> <span class="pre">'torch'}</span></em><a class="headerlink" href="#pose_format.pose.Pose.pass_through_methods" title="Permalink to this definition"></a></dt>
+<dd><p>A set of method names which define actions that can be applied to the pose data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>augment2d</strong> (<em>str</em>) – Represents a method to augment 2D points.</p></li>
+<li><p><strong>flip</strong> (<em>str</em>) – Represents a method to flip the pose on an axis.</p></li>
+<li><p><strong>interpolate</strong> (<em>str</em>) – Represents a method to interpolate missing pose points.</p></li>
+<li><p><strong>torch</strong> (<em>str</em>) – Represents a method to convert the body data to torch format.</p></li>
+<li><p><strong>tensorflow</strong> (<em>str</em>) – Represents a method to convert the body data to TensorFlow format.</p></li>
+<li><p><strong>slice_step</strong> (<em>str</em>) – Represents a method to step through the data.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pose_format.pose.Pose.read">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">read</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">buffer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pose_body=&lt;class</span> <span class="pre">'pose_format.numpy.pose_body.NumPyPoseBody'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">**kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/pose.html#Pose.read"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.pose.Pose.read" title="Permalink to this definition"></a></dt>
+<dd><p>Read Pose object from buffer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>buffer</strong> (<em>bytes</em>) – The input buffer.</p></li>
+<li><p><strong>pose_body</strong> (<em>Type</em><em>[</em><a class="reference internal" href="pose_format.pose_body.html#pose_format.pose_body.PoseBody" title="pose_format.pose_body.PoseBody"><em>PoseBody</em></a><em>]</em><em>, </em><em>optional</em>) – The type of pose body to be read. Defaults to NumPyPoseBody.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Pose object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pose_format.pose.Pose" title="pose_format.pose.Pose">Pose</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pose_format.pose.Pose.unnormalize_distribution">
+<span class="sig-name descname"><span class="pre">unnormalize_distribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mu</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">std</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/pose.html#Pose.unnormalize_distribution"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.pose.Pose.unnormalize_distribution" title="Permalink to this definition"></a></dt>
+<dd><p>Given mean, standard deviationn unnormalization applied to the pose points distribution.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mu</strong> (<em>np.ndarray</em>) – The mean values used for normalization.</p></li>
+<li><p><strong>std</strong> (<em>np.ndarray</em>) – The standard deviation values used for normalization.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pose_format.pose.Pose.write">
+<span class="sig-name descname"><span class="pre">write</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">buffer</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/pose.html#Pose.write"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.pose.Pose.write" title="Permalink to this definition"></a></dt>
+<dd><p>Write Pose object to buffer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>buffer</strong> (<em>BinaryIO</em>) – buffer</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Moryossef, Amit and Müller, Mathias.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Examples &mdash; Pose-Format Toolkit v1.0.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="_static/my.css" type="text/css" />
+      <link rel="stylesheet" href="_static/assets/jsonview.bundle.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sphinx-needs/libs/html/datatables.min.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sphinx-needs/common.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sphinx-needs/layouts.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sphinx-needs/modern.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sphinx-needs/styles.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script src="_static/assets/jsonview.bundle.js"></script>
+        <script src="_static/assets/jsonview_loader.js"></script>
+        <script src="_static/sphinx-needs/libs/html/datatables.min.js"></script>
+        <script src="_static/sphinx-needs/libs/html/datatables_loader.js"></script>
+        <script src="_static/sphinx-needs/libs/html/sphinx_needs_collapse.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="specs/v0.1.md" href="specs_v01.html" />
+    <link rel="prev" title="src" href="pose_viewer_src.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Pose-Format Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="readme.html">Pose Format Introduction</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python Code Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pose_format.html">pose_format package</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Additional Material</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="js_docs.html">JavaScript</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#pose-format-conversion-with-sirens">Pose Format Conversion with Sirens</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#step-by-step-guide">Step-by-step Guide:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#overview-of-pose-to-siren-to-pose-py">Overview of <code class="docutils literal notranslate"><span class="pre">pose_to_siren_to_pose.py</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="specs_v01.html">specs/v0.1.md</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Pose-Format Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Examples</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/rfahrn/pose-master/blob/master//docs/examples.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="examples">
+<h1>Examples<a class="headerlink" href="#examples" title="Permalink to this heading"></a></h1>
+<section id="pose-format-conversion-with-sirens">
+<h2>Pose Format Conversion with Sirens<a class="headerlink" href="#pose-format-conversion-with-sirens" title="Permalink to this heading"></a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">pose_to_siren_to_pose.py</span></code> script shows us how to change a 3D pose using something called a Siren neural network.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The function follows these steps:</p>
+<ol class="arabic simple">
+<li><p>Fills missing data in the body with zeros.</p></li>
+<li><p>Normalizes the pose distribution.</p></li>
+<li><p>Converts the pose using the Siren neural network.</p></li>
+<li><p>Constructs the new Pose with the predicted data.</p></li>
+<li><p>Unnormalizes the pose distribution.</p></li>
+</ol>
+<p>Also:  Before you start, ensure you have a <a class="reference internal" href="pose_format.pose.html#module-pose_format.pose" title="pose_format.pose"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pose</span></code></a> file/ path. This is the standardized format that stores the 3D pose information. If you don’t have one, you might either need to obtain it from a relevant dataset or convert your existing pose data into this format.</p>
+</div>
+<section id="step-by-step-guide">
+<h3>Step-by-step Guide:<a class="headerlink" href="#step-by-step-guide" title="Permalink to this heading"></a></h3>
+<ol class="arabic">
+<li><p><strong>Preparation</strong></p>
+<blockquote>
+<div><p>Begin by importing the necessary modules:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">ma</span>
+<span class="kn">import</span> <span class="nn">pose_format.utils.siren</span> <span class="k">as</span> <span class="nn">siren</span>
+<span class="kn">from</span> <span class="nn">pose_format</span> <span class="kn">import</span> <span class="n">Pose</span>
+<span class="kn">from</span> <span class="nn">pose_format.numpy</span> <span class="kn">import</span> <span class="n">NumPyPoseBody</span>
+<span class="kn">from</span> <span class="nn">pose_format.pose_visualizer</span> <span class="kn">import</span> <span class="n">PoseVisualizer</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p><strong>Define the Conversion Function</strong></p>
+<blockquote>
+<div><p>The function <code class="xref py py-obj docutils literal notranslate"><span class="pre">pose_to_siren_to_pose</span></code> is used to perform the conversion. An you find the overview of the whole function <a class="reference internal" href="#overview"><span class="std std-ref">Overview of pose_to_siren_to_pose.py</span></a></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">pose_to_siren_to_pose</span><span class="p">(</span><span class="n">p</span><span class="p">:</span> <span class="n">Pose</span><span class="p">,</span> <span class="n">fps</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Pose</span><span class="p">:</span>
+<span class="sd">&quot;&quot;&quot;Converts a given Pose object to its Siren representation and back to Pose.&quot;&quot;&quot;</span>
+
+    <span class="c1"># Fills missing values with 0&#39;s</span>
+    <span class="n">p</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">zero_filled</span><span class="p">()</span>
+
+    <span class="c1"># Noralizes</span>
+    <span class="n">mu</span><span class="p">,</span> <span class="n">std</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">normalize_distribution</span><span class="p">()</span>
+
+    <span class="c1"># Use siren net</span>
+    <span class="n">net</span> <span class="o">=</span> <span class="n">siren</span><span class="o">.</span><span class="n">get_pose_siren</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">total_steps</span><span class="o">=</span><span class="mi">3000</span><span class="p">,</span> <span class="n">steps_til_summary</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span> <span class="n">cuda</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">new_fps</span> <span class="o">=</span> <span class="n">fps</span> <span class="k">if</span> <span class="n">fps</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">p</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">fps</span>
+    <span class="n">coords</span> <span class="o">=</span> <span class="n">siren</span><span class="o">.</span><span class="n">PoseDataset</span><span class="o">.</span><span class="n">get_coords</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">data</span><span class="p">)</span> <span class="o">/</span> <span class="n">p</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">fps</span><span class="p">,</span> <span class="n">fps</span><span class="o">=</span><span class="n">new_fps</span><span class="p">)</span>
+
+    <span class="c1"># Get predicitons of new Pose data</span>
+    <span class="n">pred</span> <span class="o">=</span> <span class="n">net</span><span class="p">(</span><span class="n">coords</span><span class="p">)</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+
+    <span class="c1"># Construct new Body out of predcitions</span>
+    <span class="n">pose_body</span> <span class="o">=</span> <span class="n">NumPyPoseBody</span><span class="p">(</span><span class="n">fps</span><span class="o">=</span><span class="n">new_fps</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">ma</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">pred</span><span class="p">),</span> <span class="n">confidence</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="nb">tuple</span><span class="p">(</span><span class="n">pred</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="mi">3</span><span class="p">])))</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">Pose</span><span class="p">(</span><span class="n">header</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">header</span><span class="p">,</span> <span class="n">body</span><span class="o">=</span><span class="n">pose_body</span><span class="p">)</span>
+
+    <span class="c1"># Revert normalization and give back the pose instance</span>
+    <span class="n">p</span><span class="o">.</span><span class="n">unnormalize_distribution</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">std</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">p</span>
+</pre></div>
+</div>
+<p>The function does the following operations:</p>
+<ul class="simple">
+<li><p>Fills missing data in the pose body with zeros.</p></li>
+<li><p>Normalizes the pose distribution.</p></li>
+<li><p>Uses the Siren neural network to transform the pose.</p></li>
+<li><p>Constructs a new Pose with the predicted data.</p></li>
+<li><p>Reverts the normalization on the pose distribution.</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p><strong>Usage</strong></p>
+<blockquote>
+<div><p>After defining the function, you can use it in your main script:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+ <span class="n">pose_path</span> <span class="o">=</span> <span class="s2">&quot;/home/nlp/amit/PhD/PoseFormat/sample-data/1.pose&quot;</span>  <span class="c1"># your own file path to a `.pose` file</span>
+
+ <span class="n">buffer</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">pose_path</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+ <span class="n">p</span> <span class="o">=</span> <span class="n">Pose</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">buffer</span><span class="p">)</span>
+ <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Poses loaded&quot;</span><span class="p">)</span>
+
+ <span class="n">p</span> <span class="o">=</span> <span class="n">pose_to_siren_to_pose</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+
+ <span class="n">info</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">normalization_info</span><span class="p">(</span>
+     <span class="n">p1</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;pose_keypoints_2d&quot;</span><span class="p">,</span> <span class="s2">&quot;RShoulder&quot;</span><span class="p">),</span>
+     <span class="n">p2</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;pose_keypoints_2d&quot;</span><span class="p">,</span> <span class="s2">&quot;LShoulder&quot;</span><span class="p">)</span>
+ <span class="p">)</span>
+ <span class="n">p</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="n">info</span><span class="p">,</span> <span class="n">scale_factor</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
+ <span class="n">p</span><span class="o">.</span><span class="n">focus</span><span class="p">()</span>
+
+ <span class="n">v</span> <span class="o">=</span> <span class="n">PoseVisualizer</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+ <span class="n">v</span><span class="o">.</span><span class="n">save_video</span><span class="p">(</span><span class="s2">&quot;reconstructed.mp4&quot;</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">max_frames</span><span class="o">=</span><span class="mi">3000</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>The main script performs these tasks:</p>
+<ul class="simple">
+<li><p>Reads the pose data from a file.</p></li>
+<li><p>Applies the <code class="docutils literal notranslate"><span class="pre">pose_to_siren_to_pose</span></code> function to the read pose.</p></li>
+<li><p>Normalizes and focuses the pose.</p></li>
+<li><p>Visualizes the converted pose using the <code class="docutils literal notranslate"><span class="pre">PoseVisualizer</span></code>.</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p><strong>Execution</strong></p>
+<blockquote>
+<div><p>To run the script:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>python<span class="w"> </span>pose_format_converter.py
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+</ol>
+<p>The <code class="docutils literal notranslate"><span class="pre">pose_format</span></code> combined with Siren neural networks is great to transform and work with 3D pose data.
+By understanding and using the functions and methods provided in this script, you will be able to understand better how to manipulate and visualize 3D poses to suit your own requirements.</p>
+</section>
+<section id="overview-of-pose-to-siren-to-pose-py">
+<span id="overview"></span><h3>Overview of <code class="docutils literal notranslate"><span class="pre">pose_to_siren_to_pose.py</span></code><a class="headerlink" href="#overview-of-pose-to-siren-to-pose-py" title="Permalink to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos"> 2</span><span class="sd">pose_format_converter</span>
+<span class="linenos"> 3</span><span class="sd">---------------------</span>
+<span class="linenos"> 4</span><span class="sd">A utility to convert poses using Siren neural networks and visualize the results.</span>
+<span class="linenos"> 5</span>
+<span class="linenos"> 6</span><span class="sd">Modules:</span>
+<span class="linenos"> 7</span><span class="sd">- numpy</span>
+<span class="linenos"> 8</span><span class="sd">- pose_format</span>
+<span class="linenos"> 9</span><span class="sd">- pose_format.utils.siren</span>
+<span class="linenos">10</span><span class="sd">- pose_format.numpy</span>
+<span class="linenos">11</span><span class="sd">- pose_format.pose_visualizer</span>
+<span class="linenos">12</span>
+<span class="linenos">13</span><span class="sd">Functions:</span>
+<span class="linenos">14</span><span class="sd">- pose_to_siren_to_pose(p: Pose, fps=None) -&gt; Pose</span>
+<span class="linenos">15</span>
+<span class="linenos">16</span><span class="sd">Example usage:</span>
+<span class="linenos">17</span><span class="sd">$ python pose_format_converter.py</span>
+<span class="linenos">18</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">19</span>
+<span class="linenos">20</span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="linenos">21</span><span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">ma</span>
+<span class="linenos">22</span><span class="kn">import</span> <span class="nn">pose_format.utils.siren</span> <span class="k">as</span> <span class="nn">siren</span>
+<span class="linenos">23</span><span class="kn">from</span> <span class="nn">pose_format</span> <span class="kn">import</span> <span class="n">Pose</span>
+<span class="linenos">24</span><span class="kn">from</span> <span class="nn">pose_format.numpy</span> <span class="kn">import</span> <span class="n">NumPyPoseBody</span>
+<span class="linenos">25</span><span class="kn">from</span> <span class="nn">pose_format.pose_visualizer</span> <span class="kn">import</span> <span class="n">PoseVisualizer</span>
+<span class="linenos">26</span>
+<span class="linenos">27</span><span class="k">def</span> <span class="nf">pose_to_siren_to_pose</span><span class="p">(</span><span class="n">p</span><span class="p">:</span> <span class="n">Pose</span><span class="p">,</span> <span class="n">fps</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Pose</span><span class="p">:</span>
+<span class="linenos">28</span><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">29</span><span class="sd">    Converts a given Pose object to its Siren representation and back to Pose.</span>
+<span class="linenos">30</span>
+<span class="linenos">31</span><span class="sd">    Parameters</span>
+<span class="linenos">32</span><span class="sd">    ----------</span>
+<span class="linenos">33</span><span class="sd">    p : Pose</span>
+<span class="linenos">34</span><span class="sd">        Input pose to be converted.</span>
+<span class="linenos">35</span><span class="sd">    fps : int, optional</span>
+<span class="linenos">36</span><span class="sd">        Frames per second for the Siren representation. If None, uses the fps of the input Pose.</span>
+<span class="linenos">37</span>
+<span class="linenos">38</span><span class="sd">    Returns</span>
+<span class="linenos">39</span><span class="sd">    -------</span>
+<span class="linenos">40</span><span class="sd">    Pose</span>
+<span class="linenos">41</span><span class="sd">        The Pose representation after converting it through the Siren neural network.</span>
+<span class="linenos">42</span>
+<span class="linenos">43</span><span class="sd">    &quot;&quot;&quot;</span>
+<span class="linenos">44</span>    <span class="n">p</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">zero_filled</span><span class="p">()</span>
+<span class="linenos">45</span>    <span class="n">mu</span><span class="p">,</span> <span class="n">std</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">normalize_distribution</span><span class="p">()</span>
+<span class="linenos">46</span>
+<span class="linenos">47</span>    <span class="n">net</span> <span class="o">=</span> <span class="n">siren</span><span class="o">.</span><span class="n">get_pose_siren</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">total_steps</span><span class="o">=</span><span class="mi">3000</span><span class="p">,</span> <span class="n">steps_til_summary</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span> <span class="n">cuda</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">48</span>
+<span class="linenos">49</span>    <span class="n">new_fps</span> <span class="o">=</span> <span class="n">fps</span> <span class="k">if</span> <span class="n">fps</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">p</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">fps</span>
+<span class="linenos">50</span>    <span class="n">coords</span> <span class="o">=</span> <span class="n">siren</span><span class="o">.</span><span class="n">PoseDataset</span><span class="o">.</span><span class="n">get_coords</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">data</span><span class="p">)</span> <span class="o">/</span> <span class="n">p</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">fps</span><span class="p">,</span> <span class="n">fps</span><span class="o">=</span><span class="n">new_fps</span><span class="p">)</span>
+<span class="linenos">51</span>    <span class="n">pred</span> <span class="o">=</span> <span class="n">net</span><span class="p">(</span><span class="n">coords</span><span class="p">)</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+<span class="linenos">52</span>
+<span class="linenos">53</span>    <span class="n">pose_body</span> <span class="o">=</span> <span class="n">NumPyPoseBody</span><span class="p">(</span><span class="n">fps</span><span class="o">=</span><span class="n">new_fps</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">ma</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">pred</span><span class="p">),</span> <span class="n">confidence</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="nb">tuple</span><span class="p">(</span><span class="n">pred</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="mi">3</span><span class="p">])))</span>
+<span class="linenos">54</span>    <span class="n">p</span> <span class="o">=</span> <span class="n">Pose</span><span class="p">(</span><span class="n">header</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">header</span><span class="p">,</span> <span class="n">body</span><span class="o">=</span><span class="n">pose_body</span><span class="p">)</span>
+<span class="linenos">55</span>    <span class="n">p</span><span class="o">.</span><span class="n">unnormalize_distribution</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">std</span><span class="p">)</span>
+<span class="linenos">56</span>    <span class="k">return</span> <span class="n">p</span>
+<span class="linenos">57</span>
+<span class="linenos">58</span><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+<span class="linenos">59</span>    <span class="c1"># Example usage of the pose_to_siren_to_pose function.</span>
+<span class="linenos">60</span>    <span class="n">pose_path</span> <span class="o">=</span> <span class="s2">&quot;/home/nlp/amit/PhD/PoseFormat/sample-data/1.pose&quot;</span>
+<span class="linenos">61</span>
+<span class="linenos">62</span>    <span class="n">buffer</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">pose_path</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+<span class="linenos">63</span>    <span class="n">p</span> <span class="o">=</span> <span class="n">Pose</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">buffer</span><span class="p">)</span>
+<span class="linenos">64</span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Poses loaded&quot;</span><span class="p">)</span>
+<span class="linenos">65</span>
+<span class="linenos">66</span>    <span class="n">p</span> <span class="o">=</span> <span class="n">pose_to_siren_to_pose</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+<span class="linenos">67</span>
+<span class="linenos">68</span>    <span class="n">info</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">normalization_info</span><span class="p">(</span>
+<span class="linenos">69</span>        <span class="n">p1</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;pose_keypoints_2d&quot;</span><span class="p">,</span> <span class="s2">&quot;RShoulder&quot;</span><span class="p">),</span>
+<span class="linenos">70</span>        <span class="n">p2</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;pose_keypoints_2d&quot;</span><span class="p">,</span> <span class="s2">&quot;LShoulder&quot;</span><span class="p">)</span>
+<span class="linenos">71</span>    <span class="p">)</span>
+<span class="linenos">72</span>    <span class="n">p</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="n">info</span><span class="p">,</span> <span class="n">scale_factor</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
+<span class="linenos">73</span>    <span class="n">p</span><span class="o">.</span><span class="n">focus</span><span class="p">()</span>
+<span class="linenos">74</span>
+<span class="linenos">75</span>    <span class="n">v</span> <span class="o">=</span> <span class="n">PoseVisualizer</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+<span class="linenos">76</span>    <span class="n">v</span><span class="o">.</span><span class="n">save_video</span><span class="p">(</span><span class="s2">&quot;reconstructed.mp4&quot;</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">max_frames</span><span class="o">=</span><span class="mi">3000</span><span class="p">))</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="pose_viewer_src.html" class="btn btn-neutral float-left" title="src" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="specs_v01.html" class="btn btn-neutral float-right" title="specs/v0.1.md" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Moryossef, Amit and Müller, Mathias.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

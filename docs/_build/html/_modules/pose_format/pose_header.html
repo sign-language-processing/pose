@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pose_format.pose_header &mdash; Pose-Format Toolkit v1.0.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/my.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/assets/jsonview.bundle.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sphinx-needs/libs/html/datatables.min.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sphinx-needs/common.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sphinx-needs/layouts.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sphinx-needs/modern.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sphinx-needs/styles.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/assets/jsonview.bundle.js"></script>
+        <script src="../../_static/assets/jsonview_loader.js"></script>
+        <script src="../../_static/sphinx-needs/libs/html/datatables.min.js"></script>
+        <script src="../../_static/sphinx-needs/libs/html/datatables_loader.js"></script>
+        <script src="../../_static/sphinx-needs/libs/html/sphinx_needs_collapse.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Pose-Format Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html">Pose Format Introduction</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python Code Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">Pose Format Organization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../pose_format.html">pose_format package</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Additional Material</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../js_docs.html">JavaScript</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../specs_v01.html">specs/v0.1.md</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Pose-Format Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">pose_format.pose_header</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pose_format.pose_header</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">struct</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">BinaryIO</span>
+
+<span class="kn">import</span> <span class="nn">math</span>
+
+<span class="kn">from</span> <span class="nn">.utils.reader</span> <span class="kn">import</span> <span class="n">BufferReader</span><span class="p">,</span> <span class="n">ConstStructs</span>
+
+<span class="n">VERSION</span> <span class="o">=</span> <span class="mf">0.1</span>
+
+
+<div class="viewcode-block" id="PoseNormalizationInfo"><a class="viewcode-back" href="../../pose_format.pose_header.html#pose_format.pose_header.PoseNormalizationInfo">[docs]</a><span class="k">class</span> <span class="nc">PoseNormalizationInfo</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; This class represents is used for normalization info for pose.</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        p1 : int</span>
+<span class="sd">            First pose value.</span>
+<span class="sd">        p2 : int</span>
+<span class="sd">            Second pose value.</span>
+<span class="sd">        p3 : int, optional</span>
+<span class="sd">            Third pose value. Defaults to None.</span>
+<span class="sd">        </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p1</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">p2</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">p3</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize a PoseNormalizationInfo instance.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p1</span> <span class="o">=</span> <span class="n">p1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p2</span> <span class="o">=</span> <span class="n">p2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p3</span> <span class="o">=</span> <span class="n">p3</span></div>
+
+
+<div class="viewcode-block" id="PoseHeaderComponent"><a class="viewcode-back" href="../../pose_format.pose_header.html#pose_format.pose_header.PoseHeaderComponent">[docs]</a><span class="k">class</span> <span class="nc">PoseHeaderComponent</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class for pose header component.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name : str</span>
+<span class="sd">        Name of the pose header component.</span>
+<span class="sd">    points : List[str]</span>
+<span class="sd">        List of point names.</span>
+<span class="sd">    limbs : List[Tuple[int, int]]</span>
+<span class="sd">        List of limb indices.</span>
+<span class="sd">    colors : List[Tuple[int, int, int]]</span>
+<span class="sd">        List of RGB colors for each limb.</span>
+<span class="sd">    point_format : str</span>
+<span class="sd">        Format for the points.</span>
+
+<span class="sd">    Note</span>
+<span class="sd">    ----</span>
+<span class="sd">        Limbs and colors should have the same length. The index in the limbs list corresponds to a color in the colors list.</span>
+<span class="sd">    </span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+        
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                 <span class="n">points</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+                 <span class="n">limbs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]],</span>
+                 <span class="n">colors</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]],</span>
+                 <span class="n">point_format</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes PoseHeadComponent</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">points</span> <span class="o">=</span> <span class="n">points</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">limbs</span> <span class="o">=</span> <span class="n">limbs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">colors</span> <span class="o">=</span> <span class="n">colors</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="n">point_format</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">relative_limbs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_relative_limbs</span><span class="p">()</span>
+
+<div class="viewcode-block" id="PoseHeaderComponent.read"><a class="viewcode-back" href="../../pose_format.pose_header.html#pose_format.pose_header.PoseHeaderComponent.read">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="n">version</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">reader</span><span class="p">:</span> <span class="n">BufferReader</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reads pose header dimensions from reader (BufferReader).</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        version : float</span>
+<span class="sd">            Version information.</span>
+<span class="sd">        reader : BufferReader</span>
+<span class="sd">            Reader object.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        PoseHeaderDimensions</span>
+<span class="sd">            instance of PoseHeaderDimensions.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">unpack_str</span><span class="p">()</span>
+        <span class="n">point_format</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">unpack_str</span><span class="p">()</span>
+        <span class="n">_points</span><span class="p">,</span> <span class="n">_limbs</span><span class="p">,</span> <span class="n">_colors</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">ConstStructs</span><span class="o">.</span><span class="n">triple_ushort</span><span class="p">)</span>
+        <span class="n">points</span> <span class="o">=</span> <span class="p">[</span><span class="n">reader</span><span class="o">.</span><span class="n">unpack_str</span><span class="p">()</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">_points</span><span class="p">)]</span>
+        <span class="n">limbs</span> <span class="o">=</span> <span class="p">[</span><span class="n">reader</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">ConstStructs</span><span class="o">.</span><span class="n">double_ushort</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">_limbs</span><span class="p">)]</span>
+        <span class="n">colors</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">unpack_numpy</span><span class="p">(</span><span class="n">ConstStructs</span><span class="o">.</span><span class="n">ushort</span><span class="p">,</span> <span class="p">(</span><span class="n">_colors</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">PoseHeaderComponent</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">points</span><span class="p">,</span> <span class="n">limbs</span><span class="p">,</span> <span class="n">colors</span><span class="p">,</span> <span class="n">point_format</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_write_str</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">buffer</span><span class="p">:</span> <span class="n">BinaryIO</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">buffer</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s2">&quot;&lt;H</span><span class="si">%d</span><span class="s2">s&quot;</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">),</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s1">&#39;utf8&#39;</span><span class="p">)))</span>
+
+<div class="viewcode-block" id="PoseHeaderComponent.write"><a class="viewcode-back" href="../../pose_format.pose_header.html#pose_format.pose_header.PoseHeaderComponent.write">[docs]</a>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">buffer</span><span class="p">:</span> <span class="n">BinaryIO</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Writes pose header dimensions to a buffer (BinaryIO).</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        buffer : BinaryIO</span>
+<span class="sd">            Buffer to write data info.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If dimension value is out of bounds.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_write_str</span><span class="p">(</span><span class="n">buffer</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>  <span class="c1"># Component Name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_write_str</span><span class="p">(</span><span class="n">buffer</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="p">)</span>  <span class="c1"># Point Format</span>
+
+        <span class="c1"># Lengths of points, limbs, and colors</span>
+        <span class="n">buffer</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">ConstStructs</span><span class="o">.</span><span class="n">triple_ushort</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">points</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">limbs</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">colors</span><span class="p">)))</span>
+
+        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">points</span><span class="p">:</span>  <span class="c1"># Names of Points</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_write_str</span><span class="p">(</span><span class="n">buffer</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">limbs</span><span class="p">:</span>  <span class="c1"># Indexes of Limbs</span>
+            <span class="n">buffer</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">ConstStructs</span><span class="o">.</span><span class="n">double_ushort</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">))</span>
+
+        <span class="k">for</span> <span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">colors</span><span class="p">:</span>  <span class="c1"># RGB Colors</span>
+            <span class="n">buffer</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">ConstStructs</span><span class="o">.</span><span class="n">triple_ushort</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">b</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="PoseHeaderComponent.get_relative_limbs"><a class="viewcode-back" href="../../pose_format.pose_header.html#pose_format.pose_header.PoseHeaderComponent.get_relative_limbs">[docs]</a>    <span class="k">def</span> <span class="nf">get_relative_limbs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get relative limbs mapping.</span>
+
+<span class="sd">        Constructs a mapping from the second point in each limb tuple to its index in the limbs list. </span>
+<span class="sd">        Then, it attempts to map each first point in the limbs tuple to its corresponding index.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list</span>
+<span class="sd">            List of relative limb indices or None if the limb does not have a relative mapping.</span>
+
+<span class="sd">        Note</span>
+<span class="sd">        -----</span>
+<span class="sd">        List returned is based on the `self.limbs` of the instance, its structure is expected to be a list of tuples, where each tuple represents a limb with two points.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">limbs_map</span> <span class="o">=</span> <span class="p">{</span><span class="n">p2</span><span class="p">:</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">limbs</span><span class="p">)}</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">limbs_map</span><span class="p">[</span><span class="n">p1</span><span class="p">]</span> <span class="k">if</span> <span class="n">p1</span> <span class="ow">in</span> <span class="n">limbs_map</span> <span class="k">else</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">p1</span><span class="p">,</span> <span class="n">p2</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">limbs</span><span class="p">]</span></div></div>
+
+
+<div class="viewcode-block" id="PoseHeaderDimensions"><a class="viewcode-back" href="../../pose_format.pose_header.html#pose_format.pose_header.PoseHeaderDimensions">[docs]</a><span class="k">class</span> <span class="nc">PoseHeaderDimensions</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Represents width, height, and depth dimensions for a pose header.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    width : int</span>
+<span class="sd">        Width of the pose.</span>
+<span class="sd">    height : int</span>
+<span class="sd">        Height of the pose.</span>
+<span class="sd">    depth : int</span>
+<span class="sd">        Depth of the pose. Defaults to 0.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If any dimension value is out of bounds (0 to 65535).</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; dimensions = PoseHeaderDimensions(10, 20, 5)</span>
+<span class="sd">    &gt;&gt;&gt; print(dimensions.width)</span>
+<span class="sd">    10</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">width</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">height</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">depth</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">width</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">height</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">depth</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">depth</span><span class="p">)</span>
+
+<div class="viewcode-block" id="PoseHeaderDimensions.read"><a class="viewcode-back" href="../../pose_format.pose_header.html#pose_format.pose_header.PoseHeaderDimensions.read">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="n">version</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">reader</span><span class="p">:</span> <span class="n">BufferReader</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reads and returns a PoseHeaderDimensions object from a buffer reader.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        version : float</span>
+<span class="sd">            Version of the data being read.</span>
+<span class="sd">        reader : BufferReader</span>
+<span class="sd">            The reader </span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        PoseHeaderDimensions</span>
+<span class="sd">            Instance of PoseHeaderDimensions with its read dimensions (width, height, depth).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">depth</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">ConstStructs</span><span class="o">.</span><span class="n">triple_ushort</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">PoseHeaderDimensions</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">depth</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PoseHeaderDimensions.write"><a class="viewcode-back" href="../../pose_format.pose_header.html#pose_format.pose_header.PoseHeaderDimensions.write">[docs]</a>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">buffer</span><span class="p">:</span> <span class="n">BinaryIO</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Writes dimensions to a buffer.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        buffer : BinaryIO</span>
+<span class="sd">            Buffer to which dimensions (width, height, depth) will be written.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If any dimension value is out of bounds (0 to 65535).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="mi">0</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">&lt;=</span> <span class="p">(</span><span class="mh">0x7fff</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Width must be between 0 and 65535. Got </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="mi">0</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">&lt;=</span> <span class="p">(</span><span class="mh">0x7fff</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Height must be between 0 and 65535. Got </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="mi">0</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">depth</span> <span class="o">&lt;=</span> <span class="p">(</span><span class="mh">0x7fff</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Depth must be between 0 and 65535. Got </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">depth</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">buffer</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">ConstStructs</span><span class="o">.</span><span class="n">triple_ushort</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">depth</span><span class="p">))</span></div></div>
+
+
+<div class="viewcode-block" id="PoseHeader"><a class="viewcode-back" href="../../pose_format.pose_header.html#pose_format.pose_header.PoseHeader">[docs]</a><span class="k">class</span> <span class="nc">PoseHeader</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Main header for a pose.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    version : float</span>
+<span class="sd">        Version of the pose header.</span>
+<span class="sd">    dimensions : PoseHeaderDimensions</span>
+<span class="sd">        Dimensions of the pose header.</span>
+<span class="sd">    components : List[PoseHeaderComponent]</span>
+<span class="sd">        List of pose header components.</span>
+<span class="sd">    is_bbox : bool, optional</span>
+<span class="sd">        If bounding box needed. Default is False.</span>
+<span class="sd">    Note</span>
+<span class="sd">    -----</span>
+<span class="sd">    - Use the `read` method to generate an instance from a BufferReader.</span>
+<span class="sd">    - `total_points` method returns the total number of points across all components.</span>
+<span class="sd">    - Convert the header to bounding boxes using the `bbox` method.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; header = PoseHeader(1.0, PoseHeaderDimensions(10, 20, 5), [PoseHeaderComponent(...)], is_bbox=True)</span>
+<span class="sd">    &gt;&gt;&gt; print(header.is_bbox)</span>
+<span class="sd">    True</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">version</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                 <span class="n">dimensions</span><span class="p">:</span> <span class="n">PoseHeaderDimensions</span><span class="p">,</span>
+                 <span class="n">components</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">PoseHeaderComponent</span><span class="p">],</span>
+                 <span class="n">is_bbox</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">version</span> <span class="o">=</span> <span class="n">version</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dimensions</span> <span class="o">=</span> <span class="n">dimensions</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">components</span> <span class="o">=</span> <span class="n">components</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_bbox</span> <span class="o">=</span> <span class="n">is_bbox</span>
+
+<div class="viewcode-block" id="PoseHeader.read"><a class="viewcode-back" href="../../pose_format.pose_header.html#pose_format.pose_header.PoseHeader.read">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="n">reader</span><span class="p">:</span> <span class="n">BufferReader</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;PoseHeader&#39;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reads pose header data from a reader (BufferReader).</span>
+
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        reader : BufferReader</span>
+<span class="sd">            Reader object.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        PoseHeader</span>
+<span class="sd">            An instance of PoseHeader.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+                
+        <span class="n">version</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">ConstStructs</span><span class="o">.</span><span class="n">float</span><span class="p">)</span>
+        <span class="n">dimensions</span> <span class="o">=</span> <span class="n">PoseHeaderDimensions</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">version</span><span class="p">,</span> <span class="n">reader</span><span class="p">)</span>
+
+        <span class="n">_components</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">ConstStructs</span><span class="o">.</span><span class="n">ushort</span><span class="p">)</span>
+        <span class="n">components</span> <span class="o">=</span> <span class="p">[</span><span class="n">PoseHeaderComponent</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">version</span><span class="p">,</span> <span class="n">reader</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">_components</span><span class="p">)]</span>
+
+        <span class="k">return</span> <span class="n">PoseHeader</span><span class="p">(</span><span class="n">version</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">,</span> <span class="n">components</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PoseHeader.write"><a class="viewcode-back" href="../../pose_format.pose_header.html#pose_format.pose_header.PoseHeader.write">[docs]</a>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">buffer</span><span class="p">:</span> <span class="n">BinaryIO</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Writes the pose header to a buffer (BinaryIO).</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        buffer : BinaryIO</span>
+<span class="sd">            Buffer to write data into.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">buffer</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">ConstStructs</span><span class="o">.</span><span class="n">float</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">VERSION</span><span class="p">))</span>  <span class="c1"># File version</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dimensions</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">buffer</span><span class="p">)</span>  <span class="c1"># Width, Height, Depth</span>
+        <span class="n">buffer</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">ConstStructs</span><span class="o">.</span><span class="n">ushort</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="p">)))</span>  <span class="c1"># Number of components</span>
+
+        <span class="k">for</span> <span class="n">component</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="p">:</span>
+            <span class="n">component</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">buffer</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PoseHeader.total_points"><a class="viewcode-back" href="../../pose_format.pose_header.html#pose_format.pose_header.PoseHeader.total_points">[docs]</a>    <span class="k">def</span> <span class="nf">total_points</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the total number of points.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        int</span>
+<span class="sd">            Total number of points.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">c</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">points</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="p">))</span></div>
+
+    <span class="k">def</span> <span class="nf">_get_point_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">component</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">point</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">component</span><span class="p">:</span>
+                <span class="n">idx</span> <span class="o">+=</span> <span class="n">c</span><span class="o">.</span><span class="n">points</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">point</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">idx</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">idx</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">points</span><span class="p">)</span>
+
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Couldn&#39;t find component&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="PoseHeader.normalization_info"><a class="viewcode-back" href="../../pose_format.pose_header.html#pose_format.pose_header.PoseHeader.normalization_info">[docs]</a>    <span class="k">def</span> <span class="nf">normalization_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p1</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">p2</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">p3</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Normalizates info for given points.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        p1 : Tuple[str, str]</span>
+<span class="sd">            First point.</span>
+<span class="sd">        p2 : Tuple[str, str]</span>
+<span class="sd">            Second point.</span>
+<span class="sd">        p3 : Tuple[str, str], optional</span>
+<span class="sd">            Third point.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        PoseNormalizationInfo</span>
+<span class="sd">            Normalization information for the points.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">PoseNormalizationInfo</span><span class="p">(</span><span class="n">p1</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_point_index</span><span class="p">(</span><span class="o">*</span><span class="n">p1</span><span class="p">),</span>
+                                     <span class="n">p2</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_point_index</span><span class="p">(</span><span class="o">*</span><span class="n">p2</span><span class="p">),</span>
+                                     <span class="n">p3</span><span class="o">=</span><span class="kc">None</span> <span class="k">if</span> <span class="n">p3</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_point_index</span><span class="p">(</span><span class="o">*</span><span class="n">p3</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="PoseHeader.bbox"><a class="viewcode-back" href="../../pose_format.pose_header.html#pose_format.pose_header.PoseHeader.bbox">[docs]</a>    <span class="k">def</span> <span class="nf">bbox</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts header to bounding boxes (bbox).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        PoseHeader</span>
+<span class="sd">            PoseHeader with bounding box information.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Convert Header to boxes</span>
+        <span class="n">box_points</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;TOP_LEFT&#39;</span><span class="p">,</span> <span class="s1">&#39;BOTTOM_RIGHT&#39;</span><span class="p">]</span>
+        <span class="n">box_limbs</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)]</span>
+        <span class="n">box_colors</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)]</span>
+        <span class="n">components</span> <span class="o">=</span> <span class="p">[</span><span class="n">PoseHeaderComponent</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">box_points</span><span class="p">,</span> <span class="n">box_limbs</span><span class="p">,</span> <span class="n">box_colors</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">format</span><span class="p">)</span>
+                      <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">PoseHeader</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">version</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dimensions</span><span class="p">,</span> <span class="n">components</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Moryossef, Amit and Müller, Mathias.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

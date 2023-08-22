@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pose_format.numpy.pose_body &mdash; Pose-Format Toolkit v1.0.0 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/my.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/assets/jsonview.bundle.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/sphinx-needs/libs/html/datatables.min.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/sphinx-needs/common.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/sphinx-needs/layouts.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/sphinx-needs/modern.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/sphinx-needs/styles.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/assets/jsonview.bundle.js"></script>
+        <script src="../../../_static/assets/jsonview_loader.js"></script>
+        <script src="../../../_static/sphinx-needs/libs/html/datatables.min.js"></script>
+        <script src="../../../_static/sphinx-needs/libs/html/datatables_loader.js"></script>
+        <script src="../../../_static/sphinx-needs/libs/html/sphinx_needs_collapse.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Pose-Format Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../readme.html">Pose Format Introduction</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python Code Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pose_format.html">pose_format package</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Additional Material</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../js_docs.html">JavaScript</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../specs_v01.html">specs/v0.1.md</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Pose-Format Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">pose_format.numpy.pose_body</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pose_format.numpy.pose_body</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">BinaryIO</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">numpy.ma</span> <span class="k">as</span> <span class="nn">ma</span>
+
+<span class="kn">from</span> <span class="nn">..pose_body</span> <span class="kn">import</span> <span class="n">PoseBody</span><span class="p">,</span> <span class="n">POINTS_DIMS</span>
+<span class="kn">from</span> <span class="nn">..pose_header</span> <span class="kn">import</span> <span class="n">PoseHeader</span>
+<span class="kn">from</span> <span class="nn">..utils.reader</span> <span class="kn">import</span> <span class="n">BufferReader</span><span class="p">,</span> <span class="n">ConstStructs</span>
+
+
+<span class="c1"># import numpy as np</span>
+<span class="c1"># np.seterr(all=&#39;raise&#39;)</span>
+
+<div class="viewcode-block" id="NumPyPoseBody"><a class="viewcode-back" href="../../../pose_format.numpy.pose_body.html#pose_format.numpy.pose_body.NumPyPoseBody">[docs]</a><span class="k">class</span> <span class="nc">NumPyPoseBody</span><span class="p">(</span><span class="n">PoseBody</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Represents pose information leveraging NumPy operations and structures.</span>
+
+<span class="sd">     * Inherits from:  `PoseBody`</span>
+<span class="sd">     * Implements pose info using NumPy operations and structures.</span>
+<span class="sd">     * Provides method for operations such as matrix, multiplication, interpolation and data type conversions. </span>
+
+<span class="sd">    The `NumPyPoseBody` is an implementation of the `PoseBody` abstract base class. </span>
+<span class="sd">    This subclass is optimized for NumPy operations, and utilizes NumPy masked arrays to </span>
+<span class="sd">    handle pose data. This makes it particularly suitable for applications where </span>
+<span class="sd">    NumPy-based operations on pose data are prevalent. The use of masked arrays </span>
+<span class="sd">    allows for efficient handling of missing or invalid pose values.</span>
+
+<span class="sd">    The class also provides several utility methods to transform, modify, and </span>
+<span class="sd">    operate on the pose data, including matrix multiplication, interpolation, </span>
+<span class="sd">    and conversions to other popular data types like PyTorch tensors or TensorFlow tensors.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    fps : float</span>
+<span class="sd">        Frames per second, to represent the temporal aspect of the pose data.</span>
+<span class="sd">    data : Union[ma.MaskedArray, np.ndarray]</span>
+<span class="sd">        Pose data either as a masked array or a regular numpy array.</span>
+<span class="sd">    confidence : np.ndarray</span>
+<span class="sd">        Confidence array indicating the reliability of the associated pose keypoints.</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">tensor_reader</span> <span class="o">=</span> <span class="s1">&#39;unpack_numpy&#39;</span> <span class="s2">&quot;&quot;&quot;str: Specifies the method name for unpacking a numpy array. (Value: &#39;unpack_numpy&#39;).&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fps</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">ma</span><span class="o">.</span><span class="n">MaskedArray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">confidence</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the NumPyPoseBody instance</span>
+<span class="sd">        &quot;&quot;&quot;</span>        
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>  <span class="c1"># If array is not masked</span>
+            <span class="n">mask</span> <span class="o">=</span> <span class="n">confidence</span> <span class="o">==</span> <span class="mi">0</span>  <span class="c1"># 0 means no-mask, 1 means with-mask</span>
+            <span class="n">stacked_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">mask</span><span class="p">]</span> <span class="o">*</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">ma</span><span class="o">.</span><span class="n">masked_array</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="n">stacked_mask</span><span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">fps</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">confidence</span><span class="p">)</span>
+
+<div class="viewcode-block" id="NumPyPoseBody.read_v0_0"><a class="viewcode-back" href="../../../pose_format.numpy.pose_body.html#pose_format.numpy.pose_body.NumPyPoseBody.read_v0_0">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">read_v0_0</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">header</span><span class="p">:</span> <span class="n">PoseHeader</span><span class="p">,</span> <span class="n">reader</span><span class="p">:</span> <span class="n">BufferReader</span><span class="p">,</span> <span class="o">**</span><span class="n">unused_kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reads pose data from the given buffer reader using a specified data format version.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        header : PoseHeader</span>
+<span class="sd">            Pose header information.</span>
+<span class="sd">        reader : BufferReader</span>
+<span class="sd">            The binary buffer reader.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        NumPyPoseBody</span>
+<span class="sd">            Instance of the NumPyPoseBody containing the read pose data.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">fps</span><span class="p">,</span> <span class="n">_frames</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">ConstStructs</span><span class="o">.</span><span class="n">double_ushort</span><span class="p">)</span>
+
+        <span class="n">_dims</span> <span class="o">=</span> <span class="nb">max</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">format</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">header</span><span class="o">.</span><span class="n">components</span><span class="p">])</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="n">_points</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">points</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">header</span><span class="o">.</span><span class="n">components</span><span class="p">])</span>
+
+        <span class="n">frames_d</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">frames_c</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">_frames</span><span class="p">):</span>
+            <span class="n">_people</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">ConstStructs</span><span class="o">.</span><span class="n">ushort</span><span class="p">)</span>
+            <span class="n">people_d</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">people_c</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">pid</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">_people</span><span class="p">):</span>
+                <span class="n">reader</span><span class="o">.</span><span class="n">advance</span><span class="p">(</span><span class="n">ConstStructs</span><span class="o">.</span><span class="n">short</span><span class="p">)</span>  <span class="c1"># Skip Person ID</span>
+                <span class="n">person_d</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="n">person_c</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">component</span> <span class="ow">in</span> <span class="n">header</span><span class="o">.</span><span class="n">components</span><span class="p">:</span>
+                    <span class="n">points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+                        <span class="n">reader</span><span class="o">.</span><span class="n">unpack_numpy</span><span class="p">(</span><span class="n">ConstStructs</span><span class="o">.</span><span class="n">float</span><span class="p">,</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">component</span><span class="o">.</span><span class="n">points</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">component</span><span class="o">.</span><span class="n">format</span><span class="p">))))</span>
+                    <span class="n">dimensions</span><span class="p">,</span> <span class="n">confidence</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+                    <span class="n">boolean_confidence</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">confidence</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># To create the mask</span>
+                    <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">(</span><span class="nb">tuple</span><span class="p">([</span><span class="n">boolean_confidence</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">component</span><span class="o">.</span><span class="n">format</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)))</span>
+
+                    <span class="n">person_d</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ma</span><span class="o">.</span><span class="n">masked_array</span><span class="p">(</span><span class="n">dimensions</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="n">mask</span><span class="p">))</span>
+                    <span class="n">person_c</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">confidence</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">))</span>
+
+                <span class="k">if</span> <span class="n">pid</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">people_d</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ma</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">person_d</span><span class="p">))</span>
+                    <span class="n">people_c</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">person_c</span><span class="p">))</span>
+
+            <span class="c1"># In case no person, should all be zeros</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">people_d</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">people_d</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">_points</span><span class="p">,</span> <span class="n">_dims</span><span class="p">)))</span>
+                <span class="n">people_c</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">_points</span><span class="p">))</span>
+
+            <span class="n">frames_d</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ma</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">people_d</span><span class="p">))</span>
+            <span class="n">frames_c</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">people_c</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">fps</span><span class="p">,</span> <span class="n">ma</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">frames_d</span><span class="p">),</span> <span class="n">ma</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">frames_c</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="NumPyPoseBody.write"><a class="viewcode-back" href="../../../pose_format.numpy.pose_body.html#pose_format.numpy.pose_body.NumPyPoseBody.write">[docs]</a>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">version</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">buffer</span><span class="p">:</span> <span class="n">BinaryIO</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Writes the pose data to a binary buffer using the specified data format version.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        version : float</span>
+<span class="sd">            Version of the data format.</span>
+<span class="sd">        buffer : BinaryIO</span>
+<span class="sd">            The binary buffer to write to.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_frames</span><span class="p">,</span> <span class="n">_people</span><span class="p">,</span> <span class="n">_points</span><span class="p">,</span> <span class="n">_dims</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span>
+        <span class="n">_frames</span> <span class="o">=</span> <span class="n">_frames</span> <span class="k">if</span> <span class="n">_frames</span> <span class="o">&lt;</span> <span class="mi">65535</span> <span class="k">else</span> <span class="mi">0</span>  <span class="c1"># TODO change from short to int</span>
+        <span class="n">buffer</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">ConstStructs</span><span class="o">.</span><span class="n">triple_ushort</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fps</span><span class="p">,</span> <span class="n">_frames</span><span class="p">,</span> <span class="n">_people</span><span class="p">))</span>
+
+        <span class="n">buffer</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span><span class="o">.</span><span class="n">tobytes</span><span class="p">())</span>
+        <span class="n">buffer</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">confidence</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span><span class="o">.</span><span class="n">tobytes</span><span class="p">())</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">mask</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Returns the mask associated with the data. &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">mask</span>
+
+<div class="viewcode-block" id="NumPyPoseBody.torch"><a class="viewcode-back" href="../../../pose_format.numpy.pose_body.html#pose_format.numpy.pose_body.NumPyPoseBody.torch">[docs]</a>    <span class="k">def</span> <span class="nf">torch</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Converts the current instance into a TorchPoseBody instance.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        TorchPoseBody</span>
+<span class="sd">            The pose body data represented in PyTorch tensors.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="kn">import</span> <span class="nn">torch</span>
+        <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span>
+                <span class="s2">&quot;Please install torch. https://pytorch.org/&quot;</span>
+            <span class="p">)</span>
+
+        <span class="kn">import</span> <span class="nn">torch</span>
+        <span class="kn">from</span> <span class="nn">..torch.pose_body</span> <span class="kn">import</span> <span class="n">TorchPoseBody</span>
+
+        <span class="n">torch_confidence</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">confidence</span><span class="p">)</span>
+        <span class="n">torch_data</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">TorchPoseBody</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fps</span><span class="p">,</span> <span class="n">torch_data</span><span class="p">,</span> <span class="n">torch_confidence</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="NumPyPoseBody.tensorflow"><a class="viewcode-back" href="../../../pose_format.numpy.pose_body.html#pose_format.numpy.pose_body.NumPyPoseBody.tensorflow">[docs]</a>    <span class="k">def</span> <span class="nf">tensorflow</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts the current instance into a TensorflowPoseBody instance.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        TensorflowPoseBody</span>
+<span class="sd">            The pose body data represented in TensorFlow tensors.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">import</span> <span class="nn">tensorflow</span>
+        <span class="kn">from</span> <span class="nn">..tensorflow.pose_body</span> <span class="kn">import</span> <span class="n">TensorflowPoseBody</span>
+
+        <span class="n">tf_confidence</span> <span class="o">=</span> <span class="n">tensorflow</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">confidence</span><span class="p">)</span>
+        <span class="n">tf_data</span> <span class="o">=</span> <span class="n">tensorflow</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">TensorflowPoseBody</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fps</span><span class="p">,</span> <span class="n">tf_data</span><span class="p">,</span> <span class="n">tf_confidence</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="NumPyPoseBody.zero_filled"><a class="viewcode-back" href="../../../pose_format.numpy.pose_body.html#pose_format.numpy.pose_body.NumPyPoseBody.zero_filled">[docs]</a>    <span class="k">def</span> <span class="nf">zero_filled</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Modifies the data to fill missing values with zeros.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        NumPyPoseBody</span>
+<span class="sd">            The modified pose body data.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">ma</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">filled</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">mask</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">mask</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="NumPyPoseBody.matmul"><a class="viewcode-back" href="../../../pose_format.numpy.pose_body.html#pose_format.numpy.pose_body.NumPyPoseBody.matmul">[docs]</a>    <span class="k">def</span> <span class="nf">matmul</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">matrix</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Performs matrix multiplication on the pose data.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        matrix : np.ndarray</span>
+<span class="sd">            The matrix to multiply the pose data with.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        NumPyPoseBody</span>
+<span class="sd">            The transformed pose body data.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">ma</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">matrix</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">NumPyPoseBody</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fps</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">confidence</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="NumPyPoseBody.flip"><a class="viewcode-back" href="../../../pose_format.numpy.pose_body.html#pose_format.numpy.pose_body.NumPyPoseBody.flip">[docs]</a>    <span class="k">def</span> <span class="nf">flip</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Flips the pose data across the specified axis.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        axis : int, optional</span>
+<span class="sd">            The axis along which the pose data should be flipped.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        NumPyPoseBody</span>
+<span class="sd">            The flipped pose body data.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">vec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">vec</span><span class="p">[</span><span class="n">axis</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">*</span> <span class="n">vec</span>
+        <span class="k">return</span> <span class="n">NumPyPoseBody</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fps</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">confidence</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="NumPyPoseBody.points_perspective"><a class="viewcode-back" href="../../../pose_format.numpy.pose_body.html#pose_format.numpy.pose_body.NumPyPoseBody.points_perspective">[docs]</a>    <span class="k">def</span> <span class="nf">points_perspective</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Transforms the pose data to get a perspective based on points.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        ma.MaskedArray</span>
+<span class="sd">            The transformed pose data.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">ma</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="n">POINTS_DIMS</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="NumPyPoseBody.get_points"><a class="viewcode-back" href="../../../pose_format.numpy.pose_body.html#pose_format.numpy.pose_body.NumPyPoseBody.get_points">[docs]</a>    <span class="k">def</span> <span class="nf">get_points</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">indexes</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Extracts specific keypoints based on the provided indexes.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        indexes : List[int]</span>
+<span class="sd">            Indices of the keypoints to extract.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        NumPyPoseBody</span>
+<span class="sd">            Pose body data containing only the specified keypoints.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">ma</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="n">POINTS_DIMS</span><span class="p">)</span>
+        <span class="n">new_data</span> <span class="o">=</span> <span class="n">ma</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">indexes</span><span class="p">],</span> <span class="n">axes</span><span class="o">=</span><span class="n">POINTS_DIMS</span><span class="p">)</span>
+
+        <span class="n">confidence_reshape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">confidence</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">confidence</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="n">confidence_reshape</span><span class="p">)</span>
+        <span class="n">new_confidence</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">confidence</span><span class="p">[</span><span class="n">indexes</span><span class="p">],</span> <span class="n">axes</span><span class="o">=</span><span class="n">confidence_reshape</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">NumPyPoseBody</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fps</span><span class="p">,</span> <span class="n">new_data</span><span class="p">,</span> <span class="n">new_confidence</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="NumPyPoseBody.bbox"><a class="viewcode-back" href="../../../pose_format.numpy.pose_body.html#pose_format.numpy.pose_body.NumPyPoseBody.bbox">[docs]</a>    <span class="k">def</span> <span class="nf">bbox</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">header</span><span class="p">:</span> <span class="n">PoseHeader</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Computes the bounding boxes for each component based on the pose data.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        header : PoseHeader</span>
+<span class="sd">            Pose header information.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        NumPyPoseBody</span>
+<span class="sd">            Pose body data representing bounding boxes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">ma</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="n">POINTS_DIMS</span><span class="p">)</span>
+
+        <span class="c1"># Split data by components, `ma` doesn&#39;t support &quot;.split&quot;</span>
+        <span class="n">components</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">component</span> <span class="ow">in</span> <span class="n">header</span><span class="o">.</span><span class="n">components</span><span class="p">:</span>
+            <span class="n">components</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">idx</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">component</span><span class="o">.</span><span class="n">points</span><span class="p">)))])</span>
+            <span class="n">idx</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">component</span><span class="o">.</span><span class="n">points</span><span class="p">)</span>
+
+        <span class="n">boxes</span> <span class="o">=</span> <span class="p">[</span><span class="n">ma</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">ma</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">ma</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)])</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">components</span><span class="p">]</span>
+        <span class="n">boxes_cat</span> <span class="o">=</span> <span class="n">ma</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">boxes</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">boxes_cat</span><span class="o">.</span><span class="n">mask</span><span class="p">)</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">bool_</span><span class="p">:</span>  <span class="c1"># Sometimes, it doesn&#39;t concatenate the mask...</span>
+            <span class="n">boxes_mask</span> <span class="o">=</span> <span class="n">ma</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">b</span><span class="o">.</span><span class="n">mask</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">boxes</span><span class="p">])</span>
+            <span class="n">boxes_cat</span> <span class="o">=</span> <span class="n">ma</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">boxes_cat</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="n">boxes_mask</span><span class="p">)</span>
+
+        <span class="n">new_data</span> <span class="o">=</span> <span class="n">ma</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">boxes_cat</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="n">POINTS_DIMS</span><span class="p">)</span>
+
+        <span class="n">confidence_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">new_data</span><span class="o">.</span><span class="n">mask</span><span class="p">,</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">3</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">confidence_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">confidence_mask</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">confidence</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">confidence_mask</span> <span class="o">==</span> <span class="kc">True</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">NumPyPoseBody</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fps</span><span class="p">,</span> <span class="n">new_data</span><span class="p">,</span> <span class="n">confidence</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="NumPyPoseBody.interpolate"><a class="viewcode-back" href="../../../pose_format.numpy.pose_body.html#pose_format.numpy.pose_body.NumPyPoseBody.interpolate">[docs]</a>    <span class="k">def</span> <span class="nf">interpolate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_fps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s1">&#39;cubic&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Interpolates the pose data to match a new frame rate.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        new_fps : int, optional</span>
+<span class="sd">            The desired frame rate for interpolation.</span>
+<span class="sd">        kind : str, optional</span>
+<span class="sd">            The type of interpolation. Options include: &quot;linear&quot;, &quot;quadratic&quot;, and &quot;cubic&quot;.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        NumPyPoseBody</span>
+<span class="sd">            Interpolated pose body data.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="kn">import</span> <span class="n">interp1d</span>
+        <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="s2">&quot;Please install scipy with: pip install scipy&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">new_fps</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">new_fps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fps</span>
+
+        <span class="n">_frames</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">_frames</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Can&#39;t interpolate single frame&quot;</span><span class="p">)</span>
+
+        <span class="n">_new_frames</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">_frames</span> <span class="o">*</span> <span class="n">new_fps</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">fps</span><span class="p">)</span>
+        <span class="n">steps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">_frames</span><span class="p">)</span>
+        <span class="n">new_steps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">_new_frames</span><span class="p">)</span>
+
+        <span class="n">transposed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">points_perspective</span><span class="p">()</span>  <span class="c1"># (points, people, frames, dims)</span>
+        <span class="n">masked_confidence</span> <span class="o">=</span> <span class="n">ma</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">confidence</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">confidence</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">confidence</span> <span class="o">=</span> <span class="n">ma</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">masked_confidence</span><span class="o">.</span><span class="n">transpose</span><span class="p">(),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>  <span class="c1"># (points, people, frames, 1)</span>
+        <span class="n">points</span> <span class="o">=</span> <span class="n">ma</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">transposed</span><span class="p">,</span> <span class="n">confidence</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+
+        <span class="n">new_people</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">people</span> <span class="ow">in</span> <span class="n">points</span><span class="p">:</span>
+            <span class="n">new_frames</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">frames</span> <span class="ow">in</span> <span class="n">people</span><span class="p">:</span>
+                <span class="n">mask</span> <span class="o">=</span> <span class="n">frames</span><span class="o">.</span><span class="n">transpose</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">mask</span>
+
+                <span class="n">partial_steps</span> <span class="o">=</span> <span class="n">ma</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">steps</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="n">mask</span><span class="p">)</span><span class="o">.</span><span class="n">compressed</span><span class="p">()</span>
+
+                <span class="k">if</span> <span class="n">partial_steps</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># No data for this point</span>
+                    <span class="n">new_frames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">_new_frames</span><span class="p">,</span> <span class="n">frames</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">partial_frames</span> <span class="o">=</span> <span class="n">frames</span><span class="o">.</span><span class="n">compressed</span><span class="p">()</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">partial_steps</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">frames</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">partial_steps</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                        <span class="n">f</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">l</span><span class="p">:</span> <span class="n">partial_frames</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">this_kind</span> <span class="o">=</span> <span class="n">kind</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">partial_steps</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">3</span> \
+                            <span class="k">else</span> <span class="s2">&quot;quadratic&quot;</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">partial_steps</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">kind</span> <span class="o">==</span> <span class="s2">&quot;cubic&quot;</span> \
+                            <span class="k">else</span> <span class="s2">&quot;linear&quot;</span>  <span class="c1"># Can&#39;t do something fancy for 2 points</span>
+                        <span class="n">f</span> <span class="o">=</span> <span class="n">interp1d</span><span class="p">(</span><span class="n">partial_steps</span><span class="p">,</span> <span class="n">partial_frames</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="n">this_kind</span><span class="p">)</span>
+
+                    <span class="n">first_step</span> <span class="o">=</span> <span class="n">partial_steps</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="n">last_step</span> <span class="o">=</span> <span class="n">partial_steps</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="n">first_step</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">last_step</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                        <span class="n">new_frames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">new_steps</span><span class="p">))</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">first_step_where</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="n">new_steps</span> <span class="o">&gt;=</span> <span class="n">first_step</span><span class="p">)</span>
+                        <span class="n">first_step_index</span> <span class="o">=</span> <span class="n">first_step_where</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">first_step_where</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
+
+                        <span class="n">last_step_where</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="n">new_steps</span> <span class="o">&gt;</span> <span class="n">last_step</span><span class="p">)</span>
+                        <span class="n">last_step_index</span> <span class="o">=</span> <span class="n">last_step_where</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">last_step_where</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="nb">len</span><span class="p">(</span><span class="n">new_steps</span><span class="p">)</span>
+
+                        <span class="k">if</span> <span class="n">first_step_index</span> <span class="o">==</span> <span class="n">last_step_index</span><span class="p">:</span>
+                            <span class="n">new_frames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">new_steps</span><span class="p">),</span> <span class="n">frames</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])))</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">frame_data</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">new_steps</span><span class="p">[</span><span class="n">first_step_index</span><span class="p">:</span><span class="n">last_step_index</span><span class="p">])</span>
+                            <span class="n">new_frames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span>
+                                <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">first_step_index</span><span class="p">,</span> <span class="n">frames</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])),</span>
+                                <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">frame_data</span><span class="p">),</span>
+                                <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">new_steps</span><span class="p">)</span> <span class="o">-</span> <span class="n">last_step_index</span><span class="p">,</span> <span class="n">frames</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+                            <span class="p">]))</span>
+            <span class="n">new_people</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">new_frames</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+
+        <span class="n">new_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">new_people</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+        <span class="n">dimensions</span><span class="p">,</span> <span class="n">confidence</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">new_data</span><span class="p">,</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+        <span class="n">confidence</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">confidence</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">NumPyPoseBody</span><span class="p">(</span><span class="n">fps</span><span class="o">=</span><span class="n">new_fps</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">dimensions</span><span class="p">,</span> <span class="n">confidence</span><span class="o">=</span><span class="n">confidence</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="NumPyPoseBody.flatten"><a class="viewcode-back" href="../../../pose_format.numpy.pose_body.html#pose_format.numpy.pose_body.NumPyPoseBody.flatten">[docs]</a>    <span class="k">def</span> <span class="nf">flatten</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Flattens data and confidence arrays.</span>
+
+<span class="sd">        method reshapes data and confidence arrays to a two-dimensional array.</span>
+<span class="sd">        The flattened array is filtered to remove rows where confidence is zero.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        --------</span>
+<span class="sd">        numpy.ndarray</span>
+<span class="sd">            flattened and filtered version of the data array.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">shape</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>  <span class="c1"># Not masked data</span>
+        <span class="n">confidence</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">confidence</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+        <span class="n">indexes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndindex</span><span class="p">(</span><span class="n">shape</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+        <span class="n">flat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">c_</span><span class="p">[</span><span class="n">indexes</span><span class="p">,</span> <span class="n">confidence</span><span class="p">,</span> <span class="n">data</span><span class="p">]</span>
+        <span class="c1"># Filter data from flat</span>
+        <span class="n">flat</span> <span class="o">=</span> <span class="n">flat</span><span class="p">[</span><span class="n">confidence</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="c1"># Scale the first axis by fps</span>
+        <span class="n">scalar</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span> <span class="o">+</span> <span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">scalar</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">fps</span>
+        <span class="k">return</span> <span class="n">flat</span> <span class="o">*</span> <span class="n">scalar</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Moryossef, Amit and Müller, Mathias.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

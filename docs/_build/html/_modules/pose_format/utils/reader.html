@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pose_format.utils.reader &mdash; Pose-Format Toolkit v1.0.0 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/my.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/assets/jsonview.bundle.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/sphinx-needs/libs/html/datatables.min.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/sphinx-needs/common.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/sphinx-needs/layouts.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/sphinx-needs/modern.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/sphinx-needs/styles.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/assets/jsonview.bundle.js"></script>
+        <script src="../../../_static/assets/jsonview_loader.js"></script>
+        <script src="../../../_static/sphinx-needs/libs/html/datatables.min.js"></script>
+        <script src="../../../_static/sphinx-needs/libs/html/datatables_loader.js"></script>
+        <script src="../../../_static/sphinx-needs/libs/html/sphinx_needs_collapse.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Pose-Format Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../readme.html">Pose Format Introduction</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python Code Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">Pose Format Organization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pose_format.html">pose_format package</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Additional Material</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../js_docs.html">JavaScript</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../specs_v01.html">specs/v0.1.md</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Pose-Format Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">pose_format.utils.reader</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pose_format.utils.reader</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">struct</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Tuple</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
+
+
+<div class="viewcode-block" id="ConstStructs"><a class="viewcode-back" href="../../../pose_format.utils.reader.html#pose_format.utils.reader.ConstStructs">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">ConstStructs</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class hold collection of predefined struct formats to reuse</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters </span>
+<span class="sd">    ----------</span>
+<span class="sd">    float : struct.Struct</span>
+<span class="sd">        Struct format for a float.</span>
+<span class="sd">    short : struct.Struct</span>
+<span class="sd">        Struct format for a short integer.</span>
+<span class="sd">    ushort : struct.Struct</span>
+<span class="sd">        Struct format for an unsigned short integer.</span>
+<span class="sd">    double_ushort : struct.Struct</span>
+<span class="sd">        Struct format for two unsigned short integers.</span>
+<span class="sd">    triple_ushort : struct.Struct</span>
+<span class="sd">        Struct format for three unsigned short integers.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">float</span><span class="p">:</span> <span class="n">struct</span><span class="o">.</span><span class="n">Struct</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">Struct</span><span class="p">(</span><span class="s2">&quot;&lt;f&quot;</span><span class="p">)</span>
+
+    <span class="n">short</span><span class="p">:</span> <span class="n">struct</span><span class="o">.</span><span class="n">Struct</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">Struct</span><span class="p">(</span><span class="s2">&quot;&lt;h&quot;</span><span class="p">)</span>
+    <span class="n">ushort</span><span class="p">:</span> <span class="n">struct</span><span class="o">.</span><span class="n">Struct</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">Struct</span><span class="p">(</span><span class="s2">&quot;&lt;H&quot;</span><span class="p">)</span>
+
+    <span class="n">double_ushort</span><span class="p">:</span> <span class="n">struct</span><span class="o">.</span><span class="n">Struct</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">Struct</span><span class="p">(</span><span class="s2">&quot;&lt;HH&quot;</span><span class="p">)</span>
+    <span class="n">triple_ushort</span><span class="p">:</span> <span class="n">struct</span><span class="o">.</span><span class="n">Struct</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">Struct</span><span class="p">(</span><span class="s2">&quot;&lt;HHH&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="BufferReader"><a class="viewcode-back" href="../../../pose_format.utils.reader.html#pose_format.utils.reader.BufferReader">[docs]</a><span class="k">class</span> <span class="nc">BufferReader</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class is used to read binary data from buffer</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">        buffer: bytes</span>
+<span class="sd">            buffer from which to read data</span>
+<span class="sd">        read_offset: int</span>
+<span class="sd">            current read offset in buffer</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">buffer</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span> <span class="o">=</span> <span class="n">buffer</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">read_offset</span> <span class="o">=</span> <span class="mi">0</span>
+
+<div class="viewcode-block" id="BufferReader.bytes_left"><a class="viewcode-back" href="../../../pose_format.utils.reader.html#pose_format.utils.reader.BufferReader.bytes_left">[docs]</a>    <span class="k">def</span> <span class="nf">bytes_left</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;gives number of bytes left to read from buffer</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        int</span>
+<span class="sd">            The number of bytes left to read.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">buffer</span><span class="p">)</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_offset</span></div>
+
+<div class="viewcode-block" id="BufferReader.unpack_f"><a class="viewcode-back" href="../../../pose_format.utils.reader.html#pose_format.utils.reader.BufferReader.unpack_f">[docs]</a>    <span class="k">def</span> <span class="nf">unpack_f</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s_format</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;unpacks data from buffer using given struct format</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        s_format : str</span>
+<span class="sd">            The struct format to use for unpacking data.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Unpacked data as specified by the struct format.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">ConstStructs</span><span class="p">,</span> <span class="n">s_format</span><span class="p">):</span>
+            <span class="n">le_format</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&lt;&quot;</span> <span class="o">+</span> <span class="n">s_format</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="n">ConstStructs</span><span class="p">,</span> <span class="n">s_format</span><span class="p">,</span> <span class="n">struct</span><span class="o">.</span><span class="n">Struct</span><span class="p">(</span><span class="n">le_format</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">ConstStructs</span><span class="p">,</span> <span class="n">s_format</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="BufferReader.unpack_numpy"><a class="viewcode-back" href="../../../pose_format.utils.reader.html#pose_format.utils.reader.BufferReader.unpack_numpy">[docs]</a>    <span class="k">def</span> <span class="nf">unpack_numpy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span> <span class="n">struct</span><span class="o">.</span><span class="n">Struct</span><span class="p">,</span> <span class="n">shape</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;unpacks data from buffer into a numpy array using struct format and shape</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        s : struct.Struct</span>
+<span class="sd">            The struct format to use.</span>
+<span class="sd">        shape : Tuple[int, ...]</span>
+<span class="sd">            The shape of the NumPy array.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        np.ndarray</span>
+<span class="sd">            The unpacked NumPy array.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">s</span><span class="o">.</span><span class="n">format</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_offset</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">advance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">shape</span><span class="p">)))</span>
+        <span class="k">return</span> <span class="n">arr</span></div>
+
+<div class="viewcode-block" id="BufferReader.unpack_torch"><a class="viewcode-back" href="../../../pose_format.utils.reader.html#pose_format.utils.reader.BufferReader.unpack_torch">[docs]</a>    <span class="k">def</span> <span class="nf">unpack_torch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span> <span class="n">struct</span><span class="o">.</span><span class="n">Struct</span><span class="p">,</span> <span class="n">shape</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; unpacks data from buffer into a torch tensor using struct format and shape</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        s : struct.Struct</span>
+<span class="sd">            The struct format to use.</span>
+<span class="sd">        shape : Tuple[int, ...]</span>
+<span class="sd">            The shape of the PyTorch tensor.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        torch.Tensor</span>
+<span class="sd">            The unpacked PyTorch tensor.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">import</span> <span class="nn">torch</span>
+
+        <span class="n">arr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">unpack_numpy</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">shape</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BufferReader.unpack_tensorflow"><a class="viewcode-back" href="../../../pose_format.utils.reader.html#pose_format.utils.reader.BufferReader.unpack_tensorflow">[docs]</a>    <span class="k">def</span> <span class="nf">unpack_tensorflow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span> <span class="n">struct</span><span class="o">.</span><span class="n">Struct</span><span class="p">,</span> <span class="n">shape</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Unpacks into a tensorflow tensor using struct format and shape</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        s : struct.Struct</span>
+<span class="sd">            The struct format to use.</span>
+<span class="sd">        shape : Tuple[int, ...]</span>
+<span class="sd">            The shape of the TensorFlow tensor.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        tensorflow.Tensor</span>
+<span class="sd">            The unpacked TensorFlow tensor.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+
+        <span class="n">arr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">unpack_numpy</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">shape</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BufferReader.unpack"><a class="viewcode-back" href="../../../pose_format.utils.reader.html#pose_format.utils.reader.BufferReader.unpack">[docs]</a>    <span class="k">def</span> <span class="nf">unpack</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span> <span class="n">struct</span><span class="o">.</span><span class="n">Struct</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Unpacks data from the buffer using a given struct format.</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        s : struct.Struct</span>
+<span class="sd">            The struct format to use for unpacking data.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Unpacked data as specified by the struct format.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">unpack</span><span class="p">:</span> <span class="nb">tuple</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">unpack_from</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">buffer</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_offset</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">advance</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">unpack</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">unpack</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">unpack</span></div>
+
+<div class="viewcode-block" id="BufferReader.advance"><a class="viewcode-back" href="../../../pose_format.utils.reader.html#pose_format.utils.reader.BufferReader.advance">[docs]</a>    <span class="k">def</span> <span class="nf">advance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span> <span class="n">struct</span><span class="o">.</span><span class="n">Struct</span><span class="p">,</span> <span class="n">times</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Updates read_offset by number of times and size of given struct -&gt; advances read offset in buffer</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        s : struct.Struct</span>
+<span class="sd">            The struct format that determines the data size.</span>
+<span class="sd">        times : int, optional</span>
+<span class="sd">            The number of times to advance the read offset. Default is 1.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">read_offset</span> <span class="o">+=</span> <span class="n">s</span><span class="o">.</span><span class="n">size</span> <span class="o">*</span> <span class="n">times</span></div>
+
+<div class="viewcode-block" id="BufferReader.unpack_str"><a class="viewcode-back" href="../../../pose_format.utils.reader.html#pose_format.utils.reader.BufferReader.unpack_str">[docs]</a>    <span class="k">def</span> <span class="nf">unpack_str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Unpacks a string from the buffer.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        str</span>
+<span class="sd">            The unpacked string, encoded in UTF-8.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">length</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">ConstStructs</span><span class="o">.</span><span class="n">ushort</span><span class="p">)</span>
+        <span class="n">bytes_</span><span class="p">:</span> <span class="nb">bytes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">unpack_f</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%d</span><span class="s2">s&quot;</span> <span class="o">%</span> <span class="n">length</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">bytes_</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span></div></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
+
+    <span class="n">buffer</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s2">&quot;&lt;H5s&quot;</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">(</span><span class="s2">&quot;hello&quot;</span><span class="p">,</span> <span class="s1">&#39;utf8&#39;</span><span class="p">))</span>
+    <span class="n">reader</span> <span class="o">=</span> <span class="n">BufferReader</span><span class="p">(</span><span class="n">buffer</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">10000</span><span class="p">)):</span>
+        <span class="n">reader</span><span class="o">.</span><span class="n">read_offset</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">reader</span><span class="o">.</span><span class="n">unpack_str</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Moryossef, Amit and Müller, Mathias.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

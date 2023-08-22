@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pose_format.torch.pose_body module &mdash; Pose-Format Toolkit v1.0.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="_static/my.css" type="text/css" />
+      <link rel="stylesheet" href="_static/assets/jsonview.bundle.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sphinx-needs/libs/html/datatables.min.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sphinx-needs/common.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sphinx-needs/layouts.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sphinx-needs/modern.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sphinx-needs/styles.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script src="_static/assets/jsonview.bundle.js"></script>
+        <script src="_static/assets/jsonview_loader.js"></script>
+        <script src="_static/sphinx-needs/libs/html/datatables.min.js"></script>
+        <script src="_static/sphinx-needs/libs/html/datatables_loader.js"></script>
+        <script src="_static/sphinx-needs/libs/html/sphinx_needs_collapse.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="pose_format.torch.pose_representation module" href="pose_format.torch.pose_representation.html" />
+    <link rel="prev" title="pose_format.torch.representation.points module" href="pose_format.torch.representation.points.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Pose-Format Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="readme.html">Pose Format Introduction</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python Code Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pose_format.html">pose_format package</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Additional Material</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="js_docs.html">JavaScript</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="specs_v01.html">specs/v0.1.md</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Pose-Format Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="pose_format.html">pose_format package</a></li>
+          <li class="breadcrumb-item"><a href="pose_format.torch.html">pose_format.torch package</a></li>
+      <li class="breadcrumb-item active">pose_format.torch.pose_body module</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/rfahrn/pose-master/blob/master//docs/pose_format.torch.pose_body.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-pose_format.torch.pose_body">
+<span id="pose-format-torch-pose-body-module"></span><h1>pose_format.torch.pose_body module<a class="headerlink" href="#module-pose_format.torch.pose_body" title="Permalink to this heading"></a></h1>
+<p><strong>Classes:</strong></p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pose_format.torch.pose_body.TorchPoseBody" title="pose_format.torch.pose_body.TorchPoseBody"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TorchPoseBody</span></code></a>(fps, data, confidence)</p></td>
+<td><p>TorchPoseBody class of pose information with PyTorch tensors.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py class">
+<dt class="sig sig-object py" id="pose_format.torch.pose_body.TorchPoseBody">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pose_format.torch.pose_body.</span></span><span class="sig-name descname"><span class="pre">TorchPoseBody</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fps</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">confidence</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/torch/pose_body.html#TorchPoseBody"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.torch.pose_body.TorchPoseBody" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="pose_format.pose_body.html#pose_format.pose_body.PoseBody" title="pose_format.pose_body.PoseBody"><code class="xref py py-class docutils literal notranslate"><span class="pre">PoseBody</span></code></a></p>
+<p>TorchPoseBody class of pose information with PyTorch tensors.</p>
+<p>This class extends the PoseBody class and provides methods for manipulating pose data using PyTorch tensors.</p>
+<p><strong>Methods:</strong></p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pose_format.torch.pose_body.TorchPoseBody.cuda" title="pose_format.torch.pose_body.TorchPoseBody.cuda"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cuda</span></code></a>()</p></td>
+<td><p>Move data and cofidence of tensors to GPU</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pose_format.torch.pose_body.TorchPoseBody.flatten" title="pose_format.torch.pose_body.TorchPoseBody.flatten"><code class="xref py py-obj docutils literal notranslate"><span class="pre">flatten</span></code></a>()</p></td>
+<td><p>Flatten pose data along the associated confidence values.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pose_format.torch.pose_body.TorchPoseBody.get_points" title="pose_format.torch.pose_body.TorchPoseBody.get_points"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_points</span></code></a>(indexes)</p></td>
+<td><p>Get specific points from pose data.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pose_format.torch.pose_body.TorchPoseBody.matmul" title="pose_format.torch.pose_body.TorchPoseBody.matmul"><code class="xref py py-obj docutils literal notranslate"><span class="pre">matmul</span></code></a>(matrix)</p></td>
+<td><p>Matrix multiplication on pose data.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pose_format.torch.pose_body.TorchPoseBody.points_perspective" title="pose_format.torch.pose_body.TorchPoseBody.points_perspective"><code class="xref py py-obj docutils literal notranslate"><span class="pre">points_perspective</span></code></a>()</p></td>
+<td><p>Get pose data with dimensions permuted according to POINTS_DIMS.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pose_format.torch.pose_body.TorchPoseBody.zero_filled" title="pose_format.torch.pose_body.TorchPoseBody.zero_filled"><code class="xref py py-obj docutils literal notranslate"><span class="pre">zero_filled</span></code></a>()</p></td>
+<td><p>Fill invalid values with zeros.</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Attributes:</strong></p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pose_format.torch.pose_body.TorchPoseBody.tensor_reader" title="pose_format.torch.pose_body.TorchPoseBody.tensor_reader"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tensor_reader</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fps</strong> (<em>float</em>) – </p></li>
+<li><p><strong>data</strong> (<a class="reference internal" href="pose_format.torch.masked.tensor.html#pose_format.torch.masked.tensor.MaskedTensor" title="pose_format.torch.masked.tensor.MaskedTensor"><em>MaskedTensor</em></a><em> | </em><em>Tensor</em>) – </p></li>
+<li><p><strong>confidence</strong> (<em>Tensor</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pose_format.torch.pose_body.TorchPoseBody.cuda">
+<span class="sig-name descname"><span class="pre">cuda</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/torch/pose_body.html#TorchPoseBody.cuda"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.torch.pose_body.TorchPoseBody.cuda" title="Permalink to this definition"></a></dt>
+<dd><p>Move data and cofidence of tensors to GPU</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pose_format.torch.pose_body.TorchPoseBody.flatten">
+<span class="sig-name descname"><span class="pre">flatten</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/torch/pose_body.html#TorchPoseBody.flatten"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.torch.pose_body.TorchPoseBody.flatten" title="Permalink to this definition"></a></dt>
+<dd><p>Flatten pose data along the associated confidence values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Flattened tensor containing indexes, confidence values, and data.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pose_format.torch.pose_body.TorchPoseBody.get_points">
+<span class="sig-name descname"><span class="pre">get_points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">indexes</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/torch/pose_body.html#TorchPoseBody.get_points"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.torch.pose_body.TorchPoseBody.get_points" title="Permalink to this definition"></a></dt>
+<dd><p>Get specific points from pose data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>indexes</strong> (<em>List</em><em>[</em><em>int</em><em>]</em>) – List of indexes specifying the points that you need.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>New TorchPoseBody instance containing specified points and associated confidence values.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pose_format.torch.pose_body.TorchPoseBody" title="pose_format.torch.pose_body.TorchPoseBody">TorchPoseBody</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pose_format.torch.pose_body.TorchPoseBody.matmul">
+<span class="sig-name descname"><span class="pre">matmul</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matrix</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/torch/pose_body.html#TorchPoseBody.matmul"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.torch.pose_body.TorchPoseBody.matmul" title="Permalink to this definition"></a></dt>
+<dd><p>Matrix multiplication on pose data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>matrix</strong> (<em>np.ndarray</em>) – matrix to perform multiplication with</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A new TorchPoseBody instance with results of matrix multiplication.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pose_format.torch.pose_body.TorchPoseBody" title="pose_format.torch.pose_body.TorchPoseBody">TorchPoseBody</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pose_format.torch.pose_body.TorchPoseBody.points_perspective">
+<span class="sig-name descname"><span class="pre">points_perspective</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/torch/pose_body.html#TorchPoseBody.points_perspective"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.torch.pose_body.TorchPoseBody.points_perspective" title="Permalink to this definition"></a></dt>
+<dd><p>Get pose data with dimensions permuted according to POINTS_DIMS.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A <a class="reference internal" href="pose_format.torch.masked.tensor.html#pose_format.torch.masked.tensor.MaskedTensor" title="pose_format.torch.masked.tensor.MaskedTensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">MaskedTensor</span></code></a> instance with dimensions permuted for points perspective.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="pose_format.torch.masked.tensor.html#pose_format.torch.masked.tensor.MaskedTensor" title="pose_format.torch.masked.tensor.MaskedTensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">MaskedTensor</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pose_format.torch.pose_body.TorchPoseBody.tensor_reader">
+<span class="sig-name descname"><span class="pre">tensor_reader</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'unpack_torchstr:</span> <span class="pre">Reader</span> <span class="pre">format</span> <span class="pre">for</span> <span class="pre">unpacking</span> <span class="pre">Torch</span> <span class="pre">tensors.'</span></em><a class="headerlink" href="#pose_format.torch.pose_body.TorchPoseBody.tensor_reader" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pose_format.torch.pose_body.TorchPoseBody.zero_filled">
+<span class="sig-name descname"><span class="pre">zero_filled</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/torch/pose_body.html#TorchPoseBody.zero_filled"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.torch.pose_body.TorchPoseBody.zero_filled" title="Permalink to this definition"></a></dt>
+<dd><p>Fill invalid values with zeros.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>TorchPoseBody instance with masked data filled with zeros.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#pose_format.torch.pose_body.TorchPoseBody" title="pose_format.torch.pose_body.TorchPoseBody">TorchPoseBody</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="pose_format.torch.representation.points.html" class="btn btn-neutral float-left" title="pose_format.torch.representation.points module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="pose_format.torch.pose_representation.html" class="btn btn-neutral float-right" title="pose_format.torch.pose_representation module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Moryossef, Amit and Müller, Mathias.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

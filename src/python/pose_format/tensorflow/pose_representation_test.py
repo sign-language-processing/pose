@@ -23,15 +23,24 @@ representation = TensorflowPoseRepresentation(
 
 
 class TestTensorflowPoseRepresentation(TestCase):
+    """
+    Testcases for TensorflowPoseRepresentation class.
+    
+    Validates the functionalities associated with the Tensorflow representation
+    of pose data, such as ensuring that input sizes, output calculations, and representations are accurate.
+    """
     def test_input_size(self):
+        """Checks that the input size is correct"""
         input_size = representation.input_size
         self.assertEqual(input_size, 21)
 
     def test_calc_output_size(self):
+        """Checks that the output size is correct"""
         output_size = representation.calc_output_size()
         self.assertEqual(output_size, 70)
 
     def test_call_return_shape(self):
+        """Checks that the shape of the returned representation is correct"""
         input_size = representation.input_size
         output_size = representation.calc_output_size()
 

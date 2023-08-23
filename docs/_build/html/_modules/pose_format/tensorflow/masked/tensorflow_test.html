@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pose_format.tensorflow.masked.tensorflow_test &mdash; Pose-Format Toolkit v1.0.0 documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/my.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/assets/jsonview.bundle.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/sphinx-needs/libs/html/datatables.min.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/sphinx-needs/common.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/sphinx-needs/layouts.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/sphinx-needs/modern.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/sphinx-needs/styles.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../../_static/assets/jsonview.bundle.js"></script>
+        <script src="../../../../_static/assets/jsonview_loader.js"></script>
+        <script src="../../../../_static/sphinx-needs/libs/html/datatables.min.js"></script>
+        <script src="../../../../_static/sphinx-needs/libs/html/datatables_loader.js"></script>
+        <script src="../../../../_static/sphinx-needs/libs/html/sphinx_needs_collapse.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            Pose-Format Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../readme.html">Pose Format Introduction</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python Code Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules.html">Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../pose_format.html">pose_format package</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Additional Material</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../js_docs.html">JavaScript</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../specs_v01.html">specs/v0.1.md</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Pose-Format Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">pose_format.tensorflow.masked.tensorflow_test</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pose_format.tensorflow.masked.tensorflow_test</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">unittest</span> <span class="kn">import</span> <span class="n">TestCase</span>
+
+<span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+
+<span class="kn">from</span> <span class="nn">pose_format.tensorflow.masked.tensor</span> <span class="kn">import</span> <span class="n">MaskedTensor</span>
+<span class="kn">from</span> <span class="nn">pose_format.tensorflow.masked.tensorflow</span> <span class="kn">import</span> <span class="n">MaskedTensorflow</span>
+
+
+<div class="viewcode-block" id="TestMaskedTensorflow"><a class="viewcode-back" href="../../../../pose_format.tensorflow.masked.tensorflow_test.html#pose_format.tensorflow.masked.tensorflow_test.TestMaskedTensorflow">[docs]</a><span class="k">class</span> <span class="nc">TestMaskedTensorflow</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A test class for checking the operations in the MaskedTensorflow class.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># cat</span>
+<div class="viewcode-block" id="TestMaskedTensorflow.test_cat"><a class="viewcode-back" href="../../../../pose_format.tensorflow.masked.tensorflow_test.html#pose_format.tensorflow.masked.tensorflow_test.TestMaskedTensorflow.test_cat">[docs]</a>    <span class="k">def</span> <span class="nf">test_cat</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Test the `concat` method for two tensors along axis=0.</span>
+
+<span class="sd">        Checks that the concatenated output is as expected.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">tensor1</span> <span class="o">=</span> <span class="n">MaskedTensor</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]))</span>
+        <span class="n">tensor2</span> <span class="o">=</span> <span class="n">MaskedTensor</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]))</span>
+        <span class="n">stack</span> <span class="o">=</span> <span class="n">MaskedTensorflow</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">tensor1</span><span class="p">,</span> <span class="n">tensor2</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">MaskedTensor</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]]))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">reduce_all</span><span class="p">(</span><span class="n">stack</span> <span class="o">==</span> <span class="n">res</span><span class="p">),</span> <span class="n">msg</span><span class="o">=</span><span class="s2">&quot;Cat is not equal to expected&quot;</span><span class="p">)</span></div>
+
+    <span class="c1"># stack</span>
+<div class="viewcode-block" id="TestMaskedTensorflow.test_stack"><a class="viewcode-back" href="../../../../pose_format.tensorflow.masked.tensorflow_test.html#pose_format.tensorflow.masked.tensorflow_test.TestMaskedTensorflow.test_stack">[docs]</a>    <span class="k">def</span> <span class="nf">test_stack</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Test the `stack` method for two tensors along axis=0.</span>
+<span class="sd">        </span>
+<span class="sd">        Ensure the stacked output is as expected.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">tensor1</span> <span class="o">=</span> <span class="n">MaskedTensor</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]))</span>
+        <span class="n">tensor2</span> <span class="o">=</span> <span class="n">MaskedTensor</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]))</span>
+        <span class="n">stack</span> <span class="o">=</span> <span class="n">MaskedTensorflow</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">tensor1</span><span class="p">,</span> <span class="n">tensor2</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">MaskedTensor</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]]))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">reduce_all</span><span class="p">(</span><span class="n">stack</span> <span class="o">==</span> <span class="n">res</span><span class="p">),</span> <span class="n">msg</span><span class="o">=</span><span class="s2">&quot;Stack is not equal to expected&quot;</span><span class="p">)</span></div>
+
+    <span class="c1"># zeros</span>
+<div class="viewcode-block" id="TestMaskedTensorflow.test_zeros_tensor_shape"><a class="viewcode-back" href="../../../../pose_format.tensorflow.masked.tensorflow_test.html#pose_format.tensorflow.masked.tensorflow_test.TestMaskedTensorflow.test_zeros_tensor_shape">[docs]</a>    <span class="k">def</span> <span class="nf">test_zeros_tensor_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Test the shape of the tensor obtained from `zeros` method.</span>
+<span class="sd">        </span>
+<span class="sd">         Checks if shape of output tensor is correct.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">zeros</span> <span class="o">=</span> <span class="n">MaskedTensorflow</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">zeros</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="TestMaskedTensorflow.test_zeros_tensor_value"><a class="viewcode-back" href="../../../../pose_format.tensorflow.masked.tensorflow_test.html#pose_format.tensorflow.masked.tensorflow_test.TestMaskedTensorflow.test_zeros_tensor_value">[docs]</a>    <span class="k">def</span> <span class="nf">test_zeros_tensor_value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Test the values of the tensor obtained from `zeros` method.</span>
+
+<span class="sd">        Ensures that all values in the tensor are zeros.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">zeros</span> <span class="o">=</span> <span class="n">MaskedTensorflow</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">reduce_all</span><span class="p">(</span><span class="n">zeros</span> <span class="o">==</span> <span class="mi">0</span><span class="p">),</span> <span class="n">msg</span><span class="o">=</span><span class="s2">&quot;Zeros are not all zeros&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TestMaskedTensorflow.test_zeros_tensor_type_float"><a class="viewcode-back" href="../../../../pose_format.tensorflow.masked.tensorflow_test.html#pose_format.tensorflow.masked.tensorflow_test.TestMaskedTensorflow.test_zeros_tensor_type_float">[docs]</a>    <span class="k">def</span> <span class="nf">test_zeros_tensor_type_float</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Test the dtype of the tensor obtained from `zeros` method with dtype=tf.float32.</span>
+
+<span class="sd">        Tests the dtype of the tensor is correct.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">dtype</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">float32</span>
+        <span class="n">zeros</span> <span class="o">=</span> <span class="n">MaskedTensorflow</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">zeros</span><span class="o">.</span><span class="n">tensor</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">dtype</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TestMaskedTensorflow.test_zeros_tensor_type_bool"><a class="viewcode-back" href="../../../../pose_format.tensorflow.masked.tensorflow_test.html#pose_format.tensorflow.masked.tensorflow_test.TestMaskedTensorflow.test_zeros_tensor_type_bool">[docs]</a>    <span class="k">def</span> <span class="nf">test_zeros_tensor_type_bool</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Test the dtype of the tensor obtained from `zeros` method with dtype=tf.bool.</span>
+
+<span class="sd">        Tests that the dtype of the tensor is correct.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">dtype</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">bool</span>
+        <span class="n">zeros</span> <span class="o">=</span> <span class="n">MaskedTensorflow</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">zeros</span><span class="o">.</span><span class="n">tensor</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">dtype</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TestMaskedTensorflow.test_zeros_mask_value"><a class="viewcode-back" href="../../../../pose_format.tensorflow.masked.tensorflow_test.html#pose_format.tensorflow.masked.tensorflow_test.TestMaskedTensorflow.test_zeros_mask_value">[docs]</a>    <span class="k">def</span> <span class="nf">test_zeros_mask_value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Test the mask values of the tensor obtained from `zeros` method.</span>
+
+<span class="sd">        Tests if all values in the mask are zeros.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">zeros</span> <span class="o">=</span> <span class="n">MaskedTensorflow</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">reduce_all</span><span class="p">(</span><span class="n">zeros</span><span class="o">.</span><span class="n">mask</span> <span class="o">==</span> <span class="n">tf</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">dtypes</span><span class="o">.</span><span class="n">bool</span><span class="p">)),</span>
+                        <span class="n">msg</span><span class="o">=</span><span class="s2">&quot;Zeros mask are not all zeros&quot;</span><span class="p">)</span></div>
+
+    <span class="c1"># Fallback</span>
+<div class="viewcode-block" id="TestMaskedTensorflow.test_not_implemented_method"><a class="viewcode-back" href="../../../../pose_format.tensorflow.masked.tensorflow_test.html#pose_format.tensorflow.masked.tensorflow_test.TestMaskedTensorflow.test_not_implemented_method">[docs]</a>    <span class="k">def</span> <span class="nf">test_not_implemented_method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Test a method that is not explicitly defined for MaskedTensor but is implemented via fallback.</span>
+
+<span class="sd">        Tests that the square of the tensor is computed as expected.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">tensor</span> <span class="o">=</span> <span class="n">MaskedTensor</span><span class="p">(</span><span class="n">tensor</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]))</span>
+        <span class="n">tensor_square</span> <span class="o">=</span> <span class="n">MaskedTensorflow</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">tensor</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">reduce_all</span><span class="p">(</span><span class="n">tensor_square</span> <span class="o">==</span> <span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">9</span><span class="p">])),</span> <span class="n">msg</span><span class="o">=</span><span class="s2">&quot;Square is not equal to expected&quot;</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Moryossef, Amit and Müller, Mathias.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

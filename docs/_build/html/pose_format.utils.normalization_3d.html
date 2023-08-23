@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pose_format.utils.normalization_3d module &mdash; Pose-Format Toolkit v1.0.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="_static/my.css" type="text/css" />
+      <link rel="stylesheet" href="_static/assets/jsonview.bundle.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sphinx-needs/libs/html/datatables.min.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sphinx-needs/common.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sphinx-needs/layouts.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sphinx-needs/modern.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sphinx-needs/styles.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script src="_static/assets/jsonview.bundle.js"></script>
+        <script src="_static/assets/jsonview_loader.js"></script>
+        <script src="_static/sphinx-needs/libs/html/datatables.min.js"></script>
+        <script src="_static/sphinx-needs/libs/html/datatables_loader.js"></script>
+        <script src="_static/sphinx-needs/libs/html/sphinx_needs_collapse.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="pose_format.utils.openpose module" href="pose_format.utils.openpose.html" />
+    <link rel="prev" title="pose_format.utils.fast_math module" href="pose_format.utils.fast_math.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Pose-Format Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="readme.html">Pose Format Introduction</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python Code Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Structure</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="pose_format.html">pose_format package</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="pose_format.numpy.html">pose_format.numpy package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pose_format.tensorflow.html">pose_format.tensorflow package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pose_format.testing.html">pose_format.testing package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pose_format.third_party.html">pose_format.third_party package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pose_format.torch.html">pose_format.torch package</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="pose_format.utils.html">pose_format.utils package</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="pose_format.utils.fast_math.html">pose_format.utils.fast_math module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">pose_format.utils.normalization_3d module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pose_format.utils.normalization_3d.PoseNormalizer"><code class="docutils literal notranslate"><span class="pre">PoseNormalizer</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pose_format.utils.openpose.html">pose_format.utils.openpose module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pose_format.utils.openpose_135.html">pose_format.utils.openpose_135 module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pose_format.utils.openpose_test.html">pose_format.utils.openpose_test module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pose_format.utils.optical_flow.html">pose_format.utils.optical_flow module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pose_format.utils.reader.html">pose_format.utils.reader module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pose_format.utils.reader_test.html">pose_format.utils.reader_test module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pose_format.utils.siren.html">pose_format.utils.siren module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pose_format.utils.pose_converter.html">pose_format.utils.pose_converter module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pose_format.utils.holistic.html">pose_format.utils.holistic module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pose_format.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Additional Material</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="js_docs.html">JavaScript</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="specs_v01.html">specs/v0.1.md</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Pose-Format Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="pose_format.html">pose_format package</a></li>
+          <li class="breadcrumb-item"><a href="pose_format.utils.html">pose_format.utils package</a></li>
+      <li class="breadcrumb-item active">pose_format.utils.normalization_3d module</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/rfahrn/pose-master/blob/master//docs/pose_format.utils.normalization_3d.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-pose_format.utils.normalization_3d">
+<span id="pose-format-utils-normalization-3d-module"></span><h1>pose_format.utils.normalization_3d module<a class="headerlink" href="#module-pose_format.utils.normalization_3d" title="Permalink to this heading"></a></h1>
+<p><strong>Classes:</strong></p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pose_format.utils.normalization_3d.PoseNormalizer" title="pose_format.utils.normalization_3d.PoseNormalizer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PoseNormalizer</span></code></a>(plane, line[, size])</p></td>
+<td><p>Class to normalize pose using normalization information.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py class">
+<dt class="sig sig-object py" id="pose_format.utils.normalization_3d.PoseNormalizer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pose_format.utils.normalization_3d.</span></span><span class="sig-name descname"><span class="pre">PoseNormalizer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">plane</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">line</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/utils/normalization_3d.html#PoseNormalizer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.utils.normalization_3d.PoseNormalizer" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class to normalize pose using normalization information.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>plane</strong> (<a class="reference internal" href="pose_format.pose_header.html#pose_format.pose_header.PoseNormalizationInfo" title="pose_format.pose_header.PoseNormalizationInfo"><em>PoseNormalizationInfo</em></a>) – Plane normalization information</p></li>
+<li><p><strong>line</strong> (<a class="reference internal" href="pose_format.pose_header.html#pose_format.pose_header.PoseNormalizationInfo" title="pose_format.pose_header.PoseNormalizationInfo"><em>PoseNormalizationInfo</em></a>) – Line normalization information</p></li>
+<li><p><strong>size</strong> (<em>float</em>) – The desired size after normalization, defaults to 1</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>Methods:</strong></p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pose_format.utils.normalization_3d.PoseNormalizer.get_normal" title="pose_format.utils.normalization_3d.PoseNormalizer.get_normal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_normal</span></code></a>(pose)</p></td>
+<td><p>Get normal vector based on pose &quot;plane&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pose_format.utils.normalization_3d.PoseNormalizer.get_rotation_angle" title="pose_format.utils.normalization_3d.PoseNormalizer.get_rotation_angle"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_rotation_angle</span></code></a>(pose)</p></td>
+<td><p>Gets rotation angle required to rotate pose such that the line is on the Y axis.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pose_format.utils.normalization_3d.PoseNormalizer.normalize_pose" title="pose_format.utils.normalization_3d.PoseNormalizer.normalize_pose"><code class="xref py py-obj docutils literal notranslate"><span class="pre">normalize_pose</span></code></a>(pose)</p></td>
+<td><p>Fully normalizes the pose - rotates to match normals, then rotates in the X-Y plane, and finally scales.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pose_format.utils.normalization_3d.PoseNormalizer.rotate" title="pose_format.utils.normalization_3d.PoseNormalizer.rotate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rotate</span></code></a>(pose, angle)</p></td>
+<td><p>Rotate pose in the X-Y plane by a custom angle (np.ndarray).</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pose_format.utils.normalization_3d.PoseNormalizer.rotate_to_normal" title="pose_format.utils.normalization_3d.PoseNormalizer.rotate_to_normal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rotate_to_normal</span></code></a>(pose, normal, around)</p></td>
+<td><p>Rotate pose so that its normal vector aligns with z-axis.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pose_format.utils.normalization_3d.PoseNormalizer.scale" title="pose_format.utils.normalization_3d.PoseNormalizer.scale"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scale</span></code></a>(pose)</p></td>
+<td><p>Scaling of pose</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="pose_format.utils.normalization_3d.PoseNormalizer.get_normal">
+<span class="sig-name descname"><span class="pre">get_normal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pose</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/utils/normalization_3d.html#PoseNormalizer.get_normal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.utils.normalization_3d.PoseNormalizer.get_normal" title="Permalink to this definition"></a></dt>
+<dd><p>Get normal vector based on pose “plane”</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>pose</strong> (<em>ma.masked_array</em>) – Pose data.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>normal</strong> (<em>ma.masked_array</em>) – Normal vector for pose.</p></li>
+<li><p><strong>base</strong> (<em>ma.masked_array</em>) – Base point -&gt; triangle[:,0] used to compute normal</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>Tuple</em>[<em>MaskedArray</em>, <em>MaskedArray</em>]</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Important that plane attributes (p1, p2, p3) are correctly initialized for normal to be correctly computed</p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pose_format.utils.normalization_3d.PoseNormalizer.get_rotation_angle">
+<span class="sig-name descname"><span class="pre">get_rotation_angle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pose</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/utils/normalization_3d.html#PoseNormalizer.get_rotation_angle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.utils.normalization_3d.PoseNormalizer.get_rotation_angle" title="Permalink to this definition"></a></dt>
+<dd><p>Gets rotation angle required to rotate pose such that the line is on the Y axis.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>pose</strong> (<em>ma.masked_array</em>) – Pose data</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Angles (degrees) needed for each pose in the array</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ma.masked_array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pose_format.utils.normalization_3d.PoseNormalizer.normalize_pose">
+<span class="sig-name descname"><span class="pre">normalize_pose</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pose</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/utils/normalization_3d.html#PoseNormalizer.normalize_pose"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.utils.normalization_3d.PoseNormalizer.normalize_pose" title="Permalink to this definition"></a></dt>
+<dd><p>Fully normalizes the pose - rotates to match normals, then rotates in the
+X-Y plane, and finally scales.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>pose</strong> (<em>ma.masked_array</em>) – original pose data</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>fully normalized pose</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ma.masked_array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pose_format.utils.normalization_3d.PoseNormalizer.rotate">
+<span class="sig-name descname"><span class="pre">rotate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pose</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">angle</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/utils/normalization_3d.html#PoseNormalizer.rotate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.utils.normalization_3d.PoseNormalizer.rotate" title="Permalink to this definition"></a></dt>
+<dd><p>Rotate pose in the X-Y plane by a custom angle (np.ndarray).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pose</strong> (<em>ma.masked_array</em>) – Original pose data</p></li>
+<li><p><strong>angle</strong> (<em>np.ndarray</em>) – Angles to rotate poses, in degrees.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>rotated pose</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ma.masked_array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pose_format.utils.normalization_3d.PoseNormalizer.rotate_to_normal">
+<span class="sig-name descname"><span class="pre">rotate_to_normal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pose</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normal</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">around</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/utils/normalization_3d.html#PoseNormalizer.rotate_to_normal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.utils.normalization_3d.PoseNormalizer.rotate_to_normal" title="Permalink to this definition"></a></dt>
+<dd><p>Rotate pose so that its normal vector aligns with z-axis.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pose</strong> (<em>ma.masked_array</em>) – Original pose data</p></li>
+<li><p><strong>normal</strong> (<em>ma.masked_array</em>) – Normal vector with respect to which the pose will be aligned.</p></li>
+<li><p><strong>around</strong> (<em>ma.masked_array</em>) – Points to rotate around</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The rotated pose</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ma.masked_array</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError:</strong> – if the shapes of pose, normal, and around aren’t compatible.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pose</span> <span class="o">=</span> <span class="n">ma</span><span class="o">.</span><span class="n">masked_array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">normal</span> <span class="o">=</span> <span class="n">ma</span><span class="o">.</span><span class="n">masked_array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">around</span> <span class="o">=</span> <span class="n">ma</span><span class="o">.</span><span class="n">masked_array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rotated_pose</span> <span class="o">=</span> <span class="n">normalizer</span><span class="o">.</span><span class="n">rotate_to_normal</span><span class="p">(</span><span class="n">pose</span><span class="p">,</span> <span class="n">normal</span><span class="p">,</span> <span class="n">around</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pose_format.utils.normalization_3d.PoseNormalizer.scale">
+<span class="sig-name descname"><span class="pre">scale</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pose</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/utils/normalization_3d.html#PoseNormalizer.scale"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.utils.normalization_3d.PoseNormalizer.scale" title="Permalink to this definition"></a></dt>
+<dd><p>Scaling of pose</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>pose</strong> (<em>ma.masked_array</em>) – pose to scale</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>scaled pose</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ma.masked_array</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="pose_format.utils.fast_math.html" class="btn btn-neutral float-left" title="pose_format.utils.fast_math module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="pose_format.utils.openpose.html" class="btn btn-neutral float-right" title="pose_format.utils.openpose module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Moryossef, Amit and Müller, Mathias.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

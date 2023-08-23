@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pose_format.pose_body &mdash; Pose-Format Toolkit v1.0.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/my.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/assets/jsonview.bundle.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sphinx-needs/libs/html/datatables.min.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sphinx-needs/common.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sphinx-needs/layouts.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sphinx-needs/modern.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sphinx-needs/styles.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/assets/jsonview.bundle.js"></script>
+        <script src="../../_static/assets/jsonview_loader.js"></script>
+        <script src="../../_static/sphinx-needs/libs/html/datatables.min.js"></script>
+        <script src="../../_static/sphinx-needs/libs/html/datatables_loader.js"></script>
+        <script src="../../_static/sphinx-needs/libs/html/sphinx_needs_collapse.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Pose-Format Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html">Pose Format Introduction</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python Code Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../pose_format.html">pose_format package</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Additional Material</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../js_docs.html">JavaScript</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../specs_v01.html">specs/v0.1.md</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Pose-Format Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">pose_format.pose_body</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pose_format.pose_body</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">sample</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">BinaryIO</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">pose_format.pose_header</span> <span class="kn">import</span> <span class="n">PoseHeader</span>
+<span class="kn">from</span> <span class="nn">pose_format.utils.reader</span> <span class="kn">import</span> <span class="n">BufferReader</span><span class="p">,</span> <span class="n">ConstStructs</span>
+
+<span class="n">POINTS_DIMS</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="PoseBody"><a class="viewcode-back" href="../../pose_format.pose_body.html#pose_format.pose_body.PoseBody">[docs]</a><span class="k">class</span> <span class="nc">PoseBody</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class for body data of a pose.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    fps : float</span>
+<span class="sd">        Frames per second.</span>
+<span class="sd">    data: </span>
+<span class="sd">        Data in the format (Frames, People, Points, Dims) e.g., (93, 1, 137, 2).</span>
+<span class="sd">    confidence: </span>
+<span class="sd">        Confidence data in the format (Frames, People, Points) e.g., (93, 1, 137).</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">tensor_reader</span> <span class="o">=</span> <span class="s1">&#39;ABSTRACT-DO-NOT-USE&#39;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fps</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">confidence</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize a PoseBody instance.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fps</span> <span class="o">=</span> <span class="n">fps</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">data</span>  <span class="c1"># Shape (Frames, People, Points, Dims) - eg (93, 1, 137, 2)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">confidence</span> <span class="o">=</span> <span class="n">confidence</span>  <span class="c1"># Shape (Frames, People, Points) - eg (93, 1, 137)</span>
+
+
+<div class="viewcode-block" id="PoseBody.read"><a class="viewcode-back" href="../../pose_format.pose_body.html#pose_format.pose_body.PoseBody.read">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">header</span><span class="p">:</span> <span class="n">PoseHeader</span><span class="p">,</span> <span class="n">reader</span><span class="p">:</span> <span class="n">BufferReader</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;PoseBody&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reads pose data a buffer (BufferReader) based on the header&#39;s version.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        header : PoseHeader</span>
+<span class="sd">            Header containing the version of the pose data.</span>
+<span class="sd">        reader : BufferReader</span>
+<span class="sd">            Buffer from which to read the pose data.</span>
+<span class="sd">        **kwargs : dict</span>
+<span class="sd">            Additional parameters for reading specific versions.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        PoseBody</span>
+<span class="sd">            A PoseBody object initialized with the read data.</span>
+<span class="sd">        </span>
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        NotImplementedError</span>
+<span class="sd">            If the header&#39;s version is not supported.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">header</span><span class="o">.</span><span class="n">version</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">read_v0_0</span><span class="p">(</span><span class="n">header</span><span class="p">,</span> <span class="n">reader</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">round</span><span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">version</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="o">==</span> <span class="mf">0.1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">read_v0_1</span><span class="p">(</span><span class="n">header</span><span class="p">,</span> <span class="n">reader</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Unknown version - </span><span class="si">%f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">header</span><span class="o">.</span><span class="n">version</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PoseBody.read_v0_0"><a class="viewcode-back" href="../../pose_format.pose_body.html#pose_format.pose_body.PoseBody.read_v0_0">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">read_v0_0</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">header</span><span class="p">:</span> <span class="n">PoseHeader</span><span class="p">,</span> <span class="n">reader</span><span class="p">:</span> <span class="n">BufferReader</span><span class="p">,</span> <span class="o">**</span><span class="n">unused_kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to read version 0.0 pose data.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        header : PoseHeader</span>
+<span class="sd">            Header containing the version of the pose data.</span>
+<span class="sd">        reader : BufferReader</span>
+<span class="sd">            Buffer from which to read the pose data.</span>
+<span class="sd">        unused_kwargs : dict</span>
+<span class="sd">            Unused additional parameters for this version.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        NotImplementedError</span>
+<span class="sd">            Since method for this version is not implemented.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;&#39;read_v0_0&#39; not implemented on &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span> <span class="bp">cls</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PoseBody.read_v0_1_frames"><a class="viewcode-back" href="../../pose_format.pose_body.html#pose_format.pose_body.PoseBody.read_v0_1_frames">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">read_v0_1_frames</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">frames</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">shape</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">reader</span><span class="p">:</span> <span class="n">BufferReader</span><span class="p">,</span>
+                         <span class="n">start_frame</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">end_frame</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reads frame data for version 0.1 from a buffer.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        frames : int</span>
+<span class="sd">            Number of frames in the pose data.</span>
+<span class="sd">        shape : List[int]</span>
+<span class="sd">            Shape of the pose data.</span>
+<span class="sd">        reader : BufferReader</span>
+<span class="sd">            Buffer from which to read the pose data.</span>
+<span class="sd">        start_frame : int, optional</span>
+<span class="sd">            Index of the first frame to read. Default is None.</span>
+<span class="sd">        end_frame : int, optional</span>
+<span class="sd">            Index of the last frame to read. Default is None.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        ndarray</span>
+<span class="sd">            Array containing the pose data for the specified frames.</span>
+<span class="sd">        </span>
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If start_frame is greater than the number of frames.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">tensor_reader</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="fm">__getattribute__</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">tensor_reader</span><span class="p">)</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">ConstStructs</span><span class="o">.</span><span class="n">float</span>
+
+        <span class="n">_frames</span> <span class="o">=</span> <span class="n">frames</span>
+        <span class="k">if</span> <span class="n">start_frame</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">start_frame</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">start_frame</span> <span class="o">&gt;=</span> <span class="n">frames</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Start frame is greater than the number of frames&quot;</span><span class="p">)</span>
+            <span class="c1"># Advance to the start frame</span>
+            <span class="n">reader</span><span class="o">.</span><span class="n">advance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">((</span><span class="n">start_frame</span><span class="p">,</span> <span class="o">*</span><span class="n">shape</span><span class="p">))))</span>
+            <span class="n">_frames</span> <span class="o">-=</span> <span class="n">start_frame</span>
+
+        <span class="n">remove_frames</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">end_frame</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">end_frame</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">end_frame</span><span class="p">,</span> <span class="n">frames</span><span class="p">)</span>  <span class="c1"># Do not allow overflow</span>
+            <span class="n">remove_frames</span> <span class="o">=</span> <span class="n">frames</span> <span class="o">-</span> <span class="n">end_frame</span>
+            <span class="n">_frames</span> <span class="o">-=</span> <span class="n">remove_frames</span>
+
+        <span class="n">tensor</span> <span class="o">=</span> <span class="n">tensor_reader</span><span class="p">(</span><span class="n">ConstStructs</span><span class="o">.</span><span class="n">float</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">_frames</span><span class="p">,</span> <span class="o">*</span><span class="n">shape</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">remove_frames</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">reader</span><span class="o">.</span><span class="n">advance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">((</span><span class="n">remove_frames</span><span class="p">,</span> <span class="o">*</span><span class="n">shape</span><span class="p">))))</span>
+
+        <span class="k">return</span> <span class="n">tensor</span></div>
+
+<div class="viewcode-block" id="PoseBody.read_v0_1"><a class="viewcode-back" href="../../pose_format.pose_body.html#pose_format.pose_body.PoseBody.read_v0_1">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">read_v0_1</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">header</span><span class="p">:</span> <span class="n">PoseHeader</span><span class="p">,</span> <span class="n">reader</span><span class="p">:</span> <span class="n">BufferReader</span><span class="p">,</span>
+                  <span class="n">start_frame</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">end_frame</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">unused_kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;PoseBody&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reads pose data for version 0.1 from a buffer.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        header : PoseHeader</span>
+<span class="sd">            Header containing the version of the pose data.</span>
+<span class="sd">        reader : BufferReader</span>
+<span class="sd">            Buffer from which to read the pose data.</span>
+<span class="sd">        start_frame : int, optional</span>
+<span class="sd">            Index of the first frame to read. Default is None.</span>
+<span class="sd">        end_frame : int, optional</span>
+<span class="sd">            Index of the last frame to read. Default is None.</span>
+<span class="sd">        **unused_kwargs : dict</span>
+<span class="sd">            Unused additional parameters for this version.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        PoseBody</span>
+<span class="sd">            PoseBody object initialized with the read data for version 0.1.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">fps</span><span class="p">,</span> <span class="n">_frames</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">ConstStructs</span><span class="o">.</span><span class="n">double_ushort</span><span class="p">)</span>
+
+        <span class="n">_people</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">ConstStructs</span><span class="o">.</span><span class="n">ushort</span><span class="p">)</span>
+        <span class="n">_points</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">points</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">header</span><span class="o">.</span><span class="n">components</span><span class="p">])</span>
+        <span class="n">_dims</span> <span class="o">=</span> <span class="nb">max</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">format</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">header</span><span class="o">.</span><span class="n">components</span><span class="p">])</span> <span class="o">-</span> <span class="mi">1</span>
+
+        <span class="c1"># _frames is defined as short, which sometimes is not enough! TODO change to int</span>
+        <span class="n">_frames</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">reader</span><span class="o">.</span><span class="n">bytes_left</span><span class="p">()</span> <span class="o">/</span> <span class="p">(</span><span class="n">_people</span> <span class="o">*</span> <span class="n">_points</span> <span class="o">*</span> <span class="p">(</span><span class="n">_dims</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="mi">4</span><span class="p">))</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">read_v0_1_frames</span><span class="p">(</span><span class="n">_frames</span><span class="p">,</span> <span class="p">(</span><span class="n">_people</span><span class="p">,</span> <span class="n">_points</span><span class="p">,</span> <span class="n">_dims</span><span class="p">),</span> <span class="n">reader</span><span class="p">,</span> <span class="n">start_frame</span><span class="p">,</span> <span class="n">end_frame</span><span class="p">)</span>
+        <span class="n">confidence</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">read_v0_1_frames</span><span class="p">(</span><span class="n">_frames</span><span class="p">,</span> <span class="p">(</span><span class="n">_people</span><span class="p">,</span> <span class="n">_points</span><span class="p">),</span> <span class="n">reader</span><span class="p">,</span> <span class="n">start_frame</span><span class="p">,</span> <span class="n">end_frame</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">fps</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">confidence</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PoseBody.write"><a class="viewcode-back" href="../../pose_format.pose_body.html#pose_format.pose_body.PoseBody.write">[docs]</a>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">version</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">buffer</span><span class="p">:</span> <span class="n">BinaryIO</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Write the data to a file based on the version of the spec.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        version : float</span>
+<span class="sd">            Version of the pose data to write.</span>
+<span class="sd">        buffer : BinaryIO</span>
+<span class="sd">            Buffer to write the pose data to.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;&#39;write&#39; not implemented on &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets a version of the PoseBody data and confidence based on the provided index.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        index : int or slice</span>
+<span class="sd">            Index or slice to get data.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        PoseBody</span>
+<span class="sd">            PoseBody object with the sliced data and confidence.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Get the sliced data and confidence</span>
+        <span class="n">sliced_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+        <span class="n">sliced_confidence</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">confidence</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+
+        <span class="c1"># Create a new PoseBody object with the sliced data and confidence</span>
+        <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)(</span><span class="bp">self</span><span class="o">.</span><span class="n">fps</span><span class="p">,</span> <span class="n">sliced_data</span><span class="p">,</span> <span class="n">sliced_confidence</span><span class="p">)</span>
+
+<div class="viewcode-block" id="PoseBody.numpy"><a class="viewcode-back" href="../../pose_format.pose_body.html#pose_format.pose_body.PoseBody.numpy">[docs]</a>    <span class="k">def</span> <span class="nf">numpy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Convert the current PoseBody representation to NumpyPoseBody.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        NumpyPoseBody</span>
+<span class="sd">            The converted PoseBody object.</span>
+<span class="sd">        </span>
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        NotImplementedError</span>
+<span class="sd">            If the method is not implemented.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;&#39;numpy&#39; not implemented on &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PoseBody.torch"><a class="viewcode-back" href="../../pose_format.pose_body.html#pose_format.pose_body.PoseBody.torch">[docs]</a>    <span class="k">def</span> <span class="nf">torch</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts current PoseBody to TorchPoseBody.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        TorchPoseBody</span>
+<span class="sd">            The converted PoseBody object.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        NotImplementedError</span>
+<span class="sd">            If the method is not implemented.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;&#39;torch&#39; not implemented on &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PoseBody.tensorflow"><a class="viewcode-back" href="../../pose_format.pose_body.html#pose_format.pose_body.PoseBody.tensorflow">[docs]</a>    <span class="k">def</span> <span class="nf">tensorflow</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts current PoseBody representation to TensorflowPoseBody.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        TensorflowPoseBody</span>
+<span class="sd">            Converted PoseBody object.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        NotImplementedError</span>
+<span class="sd">            If the method is not implemented.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;&#39;tensorflow&#39; not implemented on &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PoseBody.flatten"><a class="viewcode-back" href="../../pose_format.pose_body.html#pose_format.pose_body.PoseBody.flatten">[docs]</a>    <span class="k">def</span> <span class="nf">flatten</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts data from the (Frames, People, Points, Dims) masked representation to an array of points.</span>
+<span class="sd">        </span>
+<span class="sd">        Every item in the result array contains the following dimensions:</span>
+<span class="sd">        0. Time in milliseconds</span>
+<span class="sd">        1. Person ID</span>
+<span class="sd">        2. Point ID</span>
+<span class="sd">        3. X dimension</span>
+<span class="sd">        4. Y dimension</span>
+<span class="sd">        5. Z dimension (if exists)</span>
+<span class="sd">        6. Pose estimation confidence</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        np.ndarray</span>
+<span class="sd">            Array of points with detailed dimensions.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        NotImplementedError</span>
+<span class="sd">            If the method is not implemented for the specific class.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;&#39;flatten&#39; not implemented on &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PoseBody.slice_step"><a class="viewcode-back" href="../../pose_format.pose_body.html#pose_format.pose_body.PoseBody.slice_step">[docs]</a>    <span class="k">def</span> <span class="nf">slice_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">by</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;PoseBody&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Slices data by skipping rows. This affects the fps (frames per seconds).</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        by : int</span>
+<span class="sd">            Take one row every &quot;by&quot; rows.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        PoseBody</span>
+<span class="sd">            PoseBody instance with sliced data.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">new_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[::</span><span class="n">by</span><span class="p">]</span>
+        <span class="n">new_confidence</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">confidence</span><span class="p">[::</span><span class="n">by</span><span class="p">]</span>
+        <span class="n">new_fps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fps</span> <span class="o">/</span> <span class="n">by</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">(</span><span class="n">fps</span><span class="o">=</span><span class="n">new_fps</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">new_data</span><span class="p">,</span> <span class="n">confidence</span><span class="o">=</span><span class="n">new_confidence</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PoseBody.augment2d"><a class="viewcode-back" href="../../pose_format.pose_body.html#pose_format.pose_body.PoseBody.augment2d">[docs]</a>    <span class="k">def</span> <span class="nf">augment2d</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rotation_std</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">shear_std</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">scale_std</span><span class="o">=</span><span class="mf">0.2</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Augment 2D data with given standard deviations.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        rotation_std : float, optional</span>
+<span class="sd">            Rotation in radians. Default is 0.2.</span>
+<span class="sd">        shear_std : float, optional</span>
+<span class="sd">            Shear X in percent. Default is 0.2.</span>
+<span class="sd">        scale_std : float, optional</span>
+<span class="sd">            Scale X in percent. Default is 0.2.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        PoseBody</span>
+<span class="sd">            Augmented PoseBody instance.</span>
+<span class="sd">        </span>
+<span class="sd">        Note</span>
+<span class="sd">        -----</span>
+<span class="sd">        - The method modifies the PoseBody based on shear, rotation, and scaling.</span>
+<span class="sd">        - **shear_std** based on https://en.wikipedia.org/wiki/Shear_matrix</span>
+<span class="sd">        - **rotation_std** based on https://en.wikipedia.org/wiki/Rotation_matrix </span>
+<span class="sd">        - **scale_std** based on https://en.wikipedia.org/wiki/Scaling_(geometry)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+
+        <span class="c1"># Based on https://en.wikipedia.org/wiki/Shear_matrix</span>
+        <span class="k">if</span> <span class="n">shear_std</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">shear_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+            <span class="n">shear_matrix</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">shear_std</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">shear_matrix</span><span class="p">)</span>
+
+        <span class="c1"># Based on https://en.wikipedia.org/wiki/Rotation_matrix</span>
+        <span class="k">if</span> <span class="n">rotation_std</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">rotation_angle</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">rotation_std</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">rotation_cos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">rotation_angle</span><span class="p">)</span>
+            <span class="n">rotation_sin</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">rotation_angle</span><span class="p">)</span>
+            <span class="n">rotation_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">rotation_cos</span><span class="p">,</span> <span class="o">-</span><span class="n">rotation_sin</span><span class="p">],</span> <span class="p">[</span><span class="n">rotation_sin</span><span class="p">,</span> <span class="n">rotation_cos</span><span class="p">]])</span>
+            <span class="n">matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">rotation_matrix</span><span class="p">)</span>
+
+        <span class="c1"># Based on https://en.wikipedia.org/wiki/Scaling_(geometry)</span>
+        <span class="k">if</span> <span class="n">scale_std</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">scale_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+            <span class="n">scale_matrix</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">scale_std</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">scale_matrix</span><span class="p">)</span>
+
+        <span class="c1"># Cast to matrix the correct size</span>
+        <span class="n">dim_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">dim_matrix</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">matrix</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">dim_matrix</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="PoseBody.zero_filled"><a class="viewcode-back" href="../../pose_format.pose_body.html#pose_format.pose_body.PoseBody.zero_filled">[docs]</a>    <span class="k">def</span> <span class="nf">zero_filled</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="vm">__qualname__</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates a new PoseBody instance with data replaced by zeros.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        PoseBody</span>
+<span class="sd">            PoseBody instance with zero-filled data.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        NotImplementedError</span>
+<span class="sd">            If the method is not implemented for the specific class.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;&#39;zero_filled&#39; not implemented on &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PoseBody.matmul"><a class="viewcode-back" href="../../pose_format.pose_body.html#pose_format.pose_body.PoseBody.matmul">[docs]</a>    <span class="k">def</span> <span class="nf">matmul</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">matrix</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="vm">__qualname__</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Multiplies PoseBody data with a numpy.ndarray matrix.</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        matrix : np.ndarray</span>
+<span class="sd">            The matrix to multiply the PoseBody data with.</span>
+<span class="sd">            </span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        PoseBody</span>
+<span class="sd">            PoseBody instance with data multiplied by a numpy array.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;&#39;matmul&#39; not implemented on &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PoseBody.get_points"><a class="viewcode-back" href="../../pose_format.pose_body.html#pose_format.pose_body.PoseBody.get_points">[docs]</a>    <span class="k">def</span> <span class="nf">get_points</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">indexes</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="vm">__qualname__</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get points from PoseBody.</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        indexes : List[int]</span>
+<span class="sd">            List of point indices to get from PoseBody.</span>
+<span class="sd">            </span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        PoseBody</span>
+<span class="sd">            PoseBody instance containing only choosen points.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;&#39;get_points&#39; not implemented on &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PoseBody.bbox"><a class="viewcode-back" href="../../pose_format.pose_body.html#pose_format.pose_body.PoseBody.bbox">[docs]</a>    <span class="k">def</span> <span class="nf">bbox</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">header</span><span class="p">:</span> <span class="n">PoseHeader</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="vm">__qualname__</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        For computing bounding box of PoseBody.</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        header : PoseHeader</span>
+<span class="sd">            Header containing the version of the pose data.</span>
+<span class="sd">            </span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        PoseBody</span>
+<span class="sd">            PoseBody instance with bounding box.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;&#39;bbox&#39; not implemented on &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PoseBody.points_perspective"><a class="viewcode-back" href="../../pose_format.pose_body.html#pose_format.pose_body.PoseBody.points_perspective">[docs]</a>    <span class="k">def</span> <span class="nf">points_perspective</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Give points in PoseBody as a perspective view.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        PoseBody</span>
+<span class="sd">            PoseBody instance with points adjusted for perspective.</span>
+<span class="sd">        </span>
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        NotImplementedError</span>
+<span class="sd">            If the method is not implemented for the specific class.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;&#39;points_perspective&#39; not implemented on &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PoseBody.select_frames"><a class="viewcode-back" href="../../pose_format.pose_body.html#pose_format.pose_body.PoseBody.select_frames">[docs]</a>    <span class="k">def</span> <span class="nf">select_frames</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frame_indexes</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;PoseBody&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Selects specific frames from PoseBody object.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        frame_indexes : List[int]</span>
+<span class="sd">            List of frame indexes to select.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        PoseBody</span>
+<span class="sd">            PoseBody object containing only the selected frames.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        IndexError</span>
+<span class="sd">            If any of the specified frame indices are out of the valid range for the current PoseBody data.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">frame_indexes</span><span class="p">]</span>
+        <span class="n">confidence</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">confidence</span><span class="p">[</span><span class="n">frame_indexes</span><span class="p">]</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">(</span><span class="n">fps</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">fps</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">confidence</span><span class="o">=</span><span class="n">confidence</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PoseBody.frame_dropout_given_percent"><a class="viewcode-back" href="../../pose_format.pose_body.html#pose_format.pose_body.PoseBody.frame_dropout_given_percent">[docs]</a>    <span class="k">def</span> <span class="nf">frame_dropout_given_percent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dropout_percent</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="s2">&quot;PoseBody&quot;</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Drop of frames based on  given dropout percentage.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        dropout_percent : float</span>
+<span class="sd">            Percentage of frames to drop. Between 0 and 1 (e.g., 0.2 means drop 20% of the frames).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Tuple[PoseBody, List[int]]</span>
+<span class="sd">            - New PoseBody object with the gotten frames.</span>
+<span class="sd">            - List of frame indexes.</span>
+<span class="sd">        </span>
+<span class="sd">        Note</span>
+<span class="sd">        -----</span>
+<span class="sd">        Actual number of dropped frames might be slightly different due to rounding.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="n">data_len</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">dropout_number</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">data_len</span> <span class="o">*</span> <span class="n">dropout_percent</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">data_len</span> <span class="o">*</span> <span class="mf">0.99</span><span class="p">))</span>
+        <span class="n">dropout_indexes</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">sample</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">data_len</span><span class="p">),</span> <span class="n">dropout_number</span><span class="p">))</span>
+        <span class="n">select_indexes</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">data_len</span><span class="p">)</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dropout_indexes</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">select_frames</span><span class="p">(</span><span class="n">select_indexes</span><span class="p">),</span> <span class="n">select_indexes</span></div>
+
+<div class="viewcode-block" id="PoseBody.frame_dropout_uniform"><a class="viewcode-back" href="../../pose_format.pose_body.html#pose_format.pose_body.PoseBody.frame_dropout_uniform">[docs]</a>    <span class="k">def</span> <span class="nf">frame_dropout_uniform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                              <span class="n">dropout_min</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.2</span><span class="p">,</span>
+                              <span class="n">dropout_max</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="s2">&quot;PoseBody&quot;</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Randomly drops frames depending on a uniform distribution - given minimum and maximum percentages.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        dropout_min : float, optional</span>
+<span class="sd">            Minimum percentage of frames to drop. Default is 0.2.</span>
+<span class="sd">        dropout_max : float, optional</span>
+<span class="sd">            Maximum percentage of frames to drop. Default is 1.0.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Tuple[PoseBody, List[int]]</span>
+<span class="sd">            - New PoseBody object with dropped frames.</span>
+<span class="sd">            - List of frame indexes that were retained.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">dropout_percent</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">low</span><span class="o">=</span><span class="n">dropout_min</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="n">dropout_max</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">frame_dropout_given_percent</span><span class="p">(</span><span class="n">dropout_percent</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PoseBody.frame_dropout_normal"><a class="viewcode-back" href="../../pose_format.pose_body.html#pose_format.pose_body.PoseBody.frame_dropout_normal">[docs]</a>    <span class="k">def</span> <span class="nf">frame_dropout_normal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                             <span class="n">dropout_mean</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
+                             <span class="n">dropout_std</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="s2">&quot;PoseBody&quot;</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        drop frames depending on normal distribution with given mean and standard deviation.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        dropout_mean : float, optional</span>
+<span class="sd">            Mean percentage of frames to drop. Default is 0.5.</span>
+<span class="sd">        dropout_std : float, optional</span>
+<span class="sd">            Standard deviation of percentage of frames to drop. Default is 0.1.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Tuple[PoseBody, List[int]]</span>
+<span class="sd">            - New PoseBody object with dropped frames.</span>
+<span class="sd">            - List of retrieved frame indexes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">dropout_percent</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">dropout_mean</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">dropout_std</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">1</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">frame_dropout_given_percent</span><span class="p">(</span><span class="n">dropout_percent</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Moryossef, Amit and Müller, Mathias.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

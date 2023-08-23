@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JSON Files &mdash; Pose-Format Toolkit v1.0.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="_static/my.css" type="text/css" />
+      <link rel="stylesheet" href="_static/assets/jsonview.bundle.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sphinx-needs/libs/html/datatables.min.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sphinx-needs/common.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sphinx-needs/layouts.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sphinx-needs/modern.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sphinx-needs/styles.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script src="_static/assets/jsonview.bundle.js"></script>
+        <script src="_static/assets/jsonview_loader.js"></script>
+        <script src="_static/sphinx-needs/libs/html/datatables.min.js"></script>
+        <script src="_static/sphinx-needs/libs/html/datatables_loader.js"></script>
+        <script src="_static/sphinx-needs/libs/html/sphinx_needs_collapse.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="pose_format/src" href="src.html" />
+    <link rel="prev" title="pose_format" href="pose_format_js.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Pose-Format Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="readme.html">Pose Format Introduction</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python Code Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pose_format.html">pose_format package</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Additional Material</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="js_docs.html">JavaScript</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="pose_format_js.html">pose_format</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">JSON Files</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#package-json">package.JSON</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#package-lock-json">package-lock.JSON</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tsconfig-json">tsconfig.JSON</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tslint-json">tslint.JSON</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="src.html">pose_format/src</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pose_viewer_js.html">pose_viewer</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="specs_v01.html">specs/v0.1.md</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Pose-Format Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="js_docs.html">JavaScript</a></li>
+          <li class="breadcrumb-item"><a href="pose_format_js.html">pose_format</a></li>
+      <li class="breadcrumb-item active">JSON Files</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/rfahrn/pose-master/blob/master//docs/json.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="json-files">
+<h1>JSON Files<a class="headerlink" href="#json-files" title="Permalink to this heading"></a></h1>
+<section id="package-json">
+<h2>package.JSON<a class="headerlink" href="#package-json" title="Permalink to this heading"></a></h2>
+<div class="literal-block-wrapper docutils container" id="id1">
+<div class="code-block-caption"><span class="caption-text">Description or Title for the JSON file</span><a class="headerlink" href="#id1" title="Permalink to this code"></a></div>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="p">{</span>
+<span class="linenos"> 2</span><span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;pose-format&quot;</span><span class="p">,</span>
+<span class="linenos"> 3</span><span class="w">  </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1.3.1&quot;</span><span class="p">,</span>
+<span class="linenos"> 4</span><span class="w">  </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Library for handling .pose files&quot;</span><span class="p">,</span>
+<span class="linenos"> 5</span><span class="w">  </span><span class="nt">&quot;scripts&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos"> 6</span><span class="w">    </span><span class="nt">&quot;start&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;tsc -w&quot;</span>
+<span class="linenos"> 7</span><span class="w">  </span><span class="p">},</span>
+<span class="linenos"> 8</span><span class="w">  </span><span class="nt">&quot;files&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="linenos"> 9</span><span class="w">    </span><span class="s2">&quot;dist/&quot;</span>
+<span class="linenos">10</span><span class="w">  </span><span class="p">],</span>
+<span class="linenos">11</span><span class="w">  </span><span class="nt">&quot;main&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;dist/index.js&quot;</span><span class="p">,</span>
+<span class="linenos">12</span><span class="w">  </span><span class="nt">&quot;module&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;dist/index.js&quot;</span><span class="p">,</span>
+<span class="linenos">13</span><span class="w">  </span><span class="nt">&quot;author&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Amit Moryossef&quot;</span><span class="p">,</span>
+<span class="linenos">14</span><span class="w">  </span><span class="nt">&quot;license&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;MIT&quot;</span><span class="p">,</span>
+<span class="linenos">15</span><span class="w">  </span><span class="nt">&quot;dependencies&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">16</span><span class="w">    </span><span class="nt">&quot;binary-parser&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;^2.1.0&quot;</span>
+<span class="linenos">17</span><span class="w">  </span><span class="p">},</span>
+<span class="linenos">18</span><span class="w">  </span><span class="nt">&quot;devDependencies&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">19</span><span class="w">    </span><span class="nt">&quot;@types/node&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;^17.0.42&quot;</span><span class="p">,</span>
+<span class="linenos">20</span><span class="w">    </span><span class="nt">&quot;typescript&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;4.7.3&quot;</span>
+<span class="linenos">21</span><span class="w">  </span><span class="p">}</span>
+<span class="linenos">22</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="package-lock-json">
+<h2>package-lock.JSON<a class="headerlink" href="#package-lock-json" title="Permalink to this heading"></a></h2>
+<div class="literal-block-wrapper docutils container" id="id2">
+<div class="code-block-caption"><span class="caption-text">Description or Title for the JSON file</span><a class="headerlink" href="#id2" title="Permalink to this code"></a></div>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="p">{</span>
+<span class="linenos"> 2</span><span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;pose-format&quot;</span><span class="p">,</span>
+<span class="linenos"> 3</span><span class="w">  </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1.3.1&quot;</span><span class="p">,</span>
+<span class="linenos"> 4</span><span class="w">  </span><span class="nt">&quot;lockfileVersion&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<span class="linenos"> 5</span><span class="w">  </span><span class="nt">&quot;requires&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="linenos"> 6</span><span class="w">  </span><span class="nt">&quot;packages&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos"> 7</span><span class="w">    </span><span class="nt">&quot;&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos"> 8</span><span class="w">      </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;pose-format&quot;</span><span class="p">,</span>
+<span class="linenos"> 9</span><span class="w">      </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1.3.1&quot;</span><span class="p">,</span>
+<span class="linenos">10</span><span class="w">      </span><span class="nt">&quot;license&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;MIT&quot;</span><span class="p">,</span>
+<span class="linenos">11</span><span class="w">      </span><span class="nt">&quot;dependencies&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">12</span><span class="w">        </span><span class="nt">&quot;binary-parser&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;^2.1.0&quot;</span>
+<span class="linenos">13</span><span class="w">      </span><span class="p">},</span>
+<span class="linenos">14</span><span class="w">      </span><span class="nt">&quot;devDependencies&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">15</span><span class="w">        </span><span class="nt">&quot;@types/node&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;^17.0.42&quot;</span><span class="p">,</span>
+<span class="linenos">16</span><span class="w">        </span><span class="nt">&quot;typescript&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;4.7.3&quot;</span>
+<span class="linenos">17</span><span class="w">      </span><span class="p">}</span>
+<span class="linenos">18</span><span class="w">    </span><span class="p">},</span>
+<span class="linenos">19</span><span class="w">    </span><span class="nt">&quot;node_modules/@types/node&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">20</span><span class="w">      </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;17.0.42&quot;</span><span class="p">,</span>
+<span class="linenos">21</span><span class="w">      </span><span class="nt">&quot;resolved&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://registry.npmjs.org/@types/node/-/node-17.0.42.tgz&quot;</span><span class="p">,</span>
+<span class="linenos">22</span><span class="w">      </span><span class="nt">&quot;integrity&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sha512-Q5BPGyGKcvQgAMbsr7qEGN/kIPN6zZecYYABeTDBizOsau+2NMdSVTar9UQw21A2+JyA2KRNDYaYrPB0Rpk2oQ==&quot;</span><span class="p">,</span>
+<span class="linenos">23</span><span class="w">      </span><span class="nt">&quot;dev&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="linenos">24</span><span class="w">    </span><span class="p">},</span>
+<span class="linenos">25</span><span class="w">    </span><span class="nt">&quot;node_modules/binary-parser&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">26</span><span class="w">      </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2.1.0&quot;</span><span class="p">,</span>
+<span class="linenos">27</span><span class="w">      </span><span class="nt">&quot;resolved&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://registry.npmjs.org/binary-parser/-/binary-parser-2.1.0.tgz&quot;</span><span class="p">,</span>
+<span class="linenos">28</span><span class="w">      </span><span class="nt">&quot;integrity&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sha512-R6WS2W7a7UHAFYLm0vWlk5M2aTayOjiyBZp+bvUZPUteuU5hI9BaREHKAFLgpq/nKheMgSxZOzpe/x3NxddqiQ==&quot;</span><span class="p">,</span>
+<span class="linenos">29</span><span class="w">      </span><span class="nt">&quot;engines&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">30</span><span class="w">        </span><span class="nt">&quot;node&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&gt;=12&quot;</span>
+<span class="linenos">31</span><span class="w">      </span><span class="p">}</span>
+<span class="linenos">32</span><span class="w">    </span><span class="p">},</span>
+<span class="linenos">33</span><span class="w">    </span><span class="nt">&quot;node_modules/typescript&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">34</span><span class="w">      </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;4.7.3&quot;</span><span class="p">,</span>
+<span class="linenos">35</span><span class="w">      </span><span class="nt">&quot;resolved&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://registry.npmjs.org/typescript/-/typescript-4.7.3.tgz&quot;</span><span class="p">,</span>
+<span class="linenos">36</span><span class="w">      </span><span class="nt">&quot;integrity&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sha512-WOkT3XYvrpXx4vMMqlD+8R8R37fZkjyLGlxavMc4iB8lrl8L0DeTcHbYgw/v0N/z9wAFsgBhcsF0ruoySS22mA==&quot;</span><span class="p">,</span>
+<span class="linenos">37</span><span class="w">      </span><span class="nt">&quot;dev&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="linenos">38</span><span class="w">      </span><span class="nt">&quot;bin&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">39</span><span class="w">        </span><span class="nt">&quot;tsc&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;bin/tsc&quot;</span><span class="p">,</span>
+<span class="linenos">40</span><span class="w">        </span><span class="nt">&quot;tsserver&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;bin/tsserver&quot;</span>
+<span class="linenos">41</span><span class="w">      </span><span class="p">},</span>
+<span class="linenos">42</span><span class="w">      </span><span class="nt">&quot;engines&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">43</span><span class="w">        </span><span class="nt">&quot;node&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&gt;=4.2.0&quot;</span>
+<span class="linenos">44</span><span class="w">      </span><span class="p">}</span>
+<span class="linenos">45</span><span class="w">    </span><span class="p">}</span>
+<span class="linenos">46</span><span class="w">  </span><span class="p">},</span>
+<span class="linenos">47</span><span class="w">  </span><span class="nt">&quot;dependencies&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">48</span><span class="w">    </span><span class="nt">&quot;@types/node&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">49</span><span class="w">      </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;17.0.42&quot;</span><span class="p">,</span>
+<span class="linenos">50</span><span class="w">      </span><span class="nt">&quot;resolved&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://registry.npmjs.org/@types/node/-/node-17.0.42.tgz&quot;</span><span class="p">,</span>
+<span class="linenos">51</span><span class="w">      </span><span class="nt">&quot;integrity&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sha512-Q5BPGyGKcvQgAMbsr7qEGN/kIPN6zZecYYABeTDBizOsau+2NMdSVTar9UQw21A2+JyA2KRNDYaYrPB0Rpk2oQ==&quot;</span><span class="p">,</span>
+<span class="linenos">52</span><span class="w">      </span><span class="nt">&quot;dev&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="linenos">53</span><span class="w">    </span><span class="p">},</span>
+<span class="linenos">54</span><span class="w">    </span><span class="nt">&quot;binary-parser&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">55</span><span class="w">      </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2.1.0&quot;</span><span class="p">,</span>
+<span class="linenos">56</span><span class="w">      </span><span class="nt">&quot;resolved&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://registry.npmjs.org/binary-parser/-/binary-parser-2.1.0.tgz&quot;</span><span class="p">,</span>
+<span class="linenos">57</span><span class="w">      </span><span class="nt">&quot;integrity&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sha512-R6WS2W7a7UHAFYLm0vWlk5M2aTayOjiyBZp+bvUZPUteuU5hI9BaREHKAFLgpq/nKheMgSxZOzpe/x3NxddqiQ==&quot;</span>
+<span class="linenos">58</span><span class="w">    </span><span class="p">},</span>
+<span class="linenos">59</span><span class="w">    </span><span class="nt">&quot;typescript&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">60</span><span class="w">      </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;4.7.3&quot;</span><span class="p">,</span>
+<span class="linenos">61</span><span class="w">      </span><span class="nt">&quot;resolved&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://registry.npmjs.org/typescript/-/typescript-4.7.3.tgz&quot;</span><span class="p">,</span>
+<span class="linenos">62</span><span class="w">      </span><span class="nt">&quot;integrity&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sha512-WOkT3XYvrpXx4vMMqlD+8R8R37fZkjyLGlxavMc4iB8lrl8L0DeTcHbYgw/v0N/z9wAFsgBhcsF0ruoySS22mA==&quot;</span><span class="p">,</span>
+<span class="linenos">63</span><span class="w">      </span><span class="nt">&quot;dev&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="linenos">64</span><span class="w">    </span><span class="p">}</span>
+<span class="linenos">65</span><span class="w">  </span><span class="p">}</span>
+<span class="linenos">66</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="tsconfig-json">
+<h2>tsconfig.JSON<a class="headerlink" href="#tsconfig-json" title="Permalink to this heading"></a></h2>
+<div class="literal-block-wrapper docutils container" id="id3">
+<div class="code-block-caption"><span class="caption-text">Description or Title for the JSON file</span><a class="headerlink" href="#id3" title="Permalink to this code"></a></div>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="p">{</span>
+<span class="linenos"> 2</span><span class="w">  </span><span class="nt">&quot;compilerOptions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos"> 3</span><span class="w">    </span><span class="nt">&quot;noImplicitReturns&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="linenos"> 4</span><span class="w">    </span><span class="nt">&quot;skipLibCheck&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="linenos"> 5</span><span class="w">    </span><span class="nt">&quot;noUnusedLocals&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="linenos"> 6</span><span class="w">    </span><span class="nt">&quot;outDir&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;dist&quot;</span><span class="p">,</span>
+<span class="linenos"> 7</span><span class="w">    </span><span class="nt">&quot;sourceMap&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="linenos"> 8</span><span class="w">    </span><span class="nt">&quot;strict&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="linenos"> 9</span><span class="w">    </span><span class="nt">&quot;target&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;es2017&quot;</span><span class="p">,</span>
+<span class="linenos">10</span><span class="w">    </span><span class="nt">&quot;moduleResolution&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;node&quot;</span>
+<span class="linenos">11</span><span class="w">  </span><span class="p">},</span>
+<span class="linenos">12</span><span class="w">  </span><span class="nt">&quot;compileOnSave&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="linenos">13</span><span class="w">  </span><span class="nt">&quot;files&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="linenos">14</span><span class="w">    </span><span class="s2">&quot;node_modules/binary-parser/dist/binary_parser.d.ts&quot;</span>
+<span class="linenos">15</span><span class="w">  </span><span class="p">],</span>
+<span class="linenos">16</span><span class="w">  </span><span class="nt">&quot;include&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="linenos">17</span><span class="w">    </span><span class="s2">&quot;pose_format/src/**/*&quot;</span><span class="p">,</span>
+<span class="linenos">18</span><span class="w">    </span><span class="s2">&quot;pose_format/src/**/*.json&quot;</span>
+<span class="linenos">19</span><span class="w">  </span><span class="p">],</span>
+<span class="linenos">20</span><span class="w">  </span><span class="nt">&quot;exclude&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="linenos">21</span><span class="w">    </span><span class="s2">&quot;node_modules&quot;</span><span class="p">,</span>
+<span class="linenos">22</span><span class="w">    </span><span class="s2">&quot;**/*.spec.ts&quot;</span>
+<span class="linenos">23</span><span class="w">  </span><span class="p">]</span>
+<span class="linenos">24</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="tslint-json">
+<h2>tslint.JSON<a class="headerlink" href="#tslint-json" title="Permalink to this heading"></a></h2>
+<div class="literal-block-wrapper docutils container" id="id4">
+<div class="code-block-caption"><span class="caption-text">Description or Title for the JSON file</span><a class="headerlink" href="#id4" title="Permalink to this code"></a></div>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="linenos">  1</span><span class="p">{</span>
+<span class="linenos">  2</span><span class="w">  </span><span class="nt">&quot;rules&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">  3</span><span class="w">    </span><span class="c1">// -- Strict errors --</span>
+<span class="linenos">  4</span><span class="w">    </span><span class="c1">// These lint rules are likely always a good idea.</span>
+<span class="linenos">  5</span>
+<span class="linenos">  6</span><span class="w">    </span><span class="c1">// Force function overloads to be declared together. This ensures readers understand APIs.</span>
+<span class="linenos">  7</span><span class="w">    </span><span class="nt">&quot;adjacent-overload-signatures&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="linenos">  8</span><span class="w">    </span><span class="c1">// Do not allow the subtle/obscure comma operator.</span>
+<span class="linenos">  9</span><span class="w">    </span><span class="nt">&quot;ban-comma-operator&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="linenos"> 10</span><span class="w">    </span><span class="c1">// Do not allow internal modules or namespaces . These are deprecated in favor of ES6 modules.</span>
+<span class="linenos"> 11</span><span class="w">    </span><span class="nt">&quot;no-namespace&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="linenos"> 12</span><span class="w">    </span><span class="c1">// Do not allow parameters to be reassigned. To avoid bugs, developers should instead assign new values to new vars.</span>
+<span class="linenos"> 13</span><span class="w">    </span><span class="nt">&quot;no-parameter-reassignment&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="linenos"> 14</span><span class="w">    </span><span class="c1">// Force the use of ES6-style imports instead of /// &lt;reference path=&gt; imports.</span>
+<span class="linenos"> 15</span><span class="w">    </span><span class="nt">&quot;no-reference&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="linenos"> 16</span><span class="w">    </span><span class="c1">// Do not allow type assertions that do nothing. This is a big warning that the developer may not understand the</span>
+<span class="linenos"> 17</span><span class="w">    </span><span class="c1">// code currently being edited (they may be incorrectly handling a different type case that does not exist).</span>
+<span class="linenos"> 18</span><span class="w">    </span><span class="nt">&quot;no-unnecessary-type-assertion&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="linenos"> 19</span><span class="w">    </span><span class="c1">// Disallow nonsensical label usage.</span>
+<span class="linenos"> 20</span><span class="w">    </span><span class="nt">&quot;label-position&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="linenos"> 21</span><span class="w">    </span><span class="c1">// Disallows the (often typo) syntax if (var1 = var2). Replace with if (var2) { var1 = var2 }.</span>
+<span class="linenos"> 22</span><span class="w">    </span><span class="nt">&quot;no-conditional-assignment&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="linenos"> 23</span><span class="w">    </span><span class="c1">// Disallows constructors for primitive types (e.g. new Number(&#39;123&#39;), though Number(&#39;123&#39;) is still allowed).</span>
+<span class="linenos"> 24</span><span class="w">    </span><span class="nt">&quot;no-construct&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="linenos"> 25</span><span class="w">    </span><span class="c1">// Do not allow super() to be called twice in a constructor.</span>
+<span class="linenos"> 26</span><span class="w">    </span><span class="nt">&quot;no-duplicate-super&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="linenos"> 27</span><span class="w">    </span><span class="c1">// Do not allow the same case to appear more than once in a switch block.</span>
+<span class="linenos"> 28</span><span class="w">    </span><span class="nt">&quot;no-duplicate-switch-case&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="linenos"> 29</span><span class="w">    </span><span class="c1">// Do not allow a variable to be declared more than once in the same block. Consider function parameters in this</span>
+<span class="linenos"> 30</span><span class="w">    </span><span class="c1">// rule.</span>
+<span class="linenos"> 31</span><span class="w">    </span><span class="nt">&quot;no-duplicate-variable&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="linenos"> 32</span><span class="w">      </span><span class="kc">true</span><span class="p">,</span>
+<span class="linenos"> 33</span><span class="w">      </span><span class="s2">&quot;check-parameters&quot;</span>
+<span class="linenos"> 34</span><span class="w">    </span><span class="p">],</span>
+<span class="linenos"> 35</span><span class="w">    </span><span class="c1">// Disallows a variable definition in an inner scope from shadowing a variable in an outer scope. Developers should</span>
+<span class="linenos"> 36</span><span class="w">    </span><span class="c1">// instead use a separate variable name.</span>
+<span class="linenos"> 37</span><span class="w">    </span><span class="nt">&quot;no-shadowed-variable&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="linenos"> 38</span><span class="w">    </span><span class="c1">// Empty blocks are almost never needed. Allow the one general exception: empty catch blocks.</span>
+<span class="linenos"> 39</span><span class="w">    </span><span class="nt">&quot;no-empty&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="linenos"> 40</span><span class="w">      </span><span class="kc">true</span><span class="p">,</span>
+<span class="linenos"> 41</span><span class="w">      </span><span class="s2">&quot;allow-empty-catch&quot;</span>
+<span class="linenos"> 42</span><span class="w">    </span><span class="p">],</span>
+<span class="linenos"> 43</span><span class="w">    </span><span class="c1">// Functions must either be handled directly (e.g. with a catch() handler) or returned to another function.</span>
+<span class="linenos"> 44</span><span class="w">    </span><span class="c1">// This is a major source of errors in Cloud Functions and the team strongly recommends leaving this rule on.</span>
+<span class="linenos"> 45</span><span class="w">    </span><span class="nt">&quot;no-floating-promises&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="linenos"> 46</span><span class="w">    </span><span class="c1">// Do not allow any imports for modules that are not in package.json. These will almost certainly fail when</span>
+<span class="linenos"> 47</span><span class="w">    </span><span class="c1">// deployed.</span>
+<span class="linenos"> 48</span><span class="w">    </span><span class="nt">&quot;no-implicit-dependencies&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="linenos"> 49</span><span class="w">    </span><span class="c1">// The &#39;this&#39; keyword can only be used inside of classes.</span>
+<span class="linenos"> 50</span><span class="w">    </span><span class="nt">&quot;no-invalid-this&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="linenos"> 51</span><span class="w">    </span><span class="c1">// Do not allow strings to be thrown because they will not include stack traces. Throw Errors instead.</span>
+<span class="linenos"> 52</span><span class="w">    </span><span class="nt">&quot;no-string-throw&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="linenos"> 53</span><span class="w">    </span><span class="c1">// Disallow control flow statements, such as return, continue, break, and throw in finally blocks.</span>
+<span class="linenos"> 54</span><span class="w">    </span><span class="nt">&quot;no-unsafe-finally&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="linenos"> 55</span><span class="w">    </span><span class="c1">// Expressions must always return a value. Avoids common errors like const myValue = functionReturningVoid();</span>
+<span class="linenos"> 56</span><span class="w">    </span><span class="nt">&quot;no-void-expression&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="linenos"> 57</span><span class="w">      </span><span class="kc">true</span><span class="p">,</span>
+<span class="linenos"> 58</span><span class="w">      </span><span class="s2">&quot;ignore-arrow-function-shorthand&quot;</span>
+<span class="linenos"> 59</span><span class="w">    </span><span class="p">],</span>
+<span class="linenos"> 60</span><span class="w">    </span><span class="c1">// Disallow duplicate imports in the same file.</span>
+<span class="linenos"> 61</span><span class="w">    </span><span class="nt">&quot;no-duplicate-imports&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="linenos"> 62</span><span class="w">    </span><span class="c1">// -- Strong Warnings --</span>
+<span class="linenos"> 63</span><span class="w">    </span><span class="c1">// These rules should almost never be needed, but may be included due to legacy code.</span>
+<span class="linenos"> 64</span><span class="w">    </span><span class="c1">// They are left as a warning to avoid frustration with blocked deploys when the developer</span>
+<span class="linenos"> 65</span><span class="w">    </span><span class="c1">// understand the warning and wants to deploy anyway.</span>
+<span class="linenos"> 66</span>
+<span class="linenos"> 67</span><span class="w">    </span><span class="c1">// Warn when an empty interface is defined. These are generally not useful.</span>
+<span class="linenos"> 68</span><span class="w">    </span><span class="nt">&quot;no-empty-interface&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos"> 69</span><span class="w">      </span><span class="nt">&quot;severity&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;warning&quot;</span>
+<span class="linenos"> 70</span><span class="w">    </span><span class="p">},</span>
+<span class="linenos"> 71</span><span class="w">    </span><span class="c1">// Warn when an import will have side effects.</span>
+<span class="linenos"> 72</span><span class="w">    </span><span class="nt">&quot;no-import-side-effect&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos"> 73</span><span class="w">      </span><span class="nt">&quot;severity&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;warning&quot;</span>
+<span class="linenos"> 74</span><span class="w">    </span><span class="p">},</span>
+<span class="linenos"> 75</span><span class="w">    </span><span class="c1">// Warn when variables are defined with var. Var has subtle meaning that can lead to bugs. Strongly prefer const for</span>
+<span class="linenos"> 76</span><span class="w">    </span><span class="c1">// most values and let for values that will change.</span>
+<span class="linenos"> 77</span><span class="w">    </span><span class="nt">&quot;no-var-keyword&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos"> 78</span><span class="w">      </span><span class="nt">&quot;severity&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;warning&quot;</span>
+<span class="linenos"> 79</span><span class="w">    </span><span class="p">},</span>
+<span class="linenos"> 80</span><span class="w">    </span><span class="c1">// Prefer === and !== over == and !=. The latter operators support overloads that are often accidental.</span>
+<span class="linenos"> 81</span><span class="w">    </span><span class="nt">&quot;triple-equals&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos"> 82</span><span class="w">      </span><span class="nt">&quot;severity&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;warning&quot;</span>
+<span class="linenos"> 83</span><span class="w">    </span><span class="p">},</span>
+<span class="linenos"> 84</span><span class="w">    </span><span class="c1">// Warn when using deprecated APIs.</span>
+<span class="linenos"> 85</span><span class="w">    </span><span class="nt">&quot;deprecation&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos"> 86</span><span class="w">      </span><span class="nt">&quot;severity&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;warning&quot;</span>
+<span class="linenos"> 87</span><span class="w">    </span><span class="p">},</span>
+<span class="linenos"> 88</span><span class="w">    </span><span class="c1">// -- Light Warnings --</span>
+<span class="linenos"> 89</span><span class="w">    </span><span class="c1">// These rules are intended to help developers use better style. Simpler code has fewer bugs. These would be &quot;info&quot;</span>
+<span class="linenos"> 90</span><span class="w">    </span><span class="c1">// if TSLint supported such a level.</span>
+<span class="linenos"> 91</span>
+<span class="linenos"> 92</span><span class="w">    </span><span class="c1">// prefer for( ... of ... ) to an index loop when the index is only used to fetch an object from an array.</span>
+<span class="linenos"> 93</span><span class="w">    </span><span class="c1">// (Even better: check out utils like .map if transforming an array!)</span>
+<span class="linenos"> 94</span><span class="w">    </span><span class="nt">&quot;prefer-for-of&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos"> 95</span><span class="w">      </span><span class="nt">&quot;severity&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;warning&quot;</span>
+<span class="linenos"> 96</span><span class="w">    </span><span class="p">},</span>
+<span class="linenos"> 97</span><span class="w">    </span><span class="c1">// Warns if function overloads could be unified into a single function with optional or rest parameters.</span>
+<span class="linenos"> 98</span><span class="w">    </span><span class="nt">&quot;unified-signatures&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos"> 99</span><span class="w">      </span><span class="nt">&quot;severity&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;warning&quot;</span>
+<span class="linenos">100</span><span class="w">    </span><span class="p">},</span>
+<span class="linenos">101</span><span class="w">    </span><span class="c1">// Prefer const for values that will not change. This better documents code.</span>
+<span class="linenos">102</span><span class="w">    </span><span class="nt">&quot;prefer-const&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">103</span><span class="w">      </span><span class="nt">&quot;severity&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;warning&quot;</span>
+<span class="linenos">104</span><span class="w">    </span><span class="p">},</span>
+<span class="linenos">105</span><span class="w">    </span><span class="c1">// Multi-line object literals and function calls should have a trailing comma. This helps avoid merge conflicts.</span>
+<span class="linenos">106</span><span class="w">    </span><span class="nt">&quot;trailing-comma&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">107</span><span class="w">      </span><span class="nt">&quot;severity&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;warning&quot;</span>
+<span class="linenos">108</span><span class="w">    </span><span class="p">}</span>
+<span class="linenos">109</span><span class="w">  </span><span class="p">},</span>
+<span class="linenos">110</span><span class="w">  </span><span class="nt">&quot;defaultSeverity&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;error&quot;</span>
+<span class="linenos">111</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="pose_format_js.html" class="btn btn-neutral float-left" title="pose_format" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="src.html" class="btn btn-neutral float-right" title="pose_format/src" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Moryossef, Amit and Müller, Mathias.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -13,7 +13,23 @@ from pose_format.tensorflow.masked.tensor import MaskedTensor
 def create_random_numpy_tensor_and_mask(shape: Tuple,
                                         probability_for_masked: float,
                                         num_nans: int = 0) -> Tuple[np.array, np.array]:
+    """
+    Creates a random numpy tensor and a corresponding mask.
 
+    Parameters
+    ----------
+    shape : Tuple
+        The desired shape of the tensor.
+    probability_for_masked : float
+        The probability that an element is masked.
+    num_nans : int, optional
+        Number of NaNs to be inserted into the tensor, default is 0.
+
+    Returns
+    -------
+    Tuple[np.array, np.array]
+        A tuple containing the generated tensor and its corresponding mask.
+    """
     tensor = np.random.random_sample(size=shape)
 
     if num_nans > 0:
@@ -26,8 +42,12 @@ def create_random_numpy_tensor_and_mask(shape: Tuple,
 
 
 class TestMaskedTensor(TestCase):
+    """Test cases for the MaskedTensor class."""
+
 
     def test_fix_nan(self):
+        """Test if NaN values in a MaskedTensor are fixed (removed).
+        """
 
         tensor, mask = create_random_numpy_tensor_and_mask(shape=(5, 7, 11),
                                                            probability_for_masked=0.2,
@@ -41,7 +61,9 @@ class TestMaskedTensor(TestCase):
         self.assertFalse(np.isnan(result_as_numpy).any(), msg="Function fix_nan did not remove all nan values.")
 
     def test_mean(self):
-
+        """
+        Test if the computed mean of a MaskedTensor matches the numpy MaskedArray.
+        """
         tensor, mask = create_random_numpy_tensor_and_mask(shape=(5, 7), probability_for_masked=0.2)
 
         masked_np = ma.array(tensor, mask=np.logical_not(mask))
@@ -56,6 +78,9 @@ class TestMaskedTensor(TestCase):
         self.assertTrue(np.allclose(np_tf, np_ma), msg="Mean is not equal to expected")
 
     def test_std(self):
+        """
+        Test if the computed standard deviation of a MaskedTensor matches the numpy MaskedArray.
+        """
         tensor, mask = create_random_numpy_tensor_and_mask(shape=(7, 3), probability_for_masked=0.1)
 
         masked_np = ma.array(tensor, mask=np.logical_not(mask))
@@ -70,7 +95,8 @@ class TestMaskedTensor(TestCase):
         self.assertTrue(np.allclose(np_tf, np_ma), msg="STD is not equal to expected")
 
     def test_reshape_identical_to_numpy_reshape(self):
-
+        """Test if the reshape method of a MaskedTensor produces results identical to numpy's reshape.
+        """
         input_shape = (7, 3, 4)
         target_shape = (21, 4)
 
@@ -86,7 +112,8 @@ class TestMaskedTensor(TestCase):
         self.assertTrue(np.allclose(reshaped_actual, reshaped_expected), msg="Reshape operations do not produce the same result")
 
     def test_reshape_return_type_is_correct(self):
-
+        """Test if the return type of the reshape method of a MaskedTensor is itself a MaskedTensor.
+        """
         input_shape = (12,)
         target_shape = (3, 4)
 
@@ -98,7 +125,9 @@ class TestMaskedTensor(TestCase):
         self.assertIsInstance(reshaped_tf, MaskedTensor, "Return value of reshape is not an instance of MaskedTensor")
 
     def test_float_eager_execution_return_type_is_correct(self):
-
+        """
+        Test if a MaskedTensor can be correctly cast to a float during eager execution.
+        """
         input_shape = (1,)
 
         tensor, mask = create_random_numpy_tensor_and_mask(shape=input_shape, probability_for_masked=0.1)

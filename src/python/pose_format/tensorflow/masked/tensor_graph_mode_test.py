@@ -8,8 +8,19 @@ from pose_format.tensorflow.masked.tensor_test import create_random_numpy_tensor
 
 
 class TestMaskedTensor(TestCase):
-
+    """
+    Unit tests for `MaskedTensor` class in TensorFlow.
+    """
     def test_float_graph_execution_fails(self):
+        """
+        Test if attempting to convert a MaskedTensor to float raises a TypeError during graph execution.
+
+        Note
+        -----
+        This test ensures that if a user attempts to convert a MaskedTensor instance 
+        to a floating point number during TensorFlow graph execution, 
+        a TypeError should be raised.
+        """
 
         with tf.Graph().as_default():
 
@@ -25,6 +36,14 @@ class TestMaskedTensor(TestCase):
                 float(masked_tf)
 
     def test_eq_graph_execution(self):
+        """
+        Test the equality operation on a MaskedTensor during graph execution.
+
+        Note
+        -----
+        This test evaluates if the MaskedTensor can be compared with a 
+        float number during TensorFlow graph execution without any errors.
+        """
 
         with tf.Graph().as_default():
 

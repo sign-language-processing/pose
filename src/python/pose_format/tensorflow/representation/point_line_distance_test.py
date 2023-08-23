@@ -13,7 +13,10 @@ representation = PointLineDistanceRepresentation()
 
 
 class TestPointLineDistanceRepresentation(TestCase):
+    """Test case for PointLineDistanceRepresentation class
+"""
     def test_call_value_should_be_distance(self):
+        """Test if the calculated distances are correct"""
         p1s = tf.constant([[[[2, 3, 4]]]], dtype=tf.float32)
         p2s = tf.constant([[[[1, 1, 1]]]], dtype=tf.float32)
         p3s = tf.constant([[[[3, 4, 2]]]], dtype=tf.float32)

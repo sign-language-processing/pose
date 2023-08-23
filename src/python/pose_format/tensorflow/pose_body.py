@@ -195,6 +195,14 @@ class TensorflowPoseBody(PoseBody):
         return self.__class__(fps=self.fps, data=data, confidence=self.confidence)
 
     def as_tfrecord(self):
+        """
+        converts into TensorFlow (tf) record format
+
+        Returns
+        -------
+        dict
+            dictionary representation of TensorFlow (tf) record for the pose body
+        """
         data = tf.io.serialize_tensor(self.data.tensor).numpy()
         confidence = tf.io.serialize_tensor(self.confidence).numpy()
 
@@ -206,6 +214,19 @@ class TensorflowPoseBody(PoseBody):
 
     @classmethod
     def from_tfrecord(cls, tfrecord_dict: dict):
+        """
+        From a TensorFlow record dictionary, it creates a instance of TensorflowPoseBody
+
+        Parameters
+        ----------
+        tfrecord_dict : dict
+            Dictionary representation of TensorFlow (tf) record data.
+
+        Returns
+        -------
+        TensorflowPoseBody
+            An instance constructed from given TensorFlow record data
+        """
         fps = tf.cast(tfrecord_dict['fps'], dtype=tf.float32)
         data = tf.io.parse_tensor(tfrecord_dict['pose_data'], out_type=tf.float32)
         confidence = tf.io.parse_tensor(tfrecord_dict['pose_confidence'], out_type=tf.float32)

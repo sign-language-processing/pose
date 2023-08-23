@@ -46,8 +46,8 @@ html_theme_options = {
 
 html_context = {
     'display_github': True,
-    'github_user': 'rfahrn', #'sign-language-processing'
-    'github_repo': 'pose-master',
+    'github_user': 'sign-language-processing', #'sign-language-processing'
+    'github_repo': 'pose',
     'github_version': 'master/',
     'conf_py_path': '/docs/',
     'source_suffix': '.rst',

@@ -223,5 +223,4 @@ If you use our toolkit in your research or projects, please consider citing the 
     howpublished={\url{https://github.com/sign-language-processing/pose}},
     year={2021}
 }
-
 ```

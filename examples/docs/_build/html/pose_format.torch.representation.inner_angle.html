@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pose_format.torch.representation.inner_angle module &mdash; Pose-Format Toolkit v1.0.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="_static/my.css" type="text/css" />
+      <link rel="stylesheet" href="_static/assets/jsonview.bundle.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sphinx-needs/libs/html/datatables.min.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sphinx-needs/common.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sphinx-needs/layouts.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sphinx-needs/modern.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sphinx-needs/styles.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script src="_static/assets/jsonview.bundle.js"></script>
+        <script src="_static/assets/jsonview_loader.js"></script>
+        <script src="_static/sphinx-needs/libs/html/datatables.min.js"></script>
+        <script src="_static/sphinx-needs/libs/html/datatables_loader.js"></script>
+        <script src="_static/sphinx-needs/libs/html/sphinx_needs_collapse.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="pose_format.torch.representation.inner_angle_test module" href="pose_format.torch.representation.inner_angle_test.html" />
+    <link rel="prev" title="pose_format.torch.representation.distance_test module" href="pose_format.torch.representation.distance_test.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Pose-Format Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="readme.html">Pose Format Introduction</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python Code Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Structure</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="pose_format.html">pose_format package</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="pose_format.numpy.html">pose_format.numpy package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pose_format.tensorflow.html">pose_format.tensorflow package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pose_format.testing.html">pose_format.testing package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pose_format.third_party.html">pose_format.third_party package</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="pose_format.torch.html">pose_format.torch package</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="pose_format.torch.masked.html">pose_format.torch.masked package</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="pose_format.torch.representation.html">pose_format.torch.representation package</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="pose_format.torch.representation.angle.html">pose_format.torch.representation.angle module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.torch.representation.angle_test.html">pose_format.torch.representation.angle_test module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.torch.representation.distance.html">pose_format.torch.representation.distance module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.torch.representation.distance_test.html">pose_format.torch.representation.distance_test module</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">pose_format.torch.representation.inner_angle module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.torch.representation.inner_angle_test.html">pose_format.torch.representation.inner_angle_test module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.torch.representation.point_line_distance.html">pose_format.torch.representation.point_line_distance module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.torch.representation.point_line_distance_test.html">pose_format.torch.representation.point_line_distance_test module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.torch.representation.points.html">pose_format.torch.representation.points module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pose_format.torch.html#submodules">Submodules</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pose_format.utils.html">pose_format.utils package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pose_format.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Additional Material</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="js_docs.html">JavaScript</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="specs_v01.html">specs/v0.1.md</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Pose-Format Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="pose_format.html">pose_format package</a></li>
+          <li class="breadcrumb-item"><a href="pose_format.torch.html">pose_format.torch package</a></li>
+          <li class="breadcrumb-item"><a href="pose_format.torch.representation.html">pose_format.torch.representation package</a></li>
+      <li class="breadcrumb-item active">pose_format.torch.representation.inner_angle module</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/rfahrn/pose-master/blob/master//docs/pose_format.torch.representation.inner_angle.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-pose_format.torch.representation.inner_angle">
+<span id="pose-format-torch-representation-inner-angle-module"></span><h1>pose_format.torch.representation.inner_angle module<a class="headerlink" href="#module-pose_format.torch.representation.inner_angle" title="Permalink to this heading"></a></h1>
+<p><strong>Classes:</strong></p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pose_format.torch.representation.inner_angle.InnerAngleRepresentation" title="pose_format.torch.representation.inner_angle.InnerAngleRepresentation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InnerAngleRepresentation</span></code></a>(*args, **kwargs)</p></td>
+<td><p>A neural network module to compute the inner angle at a point for a triangle.</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Functions:</strong></p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pose_format.torch.representation.inner_angle.get_vectors_norm" title="pose_format.torch.representation.inner_angle.get_vectors_norm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_vectors_norm</span></code></a>(vectors)</p></td>
+<td><p>Computes the normalized vectors from the given masked vectors.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py class">
+<dt class="sig sig-object py" id="pose_format.torch.representation.inner_angle.InnerAngleRepresentation">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pose_format.torch.representation.inner_angle.</span></span><span class="sig-name descname"><span class="pre">InnerAngleRepresentation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/torch/representation/inner_angle.html#InnerAngleRepresentation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.torch.representation.inner_angle.InnerAngleRepresentation" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
+<p>A neural network module to compute the inner angle at a point for a triangle.</p>
+<p><strong>Methods:</strong></p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pose_format.torch.representation.inner_angle.InnerAngleRepresentation.forward" title="pose_format.torch.representation.inner_angle.InnerAngleRepresentation.forward"><code class="xref py py-obj docutils literal notranslate"><span class="pre">forward</span></code></a>(p1s, p2s, p3s)</p></td>
+<td><p>Computes the angle in point <code class="xref py py-obj docutils literal notranslate"><span class="pre">p2s</span></code> for the triangle defined by the points &lt;p1s, p2s, p3s&gt;.</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Attributes:</strong></p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pose_format.torch.representation.inner_angle.InnerAngleRepresentation.training" title="pose_format.torch.representation.inner_angle.InnerAngleRepresentation.training"><code class="xref py py-obj docutils literal notranslate"><span class="pre">training</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<dl class="field-list simple">
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pose_format.torch.representation.inner_angle.InnerAngleRepresentation.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p1s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p2s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p3s</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/torch/representation/inner_angle.html#InnerAngleRepresentation.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.torch.representation.inner_angle.InnerAngleRepresentation.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Computes the angle in point <code class="xref py py-obj docutils literal notranslate"><span class="pre">p2s</span></code> for the triangle defined by the points &lt;p1s, p2s, p3s&gt;.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>p1s</strong> (<a class="reference internal" href="pose_format.torch.masked.tensor.html#pose_format.torch.masked.tensor.MaskedTensor" title="pose_format.torch.masked.tensor.MaskedTensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">MaskedTensor</span></code></a>) – A tensor representing the first set of points, with shape (Points, Batch, Len, Dims).</p></li>
+<li><p><strong>p2s</strong> (<a class="reference internal" href="pose_format.torch.masked.tensor.html#pose_format.torch.masked.tensor.MaskedTensor" title="pose_format.torch.masked.tensor.MaskedTensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">MaskedTensor</span></code></a>) – A tensor representing the second set of points (at which the angle is calculated), with shape (Points, Batch, Len, Dims).</p></li>
+<li><p><strong>p3s</strong> (<a class="reference internal" href="pose_format.torch.masked.tensor.html#pose_format.torch.masked.tensor.MaskedTensor" title="pose_format.torch.masked.tensor.MaskedTensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">MaskedTensor</span></code></a>) – A tensor representing the third set of points, with shape (Points, Batch, Len, Dims).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A tensor representing the computed angles at point <code class="xref py py-obj docutils literal notranslate"><span class="pre">p2s</span></code>, with shape (Points, Batch, Len).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The method is based on the approach suggested in:
+<a class="reference external" href="https://stackoverflow.com/questions/19729831/angle-between-3-points-in-3d-space">https://stackoverflow.com/questions/19729831/angle-between-3-points-in-3d-space</a></p>
+<p>The function first computes the vectors v1 and v2 by subtracting points p1s and p3s
+from p2s, respectively. The vectors are then normalized. The angle is calculated by
+finding the arccosine of the dot product of the normalized vectors. NaN values in
+the resulting tensor are set to zero.</p>
+</div>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pose_format.torch.representation.inner_angle.InnerAngleRepresentation.training">
+<span class="sig-name descname"><span class="pre">training</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#pose_format.torch.representation.inner_angle.InnerAngleRepresentation.training" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pose_format.torch.representation.inner_angle.get_vectors_norm">
+<span class="sig-prename descclassname"><span class="pre">pose_format.torch.representation.inner_angle.</span></span><span class="sig-name descname"><span class="pre">get_vectors_norm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vectors</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/torch/representation/inner_angle.html#get_vectors_norm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.torch.representation.inner_angle.get_vectors_norm" title="Permalink to this definition"></a></dt>
+<dd><p>Computes the normalized vectors from the given masked vectors.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>vectors</strong> (<a class="reference internal" href="pose_format.torch.masked.tensor.html#pose_format.torch.masked.tensor.MaskedTensor" title="pose_format.torch.masked.tensor.MaskedTensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">MaskedTensor</span></code></a>) – The input masked vectors with any shape.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The normalized masked vectors of the same shape as the input.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="pose_format.torch.masked.tensor.html#pose_format.torch.masked.tensor.MaskedTensor" title="pose_format.torch.masked.tensor.MaskedTensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">MaskedTensor</span></code></a></p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>The function squares the input vectors, then sums along the last dimension.
+Taking the square root of the sum provides the magnitude. The original vectors
+are then divided by this magnitude to normalize.</p>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="pose_format.torch.representation.distance_test.html" class="btn btn-neutral float-left" title="pose_format.torch.representation.distance_test module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="pose_format.torch.representation.inner_angle_test.html" class="btn btn-neutral float-right" title="pose_format.torch.representation.inner_angle_test module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Moryossef, Amit and Müller, Mathias.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

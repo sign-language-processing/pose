@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pose_format.torch.masked.torch module &mdash; Pose-Format Toolkit v1.0.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="_static/my.css" type="text/css" />
+      <link rel="stylesheet" href="_static/assets/jsonview.bundle.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sphinx-needs/libs/html/datatables.min.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sphinx-needs/common.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sphinx-needs/layouts.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sphinx-needs/modern.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sphinx-needs/styles.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script src="_static/assets/jsonview.bundle.js"></script>
+        <script src="_static/assets/jsonview_loader.js"></script>
+        <script src="_static/sphinx-needs/libs/html/datatables.min.js"></script>
+        <script src="_static/sphinx-needs/libs/html/datatables_loader.js"></script>
+        <script src="_static/sphinx-needs/libs/html/sphinx_needs_collapse.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="pose_format.torch.masked.torch_test module" href="pose_format.torch.masked.torch_test.html" />
+    <link rel="prev" title="pose_format.torch.masked.tensor module" href="pose_format.torch.masked.tensor.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Pose-Format Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="readme.html">Pose Format Introduction</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python Code Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Structure</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="pose_format.html">pose_format package</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="pose_format.numpy.html">pose_format.numpy package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pose_format.tensorflow.html">pose_format.tensorflow package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pose_format.testing.html">pose_format.testing package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pose_format.third_party.html">pose_format.third_party package</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="pose_format.torch.html">pose_format.torch package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="pose_format.torch.masked.html">pose_format.torch.masked package</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="pose_format.torch.masked.tensor.html">pose_format.torch.masked.tensor module</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">pose_format.torch.masked.torch module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.torch.masked.torch_test.html">pose_format.torch.masked.torch_test module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.torch.masked.html#module-pose_format.torch.masked.tensor">pose_format.torch.masked.tensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.torch.masked.html#module-pose_format.torch.masked.torch">pose_format.torch.masked.torch module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.torch.masked.html#module-pose_format.torch.masked.torch_test">pose_format.torch.masked.torch_test module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pose_format.torch.representation.html">pose_format.torch.representation package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pose_format.torch.html#submodules">Submodules</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pose_format.utils.html">pose_format.utils package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pose_format.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Additional Material</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="js_docs.html">JavaScript</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="specs_v01.html">specs/v0.1.md</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Pose-Format Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="pose_format.html">pose_format package</a></li>
+          <li class="breadcrumb-item"><a href="pose_format.torch.html">pose_format.torch package</a></li>
+          <li class="breadcrumb-item"><a href="pose_format.torch.masked.html">pose_format.torch.masked package</a></li>
+      <li class="breadcrumb-item active">pose_format.torch.masked.torch module</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/rfahrn/pose-master/blob/master//docs/pose_format.torch.masked.torch.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-pose_format.torch.masked.torch">
+<span id="pose-format-torch-masked-torch-module"></span><h1>pose_format.torch.masked.torch module<a class="headerlink" href="#module-pose_format.torch.masked.torch" title="Permalink to this heading"></a></h1>
+<p><strong>Classes:</strong></p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pose_format.torch.masked.torch.MaskedTorch" title="pose_format.torch.masked.torch.MaskedTorch"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MaskedTorch</span></code></a></p></td>
+<td><p>class mimicing torch functions and giving  support for <a class="reference internal" href="pose_format.torch.masked.tensor.html#pose_format.torch.masked.tensor.MaskedTensor" title="pose_format.torch.masked.tensor.MaskedTensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">MaskedTensor</span></code></a>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pose_format.torch.masked.torch.TorchFallback" title="pose_format.torch.masked.torch.TorchFallback"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TorchFallback</span></code></a></p></td>
+<td><p>Meta class that gives a fallback mechanism to use torch functions on <a class="reference internal" href="pose_format.torch.masked.tensor.html#pose_format.torch.masked.tensor.MaskedTensor" title="pose_format.torch.masked.tensor.MaskedTensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">MaskedTensor</span></code></a> objects.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py class">
+<dt class="sig sig-object py" id="pose_format.torch.masked.torch.MaskedTorch">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pose_format.torch.masked.torch.</span></span><span class="sig-name descname"><span class="pre">MaskedTorch</span></span><a class="reference internal" href="_modules/pose_format/torch/masked/torch.html#MaskedTorch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.torch.masked.torch.MaskedTorch" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>class mimicing torch functions and giving  support for <a class="reference internal" href="pose_format.torch.masked.tensor.html#pose_format.torch.masked.tensor.MaskedTensor" title="pose_format.torch.masked.tensor.MaskedTensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">MaskedTensor</span></code></a>.</p>
+<p><strong>Methods:</strong></p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pose_format.torch.masked.torch.MaskedTorch.cat" title="pose_format.torch.masked.torch.MaskedTorch.cat"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cat</span></code></a>(tensors, dim)</p></td>
+<td><p>Concatenate <a class="reference internal" href="pose_format.torch.masked.tensor.html#pose_format.torch.masked.tensor.MaskedTensor" title="pose_format.torch.masked.tensor.MaskedTensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">MaskedTensor</span></code></a> objects along a specified dimension.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pose_format.torch.masked.torch.MaskedTorch.squeeze" title="pose_format.torch.masked.torch.MaskedTorch.squeeze"><code class="xref py py-obj docutils literal notranslate"><span class="pre">squeeze</span></code></a>(masked_tensor)</p></td>
+<td><p>Remove dimensions of size 1 from <a class="reference internal" href="pose_format.torch.masked.tensor.html#pose_format.torch.masked.tensor.MaskedTensor" title="pose_format.torch.masked.tensor.MaskedTensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">MaskedTensor</span></code></a>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pose_format.torch.masked.torch.MaskedTorch.stack" title="pose_format.torch.masked.torch.MaskedTorch.stack"><code class="xref py py-obj docutils literal notranslate"><span class="pre">stack</span></code></a>(tensors, dim)</p></td>
+<td><p>Stack <a class="reference internal" href="pose_format.torch.masked.tensor.html#pose_format.torch.masked.tensor.MaskedTensor" title="pose_format.torch.masked.tensor.MaskedTensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">MaskedTensor</span></code></a> objects along a new dimension.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pose_format.torch.masked.torch.MaskedTorch.zeros" title="pose_format.torch.masked.torch.MaskedTorch.zeros"><code class="xref py py-obj docutils literal notranslate"><span class="pre">zeros</span></code></a>(*size[, dtype])</p></td>
+<td><p>Creates a <a class="reference internal" href="pose_format.torch.masked.tensor.html#pose_format.torch.masked.tensor.MaskedTensor" title="pose_format.torch.masked.tensor.MaskedTensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">MaskedTensor</span></code></a> of zeros with a given shape and data type.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="pose_format.torch.masked.torch.MaskedTorch.cat">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tensors</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/torch/masked/torch.html#MaskedTorch.cat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.torch.masked.torch.MaskedTorch.cat" title="Permalink to this definition"></a></dt>
+<dd><p>Concatenate <a class="reference internal" href="pose_format.torch.masked.tensor.html#pose_format.torch.masked.tensor.MaskedTensor" title="pose_format.torch.masked.tensor.MaskedTensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">MaskedTensor</span></code></a> objects along a specified dimension.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tensors</strong> (<em>list</em>) – List of tensors or <a class="reference internal" href="pose_format.torch.masked.tensor.html#pose_format.torch.masked.tensor.MaskedTensor" title="pose_format.torch.masked.tensor.MaskedTensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">MaskedTensor</span></code></a> objects to be concatenated.</p></li>
+<li><p><strong>dim</strong> (<em>int</em>) – Dimension along to concatenate.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Concatenated tensor.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="pose_format.torch.masked.tensor.html#pose_format.torch.masked.tensor.MaskedTensor" title="pose_format.torch.masked.tensor.MaskedTensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">MaskedTensor</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pose_format.torch.masked.torch.MaskedTorch.squeeze">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">squeeze</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">masked_tensor</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/torch/masked/torch.html#MaskedTorch.squeeze"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.torch.masked.torch.MaskedTorch.squeeze" title="Permalink to this definition"></a></dt>
+<dd><p>Remove dimensions of size 1 from <a class="reference internal" href="pose_format.torch.masked.tensor.html#pose_format.torch.masked.tensor.MaskedTensor" title="pose_format.torch.masked.tensor.MaskedTensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">MaskedTensor</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>masked_tensor</strong> (<a class="reference internal" href="pose_format.torch.masked.tensor.html#pose_format.torch.masked.tensor.MaskedTensor" title="pose_format.torch.masked.tensor.MaskedTensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">MaskedTensor</span></code></a>) – tensor from which dimensions are to be removed.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Squeezed masked tensor.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="pose_format.torch.masked.tensor.html#pose_format.torch.masked.tensor.MaskedTensor" title="pose_format.torch.masked.tensor.MaskedTensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">MaskedTensor</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pose_format.torch.masked.torch.MaskedTorch.stack">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stack</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tensors</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/torch/masked/torch.html#MaskedTorch.stack"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.torch.masked.torch.MaskedTorch.stack" title="Permalink to this definition"></a></dt>
+<dd><p>Stack <a class="reference internal" href="pose_format.torch.masked.tensor.html#pose_format.torch.masked.tensor.MaskedTensor" title="pose_format.torch.masked.tensor.MaskedTensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">MaskedTensor</span></code></a> objects along a new dimension.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tensors</strong> (<em>list</em>) – List of <a class="reference internal" href="pose_format.torch.masked.tensor.html#pose_format.torch.masked.tensor.MaskedTensor" title="pose_format.torch.masked.tensor.MaskedTensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">MaskedTensor</span></code></a> objects to be stacked.</p></li>
+<li><p><strong>dim</strong> (<em>int</em>) – New dimension along which to stack.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Stacked maked tensor.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="pose_format.torch.masked.tensor.html#pose_format.torch.masked.tensor.MaskedTensor" title="pose_format.torch.masked.tensor.MaskedTensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">MaskedTensor</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pose_format.torch.masked.torch.MaskedTorch.zeros">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">zeros</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pose_format/torch/masked/torch.html#MaskedTorch.zeros"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.torch.masked.torch.MaskedTorch.zeros" title="Permalink to this definition"></a></dt>
+<dd><p>Creates a <a class="reference internal" href="pose_format.torch.masked.tensor.html#pose_format.torch.masked.tensor.MaskedTensor" title="pose_format.torch.masked.tensor.MaskedTensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">MaskedTensor</span></code></a> of zeros with a given shape and data type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*size</strong> (<em>ints</em>) – Dimensions of desired tensor.</p></li>
+<li><p><strong>dtype</strong> (<em>torch.dtype</em><em>, </em><em>optional</em>) – Data type of the tensor. If None, defaults to <code class="xref py py-obj docutils literal notranslate"><span class="pre">torch.float</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>masked tensor filled with zeros.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="pose_format.torch.masked.tensor.html#pose_format.torch.masked.tensor.MaskedTensor" title="pose_format.torch.masked.tensor.MaskedTensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">MaskedTensor</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pose_format.torch.masked.torch.TorchFallback">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pose_format.torch.masked.torch.</span></span><span class="sig-name descname"><span class="pre">TorchFallback</span></span><a class="reference internal" href="_modules/pose_format/torch/masked/torch.html#TorchFallback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pose_format.torch.masked.torch.TorchFallback" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">type</span></code></p>
+<p>Meta class that gives a fallback mechanism to use torch functions on <a class="reference internal" href="pose_format.torch.masked.tensor.html#pose_format.torch.masked.tensor.MaskedTensor" title="pose_format.torch.masked.tensor.MaskedTensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">MaskedTensor</span></code></a> objects. :noindex:</p>
+<p><strong>Attributes:</strong></p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pose_format.torch.masked.torch.TorchFallback.doesnt_change_mask" title="pose_format.torch.masked.torch.TorchFallback.doesnt_change_mask"><code class="xref py py-obj docutils literal notranslate"><span class="pre">doesnt_change_mask</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pose_format.torch.masked.torch.TorchFallback.doesnt_change_mask">
+<span class="sig-name descname"><span class="pre">doesnt_change_mask</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'acos',</span> <span class="pre">'asin',</span> <span class="pre">'atan',</span> <span class="pre">'cos',</span> <span class="pre">'sin',</span> <span class="pre">'sqrt',</span> <span class="pre">'square',</span> <span class="pre">'tan',</span> <span class="pre">'unsqueeze'}</span></em><a class="headerlink" href="#pose_format.torch.masked.torch.TorchFallback.doesnt_change_mask" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="pose_format.torch.masked.tensor.html" class="btn btn-neutral float-left" title="pose_format.torch.masked.tensor module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="pose_format.torch.masked.torch_test.html" class="btn btn-neutral float-right" title="pose_format.torch.masked.torch_test module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Moryossef, Amit and Müller, Mathias.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

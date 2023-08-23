@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pose_format.utils.normalization_3d &mdash; Pose-Format Toolkit v1.0.0 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/my.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/assets/jsonview.bundle.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/sphinx-needs/libs/html/datatables.min.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/sphinx-needs/common.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/sphinx-needs/layouts.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/sphinx-needs/modern.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/sphinx-needs/styles.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/assets/jsonview.bundle.js"></script>
+        <script src="../../../_static/assets/jsonview_loader.js"></script>
+        <script src="../../../_static/sphinx-needs/libs/html/datatables.min.js"></script>
+        <script src="../../../_static/sphinx-needs/libs/html/datatables_loader.js"></script>
+        <script src="../../../_static/sphinx-needs/libs/html/sphinx_needs_collapse.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Pose-Format Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../readme.html">Pose Format Introduction</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python Code Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pose_format.html">pose_format package</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Additional Material</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../js_docs.html">JavaScript</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../specs_v01.html">specs/v0.1.md</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Pose-Format Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">pose_format.utils.normalization_3d</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pose_format.utils.normalization_3d</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Tuple</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">numpy.ma</span> <span class="k">as</span> <span class="nn">ma</span>
+<span class="kn">from</span> <span class="nn">pose_format.pose_header</span> <span class="kn">import</span> <span class="n">PoseNormalizationInfo</span>
+<span class="kn">from</span> <span class="nn">scipy.spatial.transform</span> <span class="kn">import</span> <span class="n">Rotation</span>
+
+
+<div class="viewcode-block" id="PoseNormalizer"><a class="viewcode-back" href="../../../pose_format.utils.normalization_3d.html#pose_format.utils.normalization_3d.PoseNormalizer">[docs]</a><span class="k">class</span> <span class="nc">PoseNormalizer</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class to normalize pose using normalization information.</span>
+<span class="sd">    </span>
+<span class="sd">    :param plane: Plane normalization information</span>
+<span class="sd">    :type plane: PoseNormalizationInfo</span>
+<span class="sd">    :param line: Line normalization information</span>
+<span class="sd">    :type line: PoseNormalizationInfo</span>
+<span class="sd">    :param size: The desired size after normalization, defaults to 1</span>
+<span class="sd">    :type size: float</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">plane</span><span class="p">:</span> <span class="n">PoseNormalizationInfo</span><span class="p">,</span>
+                 <span class="n">line</span><span class="p">:</span> <span class="n">PoseNormalizationInfo</span><span class="p">,</span>
+                 <span class="n">size</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="n">size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">plane</span> <span class="o">=</span> <span class="n">plane</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">line</span> <span class="o">=</span> <span class="n">line</span>
+
+<div class="viewcode-block" id="PoseNormalizer.rotate_to_normal"><a class="viewcode-back" href="../../../pose_format.utils.normalization_3d.html#pose_format.utils.normalization_3d.PoseNormalizer.rotate_to_normal">[docs]</a>    <span class="k">def</span> <span class="nf">rotate_to_normal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pose</span><span class="p">:</span> <span class="n">ma</span><span class="o">.</span><span class="n">masked_array</span><span class="p">,</span> <span class="n">normal</span><span class="p">:</span> <span class="n">ma</span><span class="o">.</span><span class="n">masked_array</span><span class="p">,</span> <span class="n">around</span><span class="p">:</span> <span class="n">ma</span><span class="o">.</span><span class="n">masked_array</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Rotate pose so that its normal vector aligns with z-axis.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        pose : ma.masked_array</span>
+<span class="sd">            Original pose data</span>
+<span class="sd">        normal : ma.masked_array</span>
+<span class="sd">            Normal vector with respect to which the pose will be aligned.</span>
+<span class="sd">        around : ma.masked_array</span>
+<span class="sd">            Points to rotate around</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        ma.masked_array</span>
+<span class="sd">            The rotated pose</span>
+<span class="sd">        </span>
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError:</span>
+<span class="sd">            if the shapes of pose, normal, and around aren&#39;t compatible.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; pose = ma.masked_array([[1, 1], [2, 2], [3, 3]])</span>
+<span class="sd">        &gt;&gt;&gt; normal = ma.masked_array([0, 0, 1])</span>
+<span class="sd">        &gt;&gt;&gt; around = ma.masked_array([1, 1])</span>
+<span class="sd">        &gt;&gt;&gt; rotated_pose = normalizer.rotate_to_normal(pose, normal, around)</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Move pose to origin</span>
+        <span class="n">pose</span> <span class="o">=</span> <span class="n">pose</span> <span class="o">-</span> <span class="n">around</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
+
+        <span class="n">old_x_axis</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+
+        <span class="n">z_axis</span> <span class="o">=</span> <span class="n">normal</span>
+        <span class="n">y_axis</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">old_x_axis</span><span class="p">,</span> <span class="n">z_axis</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">x_axis</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">z_axis</span><span class="p">,</span> <span class="n">y_axis</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">axis</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">x_axis</span><span class="p">,</span> <span class="n">y_axis</span><span class="p">,</span> <span class="n">z_axis</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">rotated</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;...ij,...kj-&gt;...ik&#39;</span><span class="p">,</span> <span class="n">pose</span><span class="p">,</span> <span class="n">axis</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ma</span><span class="o">.</span><span class="n">masked_array</span><span class="p">(</span><span class="n">rotated</span><span class="p">,</span> <span class="n">pose</span><span class="o">.</span><span class="n">mask</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PoseNormalizer.get_normal"><a class="viewcode-back" href="../../../pose_format.utils.normalization_3d.html#pose_format.utils.normalization_3d.PoseNormalizer.get_normal">[docs]</a>    <span class="k">def</span> <span class="nf">get_normal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pose</span><span class="p">:</span> <span class="n">ma</span><span class="o">.</span><span class="n">masked_array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">ma</span><span class="o">.</span><span class="n">masked_array</span><span class="p">,</span> <span class="n">ma</span><span class="o">.</span><span class="n">masked_array</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get normal vector based on pose &quot;plane&quot;</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        pose : ma.masked_array</span>
+<span class="sd">            Pose data.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        normal : ma.masked_array</span>
+<span class="sd">            Normal vector for pose.</span>
+<span class="sd">        base : ma.masked_array</span>
+<span class="sd">            Base point -&gt; triangle[:,0] used to compute normal</span>
+<span class="sd">        </span>
+<span class="sd">        Note</span>
+<span class="sd">        -----</span>
+<span class="sd">        Important that plane attributes (p1, p2, p3) are correctly initialized for normal to be correctly computed</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">triangle</span> <span class="o">=</span> <span class="n">pose</span><span class="p">[:,</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">plane</span><span class="o">.</span><span class="n">p1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">plane</span><span class="o">.</span><span class="n">p2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">plane</span><span class="o">.</span><span class="n">p3</span><span class="p">]]</span>
+
+        <span class="n">v1</span> <span class="o">=</span> <span class="n">triangle</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">triangle</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="n">v2</span> <span class="o">=</span> <span class="n">triangle</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">triangle</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+
+        <span class="n">normal</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">,</span> <span class="n">axisa</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">normal</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">normal</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">normal</span> <span class="o">=</span> <span class="n">ma</span><span class="o">.</span><span class="n">masked_array</span><span class="p">(</span><span class="n">normal</span><span class="p">,</span> <span class="n">pose</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">mask</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">normal</span><span class="p">,</span> <span class="n">triangle</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="PoseNormalizer.get_rotation_angle"><a class="viewcode-back" href="../../../pose_format.utils.normalization_3d.html#pose_format.utils.normalization_3d.PoseNormalizer.get_rotation_angle">[docs]</a>    <span class="k">def</span> <span class="nf">get_rotation_angle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pose</span><span class="p">:</span> <span class="n">ma</span><span class="o">.</span><span class="n">masked_array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ma</span><span class="o">.</span><span class="n">masked_array</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Gets rotation angle required to rotate pose such that the line is on the Y axis.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        pose : ma.masked_array</span>
+<span class="sd">            Pose data</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        ma.masked_array</span>
+<span class="sd">            Angles (degrees) needed for each pose in the array</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">p1</span> <span class="o">=</span> <span class="n">pose</span><span class="p">[:,</span> <span class="bp">self</span><span class="o">.</span><span class="n">line</span><span class="o">.</span><span class="n">p1</span><span class="p">]</span>
+        <span class="n">p2</span> <span class="o">=</span> <span class="n">pose</span><span class="p">[:,</span> <span class="bp">self</span><span class="o">.</span><span class="n">line</span><span class="o">.</span><span class="n">p2</span><span class="p">]</span>
+        <span class="n">vec</span> <span class="o">=</span> <span class="n">p2</span> <span class="o">-</span> <span class="n">p1</span>
+
+        <span class="k">return</span> <span class="mi">90</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">vec</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">vec</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">]))</span></div>
+
+<div class="viewcode-block" id="PoseNormalizer.rotate"><a class="viewcode-back" href="../../../pose_format.utils.normalization_3d.html#pose_format.utils.normalization_3d.PoseNormalizer.rotate">[docs]</a>    <span class="k">def</span> <span class="nf">rotate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pose</span><span class="p">:</span> <span class="n">ma</span><span class="o">.</span><span class="n">masked_array</span><span class="p">,</span> <span class="n">angle</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ma</span><span class="o">.</span><span class="n">masked_array</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Rotate pose in the X-Y plane by a custom angle (np.ndarray).</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        pose : ma.masked_array</span>
+<span class="sd">            Original pose data</span>
+<span class="sd">        angle : np.ndarray</span>
+<span class="sd">            Angles to rotate poses, in degrees.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        ma.masked_array</span>
+<span class="sd">            rotated pose</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">Rotation</span><span class="o">.</span><span class="n">from_euler</span><span class="p">(</span><span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="o">-</span><span class="n">angle</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">],</span> <span class="n">degrees</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># Clockwise rotation</span>
+        <span class="n">rotated</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;...ij,...kj-&gt;...ik&#39;</span><span class="p">,</span> <span class="n">pose</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">as_matrix</span><span class="p">())</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">pose</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ma</span><span class="o">.</span><span class="n">masked_array</span><span class="p">(</span><span class="n">rotated</span><span class="p">,</span> <span class="n">pose</span><span class="o">.</span><span class="n">mask</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PoseNormalizer.scale"><a class="viewcode-back" href="../../../pose_format.utils.normalization_3d.html#pose_format.utils.normalization_3d.PoseNormalizer.scale">[docs]</a>    <span class="k">def</span> <span class="nf">scale</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pose</span><span class="p">:</span> <span class="n">ma</span><span class="o">.</span><span class="n">masked_array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ma</span><span class="o">.</span><span class="n">masked_array</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Scaling of pose</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        pose : ma.masked_array</span>
+<span class="sd">            pose to scale</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        ma.masked_array</span>
+<span class="sd">            scaled pose</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">p1</span> <span class="o">=</span> <span class="n">pose</span><span class="p">[:,</span> <span class="bp">self</span><span class="o">.</span><span class="n">line</span><span class="o">.</span><span class="n">p1</span><span class="p">]</span>
+        <span class="n">p2</span> <span class="o">=</span> <span class="n">pose</span><span class="p">[:,</span> <span class="bp">self</span><span class="o">.</span><span class="n">line</span><span class="o">.</span><span class="n">p2</span><span class="p">]</span>
+        <span class="n">current_size</span> <span class="o">=</span> <span class="n">ma</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">ma</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">p2</span> <span class="o">-</span> <span class="n">p1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">scale</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">/</span> <span class="n">current_size</span>
+        <span class="n">pose</span> <span class="o">*=</span> <span class="n">scale</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">pose</span> <span class="o">-=</span> <span class="n">pose</span><span class="p">[:,</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">line</span><span class="o">.</span><span class="n">p1</span><span class="p">]]</span>  <span class="c1"># move to first point of the line</span>
+        <span class="k">return</span> <span class="n">pose</span></div>
+
+<div class="viewcode-block" id="PoseNormalizer.normalize_pose"><a class="viewcode-back" href="../../../pose_format.utils.normalization_3d.html#pose_format.utils.normalization_3d.PoseNormalizer.normalize_pose">[docs]</a>    <span class="k">def</span> <span class="nf">normalize_pose</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pose</span><span class="p">:</span> <span class="n">ma</span><span class="o">.</span><span class="n">masked_array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ma</span><span class="o">.</span><span class="n">masked_array</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Fully normalizes the pose - rotates to match normals, then rotates in the </span>
+<span class="sd">        X-Y plane, and finally scales.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        pose : ma.masked_array</span>
+<span class="sd">            original pose data</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        ma.masked_array</span>
+<span class="sd">            fully normalized pose</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># First rotate to normal</span>
+        <span class="n">normal</span><span class="p">,</span> <span class="n">base</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_normal</span><span class="p">(</span><span class="n">pose</span><span class="p">)</span>
+        <span class="n">pose</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rotate_to_normal</span><span class="p">(</span><span class="n">pose</span><span class="p">,</span> <span class="n">normal</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
+
+        <span class="c1"># Then rotate on the X-Y plane such that the line is on the Y axis</span>
+        <span class="n">angle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_rotation_angle</span><span class="p">(</span><span class="n">pose</span><span class="p">)</span>
+        <span class="n">pose</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">pose</span><span class="p">,</span> <span class="n">angle</span><span class="p">)</span>
+
+        <span class="c1"># Scale pose such that the line is of size self.size</span>
+        <span class="n">pose</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="n">pose</span><span class="p">)</span>
+
+        <span class="c1"># Filled with zeros</span>
+        <span class="n">pose</span> <span class="o">=</span> <span class="n">ma</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">pose</span><span class="o">.</span><span class="n">filled</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">mask</span><span class="o">=</span><span class="n">pose</span><span class="o">.</span><span class="n">mask</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">pose</span></div>
+
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">poses</span><span class="p">:</span> <span class="n">ma</span><span class="o">.</span><span class="n">masked_array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ma</span><span class="o">.</span><span class="n">masked_array</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Normalization to a batch of poses. </span>
+
+<span class="sd">        TReshapes the input to combine frames and people dimensions, </span>
+<span class="sd">        applies pose normalization, then reshapes back to the original structure.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        poses : ma.masked_array</span>
+<span class="sd">            4D masked array with dimensions [frames, people, joints, dims] </span>
+<span class="sd">            representing a batch of poses needed to be normalized.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        ma.masked_array</span>
+<span class="sd">            4D masked array with dimensions [frames, people, joints, dims] </span>
+<span class="sd">            containing normalized poses.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">frames</span><span class="p">,</span> <span class="n">people</span><span class="p">,</span> <span class="n">joints</span><span class="p">,</span> <span class="n">dims</span> <span class="o">=</span> <span class="n">poses</span><span class="o">.</span><span class="n">shape</span>
+        <span class="n">poses</span> <span class="o">=</span> <span class="n">poses</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">joints</span><span class="p">,</span> <span class="n">dims</span><span class="p">)</span>
+        <span class="n">poses</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">normalize_pose</span><span class="p">(</span><span class="n">poses</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">poses</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">frames</span><span class="p">,</span> <span class="n">people</span><span class="p">,</span> <span class="n">joints</span><span class="p">,</span> <span class="n">dims</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Moryossef, Amit and Müller, Mathias.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

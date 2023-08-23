@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Welcome to Pose-Format’s documentation! &mdash; Pose-Format Toolkit v1.0.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="_static/my.css" type="text/css" />
+      <link rel="stylesheet" href="_static/assets/jsonview.bundle.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sphinx-needs/libs/html/datatables.min.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sphinx-needs/common.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sphinx-needs/layouts.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sphinx-needs/modern.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sphinx-needs/styles.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script src="_static/assets/jsonview.bundle.js"></script>
+        <script src="_static/assets/jsonview_loader.js"></script>
+        <script src="_static/sphinx-needs/libs/html/datatables.min.js"></script>
+        <script src="_static/sphinx-needs/libs/html/datatables_loader.js"></script>
+        <script src="_static/sphinx-needs/libs/html/sphinx_needs_collapse.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Pose Format Introduction" href="readme.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="#" class="icon icon-home">
+            Pose-Format Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="readme.html">Pose Format Introduction</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python Code Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pose_format.html">pose_format package</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Additional Material</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="js_docs.html">JavaScript</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="specs_v01.html">specs/v0.1.md</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">Pose-Format Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Welcome to Pose-Format’s documentation!</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/rfahrn/pose-master/blob/master//docs/index.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="welcome-to-pose-format-s-documentation">
+<h1>Welcome to Pose-Format’s documentation!<a class="headerlink" href="#welcome-to-pose-format-s-documentation" title="Permalink to this heading"></a></h1>
+<p>Pose is an innovative toolkit created by <span id="id1">[<a class="reference internal" href="#id3" title="Amit Moryossef and Mathias Müller. Pose-format: library for viewing, augmenting, and handling .pose files. https://github.com/sign-language-processing/pose, 2021.">MMuller21</a>]</span> dedicated to the handling, manipulation, and visualization of poses. With support for various file formats and the ability to operate
+with Python especially the <a class="reference internal" href="pose_format.html#pose-format"><span class="std std-ref">pose_format package</span></a> package and JavaScript, Pose provides a comprehensive solution for pose-related tasks.</p>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="readme.html">Pose Format Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="readme.html#overview">Overview</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="readme.html#file-format-structure">File Format Structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="readme.html#python-implementation-guide">Python Implementation Guide:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="readme.html#running-tests">Running Tests:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="readme.html#acknowledging-the-work">Acknowledging the Work</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Python Code Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Structure</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#main-features">Main Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#tests">Tests</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tests.html">tests package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="test_data.html">Test Data</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="test_data.html#available-test-data">Available Test Data</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="tests_subs.html">tests Submodules</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="tests_hand_normalization_test.html">tests.hand_normalization_test module</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="tests_hand_normalization_test.html#tests.hand_normalization_test.Test3DNormalization"><code class="docutils literal notranslate"><span class="pre">Test3DNormalization</span></code></a><ul>
+<li class="toctree-l7"><a class="reference internal" href="tests_hand_normalization_test.html#tests.hand_normalization_test.Test3DNormalization.test_hand_normalization"><code class="docutils literal notranslate"><span class="pre">Test3DNormalization.test_hand_normalization()</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="tests_hand_normalization_test.html#tests.hand_normalization_test.Test3DNormalization.test_hand_normalization_results"><code class="docutils literal notranslate"><span class="pre">Test3DNormalization.test_hand_normalization_results()</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="tests_hand_normalization_test.html#tests.hand_normalization_test.Test3DNormalization.test_normal"><code class="docutils literal notranslate"><span class="pre">Test3DNormalization.test_normal()</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="tests_hand_normalization_test.html#tests.hand_normalization_test.Test3DNormalization.test_rotate_vector_by_90_degrees"><code class="docutils literal notranslate"><span class="pre">Test3DNormalization.test_rotate_vector_by_90_degrees()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="tests_optical_flow.html">tests.optical_flow_test module</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="tests_optical_flow.html#tests.optical_flow_test.TestOpticalFlow"><code class="docutils literal notranslate"><span class="pre">TestOpticalFlow</span></code></a><ul>
+<li class="toctree-l7"><a class="reference internal" href="tests_optical_flow.html#tests.optical_flow_test.TestOpticalFlow.test_optical_flow"><code class="docutils literal notranslate"><span class="pre">TestOpticalFlow.test_optical_flow()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="tests_pose_tf.html">tests.pose_tf_graph_mode_test module</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="tests_pose_tf.html#tests.pose_tf_graph_mode_test.TestPose"><code class="docutils literal notranslate"><span class="pre">TestPose</span></code></a><ul>
+<li class="toctree-l7"><a class="reference internal" href="tests_pose_tf.html#tests.pose_tf_graph_mode_test.TestPose.test_pose_tf_posebody_frame_dropout_normal_graph_mode_does_not_fail"><code class="docutils literal notranslate"><span class="pre">TestPose.test_pose_tf_posebody_frame_dropout_normal_graph_mode_does_not_fail()</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="tests_pose_tf.html#tests.pose_tf_graph_mode_test.TestPose.test_pose_tf_posebody_frame_dropout_uniform_graph_mode_does_not_fail"><code class="docutils literal notranslate"><span class="pre">TestPose.test_pose_tf_posebody_frame_dropout_uniform_graph_mode_does_not_fail()</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="tests_pose_tf.html#tests.pose_tf_graph_mode_test.TestPose.test_pose_tf_posebody_normalize_graph_mode_does_not_fail"><code class="docutils literal notranslate"><span class="pre">TestPose.test_pose_tf_posebody_normalize_graph_mode_does_not_fail()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="tests_pose.html">tests.pose_test module</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="tests_pose.html#tests.pose_test.TestPose"><code class="docutils literal notranslate"><span class="pre">TestPose</span></code></a><ul>
+<li class="toctree-l7"><a class="reference internal" href="tests_pose.html#tests.pose_test.TestPose.test_pose_object_should_be_callable"><code class="docutils literal notranslate"><span class="pre">TestPose.test_pose_object_should_be_callable()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l6"><a class="reference internal" href="tests_pose.html#tests.pose_test.TestPoseNumpyPoseBody"><code class="docutils literal notranslate"><span class="pre">TestPoseNumpyPoseBody</span></code></a><ul>
+<li class="toctree-l7"><a class="reference internal" href="tests_pose.html#tests.pose_test.TestPoseNumpyPoseBody.test_pose_numpy_posebody_frame_dropout_normal_eager_mode_num_frames_not_zero"><code class="docutils literal notranslate"><span class="pre">TestPoseNumpyPoseBody.test_pose_numpy_posebody_frame_dropout_normal_eager_mode_num_frames_not_zero()</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="tests_pose.html#tests.pose_test.TestPoseNumpyPoseBody.test_pose_numpy_posebody_frame_dropout_uniform_eager_mode_num_frames_not_zero"><code class="docutils literal notranslate"><span class="pre">TestPoseNumpyPoseBody.test_pose_numpy_posebody_frame_dropout_uniform_eager_mode_num_frames_not_zero()</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="tests_pose.html#tests.pose_test.TestPoseNumpyPoseBody.test_pose_numpy_posebody_normalize_preserves_shape"><code class="docutils literal notranslate"><span class="pre">TestPoseNumpyPoseBody.test_pose_numpy_posebody_normalize_preserves_shape()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l6"><a class="reference internal" href="tests_pose.html#tests.pose_test.TestPoseTensorflowPoseBody"><code class="docutils literal notranslate"><span class="pre">TestPoseTensorflowPoseBody</span></code></a><ul>
+<li class="toctree-l7"><a class="reference internal" href="tests_pose.html#tests.pose_test.TestPoseTensorflowPoseBody.test_pose_frame_dropout_normal_can_be_used_in_tf_dataset_map"><code class="docutils literal notranslate"><span class="pre">TestPoseTensorflowPoseBody.test_pose_frame_dropout_normal_can_be_used_in_tf_dataset_map()</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="tests_pose.html#tests.pose_test.TestPoseTensorflowPoseBody.test_pose_frame_dropout_uniform_can_be_used_in_tf_dataset_map"><code class="docutils literal notranslate"><span class="pre">TestPoseTensorflowPoseBody.test_pose_frame_dropout_uniform_can_be_used_in_tf_dataset_map()</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="tests_pose.html#tests.pose_test.TestPoseTensorflowPoseBody.test_pose_normalize_can_be_used_in_tf_dataset_map"><code class="docutils literal notranslate"><span class="pre">TestPoseTensorflowPoseBody.test_pose_normalize_can_be_used_in_tf_dataset_map()</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="tests_pose.html#tests.pose_test.TestPoseTensorflowPoseBody.test_pose_normalize_distribution_can_be_used_in_tf_dataset_map"><code class="docutils literal notranslate"><span class="pre">TestPoseTensorflowPoseBody.test_pose_normalize_distribution_can_be_used_in_tf_dataset_map()</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="tests_pose.html#tests.pose_test.TestPoseTensorflowPoseBody.test_pose_tf_posebody_frame_dropout_normal_eager_mode_num_frames_not_zero"><code class="docutils literal notranslate"><span class="pre">TestPoseTensorflowPoseBody.test_pose_tf_posebody_frame_dropout_normal_eager_mode_num_frames_not_zero()</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="tests_pose.html#tests.pose_test.TestPoseTensorflowPoseBody.test_pose_tf_posebody_frame_dropout_uniform_eager_mode_num_frames_not_zero"><code class="docutils literal notranslate"><span class="pre">TestPoseTensorflowPoseBody.test_pose_tf_posebody_frame_dropout_uniform_eager_mode_num_frames_not_zero()</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="tests_pose.html#tests.pose_test.TestPoseTensorflowPoseBody.test_pose_tf_posebody_normalize_distribution_eager_mode_correct_result"><code class="docutils literal notranslate"><span class="pre">TestPoseTensorflowPoseBody.test_pose_tf_posebody_normalize_distribution_eager_mode_correct_result()</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="tests_pose.html#tests.pose_test.TestPoseTensorflowPoseBody.test_pose_tf_posebody_normalize_eager_mode_preserves_shape"><code class="docutils literal notranslate"><span class="pre">TestPoseTensorflowPoseBody.test_pose_tf_posebody_normalize_eager_mode_preserves_shape()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pose_format.html">pose_format package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pose_format.numpy.html">pose_format.numpy package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pose_format.numpy.representation.html">pose_format.numpy.representation package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.numpy.representation.distance.html">pose_format.numpy.representation.distance module</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.numpy.representation.distance.html#pose_format.numpy.representation.distance.DistanceRepresentation"><code class="docutils literal notranslate"><span class="pre">DistanceRepresentation</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.numpy.representation.distance.html#pose_format.numpy.representation.distance.DistanceRepresentation.distance"><code class="docutils literal notranslate"><span class="pre">DistanceRepresentation.distance()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.numpy.representation.distance_test.html">pose_format.numpy.representation.distance_test module</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.numpy.representation.distance_test.html#pose_format.numpy.representation.distance_test.TestDistanceRepresentation"><code class="docutils literal notranslate"><span class="pre">TestDistanceRepresentation</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.numpy.representation.distance_test.html#pose_format.numpy.representation.distance_test.TestDistanceRepresentation.test_call_masked_value_should_be_zero"><code class="docutils literal notranslate"><span class="pre">TestDistanceRepresentation.test_call_masked_value_should_be_zero()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.numpy.representation.distance_test.html#pose_format.numpy.representation.distance_test.TestDistanceRepresentation.test_call_value_should_be_distance"><code class="docutils literal notranslate"><span class="pre">TestDistanceRepresentation.test_call_value_should_be_distance()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pose_format.numpy.pose_body.html">pose_format.numpy.pose_body module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.numpy.pose_body.html#pose_format.numpy.pose_body.NumPyPoseBody"><code class="docutils literal notranslate"><span class="pre">NumPyPoseBody</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.numpy.pose_body.html#pose_format.numpy.pose_body.NumPyPoseBody.bbox"><code class="docutils literal notranslate"><span class="pre">NumPyPoseBody.bbox()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.numpy.pose_body.html#pose_format.numpy.pose_body.NumPyPoseBody.flatten"><code class="docutils literal notranslate"><span class="pre">NumPyPoseBody.flatten()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.numpy.pose_body.html#pose_format.numpy.pose_body.NumPyPoseBody.flip"><code class="docutils literal notranslate"><span class="pre">NumPyPoseBody.flip()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.numpy.pose_body.html#pose_format.numpy.pose_body.NumPyPoseBody.get_points"><code class="docutils literal notranslate"><span class="pre">NumPyPoseBody.get_points()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.numpy.pose_body.html#pose_format.numpy.pose_body.NumPyPoseBody.interpolate"><code class="docutils literal notranslate"><span class="pre">NumPyPoseBody.interpolate()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.numpy.pose_body.html#pose_format.numpy.pose_body.NumPyPoseBody.mask"><code class="docutils literal notranslate"><span class="pre">NumPyPoseBody.mask</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.numpy.pose_body.html#pose_format.numpy.pose_body.NumPyPoseBody.matmul"><code class="docutils literal notranslate"><span class="pre">NumPyPoseBody.matmul()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.numpy.pose_body.html#pose_format.numpy.pose_body.NumPyPoseBody.points_perspective"><code class="docutils literal notranslate"><span class="pre">NumPyPoseBody.points_perspective()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.numpy.pose_body.html#pose_format.numpy.pose_body.NumPyPoseBody.read_v0_0"><code class="docutils literal notranslate"><span class="pre">NumPyPoseBody.read_v0_0()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.numpy.pose_body.html#pose_format.numpy.pose_body.NumPyPoseBody.tensor_reader"><code class="docutils literal notranslate"><span class="pre">NumPyPoseBody.tensor_reader</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.numpy.pose_body.html#pose_format.numpy.pose_body.NumPyPoseBody.tensorflow"><code class="docutils literal notranslate"><span class="pre">NumPyPoseBody.tensorflow()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.numpy.pose_body.html#pose_format.numpy.pose_body.NumPyPoseBody.torch"><code class="docutils literal notranslate"><span class="pre">NumPyPoseBody.torch()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.numpy.pose_body.html#pose_format.numpy.pose_body.NumPyPoseBody.write"><code class="docutils literal notranslate"><span class="pre">NumPyPoseBody.write()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.numpy.pose_body.html#pose_format.numpy.pose_body.NumPyPoseBody.zero_filled"><code class="docutils literal notranslate"><span class="pre">NumPyPoseBody.zero_filled()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pose_format.tensorflow.html">pose_format.tensorflow package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pose_format.tensorflow.masked.html">pose_format.tensorflow.masked package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.tensorflow.masked.tensor.html">pose_format.tensorflow.masked.tensor module</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.tensorflow.masked.tensor.html#pose_format.tensorflow.masked.tensor.MaskedTensor"><code class="docutils literal notranslate"><span class="pre">MaskedTensor</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.tensorflow.masked.tensor.html#pose_format.tensorflow.masked.tensor.MaskedTensor.arithmetic"><code class="docutils literal notranslate"><span class="pre">MaskedTensor.arithmetic()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.tensorflow.masked.tensor.html#pose_format.tensorflow.masked.tensor.MaskedTensor.div"><code class="docutils literal notranslate"><span class="pre">MaskedTensor.div()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.tensorflow.masked.tensor.html#pose_format.tensorflow.masked.tensor.MaskedTensor.fix_nan"><code class="docutils literal notranslate"><span class="pre">MaskedTensor.fix_nan()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.tensorflow.masked.tensor.html#pose_format.tensorflow.masked.tensor.MaskedTensor.float"><code class="docutils literal notranslate"><span class="pre">MaskedTensor.float()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.tensorflow.masked.tensor.html#pose_format.tensorflow.masked.tensor.MaskedTensor.gather"><code class="docutils literal notranslate"><span class="pre">MaskedTensor.gather()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.tensorflow.masked.tensor.html#pose_format.tensorflow.masked.tensor.MaskedTensor.matmul"><code class="docutils literal notranslate"><span class="pre">MaskedTensor.matmul()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.tensorflow.masked.tensor.html#pose_format.tensorflow.masked.tensor.MaskedTensor.mean"><code class="docutils literal notranslate"><span class="pre">MaskedTensor.mean()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.tensorflow.masked.tensor.html#pose_format.tensorflow.masked.tensor.MaskedTensor.permute"><code class="docutils literal notranslate"><span class="pre">MaskedTensor.permute()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.tensorflow.masked.tensor.html#pose_format.tensorflow.masked.tensor.MaskedTensor.rename"><code class="docutils literal notranslate"><span class="pre">MaskedTensor.rename()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.tensorflow.masked.tensor.html#pose_format.tensorflow.masked.tensor.MaskedTensor.reshape"><code class="docutils literal notranslate"><span class="pre">MaskedTensor.reshape()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.tensorflow.masked.tensor.html#pose_format.tensorflow.masked.tensor.MaskedTensor.size"><code class="docutils literal notranslate"><span class="pre">MaskedTensor.size()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.tensorflow.masked.tensor.html#pose_format.tensorflow.masked.tensor.MaskedTensor.split"><code class="docutils literal notranslate"><span class="pre">MaskedTensor.split()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.tensorflow.masked.tensor.html#pose_format.tensorflow.masked.tensor.MaskedTensor.sqrt"><code class="docutils literal notranslate"><span class="pre">MaskedTensor.sqrt()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.tensorflow.masked.tensor.html#pose_format.tensorflow.masked.tensor.MaskedTensor.square"><code class="docutils literal notranslate"><span class="pre">MaskedTensor.square()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.tensorflow.masked.tensor.html#pose_format.tensorflow.masked.tensor.MaskedTensor.squeeze"><code class="docutils literal notranslate"><span class="pre">MaskedTensor.squeeze()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.tensorflow.masked.tensor.html#pose_format.tensorflow.masked.tensor.MaskedTensor.std"><code class="docutils literal notranslate"><span class="pre">MaskedTensor.std()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.tensorflow.masked.tensor.html#pose_format.tensorflow.masked.tensor.MaskedTensor.sum"><code class="docutils literal notranslate"><span class="pre">MaskedTensor.sum()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.tensorflow.masked.tensor.html#pose_format.tensorflow.masked.tensor.MaskedTensor.transpose"><code class="docutils literal notranslate"><span class="pre">MaskedTensor.transpose()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.tensorflow.masked.tensor.html#pose_format.tensorflow.masked.tensor.MaskedTensor.variance"><code class="docutils literal notranslate"><span class="pre">MaskedTensor.variance()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.tensorflow.masked.tensor.html#pose_format.tensorflow.masked.tensor.MaskedTensor.zero_filled"><code class="docutils literal notranslate"><span class="pre">MaskedTensor.zero_filled()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.tensorflow.masked.tensor_graph_mode_test.html">pose_format.tensorflow.masked.tensor_graph_mode_test module</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.tensorflow.masked.tensor_graph_mode_test.html#pose_format.tensorflow.masked.tensor_graph_mode_test.TestMaskedTensor"><code class="docutils literal notranslate"><span class="pre">TestMaskedTensor</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.tensorflow.masked.tensor_graph_mode_test.html#pose_format.tensorflow.masked.tensor_graph_mode_test.TestMaskedTensor.test_eq_graph_execution"><code class="docutils literal notranslate"><span class="pre">TestMaskedTensor.test_eq_graph_execution()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.tensorflow.masked.tensor_graph_mode_test.html#pose_format.tensorflow.masked.tensor_graph_mode_test.TestMaskedTensor.test_float_graph_execution_fails"><code class="docutils literal notranslate"><span class="pre">TestMaskedTensor.test_float_graph_execution_fails()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.tensorflow.masked.tensor_test.html">pose_format.tensorflow.masked.tensor_test module</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.tensorflow.masked.tensor_test.html#pose_format.tensorflow.masked.tensor_test.TestMaskedTensor"><code class="docutils literal notranslate"><span class="pre">TestMaskedTensor</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.tensorflow.masked.tensor_test.html#pose_format.tensorflow.masked.tensor_test.TestMaskedTensor.test_fix_nan"><code class="docutils literal notranslate"><span class="pre">TestMaskedTensor.test_fix_nan()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.tensorflow.masked.tensor_test.html#pose_format.tensorflow.masked.tensor_test.TestMaskedTensor.test_float_eager_execution_return_type_is_correct"><code class="docutils literal notranslate"><span class="pre">TestMaskedTensor.test_float_eager_execution_return_type_is_correct()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.tensorflow.masked.tensor_test.html#pose_format.tensorflow.masked.tensor_test.TestMaskedTensor.test_mean"><code class="docutils literal notranslate"><span class="pre">TestMaskedTensor.test_mean()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.tensorflow.masked.tensor_test.html#pose_format.tensorflow.masked.tensor_test.TestMaskedTensor.test_reshape_identical_to_numpy_reshape"><code class="docutils literal notranslate"><span class="pre">TestMaskedTensor.test_reshape_identical_to_numpy_reshape()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.tensorflow.masked.tensor_test.html#pose_format.tensorflow.masked.tensor_test.TestMaskedTensor.test_reshape_return_type_is_correct"><code class="docutils literal notranslate"><span class="pre">TestMaskedTensor.test_reshape_return_type_is_correct()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.tensorflow.masked.tensor_test.html#pose_format.tensorflow.masked.tensor_test.TestMaskedTensor.test_std"><code class="docutils literal notranslate"><span class="pre">TestMaskedTensor.test_std()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.tensorflow.masked.tensor_test.html#pose_format.tensorflow.masked.tensor_test.create_random_numpy_tensor_and_mask"><code class="docutils literal notranslate"><span class="pre">create_random_numpy_tensor_and_mask()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.tensorflow.masked.tensorflow.html">pose_format.tensorflow.masked.tensorflow module</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.tensorflow.masked.tensorflow.html#pose_format.tensorflow.masked.tensorflow.MaskedTensorflow"><code class="docutils literal notranslate"><span class="pre">MaskedTensorflow</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.tensorflow.masked.tensorflow.html#pose_format.tensorflow.masked.tensorflow.MaskedTensorflow.concat"><code class="docutils literal notranslate"><span class="pre">MaskedTensorflow.concat()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.tensorflow.masked.tensorflow.html#pose_format.tensorflow.masked.tensorflow.MaskedTensorflow.stack"><code class="docutils literal notranslate"><span class="pre">MaskedTensorflow.stack()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.tensorflow.masked.tensorflow.html#pose_format.tensorflow.masked.tensorflow.MaskedTensorflow.zeros"><code class="docutils literal notranslate"><span class="pre">MaskedTensorflow.zeros()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.tensorflow.masked.tensorflow.html#pose_format.tensorflow.masked.tensorflow.TensorflowFallback"><code class="docutils literal notranslate"><span class="pre">TensorflowFallback</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.tensorflow.masked.tensorflow.html#pose_format.tensorflow.masked.tensorflow.TensorflowFallback.doesnt_change_mask"><code class="docutils literal notranslate"><span class="pre">TensorflowFallback.doesnt_change_mask</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.tensorflow.masked.tensorflow_test.html">pose_format.tensorflow.masked.tensorflow_test module</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.tensorflow.masked.tensorflow_test.html#pose_format.tensorflow.masked.tensorflow_test.TestMaskedTensorflow"><code class="docutils literal notranslate"><span class="pre">TestMaskedTensorflow</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.tensorflow.masked.tensorflow_test.html#pose_format.tensorflow.masked.tensorflow_test.TestMaskedTensorflow.test_cat"><code class="docutils literal notranslate"><span class="pre">TestMaskedTensorflow.test_cat()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.tensorflow.masked.tensorflow_test.html#pose_format.tensorflow.masked.tensorflow_test.TestMaskedTensorflow.test_not_implemented_method"><code class="docutils literal notranslate"><span class="pre">TestMaskedTensorflow.test_not_implemented_method()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.tensorflow.masked.tensorflow_test.html#pose_format.tensorflow.masked.tensorflow_test.TestMaskedTensorflow.test_stack"><code class="docutils literal notranslate"><span class="pre">TestMaskedTensorflow.test_stack()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.tensorflow.masked.tensorflow_test.html#pose_format.tensorflow.masked.tensorflow_test.TestMaskedTensorflow.test_zeros_mask_value"><code class="docutils literal notranslate"><span class="pre">TestMaskedTensorflow.test_zeros_mask_value()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.tensorflow.masked.tensorflow_test.html#pose_format.tensorflow.masked.tensorflow_test.TestMaskedTensorflow.test_zeros_tensor_shape"><code class="docutils literal notranslate"><span class="pre">TestMaskedTensorflow.test_zeros_tensor_shape()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.tensorflow.masked.tensorflow_test.html#pose_format.tensorflow.masked.tensorflow_test.TestMaskedTensorflow.test_zeros_tensor_type_bool"><code class="docutils literal notranslate"><span class="pre">TestMaskedTensorflow.test_zeros_tensor_type_bool()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.tensorflow.masked.tensorflow_test.html#pose_format.tensorflow.masked.tensorflow_test.TestMaskedTensorflow.test_zeros_tensor_type_float"><code class="docutils literal notranslate"><span class="pre">TestMaskedTensorflow.test_zeros_tensor_type_float()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.tensorflow.masked.tensorflow_test.html#pose_format.tensorflow.masked.tensorflow_test.TestMaskedTensorflow.test_zeros_tensor_value"><code class="docutils literal notranslate"><span class="pre">TestMaskedTensorflow.test_zeros_tensor_value()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pose_format.tensorflow.representation.html">pose_format.tensorflow.representation package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.tensorflow.representation.angle.html">pose_format.tensorflow.representation.angle module</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.tensorflow.representation.angle.html#pose_format.tensorflow.representation.angle.AngleRepresentation"><code class="docutils literal notranslate"><span class="pre">AngleRepresentation</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.tensorflow.representation.angle_test.html">pose_format.tensorflow.representation.angle_test module</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.tensorflow.representation.angle_test.html#pose_format.tensorflow.representation.angle_test.TestAngleRepresentation"><code class="docutils literal notranslate"><span class="pre">TestAngleRepresentation</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.tensorflow.representation.angle_test.html#pose_format.tensorflow.representation.angle_test.TestAngleRepresentation.test_call_value_should_be_angle"><code class="docutils literal notranslate"><span class="pre">TestAngleRepresentation.test_call_value_should_be_angle()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.tensorflow.representation.distance.html">pose_format.tensorflow.representation.distance module</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.tensorflow.representation.distance.html#pose_format.tensorflow.representation.distance.DistanceRepresentation"><code class="docutils literal notranslate"><span class="pre">DistanceRepresentation</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.tensorflow.representation.distance.html#pose_format.tensorflow.representation.distance.DistanceRepresentation.distance"><code class="docutils literal notranslate"><span class="pre">DistanceRepresentation.distance()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.tensorflow.representation.distance_test.html">pose_format.tensorflow.representation.distance_test module</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.tensorflow.representation.distance_test.html#pose_format.tensorflow.representation.distance_test.TestDistanceRepresentation"><code class="docutils literal notranslate"><span class="pre">TestDistanceRepresentation</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.tensorflow.representation.distance_test.html#pose_format.tensorflow.representation.distance_test.TestDistanceRepresentation.test_call_value_should_be_distance"><code class="docutils literal notranslate"><span class="pre">TestDistanceRepresentation.test_call_value_should_be_distance()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.tensorflow.representation.inner_angle.html">pose_format.tensorflow.representation.inner_angle module</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.tensorflow.representation.inner_angle.html#pose_format.tensorflow.representation.inner_angle.InnerAngleRepresentation"><code class="docutils literal notranslate"><span class="pre">InnerAngleRepresentation</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.tensorflow.representation.inner_angle.html#pose_format.tensorflow.representation.inner_angle.get_vectors_norm"><code class="docutils literal notranslate"><span class="pre">get_vectors_norm()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.tensorflow.representation.inner_angle_test.html">pose_format.tensorflow.representation.inner_angle_test module</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.tensorflow.representation.inner_angle_test.html#pose_format.tensorflow.representation.inner_angle_test.TestInnerAngleRepresentation"><code class="docutils literal notranslate"><span class="pre">TestInnerAngleRepresentation</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.tensorflow.representation.inner_angle_test.html#pose_format.tensorflow.representation.inner_angle_test.TestInnerAngleRepresentation.test_call_value_should_be_inner_angle"><code class="docutils literal notranslate"><span class="pre">TestInnerAngleRepresentation.test_call_value_should_be_inner_angle()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.tensorflow.representation.point_line_distance.html">pose_format.tensorflow.representation.point_line_distance module</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.tensorflow.representation.point_line_distance.html#pose_format.tensorflow.representation.point_line_distance.PointLineDistanceRepresentation"><code class="docutils literal notranslate"><span class="pre">PointLineDistanceRepresentation</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.tensorflow.representation.point_line_distance_test.html">pose_format.tensorflow.representation.point_line_distance_test module</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.tensorflow.representation.point_line_distance_test.html#pose_format.tensorflow.representation.point_line_distance_test.TestPointLineDistanceRepresentation"><code class="docutils literal notranslate"><span class="pre">TestPointLineDistanceRepresentation</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.tensorflow.representation.point_line_distance_test.html#pose_format.tensorflow.representation.point_line_distance_test.TestPointLineDistanceRepresentation.test_call_value_should_be_distance"><code class="docutils literal notranslate"><span class="pre">TestPointLineDistanceRepresentation.test_call_value_should_be_distance()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pose_format.tensorflow.html#module-pose_format.tensorflow.pose_body">pose_format.tensorflow.pose_body module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.tensorflow.html#pose_format.tensorflow.pose_body.TensorflowPoseBody"><code class="docutils literal notranslate"><span class="pre">TensorflowPoseBody</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.tensorflow.html#pose_format.tensorflow.pose_body.TensorflowPoseBody.as_tfrecord"><code class="docutils literal notranslate"><span class="pre">TensorflowPoseBody.as_tfrecord()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.tensorflow.html#pose_format.tensorflow.pose_body.TensorflowPoseBody.frame_dropout_given_percent"><code class="docutils literal notranslate"><span class="pre">TensorflowPoseBody.frame_dropout_given_percent()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.tensorflow.html#pose_format.tensorflow.pose_body.TensorflowPoseBody.frame_dropout_normal"><code class="docutils literal notranslate"><span class="pre">TensorflowPoseBody.frame_dropout_normal()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.tensorflow.html#pose_format.tensorflow.pose_body.TensorflowPoseBody.frame_dropout_uniform"><code class="docutils literal notranslate"><span class="pre">TensorflowPoseBody.frame_dropout_uniform()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.tensorflow.html#pose_format.tensorflow.pose_body.TensorflowPoseBody.from_tfrecord"><code class="docutils literal notranslate"><span class="pre">TensorflowPoseBody.from_tfrecord()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.tensorflow.html#pose_format.tensorflow.pose_body.TensorflowPoseBody.get_points"><code class="docutils literal notranslate"><span class="pre">TensorflowPoseBody.get_points()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.tensorflow.html#pose_format.tensorflow.pose_body.TensorflowPoseBody.matmul"><code class="docutils literal notranslate"><span class="pre">TensorflowPoseBody.matmul()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.tensorflow.html#pose_format.tensorflow.pose_body.TensorflowPoseBody.points_perspective"><code class="docutils literal notranslate"><span class="pre">TensorflowPoseBody.points_perspective()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.tensorflow.html#pose_format.tensorflow.pose_body.TensorflowPoseBody.select_frames"><code class="docutils literal notranslate"><span class="pre">TensorflowPoseBody.select_frames()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.tensorflow.html#pose_format.tensorflow.pose_body.TensorflowPoseBody.tensor_reader"><code class="docutils literal notranslate"><span class="pre">TensorflowPoseBody.tensor_reader</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.tensorflow.html#pose_format.tensorflow.pose_body.TensorflowPoseBody.zero_filled"><code class="docutils literal notranslate"><span class="pre">TensorflowPoseBody.zero_filled()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pose_format.tensorflow.html#module-pose_format.tensorflow.pose_body_test">pose_format.tensorflow.pose_body_test module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.tensorflow.html#pose_format.tensorflow.pose_body_test.TestTensorflowPoseBody"><code class="docutils literal notranslate"><span class="pre">TestTensorflowPoseBody</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.tensorflow.html#pose_format.tensorflow.pose_body_test.TestTensorflowPoseBody.test_tf_pose_body_zero_filled_fills_in_zeros"><code class="docutils literal notranslate"><span class="pre">TestTensorflowPoseBody.test_tf_pose_body_zero_filled_fills_in_zeros()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pose_format.tensorflow.html#module-pose_format.tensorflow.pose_representation">pose_format.tensorflow.pose_representation module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.tensorflow.html#pose_format.tensorflow.pose_representation.TensorflowPoseRepresentation"><code class="docutils literal notranslate"><span class="pre">TensorflowPoseRepresentation</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.tensorflow.html#pose_format.tensorflow.pose_representation.TensorflowPoseRepresentation.get_points"><code class="docutils literal notranslate"><span class="pre">TensorflowPoseRepresentation.get_points()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.tensorflow.html#pose_format.tensorflow.pose_representation.TensorflowPoseRepresentation.group_embeds"><code class="docutils literal notranslate"><span class="pre">TensorflowPoseRepresentation.group_embeds()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.tensorflow.html#pose_format.tensorflow.pose_representation.TensorflowPoseRepresentation.permute"><code class="docutils literal notranslate"><span class="pre">TensorflowPoseRepresentation.permute()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pose_format.tensorflow.html#module-pose_format.tensorflow.pose_representation_test">pose_format.tensorflow.pose_representation_test module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.tensorflow.html#pose_format.tensorflow.pose_representation_test.TestTensorflowPoseRepresentation"><code class="docutils literal notranslate"><span class="pre">TestTensorflowPoseRepresentation</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.tensorflow.html#pose_format.tensorflow.pose_representation_test.TestTensorflowPoseRepresentation.test_calc_output_size"><code class="docutils literal notranslate"><span class="pre">TestTensorflowPoseRepresentation.test_calc_output_size()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.tensorflow.html#pose_format.tensorflow.pose_representation_test.TestTensorflowPoseRepresentation.test_call_return_shape"><code class="docutils literal notranslate"><span class="pre">TestTensorflowPoseRepresentation.test_call_return_shape()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.tensorflow.html#pose_format.tensorflow.pose_representation_test.TestTensorflowPoseRepresentation.test_input_size"><code class="docutils literal notranslate"><span class="pre">TestTensorflowPoseRepresentation.test_input_size()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pose_format.testing.html">pose_format.testing package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pose_format.third_party.html">pose_format.third_party package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pose_format.third_party.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.third_party.py.html">pose_format.third_party.py package</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pose_format.torch.html">pose_format.torch package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pose_format.torch.masked.html">pose_format.torch.masked package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.torch.masked.tensor.html">pose_format.torch.masked.tensor module</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.torch.masked.tensor.html#pose_format.torch.masked.tensor.MaskedTensor"><code class="docutils literal notranslate"><span class="pre">MaskedTensor</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.masked.tensor.html#pose_format.torch.masked.tensor.MaskedTensor.arithmetic"><code class="docutils literal notranslate"><span class="pre">MaskedTensor.arithmetic()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.masked.tensor.html#pose_format.torch.masked.tensor.MaskedTensor.cuda"><code class="docutils literal notranslate"><span class="pre">MaskedTensor.cuda()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.masked.tensor.html#pose_format.torch.masked.tensor.MaskedTensor.div"><code class="docutils literal notranslate"><span class="pre">MaskedTensor.div()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.masked.tensor.html#pose_format.torch.masked.tensor.MaskedTensor.fix_nan"><code class="docutils literal notranslate"><span class="pre">MaskedTensor.fix_nan()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.masked.tensor.html#pose_format.torch.masked.tensor.MaskedTensor.matmul"><code class="docutils literal notranslate"><span class="pre">MaskedTensor.matmul()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.masked.tensor.html#pose_format.torch.masked.tensor.MaskedTensor.permute"><code class="docutils literal notranslate"><span class="pre">MaskedTensor.permute()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.masked.tensor.html#pose_format.torch.masked.tensor.MaskedTensor.pow_"><code class="docutils literal notranslate"><span class="pre">MaskedTensor.pow_()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.masked.tensor.html#pose_format.torch.masked.tensor.MaskedTensor.rename"><code class="docutils literal notranslate"><span class="pre">MaskedTensor.rename()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.masked.tensor.html#pose_format.torch.masked.tensor.MaskedTensor.reshape"><code class="docutils literal notranslate"><span class="pre">MaskedTensor.reshape()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.masked.tensor.html#pose_format.torch.masked.tensor.MaskedTensor.size"><code class="docutils literal notranslate"><span class="pre">MaskedTensor.size()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.masked.tensor.html#pose_format.torch.masked.tensor.MaskedTensor.split"><code class="docutils literal notranslate"><span class="pre">MaskedTensor.split()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.masked.tensor.html#pose_format.torch.masked.tensor.MaskedTensor.squeeze"><code class="docutils literal notranslate"><span class="pre">MaskedTensor.squeeze()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.masked.tensor.html#pose_format.torch.masked.tensor.MaskedTensor.sum"><code class="docutils literal notranslate"><span class="pre">MaskedTensor.sum()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.masked.tensor.html#pose_format.torch.masked.tensor.MaskedTensor.to"><code class="docutils literal notranslate"><span class="pre">MaskedTensor.to()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.masked.tensor.html#pose_format.torch.masked.tensor.MaskedTensor.transpose"><code class="docutils literal notranslate"><span class="pre">MaskedTensor.transpose()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.masked.tensor.html#pose_format.torch.masked.tensor.MaskedTensor.zero_filled"><code class="docutils literal notranslate"><span class="pre">MaskedTensor.zero_filled()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.torch.masked.torch.html">pose_format.torch.masked.torch module</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.torch.masked.torch.html#pose_format.torch.masked.torch.MaskedTorch"><code class="docutils literal notranslate"><span class="pre">MaskedTorch</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.masked.torch.html#pose_format.torch.masked.torch.MaskedTorch.cat"><code class="docutils literal notranslate"><span class="pre">MaskedTorch.cat()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.masked.torch.html#pose_format.torch.masked.torch.MaskedTorch.squeeze"><code class="docutils literal notranslate"><span class="pre">MaskedTorch.squeeze()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.masked.torch.html#pose_format.torch.masked.torch.MaskedTorch.stack"><code class="docutils literal notranslate"><span class="pre">MaskedTorch.stack()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.masked.torch.html#pose_format.torch.masked.torch.MaskedTorch.zeros"><code class="docutils literal notranslate"><span class="pre">MaskedTorch.zeros()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.torch.masked.torch.html#pose_format.torch.masked.torch.TorchFallback"><code class="docutils literal notranslate"><span class="pre">TorchFallback</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.masked.torch.html#pose_format.torch.masked.torch.TorchFallback.doesnt_change_mask"><code class="docutils literal notranslate"><span class="pre">TorchFallback.doesnt_change_mask</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.torch.masked.torch_test.html">pose_format.torch.masked.torch_test module</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.torch.masked.torch_test.html#pose_format.torch.masked.torch_test.TestMaskedTorch"><code class="docutils literal notranslate"><span class="pre">TestMaskedTorch</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.masked.torch_test.html#pose_format.torch.masked.torch_test.TestMaskedTorch.test_cat"><code class="docutils literal notranslate"><span class="pre">TestMaskedTorch.test_cat()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.masked.torch_test.html#pose_format.torch.masked.torch_test.TestMaskedTorch.test_not_implemented_method"><code class="docutils literal notranslate"><span class="pre">TestMaskedTorch.test_not_implemented_method()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.masked.torch_test.html#pose_format.torch.masked.torch_test.TestMaskedTorch.test_stack"><code class="docutils literal notranslate"><span class="pre">TestMaskedTorch.test_stack()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.masked.torch_test.html#pose_format.torch.masked.torch_test.TestMaskedTorch.test_zeros_mask_value"><code class="docutils literal notranslate"><span class="pre">TestMaskedTorch.test_zeros_mask_value()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.masked.torch_test.html#pose_format.torch.masked.torch_test.TestMaskedTorch.test_zeros_tensor_shape"><code class="docutils literal notranslate"><span class="pre">TestMaskedTorch.test_zeros_tensor_shape()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.masked.torch_test.html#pose_format.torch.masked.torch_test.TestMaskedTorch.test_zeros_tensor_type_bool"><code class="docutils literal notranslate"><span class="pre">TestMaskedTorch.test_zeros_tensor_type_bool()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.masked.torch_test.html#pose_format.torch.masked.torch_test.TestMaskedTorch.test_zeros_tensor_type_float"><code class="docutils literal notranslate"><span class="pre">TestMaskedTorch.test_zeros_tensor_type_float()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.masked.torch_test.html#pose_format.torch.masked.torch_test.TestMaskedTorch.test_zeros_tensor_value"><code class="docutils literal notranslate"><span class="pre">TestMaskedTorch.test_zeros_tensor_value()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.torch.masked.html#module-pose_format.torch.masked.tensor">pose_format.torch.masked.tensor module</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.torch.masked.html#pose_format.torch.masked.tensor.MaskedTensor"><code class="docutils literal notranslate"><span class="pre">MaskedTensor</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.masked.html#pose_format.torch.masked.tensor.MaskedTensor.arithmetic"><code class="docutils literal notranslate"><span class="pre">MaskedTensor.arithmetic()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.masked.html#pose_format.torch.masked.tensor.MaskedTensor.cuda"><code class="docutils literal notranslate"><span class="pre">MaskedTensor.cuda()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.masked.html#pose_format.torch.masked.tensor.MaskedTensor.div"><code class="docutils literal notranslate"><span class="pre">MaskedTensor.div()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.masked.html#pose_format.torch.masked.tensor.MaskedTensor.fix_nan"><code class="docutils literal notranslate"><span class="pre">MaskedTensor.fix_nan()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.masked.html#pose_format.torch.masked.tensor.MaskedTensor.matmul"><code class="docutils literal notranslate"><span class="pre">MaskedTensor.matmul()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.masked.html#pose_format.torch.masked.tensor.MaskedTensor.permute"><code class="docutils literal notranslate"><span class="pre">MaskedTensor.permute()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.masked.html#pose_format.torch.masked.tensor.MaskedTensor.pow_"><code class="docutils literal notranslate"><span class="pre">MaskedTensor.pow_()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.masked.html#pose_format.torch.masked.tensor.MaskedTensor.rename"><code class="docutils literal notranslate"><span class="pre">MaskedTensor.rename()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.masked.html#pose_format.torch.masked.tensor.MaskedTensor.reshape"><code class="docutils literal notranslate"><span class="pre">MaskedTensor.reshape()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.masked.html#pose_format.torch.masked.tensor.MaskedTensor.size"><code class="docutils literal notranslate"><span class="pre">MaskedTensor.size()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.masked.html#pose_format.torch.masked.tensor.MaskedTensor.split"><code class="docutils literal notranslate"><span class="pre">MaskedTensor.split()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.masked.html#pose_format.torch.masked.tensor.MaskedTensor.squeeze"><code class="docutils literal notranslate"><span class="pre">MaskedTensor.squeeze()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.masked.html#pose_format.torch.masked.tensor.MaskedTensor.sum"><code class="docutils literal notranslate"><span class="pre">MaskedTensor.sum()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.masked.html#pose_format.torch.masked.tensor.MaskedTensor.to"><code class="docutils literal notranslate"><span class="pre">MaskedTensor.to()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.masked.html#pose_format.torch.masked.tensor.MaskedTensor.transpose"><code class="docutils literal notranslate"><span class="pre">MaskedTensor.transpose()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.masked.html#pose_format.torch.masked.tensor.MaskedTensor.zero_filled"><code class="docutils literal notranslate"><span class="pre">MaskedTensor.zero_filled()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.torch.masked.html#module-pose_format.torch.masked.torch">pose_format.torch.masked.torch module</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.torch.masked.html#pose_format.torch.masked.torch.MaskedTorch"><code class="docutils literal notranslate"><span class="pre">MaskedTorch</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.masked.html#pose_format.torch.masked.torch.MaskedTorch.cat"><code class="docutils literal notranslate"><span class="pre">MaskedTorch.cat()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.masked.html#pose_format.torch.masked.torch.MaskedTorch.squeeze"><code class="docutils literal notranslate"><span class="pre">MaskedTorch.squeeze()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.masked.html#pose_format.torch.masked.torch.MaskedTorch.stack"><code class="docutils literal notranslate"><span class="pre">MaskedTorch.stack()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.masked.html#pose_format.torch.masked.torch.MaskedTorch.zeros"><code class="docutils literal notranslate"><span class="pre">MaskedTorch.zeros()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.torch.masked.html#pose_format.torch.masked.torch.TorchFallback"><code class="docutils literal notranslate"><span class="pre">TorchFallback</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.masked.html#pose_format.torch.masked.torch.TorchFallback.doesnt_change_mask"><code class="docutils literal notranslate"><span class="pre">TorchFallback.doesnt_change_mask</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.torch.masked.html#module-pose_format.torch.masked.torch_test">pose_format.torch.masked.torch_test module</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.torch.masked.html#pose_format.torch.masked.torch_test.TestMaskedTorch"><code class="docutils literal notranslate"><span class="pre">TestMaskedTorch</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.masked.html#pose_format.torch.masked.torch_test.TestMaskedTorch.test_cat"><code class="docutils literal notranslate"><span class="pre">TestMaskedTorch.test_cat()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.masked.html#pose_format.torch.masked.torch_test.TestMaskedTorch.test_not_implemented_method"><code class="docutils literal notranslate"><span class="pre">TestMaskedTorch.test_not_implemented_method()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.masked.html#pose_format.torch.masked.torch_test.TestMaskedTorch.test_stack"><code class="docutils literal notranslate"><span class="pre">TestMaskedTorch.test_stack()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.masked.html#pose_format.torch.masked.torch_test.TestMaskedTorch.test_zeros_mask_value"><code class="docutils literal notranslate"><span class="pre">TestMaskedTorch.test_zeros_mask_value()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.masked.html#pose_format.torch.masked.torch_test.TestMaskedTorch.test_zeros_tensor_shape"><code class="docutils literal notranslate"><span class="pre">TestMaskedTorch.test_zeros_tensor_shape()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.masked.html#pose_format.torch.masked.torch_test.TestMaskedTorch.test_zeros_tensor_type_bool"><code class="docutils literal notranslate"><span class="pre">TestMaskedTorch.test_zeros_tensor_type_bool()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.masked.html#pose_format.torch.masked.torch_test.TestMaskedTorch.test_zeros_tensor_type_float"><code class="docutils literal notranslate"><span class="pre">TestMaskedTorch.test_zeros_tensor_type_float()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.masked.html#pose_format.torch.masked.torch_test.TestMaskedTorch.test_zeros_tensor_value"><code class="docutils literal notranslate"><span class="pre">TestMaskedTorch.test_zeros_tensor_value()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pose_format.torch.representation.html">pose_format.torch.representation package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.torch.representation.angle.html">pose_format.torch.representation.angle module</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.torch.representation.angle.html#pose_format.torch.representation.angle.AngleRepresentation"><code class="docutils literal notranslate"><span class="pre">AngleRepresentation</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.representation.angle.html#pose_format.torch.representation.angle.AngleRepresentation.forward"><code class="docutils literal notranslate"><span class="pre">AngleRepresentation.forward()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.representation.angle.html#pose_format.torch.representation.angle.AngleRepresentation.training"><code class="docutils literal notranslate"><span class="pre">AngleRepresentation.training</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.torch.representation.angle_test.html">pose_format.torch.representation.angle_test module</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.torch.representation.angle_test.html#pose_format.torch.representation.angle_test.TestAngleRepresentation"><code class="docutils literal notranslate"><span class="pre">TestAngleRepresentation</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.representation.angle_test.html#pose_format.torch.representation.angle_test.TestAngleRepresentation.test_call_masked_value_should_be_zero"><code class="docutils literal notranslate"><span class="pre">TestAngleRepresentation.test_call_masked_value_should_be_zero()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.representation.angle_test.html#pose_format.torch.representation.angle_test.TestAngleRepresentation.test_call_value_should_be_angle"><code class="docutils literal notranslate"><span class="pre">TestAngleRepresentation.test_call_value_should_be_angle()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.torch.representation.distance.html">pose_format.torch.representation.distance module</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.torch.representation.distance.html#pose_format.torch.representation.distance.DistanceRepresentation"><code class="docutils literal notranslate"><span class="pre">DistanceRepresentation</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.representation.distance.html#pose_format.torch.representation.distance.DistanceRepresentation.distance"><code class="docutils literal notranslate"><span class="pre">DistanceRepresentation.distance()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.representation.distance.html#pose_format.torch.representation.distance.DistanceRepresentation.forward"><code class="docutils literal notranslate"><span class="pre">DistanceRepresentation.forward()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.representation.distance.html#pose_format.torch.representation.distance.DistanceRepresentation.training"><code class="docutils literal notranslate"><span class="pre">DistanceRepresentation.training</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.torch.representation.distance_test.html">pose_format.torch.representation.distance_test module</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.torch.representation.distance_test.html#pose_format.torch.representation.distance_test.TestDistanceRepresentation"><code class="docutils literal notranslate"><span class="pre">TestDistanceRepresentation</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.representation.distance_test.html#pose_format.torch.representation.distance_test.TestDistanceRepresentation.test_call_masked_value_should_be_zero"><code class="docutils literal notranslate"><span class="pre">TestDistanceRepresentation.test_call_masked_value_should_be_zero()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.representation.distance_test.html#pose_format.torch.representation.distance_test.TestDistanceRepresentation.test_call_value_should_be_distance"><code class="docutils literal notranslate"><span class="pre">TestDistanceRepresentation.test_call_value_should_be_distance()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.torch.representation.inner_angle.html">pose_format.torch.representation.inner_angle module</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.torch.representation.inner_angle.html#pose_format.torch.representation.inner_angle.InnerAngleRepresentation"><code class="docutils literal notranslate"><span class="pre">InnerAngleRepresentation</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.representation.inner_angle.html#pose_format.torch.representation.inner_angle.InnerAngleRepresentation.forward"><code class="docutils literal notranslate"><span class="pre">InnerAngleRepresentation.forward()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.representation.inner_angle.html#pose_format.torch.representation.inner_angle.InnerAngleRepresentation.training"><code class="docutils literal notranslate"><span class="pre">InnerAngleRepresentation.training</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.torch.representation.inner_angle.html#pose_format.torch.representation.inner_angle.get_vectors_norm"><code class="docutils literal notranslate"><span class="pre">get_vectors_norm()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.torch.representation.inner_angle_test.html">pose_format.torch.representation.inner_angle_test module</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.torch.representation.inner_angle_test.html#pose_format.torch.representation.inner_angle_test.TestInnerAngleRepresentation"><code class="docutils literal notranslate"><span class="pre">TestInnerAngleRepresentation</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.representation.inner_angle_test.html#pose_format.torch.representation.inner_angle_test.TestInnerAngleRepresentation.test_call_masked_value_should_be_zero"><code class="docutils literal notranslate"><span class="pre">TestInnerAngleRepresentation.test_call_masked_value_should_be_zero()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.representation.inner_angle_test.html#pose_format.torch.representation.inner_angle_test.TestInnerAngleRepresentation.test_call_value_should_be_inner_angle"><code class="docutils literal notranslate"><span class="pre">TestInnerAngleRepresentation.test_call_value_should_be_inner_angle()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.torch.representation.point_line_distance.html">pose_format.torch.representation.point_line_distance module</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.torch.representation.point_line_distance.html#pose_format.torch.representation.point_line_distance.PointLineDistanceRepresentation"><code class="docutils literal notranslate"><span class="pre">PointLineDistanceRepresentation</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.representation.point_line_distance.html#pose_format.torch.representation.point_line_distance.PointLineDistanceRepresentation.forward"><code class="docutils literal notranslate"><span class="pre">PointLineDistanceRepresentation.forward()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.representation.point_line_distance.html#pose_format.torch.representation.point_line_distance.PointLineDistanceRepresentation.training"><code class="docutils literal notranslate"><span class="pre">PointLineDistanceRepresentation.training</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.torch.representation.point_line_distance_test.html">pose_format.torch.representation.point_line_distance_test module</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.torch.representation.point_line_distance_test.html#pose_format.torch.representation.point_line_distance_test.TestPointLineDistanceRepresentation"><code class="docutils literal notranslate"><span class="pre">TestPointLineDistanceRepresentation</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.representation.point_line_distance_test.html#pose_format.torch.representation.point_line_distance_test.TestPointLineDistanceRepresentation.test_call_masked_value_should_be_zero"><code class="docutils literal notranslate"><span class="pre">TestPointLineDistanceRepresentation.test_call_masked_value_should_be_zero()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.representation.point_line_distance_test.html#pose_format.torch.representation.point_line_distance_test.TestPointLineDistanceRepresentation.test_call_value_should_be_distance"><code class="docutils literal notranslate"><span class="pre">TestPointLineDistanceRepresentation.test_call_value_should_be_distance()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.torch.representation.points.html">pose_format.torch.representation.points module</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.torch.representation.points.html#pose_format.torch.representation.points.PointsRepresentation"><code class="docutils literal notranslate"><span class="pre">PointsRepresentation</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.representation.points.html#pose_format.torch.representation.points.PointsRepresentation.forward"><code class="docutils literal notranslate"><span class="pre">PointsRepresentation.forward()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.representation.points.html#pose_format.torch.representation.points.PointsRepresentation.training"><code class="docutils literal notranslate"><span class="pre">PointsRepresentation.training</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pose_format.torch.html#submodules">Submodules</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.torch.html#module-pose_format.torch.pose_body">pose_format.torch.pose_body module</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.torch.html#pose_format.torch.pose_body.TorchPoseBody"><code class="docutils literal notranslate"><span class="pre">TorchPoseBody</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.html#pose_format.torch.pose_body.TorchPoseBody.cuda"><code class="docutils literal notranslate"><span class="pre">TorchPoseBody.cuda()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.html#pose_format.torch.pose_body.TorchPoseBody.flatten"><code class="docutils literal notranslate"><span class="pre">TorchPoseBody.flatten()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.html#pose_format.torch.pose_body.TorchPoseBody.get_points"><code class="docutils literal notranslate"><span class="pre">TorchPoseBody.get_points()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.html#pose_format.torch.pose_body.TorchPoseBody.matmul"><code class="docutils literal notranslate"><span class="pre">TorchPoseBody.matmul()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.html#pose_format.torch.pose_body.TorchPoseBody.points_perspective"><code class="docutils literal notranslate"><span class="pre">TorchPoseBody.points_perspective()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.html#pose_format.torch.pose_body.TorchPoseBody.tensor_reader"><code class="docutils literal notranslate"><span class="pre">TorchPoseBody.tensor_reader</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.html#pose_format.torch.pose_body.TorchPoseBody.zero_filled"><code class="docutils literal notranslate"><span class="pre">TorchPoseBody.zero_filled()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.torch.html#module-pose_format.torch.pose_representation">pose_format.torch.pose_representation module</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.torch.html#pose_format.torch.pose_representation.TorchPoseRepresentation"><code class="docutils literal notranslate"><span class="pre">TorchPoseRepresentation</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.html#pose_format.torch.pose_representation.TorchPoseRepresentation.header"><code class="docutils literal notranslate"><span class="pre">TorchPoseRepresentation.header</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.html#pose_format.torch.pose_representation.TorchPoseRepresentation.rep_modules1"><code class="docutils literal notranslate"><span class="pre">TorchPoseRepresentation.rep_modules1</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.html#pose_format.torch.pose_representation.TorchPoseRepresentation.rep_modules2"><code class="docutils literal notranslate"><span class="pre">TorchPoseRepresentation.rep_modules2</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.html#pose_format.torch.pose_representation.TorchPoseRepresentation.rep_modules3"><code class="docutils literal notranslate"><span class="pre">TorchPoseRepresentation.rep_modules3</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.html#pose_format.torch.pose_representation.TorchPoseRepresentation.group_embeds"><code class="docutils literal notranslate"><span class="pre">TorchPoseRepresentation.group_embeds()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="pose_format.torch.html#pose_format.torch.pose_representation.TorchPoseRepresentation.permute"><code class="docutils literal notranslate"><span class="pre">TorchPoseRepresentation.permute()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pose_format.utils.html">pose_format.utils package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pose_format.utils.fast_math.html">pose_format.utils.fast_math module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.utils.fast_math.html#pose_format.utils.fast_math.distance_batch"><code class="docutils literal notranslate"><span class="pre">distance_batch()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pose_format.utils.normalization_3d.html">pose_format.utils.normalization_3d module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.utils.normalization_3d.html#pose_format.utils.normalization_3d.PoseNormalizer"><code class="docutils literal notranslate"><span class="pre">PoseNormalizer</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.utils.normalization_3d.html#pose_format.utils.normalization_3d.PoseNormalizer.get_normal"><code class="docutils literal notranslate"><span class="pre">PoseNormalizer.get_normal()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.utils.normalization_3d.html#pose_format.utils.normalization_3d.PoseNormalizer.get_rotation_angle"><code class="docutils literal notranslate"><span class="pre">PoseNormalizer.get_rotation_angle()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.utils.normalization_3d.html#pose_format.utils.normalization_3d.PoseNormalizer.normalize_pose"><code class="docutils literal notranslate"><span class="pre">PoseNormalizer.normalize_pose()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.utils.normalization_3d.html#pose_format.utils.normalization_3d.PoseNormalizer.rotate"><code class="docutils literal notranslate"><span class="pre">PoseNormalizer.rotate()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.utils.normalization_3d.html#pose_format.utils.normalization_3d.PoseNormalizer.rotate_to_normal"><code class="docutils literal notranslate"><span class="pre">PoseNormalizer.rotate_to_normal()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.utils.normalization_3d.html#pose_format.utils.normalization_3d.PoseNormalizer.scale"><code class="docutils literal notranslate"><span class="pre">PoseNormalizer.scale()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pose_format.utils.openpose.html">pose_format.utils.openpose module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.utils.openpose.html#pose_format.utils.openpose.OpenPose_Hand_Component"><code class="docutils literal notranslate"><span class="pre">OpenPose_Hand_Component()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.utils.openpose.html#pose_format.utils.openpose.get_frame_id"><code class="docutils literal notranslate"><span class="pre">get_frame_id()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.utils.openpose.html#pose_format.utils.openpose.limbs_index"><code class="docutils literal notranslate"><span class="pre">limbs_index()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.utils.openpose.html#pose_format.utils.openpose.load_frames_directory_dict"><code class="docutils literal notranslate"><span class="pre">load_frames_directory_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.utils.openpose.html#pose_format.utils.openpose.load_openpose"><code class="docutils literal notranslate"><span class="pre">load_openpose()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.utils.openpose.html#pose_format.utils.openpose.load_openpose_directory"><code class="docutils literal notranslate"><span class="pre">load_openpose_directory()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pose_format.utils.openpose_135.html">pose_format.utils.openpose_135 module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.utils.openpose_135.html#pose_format.utils.openpose_135.load_openpose_135_directory"><code class="docutils literal notranslate"><span class="pre">load_openpose_135_directory()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pose_format.utils.openpose_test.html">pose_format.utils.openpose_test module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.utils.openpose_test.html#pose_format.utils.openpose_test.TestLoadOpenpose"><code class="docutils literal notranslate"><span class="pre">TestLoadOpenpose</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.utils.openpose_test.html#pose_format.utils.openpose_test.TestLoadOpenpose.test_load_openpose_data_shape"><code class="docutils literal notranslate"><span class="pre">TestLoadOpenpose.test_load_openpose_data_shape()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.utils.openpose_test.html#pose_format.utils.openpose_test.TestLoadOpenpose.test_load_openpose_data_shape_missing_frames"><code class="docutils literal notranslate"><span class="pre">TestLoadOpenpose.test_load_openpose_data_shape_missing_frames()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.utils.openpose_test.html#pose_format.utils.openpose_test.TestLoadOpenpose.test_load_openpose_extracts_correct_number_of_people"><code class="docutils literal notranslate"><span class="pre">TestLoadOpenpose.test_load_openpose_extracts_correct_number_of_people()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.utils.openpose_test.html#pose_format.utils.openpose_test.TestLoadOpenpose.test_load_openpose_fixed_num_frames"><code class="docutils literal notranslate"><span class="pre">TestLoadOpenpose.test_load_openpose_fixed_num_frames()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.utils.openpose_test.html#pose_format.utils.openpose_test.TestLoadOpenpose.test_load_openpose_fixed_num_frames_and_missing_frames"><code class="docutils literal notranslate"><span class="pre">TestLoadOpenpose.test_load_openpose_fixed_num_frames_and_missing_frames()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.utils.openpose_test.html#pose_format.utils.openpose_test.TestLoadOpenpose.test_load_openpose_returns_pose_object"><code class="docutils literal notranslate"><span class="pre">TestLoadOpenpose.test_load_openpose_returns_pose_object()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.utils.openpose_test.html#pose_format.utils.openpose_test.TestLoadOpenposeDirectory"><code class="docutils literal notranslate"><span class="pre">TestLoadOpenposeDirectory</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.utils.openpose_test.html#pose_format.utils.openpose_test.TestLoadOpenposeDirectory.test_get_frame_id_no_prefix"><code class="docutils literal notranslate"><span class="pre">TestLoadOpenposeDirectory.test_get_frame_id_no_prefix()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.utils.openpose_test.html#pose_format.utils.openpose_test.TestLoadOpenposeDirectory.test_get_frame_id_nonzero"><code class="docutils literal notranslate"><span class="pre">TestLoadOpenposeDirectory.test_get_frame_id_nonzero()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.utils.openpose_test.html#pose_format.utils.openpose_test.TestLoadOpenposeDirectory.test_get_frame_id_several_digits"><code class="docutils literal notranslate"><span class="pre">TestLoadOpenposeDirectory.test_get_frame_id_several_digits()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.utils.openpose_test.html#pose_format.utils.openpose_test.TestLoadOpenposeDirectory.test_get_frame_id_zero"><code class="docutils literal notranslate"><span class="pre">TestLoadOpenposeDirectory.test_get_frame_id_zero()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.utils.openpose_test.html#pose_format.utils.openpose_test.TestLoadOpenposeDirectory.test_load_openpose_directory_data_shape"><code class="docutils literal notranslate"><span class="pre">TestLoadOpenposeDirectory.test_load_openpose_directory_data_shape()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.utils.openpose_test.html#pose_format.utils.openpose_test.TestLoadOpenposeDirectory.test_load_openpose_directory_data_shape_add_empty_keys"><code class="docutils literal notranslate"><span class="pre">TestLoadOpenposeDirectory.test_load_openpose_directory_data_shape_add_empty_keys()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.utils.openpose_test.html#pose_format.utils.openpose_test.TestLoadOpenposeDirectory.test_load_openpose_directory_data_shape_missing_frames"><code class="docutils literal notranslate"><span class="pre">TestLoadOpenposeDirectory.test_load_openpose_directory_data_shape_missing_frames()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.utils.openpose_test.html#pose_format.utils.openpose_test.TestLoadOpenposeDirectory.test_load_openpose_directory_data_shape_no_file_prefix"><code class="docutils literal notranslate"><span class="pre">TestLoadOpenposeDirectory.test_load_openpose_directory_data_shape_no_file_prefix()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.utils.openpose_test.html#pose_format.utils.openpose_test.TestLoadOpenposeDirectory.test_load_openpose_directory_extracts_correct_number_of_people"><code class="docutils literal notranslate"><span class="pre">TestLoadOpenposeDirectory.test_load_openpose_directory_extracts_correct_number_of_people()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.utils.openpose_test.html#pose_format.utils.openpose_test.TestLoadOpenposeDirectory.test_load_openpose_directory_returns_pose_object"><code class="docutils literal notranslate"><span class="pre">TestLoadOpenposeDirectory.test_load_openpose_directory_returns_pose_object()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.utils.openpose_test.html#pose_format.utils.openpose_test.TestOpenposeComponents"><code class="docutils literal notranslate"><span class="pre">TestOpenposeComponents</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.utils.openpose_test.html#pose_format.utils.openpose_test.TestOpenposeComponents.test_openpose_components_names"><code class="docutils literal notranslate"><span class="pre">TestOpenposeComponents.test_openpose_components_names()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.utils.openpose_test.html#pose_format.utils.openpose_test.TestOpenposeComponents.test_openpose_components_total_points"><code class="docutils literal notranslate"><span class="pre">TestOpenposeComponents.test_openpose_components_total_points()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.utils.openpose_test.html#pose_format.utils.openpose_test.TestOpenposeComponents.test_openpose_num_points_per_component_face"><code class="docutils literal notranslate"><span class="pre">TestOpenposeComponents.test_openpose_num_points_per_component_face()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.utils.openpose_test.html#pose_format.utils.openpose_test.TestOpenposeComponents.test_openpose_num_points_per_component_hand_left"><code class="docutils literal notranslate"><span class="pre">TestOpenposeComponents.test_openpose_num_points_per_component_hand_left()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.utils.openpose_test.html#pose_format.utils.openpose_test.TestOpenposeComponents.test_openpose_num_points_per_component_hand_right"><code class="docutils literal notranslate"><span class="pre">TestOpenposeComponents.test_openpose_num_points_per_component_hand_right()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.utils.openpose_test.html#pose_format.utils.openpose_test.TestOpenposeComponents.test_openpose_num_points_per_component_pose"><code class="docutils literal notranslate"><span class="pre">TestOpenposeComponents.test_openpose_num_points_per_component_pose()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pose_format.utils.optical_flow.html">pose_format.utils.optical_flow module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.utils.optical_flow.html#pose_format.utils.optical_flow.OpticalFlowCalculator"><code class="docutils literal notranslate"><span class="pre">OpticalFlowCalculator</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pose_format.utils.reader.html">pose_format.utils.reader module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.utils.reader.html#pose_format.utils.reader.BufferReader"><code class="docutils literal notranslate"><span class="pre">BufferReader</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.utils.reader.html#pose_format.utils.reader.BufferReader.advance"><code class="docutils literal notranslate"><span class="pre">BufferReader.advance()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.utils.reader.html#pose_format.utils.reader.BufferReader.bytes_left"><code class="docutils literal notranslate"><span class="pre">BufferReader.bytes_left()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.utils.reader.html#pose_format.utils.reader.BufferReader.unpack"><code class="docutils literal notranslate"><span class="pre">BufferReader.unpack()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.utils.reader.html#pose_format.utils.reader.BufferReader.unpack_f"><code class="docutils literal notranslate"><span class="pre">BufferReader.unpack_f()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.utils.reader.html#pose_format.utils.reader.BufferReader.unpack_numpy"><code class="docutils literal notranslate"><span class="pre">BufferReader.unpack_numpy()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.utils.reader.html#pose_format.utils.reader.BufferReader.unpack_str"><code class="docutils literal notranslate"><span class="pre">BufferReader.unpack_str()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.utils.reader.html#pose_format.utils.reader.BufferReader.unpack_tensorflow"><code class="docutils literal notranslate"><span class="pre">BufferReader.unpack_tensorflow()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.utils.reader.html#pose_format.utils.reader.BufferReader.unpack_torch"><code class="docutils literal notranslate"><span class="pre">BufferReader.unpack_torch()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.utils.reader.html#pose_format.utils.reader.ConstStructs"><code class="docutils literal notranslate"><span class="pre">ConstStructs</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.utils.reader.html#pose_format.utils.reader.ConstStructs.double_ushort"><code class="docutils literal notranslate"><span class="pre">ConstStructs.double_ushort</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.utils.reader.html#pose_format.utils.reader.ConstStructs.float"><code class="docutils literal notranslate"><span class="pre">ConstStructs.float</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.utils.reader.html#pose_format.utils.reader.ConstStructs.short"><code class="docutils literal notranslate"><span class="pre">ConstStructs.short</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.utils.reader.html#pose_format.utils.reader.ConstStructs.triple_ushort"><code class="docutils literal notranslate"><span class="pre">ConstStructs.triple_ushort</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.utils.reader.html#pose_format.utils.reader.ConstStructs.ushort"><code class="docutils literal notranslate"><span class="pre">ConstStructs.ushort</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pose_format.utils.reader_test.html">pose_format.utils.reader_test module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.utils.reader_test.html#pose_format.utils.reader_test.TestBufferReader"><code class="docutils literal notranslate"><span class="pre">TestBufferReader</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.utils.reader_test.html#pose_format.utils.reader_test.TestBufferReader.test_advance"><code class="docutils literal notranslate"><span class="pre">TestBufferReader.test_advance()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.utils.reader_test.html#pose_format.utils.reader_test.TestBufferReader.test_bytes_left"><code class="docutils literal notranslate"><span class="pre">TestBufferReader.test_bytes_left()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.utils.reader_test.html#pose_format.utils.reader_test.TestBufferReader.test_unpack"><code class="docutils literal notranslate"><span class="pre">TestBufferReader.test_unpack()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.utils.reader_test.html#pose_format.utils.reader_test.TestBufferReader.test_unpack_f"><code class="docutils literal notranslate"><span class="pre">TestBufferReader.test_unpack_f()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.utils.reader_test.html#pose_format.utils.reader_test.TestBufferReader.test_unpack_numpy"><code class="docutils literal notranslate"><span class="pre">TestBufferReader.test_unpack_numpy()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.utils.reader_test.html#pose_format.utils.reader_test.TestBufferReader.test_unpack_numpy_writeable"><code class="docutils literal notranslate"><span class="pre">TestBufferReader.test_unpack_numpy_writeable()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.utils.reader_test.html#pose_format.utils.reader_test.TestBufferReader.test_unpack_str"><code class="docutils literal notranslate"><span class="pre">TestBufferReader.test_unpack_str()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.utils.reader_test.html#pose_format.utils.reader_test.TestBufferReader.test_unpack_tensorflow"><code class="docutils literal notranslate"><span class="pre">TestBufferReader.test_unpack_tensorflow()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.utils.reader_test.html#pose_format.utils.reader_test.TestBufferReader.test_unpack_torch"><code class="docutils literal notranslate"><span class="pre">TestBufferReader.test_unpack_torch()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pose_format.utils.siren.html">pose_format.utils.siren module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.utils.siren.html#pose_format.utils.siren.PoseDataset"><code class="docutils literal notranslate"><span class="pre">PoseDataset</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.utils.siren.html#pose_format.utils.siren.PoseDataset.get_coords"><code class="docutils literal notranslate"><span class="pre">PoseDataset.get_coords()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.utils.siren.html#pose_format.utils.siren.SineLayer"><code class="docutils literal notranslate"><span class="pre">SineLayer</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.utils.siren.html#pose_format.utils.siren.SineLayer.omega_0"><code class="docutils literal notranslate"><span class="pre">SineLayer.omega_0</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.utils.siren.html#pose_format.utils.siren.SineLayer.is_first"><code class="docutils literal notranslate"><span class="pre">SineLayer.is_first</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.utils.siren.html#pose_format.utils.siren.SineLayer.forward"><code class="docutils literal notranslate"><span class="pre">SineLayer.forward()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.utils.siren.html#pose_format.utils.siren.SineLayer.forward_with_intermediate"><code class="docutils literal notranslate"><span class="pre">SineLayer.forward_with_intermediate()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.utils.siren.html#pose_format.utils.siren.SineLayer.init_weights"><code class="docutils literal notranslate"><span class="pre">SineLayer.init_weights()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.utils.siren.html#pose_format.utils.siren.SineLayer.training"><code class="docutils literal notranslate"><span class="pre">SineLayer.training</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.utils.siren.html#pose_format.utils.siren.Siren"><code class="docutils literal notranslate"><span class="pre">Siren</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.utils.siren.html#pose_format.utils.siren.Siren.forward"><code class="docutils literal notranslate"><span class="pre">Siren.forward()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.utils.siren.html#pose_format.utils.siren.Siren.forward_with_activations"><code class="docutils literal notranslate"><span class="pre">Siren.forward_with_activations()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.utils.siren.html#pose_format.utils.siren.Siren.training"><code class="docutils literal notranslate"><span class="pre">Siren.training</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.utils.siren.html#pose_format.utils.siren.get_pose_siren"><code class="docutils literal notranslate"><span class="pre">get_pose_siren()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.utils.siren.html#pose_format.utils.siren.masked_mse_loss"><code class="docutils literal notranslate"><span class="pre">masked_mse_loss()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pose_format.utils.pose_converter.html">pose_format.utils.pose_converter module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.utils.pose_converter.html#pose_format.utils.pose_converter.convert_pose"><code class="docutils literal notranslate"><span class="pre">convert_pose()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.utils.pose_converter.html#pose_format.utils.pose_converter.save_image"><code class="docutils literal notranslate"><span class="pre">save_image()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pose_format.utils.holistic.html">pose_format.utils.holistic module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.utils.holistic.html#pose_format.utils.holistic.FACE_POINTS"><code class="docutils literal notranslate"><span class="pre">FACE_POINTS()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.utils.holistic.html#pose_format.utils.holistic.FACE_POINTS_NUM"><code class="docutils literal notranslate"><span class="pre">FACE_POINTS_NUM()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.utils.holistic.html#pose_format.utils.holistic.body_points"><code class="docutils literal notranslate"><span class="pre">body_points()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.utils.holistic.html#pose_format.utils.holistic.component_points"><code class="docutils literal notranslate"><span class="pre">component_points()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.utils.holistic.html#pose_format.utils.holistic.formatted_holistic_pose"><code class="docutils literal notranslate"><span class="pre">formatted_holistic_pose()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.utils.holistic.html#pose_format.utils.holistic.holistic_components"><code class="docutils literal notranslate"><span class="pre">holistic_components()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.utils.holistic.html#pose_format.utils.holistic.holistic_hand_component"><code class="docutils literal notranslate"><span class="pre">holistic_hand_component()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.utils.holistic.html#pose_format.utils.holistic.load_holistic"><code class="docutils literal notranslate"><span class="pre">load_holistic()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.utils.holistic.html#pose_format.utils.holistic.load_mediapipe_directory"><code class="docutils literal notranslate"><span class="pre">load_mediapipe_directory()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.utils.holistic.html#pose_format.utils.holistic.process_holistic"><code class="docutils literal notranslate"><span class="pre">process_holistic()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pose_format.html#submodules">Submodules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pose_format.html#module-pose_format.pose">pose_format.pose module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.html#pose_format.pose.Pose"><code class="docutils literal notranslate"><span class="pre">Pose</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.html#pose_format.pose.Pose.bbox"><code class="docutils literal notranslate"><span class="pre">Pose.bbox()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.html#pose_format.pose.Pose.focus"><code class="docutils literal notranslate"><span class="pre">Pose.focus()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.html#pose_format.pose.Pose.frame_dropout_normal"><code class="docutils literal notranslate"><span class="pre">Pose.frame_dropout_normal()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.html#pose_format.pose.Pose.frame_dropout_uniform"><code class="docutils literal notranslate"><span class="pre">Pose.frame_dropout_uniform()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.html#pose_format.pose.Pose.get_components"><code class="docutils literal notranslate"><span class="pre">Pose.get_components()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.html#pose_format.pose.Pose.normalize"><code class="docutils literal notranslate"><span class="pre">Pose.normalize()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.html#pose_format.pose.Pose.normalize_distribution"><code class="docutils literal notranslate"><span class="pre">Pose.normalize_distribution()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.html#pose_format.pose.Pose.pass_through_methods"><code class="docutils literal notranslate"><span class="pre">Pose.pass_through_methods</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.html#pose_format.pose.Pose.read"><code class="docutils literal notranslate"><span class="pre">Pose.read()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.html#pose_format.pose.Pose.unnormalize_distribution"><code class="docutils literal notranslate"><span class="pre">Pose.unnormalize_distribution()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.html#pose_format.pose.Pose.write"><code class="docutils literal notranslate"><span class="pre">Pose.write()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pose_format.html#module-pose_format.pose_body">pose_format.pose_body module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.html#pose_format.pose_body.PoseBody"><code class="docutils literal notranslate"><span class="pre">PoseBody</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.html#pose_format.pose_body.PoseBody.augment2d"><code class="docutils literal notranslate"><span class="pre">PoseBody.augment2d()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.html#pose_format.pose_body.PoseBody.bbox"><code class="docutils literal notranslate"><span class="pre">PoseBody.bbox()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.html#pose_format.pose_body.PoseBody.flatten"><code class="docutils literal notranslate"><span class="pre">PoseBody.flatten()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.html#pose_format.pose_body.PoseBody.frame_dropout_given_percent"><code class="docutils literal notranslate"><span class="pre">PoseBody.frame_dropout_given_percent()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.html#pose_format.pose_body.PoseBody.frame_dropout_normal"><code class="docutils literal notranslate"><span class="pre">PoseBody.frame_dropout_normal()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.html#pose_format.pose_body.PoseBody.frame_dropout_uniform"><code class="docutils literal notranslate"><span class="pre">PoseBody.frame_dropout_uniform()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.html#pose_format.pose_body.PoseBody.get_points"><code class="docutils literal notranslate"><span class="pre">PoseBody.get_points()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.html#pose_format.pose_body.PoseBody.matmul"><code class="docutils literal notranslate"><span class="pre">PoseBody.matmul()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.html#pose_format.pose_body.PoseBody.numpy"><code class="docutils literal notranslate"><span class="pre">PoseBody.numpy()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.html#pose_format.pose_body.PoseBody.points_perspective"><code class="docutils literal notranslate"><span class="pre">PoseBody.points_perspective()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.html#pose_format.pose_body.PoseBody.read"><code class="docutils literal notranslate"><span class="pre">PoseBody.read()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.html#pose_format.pose_body.PoseBody.read_v0_0"><code class="docutils literal notranslate"><span class="pre">PoseBody.read_v0_0()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.html#pose_format.pose_body.PoseBody.read_v0_1"><code class="docutils literal notranslate"><span class="pre">PoseBody.read_v0_1()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.html#pose_format.pose_body.PoseBody.read_v0_1_frames"><code class="docutils literal notranslate"><span class="pre">PoseBody.read_v0_1_frames()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.html#pose_format.pose_body.PoseBody.select_frames"><code class="docutils literal notranslate"><span class="pre">PoseBody.select_frames()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.html#pose_format.pose_body.PoseBody.slice_step"><code class="docutils literal notranslate"><span class="pre">PoseBody.slice_step()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.html#pose_format.pose_body.PoseBody.tensor_reader"><code class="docutils literal notranslate"><span class="pre">PoseBody.tensor_reader</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.html#pose_format.pose_body.PoseBody.tensorflow"><code class="docutils literal notranslate"><span class="pre">PoseBody.tensorflow()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.html#pose_format.pose_body.PoseBody.torch"><code class="docutils literal notranslate"><span class="pre">PoseBody.torch()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.html#pose_format.pose_body.PoseBody.write"><code class="docutils literal notranslate"><span class="pre">PoseBody.write()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.html#pose_format.pose_body.PoseBody.zero_filled"><code class="docutils literal notranslate"><span class="pre">PoseBody.zero_filled()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pose_format.html#module-pose_format.pose_header">pose_format.pose_header module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.html#pose_format.pose_header.PoseHeader"><code class="docutils literal notranslate"><span class="pre">PoseHeader</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.html#pose_format.pose_header.PoseHeader.bbox"><code class="docutils literal notranslate"><span class="pre">PoseHeader.bbox()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.html#pose_format.pose_header.PoseHeader.normalization_info"><code class="docutils literal notranslate"><span class="pre">PoseHeader.normalization_info()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.html#pose_format.pose_header.PoseHeader.read"><code class="docutils literal notranslate"><span class="pre">PoseHeader.read()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.html#pose_format.pose_header.PoseHeader.total_points"><code class="docutils literal notranslate"><span class="pre">PoseHeader.total_points()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.html#pose_format.pose_header.PoseHeader.write"><code class="docutils literal notranslate"><span class="pre">PoseHeader.write()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.html#pose_format.pose_header.PoseHeaderComponent"><code class="docutils literal notranslate"><span class="pre">PoseHeaderComponent</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.html#pose_format.pose_header.PoseHeaderComponent.get_relative_limbs"><code class="docutils literal notranslate"><span class="pre">PoseHeaderComponent.get_relative_limbs()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.html#pose_format.pose_header.PoseHeaderComponent.read"><code class="docutils literal notranslate"><span class="pre">PoseHeaderComponent.read()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.html#pose_format.pose_header.PoseHeaderComponent.write"><code class="docutils literal notranslate"><span class="pre">PoseHeaderComponent.write()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.html#pose_format.pose_header.PoseHeaderDimensions"><code class="docutils literal notranslate"><span class="pre">PoseHeaderDimensions</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.html#pose_format.pose_header.PoseHeaderDimensions.read"><code class="docutils literal notranslate"><span class="pre">PoseHeaderDimensions.read()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.html#pose_format.pose_header.PoseHeaderDimensions.write"><code class="docutils literal notranslate"><span class="pre">PoseHeaderDimensions.write()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.html#pose_format.pose_header.PoseNormalizationInfo"><code class="docutils literal notranslate"><span class="pre">PoseNormalizationInfo</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pose_format.html#module-pose_format.pose_representation">pose_format.pose_representation module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.html#pose_format.pose_representation.PoseRepresentation"><code class="docutils literal notranslate"><span class="pre">PoseRepresentation</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.html#pose_format.pose_representation.PoseRepresentation.input_size"><code class="docutils literal notranslate"><span class="pre">PoseRepresentation.input_size</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.html#pose_format.pose_representation.PoseRepresentation.rep_modules1_size"><code class="docutils literal notranslate"><span class="pre">PoseRepresentation.rep_modules1_size</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.html#pose_format.pose_representation.PoseRepresentation.rep_modules2_size"><code class="docutils literal notranslate"><span class="pre">PoseRepresentation.rep_modules2_size</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.html#pose_format.pose_representation.PoseRepresentation.rep_modules3_size"><code class="docutils literal notranslate"><span class="pre">PoseRepresentation.rep_modules3_size</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.html#pose_format.pose_representation.PoseRepresentation.output_size"><code class="docutils literal notranslate"><span class="pre">PoseRepresentation.output_size</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.html#pose_format.pose_representation.PoseRepresentation.calc_output_size"><code class="docutils literal notranslate"><span class="pre">PoseRepresentation.calc_output_size()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.html#pose_format.pose_representation.PoseRepresentation.get_limbs_points"><code class="docutils literal notranslate"><span class="pre">PoseRepresentation.get_limbs_points()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.html#pose_format.pose_representation.PoseRepresentation.get_points"><code class="docutils literal notranslate"><span class="pre">PoseRepresentation.get_points()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.html#pose_format.pose_representation.PoseRepresentation.get_triangles_points"><code class="docutils literal notranslate"><span class="pre">PoseRepresentation.get_triangles_points()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.html#pose_format.pose_representation.PoseRepresentation.group_embeds"><code class="docutils literal notranslate"><span class="pre">PoseRepresentation.group_embeds()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.html#pose_format.pose_representation.PoseRepresentation.permute"><code class="docutils literal notranslate"><span class="pre">PoseRepresentation.permute()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pose_format.html#module-pose_format.pose_test">pose_format.pose_test module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.html#pose_format.pose_test.TestPose"><code class="docutils literal notranslate"><span class="pre">TestPose</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.html#pose_format.pose_test.TestPose.test_pose_object_should_be_callable"><code class="docutils literal notranslate"><span class="pre">TestPose.test_pose_object_should_be_callable()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.html#pose_format.pose_test.TestPoseNumpyPoseBody"><code class="docutils literal notranslate"><span class="pre">TestPoseNumpyPoseBody</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.html#pose_format.pose_test.TestPoseNumpyPoseBody.test_pose_numpy_posebody_frame_dropout_normal_eager_mode_num_frames_not_zero"><code class="docutils literal notranslate"><span class="pre">TestPoseNumpyPoseBody.test_pose_numpy_posebody_frame_dropout_normal_eager_mode_num_frames_not_zero()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.html#pose_format.pose_test.TestPoseNumpyPoseBody.test_pose_numpy_posebody_frame_dropout_uniform_eager_mode_num_frames_not_zero"><code class="docutils literal notranslate"><span class="pre">TestPoseNumpyPoseBody.test_pose_numpy_posebody_frame_dropout_uniform_eager_mode_num_frames_not_zero()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.html#pose_format.pose_test.TestPoseNumpyPoseBody.test_pose_numpy_posebody_normalize_preserves_shape"><code class="docutils literal notranslate"><span class="pre">TestPoseNumpyPoseBody.test_pose_numpy_posebody_normalize_preserves_shape()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.html#pose_format.pose_test.TestPoseTensorflowPoseBody"><code class="docutils literal notranslate"><span class="pre">TestPoseTensorflowPoseBody</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.html#pose_format.pose_test.TestPoseTensorflowPoseBody.test_pose_frame_dropout_normal_can_be_used_in_tf_dataset_map"><code class="docutils literal notranslate"><span class="pre">TestPoseTensorflowPoseBody.test_pose_frame_dropout_normal_can_be_used_in_tf_dataset_map()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.html#pose_format.pose_test.TestPoseTensorflowPoseBody.test_pose_frame_dropout_uniform_can_be_used_in_tf_dataset_map"><code class="docutils literal notranslate"><span class="pre">TestPoseTensorflowPoseBody.test_pose_frame_dropout_uniform_can_be_used_in_tf_dataset_map()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.html#pose_format.pose_test.TestPoseTensorflowPoseBody.test_pose_normalize_can_be_used_in_tf_dataset_map"><code class="docutils literal notranslate"><span class="pre">TestPoseTensorflowPoseBody.test_pose_normalize_can_be_used_in_tf_dataset_map()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.html#pose_format.pose_test.TestPoseTensorflowPoseBody.test_pose_normalize_distribution_can_be_used_in_tf_dataset_map"><code class="docutils literal notranslate"><span class="pre">TestPoseTensorflowPoseBody.test_pose_normalize_distribution_can_be_used_in_tf_dataset_map()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.html#pose_format.pose_test.TestPoseTensorflowPoseBody.test_pose_tf_posebody_frame_dropout_normal_eager_mode_num_frames_not_zero"><code class="docutils literal notranslate"><span class="pre">TestPoseTensorflowPoseBody.test_pose_tf_posebody_frame_dropout_normal_eager_mode_num_frames_not_zero()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.html#pose_format.pose_test.TestPoseTensorflowPoseBody.test_pose_tf_posebody_frame_dropout_uniform_eager_mode_num_frames_not_zero"><code class="docutils literal notranslate"><span class="pre">TestPoseTensorflowPoseBody.test_pose_tf_posebody_frame_dropout_uniform_eager_mode_num_frames_not_zero()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.html#pose_format.pose_test.TestPoseTensorflowPoseBody.test_pose_tf_posebody_normalize_distribution_eager_mode_correct_result"><code class="docutils literal notranslate"><span class="pre">TestPoseTensorflowPoseBody.test_pose_tf_posebody_normalize_distribution_eager_mode_correct_result()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.html#pose_format.pose_test.TestPoseTensorflowPoseBody.test_pose_tf_posebody_normalize_eager_mode_preserves_shape"><code class="docutils literal notranslate"><span class="pre">TestPoseTensorflowPoseBody.test_pose_tf_posebody_normalize_eager_mode_preserves_shape()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pose_format.html#module-pose_format.pose_visualizer">pose_format.pose_visualizer module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.html#pose_format.pose_visualizer.FastAndUglyPoseVisualizer"><code class="docutils literal notranslate"><span class="pre">FastAndUglyPoseVisualizer</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.html#pose_format.pose_visualizer.FastAndUglyPoseVisualizer.draw"><code class="docutils literal notranslate"><span class="pre">FastAndUglyPoseVisualizer.draw()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="pose_format.html#pose_format.pose_visualizer.PoseVisualizer"><code class="docutils literal notranslate"><span class="pre">PoseVisualizer</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.html#pose_format.pose_visualizer.PoseVisualizer.draw"><code class="docutils literal notranslate"><span class="pre">PoseVisualizer.draw()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.html#pose_format.pose_visualizer.PoseVisualizer.draw_on_video"><code class="docutils literal notranslate"><span class="pre">PoseVisualizer.draw_on_video()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.html#pose_format.pose_visualizer.PoseVisualizer.save_frame"><code class="docutils literal notranslate"><span class="pre">PoseVisualizer.save_frame()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.html#pose_format.pose_visualizer.PoseVisualizer.save_gif"><code class="docutils literal notranslate"><span class="pre">PoseVisualizer.save_gif()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="pose_format.html#pose_format.pose_visualizer.PoseVisualizer.save_video"><code class="docutils literal notranslate"><span class="pre">PoseVisualizer.save_video()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Additional Material</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="js_docs.html">JavaScript</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pose_format_js.html">pose_format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pose_viewer_js.html">pose_viewer</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#pose-format-conversion-with-sirens">Pose Format Conversion with Sirens</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="specs_v01.html">specs/v0.1.md</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="specs_v01.html#header">Header</a></li>
+<li class="toctree-l2"><a class="reference internal" href="specs_v01.html#body">Body</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this heading"></a></h2>
+<div class="docutils container" id="id2">
+<div class="citation" id="id3" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">MMuller21</a><span class="fn-bracket">]</span></span>
+<p>Amit Moryossef and Mathias Müller. Pose-format: library for viewing, augmenting, and handling .pose files. <a class="reference external" href="https://github.com/sign-language-processing/pose">https://github.com/sign-language-processing/pose</a>, 2021.</p>
+</div>
+</div>
+</div>
+<section id="indices-and-tables">
+<h3>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="readme.html" class="btn btn-neutral float-right" title="Pose Format Introduction" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Moryossef, Amit and Müller, Mathias.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

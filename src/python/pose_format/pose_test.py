@@ -98,13 +98,27 @@ def _create_random_tensorflow_data(frames_min: Optional[int] = None,
                                    num_keypoints: int = 137,
                                    num_dimensions: int = 2) -> Tuple[tf.Tensor, tf.Tensor, tf.Tensor]:
     """
+    Creates random TensorFlow data for poses with optional frame ranges and default settings
 
-    :param frames_min:
-    :param frames_max:
-    :param num_frames:
-    :param num_keypoints:
-    :param num_dimensions:
-    :return:
+    Parameters
+    ----------
+    frames_min : int, optional
+        Minimum number of frames.
+    frames_max : int, optional
+        Maximum number of frames.
+    num_frames : int, optional
+        Specific number of frames.
+    num_keypoints : int, default=137
+        Number of keypoints.
+    num_dimensions : int, default=2
+        Number of dimensions (e.g., 2 for x, y coordinates).
+
+    Returns
+    -------
+    tuple of tf.Tensor
+        - tensor: random poses tensor, shape (num_frames, 1, num_keypoints, num_dimensions).
+        - mask: bool mask tensor with the same shape as tensor.
+        - confidence: confidence scores tensor, shape (num_frames, 1, num_keypoints).
     """
     if num_frames is None:
         assert None not in [frames_min, frames_max]
@@ -133,14 +147,29 @@ def _create_random_numpy_data(frames_min: Optional[int] = None,
                               num_dimensions: int = 2,
                               probability_for_masked: float = 0.2) -> Tuple[np.array, np.array, np.array]:
     """
+    Create random NumPy data for poses with optional frame ranges and default settings.
 
-    :param frames_min:
-    :param frames_max:
-    :param num_frames:
-    :param num_keypoints:
-    :param num_dimensions:
-    :param probability_for_masked:
-    :return:
+    Parameters
+    ----------
+    frames_min : int, optional
+        Minimum number of frames.
+    frames_max : int, optional
+        Maximum number of frames.
+    num_frames : int, optional
+        Specific number of frames.
+    num_keypoints : int, default=137
+        Number of keypoints.
+    num_dimensions : int, default=2
+        Number of dimensions (e.g., 2 for x, y coordinates).
+    probability_for_masked : float, default=0.2
+        Probability for point to be masked.
+
+    Returns
+    -------
+    tuple of np.array
+        - tensor: Random poses numpy array, shape (num_frames, 1, num_keypoints, num_dimensions).
+        - mask: Boolean mask numpy array and same shape as tensor.
+        - confidence: Confidence scores numpy array, shape (num_frames, 1, num_keypoints).
     """
     if num_frames is None:
         assert None not in [frames_min, frames_max]

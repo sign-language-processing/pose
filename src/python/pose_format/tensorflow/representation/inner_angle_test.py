@@ -13,7 +13,9 @@ representation = InnerAngleRepresentation()
 
 
 class TestInnerAngleRepresentation(TestCase):
+    """Test case for InnerAngleRepresentation class"""
     def test_call_value_should_be_inner_angle(self):
+        """Test if the calculated inner angles are correct."""
         p1s = tf.constant([[[[2, 3, 4]]]], dtype=tf.float32)
         p2s = tf.constant([[[[1, 1, 1]]]], dtype=tf.float32)
         p3s = tf.constant([[[[3, 4, 2]]]], dtype=tf.float32)

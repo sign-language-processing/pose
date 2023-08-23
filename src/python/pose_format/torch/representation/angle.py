@@ -5,12 +5,29 @@ from ..masked.tensor import MaskedTensor
 
 
 class AngleRepresentation(nn.Module):
+    """
+    Class to compute the angle between the X/Y axis and the line segments formed by two sets of points.
+    """
     def forward(self, p1s: MaskedTensor, p2s: MaskedTensor) -> torch.Tensor:
         """
-        Angle of the X/Y axis between two points
-        :param p1s: MaskedTensor (Points, Batch, Len, Dims)
-        :param p2s: MaskedTensor (Points, Batch, Len, Dims)
-        :return: torch.Tensor (Points, Batch, Len)
+        Computes angle in radians between X/Y axis and line segments made by two sets of points.
+        
+        Parameters
+        ----------
+        p1s : :class:`~pose_format.torch.masked.tensor.MaskedTensor`
+            A tensor representing the first set of points with shape (Points, Batch, Len, Dims).
+        
+        p2s : :class:`~pose_format.torch.masked.tensor.MaskedTensor`
+            A tensor representing the second set of points with the same shape as `p1s`.
+        
+        Returns
+        -------
+        torch.Tensor
+            A tensor of angles (in radians) with shape (Points, Batch, Len).
+        
+        Note
+        -----
+        The slope is determined for each pair of points. The arctangent function is then applied to calculate the angle in radians.
         """
         dims = p1s.shape[-1]
 
@@ -29,3 +46,4 @@ if __name__ == "__main__":
     p2s = MaskedTensor(torch.tensor([[[[4, 5, 6]]]], dtype=torch.float))
     angles = representation(p1s, p2s)
     print(angles)
+

@@ -7,6 +7,22 @@ from ..pose_representation import PoseRepresentation
 
 
 class TorchPoseRepresentation(PoseRepresentation):
+    """TorchPoseRepresentation class representing pose information using PyTorch tensors.
+
+    This class extends the PoseRepresentation class and provides methods for manipulating and representing pose data
+    using PyTorch tensors.
+
+    Parameters
+    ----------
+    header : PoseHeader
+        Header describing the pose data structure.
+    rep_modules1 : List
+        List of additional representation modules (level 1) to apply to pose data.
+    rep_modules2 : List
+        List of additional representation modules (level 2) to apply to pose data.
+    rep_modules3 : List
+        List of additional representation modules (level 3) to apply to pose data.
+    """
     def __init__(self, header: PoseHeader, rep_modules1: List = [], rep_modules2: List = [], rep_modules3: List = []):
         super(TorchPoseRepresentation, self).__init__(header, rep_modules1, rep_modules2, rep_modules3)
 
@@ -21,11 +37,37 @@ class TorchPoseRepresentation(PoseRepresentation):
 
     def group_embeds(self, embeds: List[torch.Tensor]):
         """
-        :param embeds: torch.Tensor List of tensors size (embed_size, Batch, Len)
-        :return: Size (Batch, Len, embed_size)
+        Group and reshape embedded tensors for batch processing.
+
+        Parameters
+        ----------
+        embeds : List[torch.Tensor]
+            List of embedded tensors of size (embed_size, Batch, Len).
+
+        Returns
+        -------
+        torch.Tensor
+            A tensor of size (Batch, Len, embed_size) with grouped and reshaped embedded tensors.
+
         """
         group = torch.cat(embeds, dim=0)  # (embed_size, Batch, Len)
         return group.permute(dims=[1, 2, 0])
 
     def permute(self, src, shape: tuple):
+        """
+        Permute dimensions of tensor according to a specified shape (tuple).
+
+        Parameters
+        ----------
+        src : torch.Tensor
+            tensor to  permute
+        shape : tuple
+            desired shape of the tensor after permutation.
+
+        Returns
+        -------
+        torch.Tensor
+            tensor with permuted dimensions according to specified shape.
+
+        """
         return src.permute(shape)

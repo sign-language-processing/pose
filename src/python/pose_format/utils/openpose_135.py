@@ -74,6 +74,29 @@ OpenPose_Components = [PoseHeaderComponent(name="BODY_135",
 
 
 def load_openpose_135_directory(*args, **kwargs) -> Pose:
+    """
+    Loads OpnePose data from a directory and returns a Pose object.
+
+    The function reads Openpose data and modifies body data and confidence to contain only first 135 components.
+    It then updates header components to OpenPose components.
+
+    Parameters
+    ----------
+    *args : 
+        Variable length argument list.
+    **kwargs :
+        arbitrary keyword arguments.
+
+    Returns
+    -------
+    Pose
+        modified Pose object with body data and confidence from the first 135 components
+
+    Note
+    -----
+    The function assumes that the input directory contains "OpenPose data" compatible with the Pose data structure, 
+    and body data and confidence matrices must have at least 135 components, no less! 
+    """
     pose = load_openpose_directory(*args, **kwargs)
 
     pose.body.data = pose.body.data[:, :, :135, :]

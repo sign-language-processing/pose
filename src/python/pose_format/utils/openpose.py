@@ -132,6 +132,20 @@ OPENPOSE_FRAME_PATTERN = "(?:^|\D)(\d+)\\_keypoints.json"
 # Definition of OpenPose Components
 
 def limbs_index(limbs: List[Tuple[str, str]], points: List[str]) -> List[Tuple[int, int]]:
+    """convert limb names to indices based on a list of points.
+    
+    Parameters
+    ----------
+    limbs : list of tuple of str
+        limbs defined by point names
+    points : list of str (List[str])
+        list of point names
+    
+    Returns
+    -------
+    list of tuple of int
+        List of limbs defined by point indices
+    """
     return [(points.index(p1), points.index(p2)) for p1, p2 in limbs]
 
 
@@ -141,6 +155,10 @@ hand_colors = [tuple([math.floor(x + 35 * (i % 4)) for x in HAND_POINTS_COLOR[i 
 OpenPose_Hand_Component = lambda name: PoseHeaderComponent(name=name, points=HAND_POINTS,
                                                            limbs=limbs_index(HAND_LIMBS, HAND_POINTS),
                                                            colors=hand_colors, point_format="XYC")
+OpenPose_Hand_Component.__doc__ = """
+This "lambda" function creates a PoseHeaderComponent using 'name' and
+a constants for points, limbs, colors, and format.
+"""
 
 #     {
 #     "points": HAND_POINTS,
@@ -165,18 +183,28 @@ OpenPoseFrames = Dict[int, OpenPoseFrame]
 
 def load_openpose(frames: OpenPoseFrames, fps: float = 24, width: int = 1000, height: int = 1000,
                   depth: int = 0, num_frames: Optional[int] = None) -> Pose:
-    """
-    Loads a dictionary of OpenPose frames.
+    """Loads a dictionary of OpenPose frames into a Pose object.
+    
+    Parameters
+    ----------
+    frames : dict
+        Dictionary where keys are frame IDs, and values are individual frames. Each individual frame is also a dictionary.
+    fps : float, optional
+        Framerate, default is 24.
+    width : int, optional
+        Width of pose space, default is 1000.
+    height : int, optional
+        Height of pose space, default is 1000.
+    depth : int, optional
+        Depth of pose space, default is 0.
+    num_frames : int, optional
+        Number of frames when it's known and cannot be derived from OpenPose files. That is the case if the last frame(s) of a video are missing from the OpenPose output.
+        Default is None.
 
-    :param frames: A dictionary where keys are frame IDs, and values are individual frames. Each individual frame
-                   is also a dictionary.
-    :param fps: Framerate.
-    :param width: Width of pose space.
-    :param height: Height of pose space.
-    :param depth: Depth of pose space.
-    :param num_frames: Number of frames when it is known and cannot be derived from OpenPose files. That is the case if
-                       the last frame(s) of a video are missing from the OpenPose output.
-    :return: Pose objects with a header specific to OpenPose and a body that contains a single array.
+    Returns
+    -------
+    Pose
+        Pose object with a header specific to OpenPose and a body that contains a single array.
     """
     dimensions = PoseHeaderDimensions(width=width, height=height, depth=depth)
 
@@ -215,12 +243,19 @@ def load_openpose(frames: OpenPoseFrames, fps: float = 24, width: int = 1000, he
 
 
 def get_frame_id(filename: str, pattern: str) -> int:
-    """
-    Parses a filename to find the ID of a frame. Example file name for frame with ID 17:
-    `CAM2_000000000017_keypoints.json`.
+    """Parses a filename to find the ID of a frame. Example file name for frame with ID 17: `CAM2_000000000017_keypoints.json`.
 
-    :param filename: Name of openpose frame file.
-    :return: Frame ID as an integer.
+    Parameters
+    ----------
+    filename : str
+        Name of the openpose frame file.
+    pattern : str, optional
+        Regex pattern to extract frame ID, default is OPENPOSE_FRAME_PATTERN.
+
+    Returns
+    -------
+    int
+        Frame ID as an integer.
     """
     m = re.findall(pattern, filename)
     frame_id = int(m[-1])
@@ -230,9 +265,29 @@ def get_frame_id(filename: str, pattern: str) -> int:
 
 def load_frames_directory_dict(directory: str, pattern: str) -> OpenPoseFrames:
     """
-    Loads a pose directory where the poses of each frame are stored in a separate file, with a specific naming
-    scheme. The filename must follow this template: `[ARBITRARY CHARACTERS]_[FRAME_ID]_keypoints.json`.
-    Example file name for frame with ID 17: `CAM2_000000000017_keypoints.json`.
+    Load a pose directory where each frame's pose data is stored in a separate file 
+    following a specific naming scheme. 
+    Filenames must adhere to the format: `[ARBITRARY CHARACTERS]_[FRAME_ID]_keypoints.json`.
+    Example: For a frame with ID 17, the filename would be `CAM2_000000000017_keypoints.json`.
+
+    Parameters
+    ----------
+    directory : str
+        Path to the folder containing pose files.
+    pattern : str, optional
+        Regular expression pattern to identify and parse frame filenames. The default pattern expects 
+        filenames of the form `[ARBITRARY CHARACTERS]_[FRAME_ID]_keypoints.json`.
+
+    Returns
+    -------
+    OpenPoseFrames
+        Dictionary where keys are frame IDs (int) and values are the corresponding frames (dict).
+
+    Examples
+    --------
+    >>> frames = load_frames_directory_dict("path/to/frames")
+    >>> print(frames[17])
+    {...}  # content of CAM2_000000000017_keypoints.json
     """
     frames = {}  # type: OpenPoseFrames
 
@@ -248,15 +303,35 @@ def load_frames_directory_dict(directory: str, pattern: str) -> OpenPoseFrames:
 
 def load_openpose_directory(directory: str, fps: float = 24, width: int = 1000, height: int = 1000,
                             depth: int = 0, num_frames: Optional[int] = None) -> Pose:
-    """
-    :param directory: Path to folder that contains pose files.
-    :param fps: Framerate.
-    :param width: Width of pose space.
-    :param height: Height of pose space.
-    :param depth: Depth of pose space.
-    :param num_frames: Number of frames when it is known and cannot be derived from OpenPose files. That is the case if
-                       the last frame(s) of a video are missing from the OpenPose output.
-    :return: Pose objects with a header specific to OpenPose and a body that contains a single array.
+    """Loads pose data from a directory containing OpenPose files and return a `Pose` object.
+
+    Parameters
+    ----------
+    directory : str
+        Path to the folder that contains pose files.
+    fps : float, optional
+        Framerate. Default is 24.
+    width : int, optional
+        Width of pose space. Default 1000.
+    height : int, optional
+        Height of pose space, default; 1000.
+    depth : int, optional
+        Depth of pose space, default; 0.
+    num_frames : int, optional
+        Number of frames when known and cannot be derived from OpenPose files. 
+        This can be the case if the last frame(s) of a video are missing from the OpenPose output.
+        Default is None.
+
+    Returns
+    -------
+    Pose
+        Pose object with a header specific to OpenPose and a body containing a single array.
+
+    Examples
+    --------
+    >>> pose = load_openpose_directory("path/to/frames")
+    >>> print(pose.header)
+    PoseHeader(...)
     """
     frames = load_frames_directory_dict(directory=directory, pattern=OPENPOSE_FRAME_PATTERN)
 

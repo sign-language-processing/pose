@@ -42,6 +42,21 @@ POSES_MAP = BODY_MAP + LEFT_HAND_MAP + RIGHT_HAND_MAP
 
 
 def convert_pose(pose: Pose, pose_components: List[PoseHeaderComponent]) -> Pose:
+    """
+    converts the given pose to a new pose instance based on given pose components.
+
+    Parameters
+    ----------
+    pose : Pose
+        The initial pose object to convert
+    pose_components : List[PoseHeaderComponent]
+        the new set of pose components to define the pose structure
+
+    Returns
+    -------
+    Pose
+        Converted pose object
+    """
     pose_header = PoseHeader(version=pose.header.version,
                              dimensions=pose.header.dimensions,
                              components=pose_components)
@@ -82,6 +97,16 @@ def convert_pose(pose: Pose, pose_components: List[PoseHeaderComponent]) -> Pose
 
 
 def save_image(pose: Pose, name: str):
+    """
+    Saves visualized pose as an image with a given name
+
+    Parameters
+    ----------
+    pose : Pose
+        Pose to be visualized and saved
+    name : str
+        Name to save image to.
+    """
     visualizer = PoseVisualizer(pose, thickness=1)
     frame = next(iter(visualizer.draw(background_color=(255, 255, 255))))
     visualizer.save_frame(name, frame)

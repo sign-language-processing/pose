@@ -9,15 +9,36 @@ from pose_format.pose import Pose
 
 
 class SineLayer(nn.Module):
-  # See paper sec. 3.2, final paragraph, and supplement Sec. 1.5 for discussion of omega_0.
+  """
+    A sine activation layer as described in the SIREN paper.
 
-  # If is_first=True, omega_0 is a frequency factor which simply multiplies the activations before the
-  # nonlinearity. Different signals may require different omega_0 in the first layer - this is a
-  # hyperparameter.
+    Parameters
+    ----------
+    in_features : int
+        number of input features.
+    out_features : int
+        number of output features.
+    bias : bool, optional
+        If set to False, the layer will not learn an additive bias. Default is True.
+    is_first : bool, optional
+        If it's the first layer in the network. Default is False.
+    omega_0 : float, optional
+        hyperparameter. Default is 30.
 
-  # If is_first=False, then the weights will be divided by omega_0 so as to keep the magnitude of
-  # activations constant, but boost gradients to the weight matrix (see supplement Sec. 1.5)
+    Attributes
+    ----------
+    omega_0 : float
+        hyperparameter for controlling the sine function.
+    is_first : bool
+        Determines how weights are initialized.
 
+    Note
+    -----
+    - See paper sec. 3.2, final paragraph, and supplement Sec. 1.5 for discussion of omega_0.
+    - If `is_first=True`, omega_0 multiplies the activations before the nonlinearity.
+    - If `is_first=False`, weights are divided by omega_0 to keep magnitude of activations constant.
+
+  """
   def __init__(self, in_features, out_features, bias=True,
                is_first=False, omega_0=30):
     super().__init__()
@@ -30,6 +51,7 @@ class SineLayer(nn.Module):
     self.init_weights()
 
   def init_weights(self):
+    """initializes weights"""
     with torch.no_grad():
       if self.is_first:
         self.linear.weight.uniform_(-1 / self.in_features,
@@ -39,15 +61,60 @@ class SineLayer(nn.Module):
                                     np.sqrt(6 / self.in_features) / self.omega_0)
 
   def forward(self, input):
+    """forward pass through layer 
+    
+    Parameters
+    ----------
+    input : torch.Tensor
+        input tensor to layer
+
+    Returns
+    -------
+    torch.Tensor
+        Sine "activated" output tensor
+    """
     return torch.sin(self.omega_0 * self.linear(input))
 
   def forward_with_intermediate(self, input):
+    """forward pass with intermediate value, before sine act. For visualization of activation distributions 
+    
+    Parameters
+    ----------
+    input : torch.Tensor
+        Input tensor to layer
+
+    Returns
+    -------
+    tuple
+        Sine activated output tensor along with an intermediate tensor
+    """
     # For visualization of activation distributions
     intermediate = self.omega_0 * self.linear(input)
     return torch.sin(intermediate), intermediate
 
 
 class Siren(nn.Module):
+  """SIREN network consisting of SineLayers.
+
+    Parameters
+    ----------
+    in_features : int
+        number of input features.
+    hidden_features : int
+        number of hidden features.
+    hidden_layers : int
+        number hidden layers.
+    out_features : int
+        number output features.
+    outermost_linear : bool, optional
+        If True, outermost layer is linear. Default- False.
+    first_omega_0 : float, optional
+        Omega_0 for the first layer. The default is 30
+    hidden_omega_0 : float, optional
+        Omega_0 for the hidden layers, default; 30
+
+  """
+
   def __init__(self, in_features, hidden_features, hidden_layers, out_features, outermost_linear=False,
                first_omega_0=30, hidden_omega_0=30.):
     super().__init__()
@@ -75,6 +142,18 @@ class Siren(nn.Module):
     self.net = nn.Sequential(*self.net)
 
   def forward(self, coords):
+    """forward pass through network 
+
+    Parameters
+    ----------
+    coords : torch.Tensor
+        Input coordinates
+
+    Returns
+    -------
+    tuple
+        output (network) and coordinates (input)
+    """
     coords = coords.clone().detach().requires_grad_(True)  # allows to take derivative w.r.t. input
     output = self.net(coords)
     return output, coords
@@ -110,6 +189,18 @@ class Siren(nn.Module):
 
 
 class PoseDataset(Dataset):
+  """Dataset for pose
+
+    Parameters
+    ----------
+    pose : Pose
+        Pose object containing body data & confidence scores
+
+    Note
+    -----
+    - Assumes pose data is provided in a specific format with body data & confidence scores.
+
+  """
   def __init__(self, pose: Pose):
     super().__init__()
 
@@ -121,6 +212,20 @@ class PoseDataset(Dataset):
 
   @staticmethod
   def get_coords(time: float, fps: float):
+    """gets coordinates based on time and frames per second (fps)
+
+    Parameters
+    ----------
+    time : float
+        Time (duration)
+    fps : float
+        frames per second
+
+    Returns
+    -------
+    torch.Tensor
+        Tensor with coordinates
+    """
     return torch.tensor([[i / fps] for i in range(int(fps * time))], dtype=torch.float32)
 
   def __len__(self):
@@ -133,6 +238,22 @@ class PoseDataset(Dataset):
 
 
 def masked_mse_loss(model_output: torch.FloatTensor, ground_truth: torch.FloatTensor, confidence: torch.FloatTensor):
+  """ for calculating masked mean squared error loss 
+  
+  Parameters
+  ----------
+  model_output : torch.FloatTensor
+      output of model
+  ground_truth : torch.FloatTensor
+      Ground truth values
+  confidence : torch.FloatTensor
+      Confidence scores for pose
+
+  Returns
+  -------
+  torch.Tensor
+      computed masked mse loss
+  """
   sq_error = (model_output - ground_truth) ** 2
   return (sq_error * confidence).mean()
 
@@ -145,6 +266,34 @@ def get_pose_siren(pose: Pose,
                    batch_size=1,
                    steps_til_summary=None,
                    cuda: bool = True):
+  """
+  for training: returns a SIREN model for pose data 
+
+  Parameters
+  ----------
+  pose : Pose
+      Pose object with body data & confidence
+  hidden_features : int, optional
+      hidden features. Default 256.
+  hidden_layers : int, optional
+      hidden layers, default  4.
+  total_steps : int, optional
+      total (training) steps, default; 5000.
+  learning_rate : float, optional
+      Learning rate (optimization) default; 1e-5.
+  batch_size : int, optional
+      batch size (training) default; 1.
+  steps_til_summary : int, optional
+      Steps until summary. If None, no summary is printed, default is None
+  cuda : bool, optional
+      If True, training on GPU, default is True
+
+  Returns
+  -------
+  function
+      prediction function with model output of trained SIREN model
+
+  """
   dataset = PoseDataset(pose)
   data_loader = DataLoader(dataset, batch_size=batch_size, pin_memory=True, num_workers=0, shuffle=True)
   shape = pose.body.data.shape

@@ -10,15 +10,55 @@ POINTS_DIMS = (2, 1, 0, 3)
 
 
 class PoseBody:
+    """
+    Class for body data of a pose.
+
+    Parameters
+    ----------
+    fps : float
+        Frames per second.
+    data: 
+        Data in the format (Frames, People, Points, Dims) e.g., (93, 1, 137, 2).
+    confidence: 
+        Confidence data in the format (Frames, People, Points) e.g., (93, 1, 137).
+
+
+    """
     tensor_reader = 'ABSTRACT-DO-NOT-USE'
 
     def __init__(self, fps: float, data, confidence):
+        """
+        Initialize a PoseBody instance."""
         self.fps = fps
         self.data = data  # Shape (Frames, People, Points, Dims) - eg (93, 1, 137, 2)
         self.confidence = confidence  # Shape (Frames, People, Points) - eg (93, 1, 137)
 
+
     @classmethod
-    def read(cls, header: PoseHeader, reader: BufferReader, **kwargs):
+    def read(cls, header: PoseHeader, reader: BufferReader, **kwargs) -> "PoseBody":
+        """
+        Reads pose data a buffer (BufferReader) based on the header's version.
+
+        Parameters
+        ----------
+        header : PoseHeader
+            Header containing the version of its pose data.
+        reader : BufferReader
+            Buffer from which to read the pose data.
+        **kwargs : dict
+            Additional parameters for reading specific versions.
+        
+        Returns
+        -------
+        PoseBody
+            PoseBody object initialized with the read data.
+        
+        Raises
+        ------
+        NotImplementedError
+            If header's version is not supported / unknown.
+        """
+
         if header.version == 0:
             return cls.read_v0_0(header, reader, **kwargs)
         elif round(header.version, 3) == 0.1:
@@ -28,11 +68,53 @@ class PoseBody:
 
     @classmethod
     def read_v0_0(cls, header: PoseHeader, reader: BufferReader, **unused_kwargs):
+        """reads version 0.0 pose data.
+
+        Parameters
+        ----------
+        header : PoseHeader
+            Header containing the version of the pose data.
+        reader : BufferReader
+            Buffer from which to read the pose data.
+        unused_kwargs : dict
+            Unused additional parameters for this version.
+
+        Raises
+        ------
+        NotImplementedError
+            method for this version is not implemented.
+        """
         raise NotImplementedError("'read_v0_0' not implemented on '%s'" % cls.__class__)
 
     @classmethod
     def read_v0_1_frames(cls, frames: int, shape: List[int], reader: BufferReader,
                          start_frame: int = None, end_frame: int = None):
+        """
+        Reads frame data for version 0.1 from a buffer.
+
+        Parameters
+        ----------
+        frames : int
+            Number of frames in the pose data.
+        shape : List[int]
+            Shape of the pose data.
+        reader : BufferReader
+            Buffer from which to read the pose data.
+        start_frame : int, optional
+            Index of the first frame to read. Default is None.
+        end_frame : int, optional
+            Index of the last frame to read. Default is None.
+
+        Returns
+        -------
+        ndarray
+            Array containing the pose data for the specified frames.
+        
+        Raises
+        ------
+        ValueError
+            If start_frame is greater than number of frames.
+        """
         tensor_reader = reader.__getattribute__(cls.tensor_reader)
         s = ConstStructs.float
 
@@ -59,7 +141,28 @@ class PoseBody:
 
     @classmethod
     def read_v0_1(cls, header: PoseHeader, reader: BufferReader,
-                  start_frame: int = None, end_frame: int = None, **unused_kwargs):
+                  start_frame: int = None, end_frame: int = None, **unused_kwargs) -> "PoseBody":
+        """
+        Reads pose data for version 0.1 from a buffer.
+
+        Parameters
+        ----------
+        header : PoseHeader
+            Header containing the version of the pose data.
+        reader : BufferReader
+            Buffer from which to read the pose data.
+        start_frame : int, optional
+            Index of the first frame to read. Default is None.
+        end_frame : int, optional
+            Index of the last frame to read. Default is None.
+        **unused_kwargs : dict
+            Unused additional parameters for this version.
+
+        Returns
+        -------
+        PoseBody
+            PoseBody object initialized with the read data for version 0.1.
+        """
         fps, _frames = reader.unpack(ConstStructs.double_ushort)
 
         _people = reader.unpack(ConstStructs.ushort)
@@ -76,13 +179,31 @@ class PoseBody:
 
     def write(self, version: float, buffer: BinaryIO):
         """
-        Write the data to a file based on the version of the spec
-        :param version: float
-        :param buffer: BinaryIO
+        Writes  data to a file based on version of spec: in docs/spec.
+
+        Parameters
+        ----------
+        version : float
+            Version of the pose data to write.
+        buffer : BinaryIO
+            Buffer to write the pose data to.
         """
         raise NotImplementedError("'write' not implemented on '%s'" % self.__class__)
 
     def __getitem__(self, index):
+        """
+        Gets a version of the PoseBody data and confidence based on the provided index.
+
+        Parameters
+        ----------
+        index : int or slice
+            Index or slice to get data.
+
+        Returns
+        -------
+        PoseBody
+            PoseBody object with the sliced data and confidence.
+        """
         # Get the sliced data and confidence
         sliced_data = self.data[index]
         sliced_confidence = self.confidence[index]
@@ -92,46 +213,90 @@ class PoseBody:
 
     def numpy(self):
         """
-        Convert the current PoseBody representation to NumpyPoseBody
-        :return: NumpyPoseBody
+        Convert the current PoseBody representation to NumpyPoseBody.
+
+        Returns
+        -------
+        NumpyPoseBody
+            The converted PoseBody object.
+        
+        Raises
+        ------
+        NotImplementedError
+            If numpy is not implemented.
         """
         raise NotImplementedError("'numpy' not implemented on '%s'" % self.__class__)
 
     def torch(self):
         """
-        Convert the current PoseBody representation to TorchPoseBody
-        :return: TorchPoseBody
+        Converts current PoseBody to TorchPoseBody.
+
+        Returns
+        -------
+        TorchPoseBody
+            The converted PoseBody object.
+
+        Raises
+        ------
+        NotImplementedError
+            If toch is not implemented.
         """
         raise NotImplementedError("'torch' not implemented on '%s'" % self.__class__)
 
     def tensorflow(self):
         """
-        Convert the current PoseBody representation to TensorflowPoseBody
-        :return: TensorflowPoseBody
+        Converts current PoseBody representation to TensorflowPoseBody.
+
+        Returns
+        -------
+        TensorflowPoseBody
+            Converted PoseBody object.
+
+        Raises
+        ------
+        NotImplementedError
+            If tensorflow is not implemented.
         """
         raise NotImplementedError("'tensorflow' not implemented on '%s'" % self.__class__)
 
     def flatten(self):
         """
-        Convert the data from the (Frames, People, Points, Dims) masked representation to array of points.
+        Converts data from the (Frames, People, Points, Dims) masked representation to an array of points.
+        
         Every item in the result array contains the following dimensions:
         0. Time in milliseconds
         1. Person ID
         2. Point ID
         3. X dimension
         4. Y dimension
-        5. Z dimension if exists
+        5. Z dimension (if exists)
         6. Pose estimation confidence
-        :return:
+
+        Returns
+        -------
+        np.ndarray
+            Array of points with detailed dimensions.
+
+        Raises
+        ------
+        NotImplementedError
+            If the method is not implemented for the specific class.
         """
         raise NotImplementedError("'flatten' not implemented on '%s'" % self.__class__)
 
     def slice_step(self, by: int) -> "PoseBody":
         """
-        Slice the data by skipping rows.
-        This slicing affects the FPS.
-        :param by: take one row every "by" rows
-        :return: PoseBody
+        Slices data by skipping rows. This affects the fps (frames per seconds).
+
+        Parameters
+        ----------
+        by : int
+            Take one row every "by" rows.
+
+        Returns
+        -------
+        PoseBody
+            PoseBody instance with sliced data.
         """
         new_data = self.data[::by]
         new_confidence = self.confidence[::by]
@@ -141,10 +306,28 @@ class PoseBody:
 
     def augment2d(self, rotation_std=0.2, shear_std=0.2, scale_std=0.2):
         """
-        :param rotation_std: Rotation in radians
-        :param shear_std: Shear X in percent
-        :param scale_std: Scale X in percent
-        :return:
+        Augment 2D data with given standard deviations.
+
+        Parameters
+        ----------
+        rotation_std : float, optional
+            Rotation in radians. Default is 0.2.
+        shear_std : float, optional
+            Shear X in percent. Default is 0.2.
+        scale_std : float, optional
+            Scale X in percent. Default is 0.2.
+
+        Returns
+        -------
+        PoseBody
+            Augmented PoseBody instance.
+        
+        Note
+        -----
+        - The method modifies the PoseBody based on shear, rotation, and scaling.
+        - **shear_std** based on https://en.wikipedia.org/wiki/Shear_matrix
+        - **rotation_std** based on https://en.wikipedia.org/wiki/Rotation_matrix 
+        - **scale_std** based on https://en.wikipedia.org/wiki/Scaling_(geometry)
         """
         matrix = np.eye(2)
 
@@ -175,26 +358,142 @@ class PoseBody:
         return self.matmul(dim_matrix.astype(dtype=np.float32))
 
     def zero_filled(self) -> __qualname__:
+        """Creates a new PoseBody instance with data replaced by zeros.
+
+        Returns
+        -------
+        PoseBody
+            PoseBody instance with zero-filled data.
+
+        Raises
+        ------
+        NotImplementedError
+            If the zero_filled is not implemented on class .
+        """
         raise NotImplementedError("'zero_filled' not implemented on '%s'" % self.__class__)
 
     def matmul(self, matrix: np.ndarray) -> __qualname__:
+        """Multiplies PoseBody data with a numpy.ndarray matrix.
+        
+        Parameters
+        ----------
+        matrix : np.ndarray
+            The matrix to multiply the PoseBody data with.
+            
+        Returns
+        -------
+        PoseBody
+            PoseBody instance with data multiplied by a numpy array.
+        
+        
+        Raises
+        ------
+        NotImplementedError
+            If the matmul is not implemented in class.
+        """
         raise NotImplementedError("'matmul' not implemented on '%s'" % self.__class__)
 
     def get_points(self, indexes: List[int]) -> __qualname__:
+        """
+        Get points from PoseBody.
+        
+        Parameters
+        ----------
+        indexes : List[int]
+            List of point indices to get from PoseBody.
+            
+        Returns
+        -------
+        PoseBody
+            PoseBody instance containing only choosen points.
+             
+        Raises
+        ------
+        NotImplementedError
+            If the `get_points` is not implemented in class.
+        """
         raise NotImplementedError("'get_points' not implemented on '%s'" % self.__class__)
 
     def bbox(self, header: PoseHeader) -> __qualname__:
+        """
+        For computing bounding box of PoseBody.
+        
+        Parameters
+        ----------
+        header : PoseHeader
+            Header containing the version of the pose data.
+            
+        Returns
+        -------
+        PoseBody
+            PoseBody instance with bounding box.
+        
+        Raises
+        ------
+        NotImplementedError
+            If the `bbox` is not implemented in class.
+        """
+        
         raise NotImplementedError("'bbox' not implemented on '%s'" % self.__class__)
 
     def points_perspective(self):
+        """
+        Give points in PoseBody as a perspective view.
+        
+        Returns
+        -------
+        PoseBody
+            PoseBody instance with points adjusted for perspective.
+        
+        Raises
+        ------
+        NotImplementedError
+            If the method is not implemented for the specific class.
+        """
         raise NotImplementedError("'points_perspective' not implemented on '%s'" % self.__class__)
 
-    def select_frames(self, frame_indexes: List[int]):
+    def select_frames(self, frame_indexes: List[int]) -> "PoseBody":
+        """Selects specific frames from PoseBody object.
+
+        Parameters
+        ----------
+        frame_indexes : List[int]
+            List of frame indexes to select.
+
+        Returns
+        -------
+        PoseBody
+            PoseBody object containing only the selected frames.
+
+        Raises
+        ------
+        IndexError
+            If any of the specified frame indices are out of the valid range for the current PoseBody data.
+        """
         data = self.data[frame_indexes]
         confidence = self.confidence[frame_indexes]
         return self.__class__(fps=self.fps, data=data, confidence=confidence)
 
     def frame_dropout_given_percent(self, dropout_percent: float) -> Tuple["PoseBody", List[int]]:
+        """
+        Drop of frames based on  given dropout percentage.
+
+        Parameters
+        ----------
+        dropout_percent : float
+            Percentage of frames to drop. Between 0 and 1 (e.g., 0.2 means drop 20% of the frames).
+
+        Returns
+        -------
+        Tuple[PoseBody, List[int]]
+            - New PoseBody object with the gotten frames.
+            - List of frame indexes.
+        
+        Note
+        -----
+        Actual number of dropped frames might be slightly different due to rounding!
+        """
+        
         data_len = len(self.data)
         dropout_number = min(int(data_len * dropout_percent), int(data_len * 0.99))
         dropout_indexes = set(sample(range(0, data_len), dropout_number))
@@ -205,6 +504,21 @@ class PoseBody:
     def frame_dropout_uniform(self,
                               dropout_min: float = 0.2,
                               dropout_max: float = 1.0) -> Tuple["PoseBody", List[int]]:
+        """Randomly drops frames depending on a uniform distribution - given minimum and maximum percentages.
+
+        Parameters
+        ----------
+        dropout_min : float, optional
+            Minimum percentage of frames to drop. Default is 0.2.
+        dropout_max : float, optional
+            Maximum percentage of frames to drop. Default is 1.0.
+
+        Returns
+        -------
+        Tuple[PoseBody, List[int]]
+            - New PoseBody object with dropped frames.
+            - List of frame indexes that were retained.
+        """
         dropout_percent = np.random.uniform(low=dropout_min, high=dropout_max, size=1)[0]
 
         return self.frame_dropout_given_percent(dropout_percent)
@@ -212,6 +526,22 @@ class PoseBody:
     def frame_dropout_normal(self,
                              dropout_mean: float = 0.5,
                              dropout_std: float = 0.1) -> Tuple["PoseBody", List[int]]:
+        """
+        drop frames depending on normal distribution with given mean and standard deviation.
+
+        Parameters
+        ----------
+        dropout_mean : float, optional
+            Mean percentage of frames to drop. Default is 0.5.
+        dropout_std : float, optional
+            Standard deviation of percentage of frames to drop. Default is 0.1.
+
+        Returns
+        -------
+        Tuple[PoseBody, List[int]]
+            - New PoseBody object with dropped frames.
+            - List of retrieved frame indexes.
+        """
         dropout_percent = np.abs(np.random.normal(loc=dropout_mean, scale=dropout_std, size=1))[0]
 
         return self.frame_dropout_given_percent(dropout_percent)

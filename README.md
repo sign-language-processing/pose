@@ -1,125 +1,161 @@
-# Pose Format
+# Overview
 
-This repository aims to include a complete toolkit for working with poses. 
-It includes a new file format with Python and Javascript readers and writers, in hope to make usage simple.
+This repository helps developers interested in Sign Language Processing (SLP) by providing a complete toolkit for working with poses. 
+It includes a file format with Python and Javascript readers and writers, which hopefully makes its usage simple.
 
-### The File Format
-The format supports any type of poses, arbitrary number of people, and arbitrary number of frames (for videos).
+### File Format Structure
+* The file format is designed to accommodate any pose type, an any number of individuals, and an indefinite number of frames per seconds. Therefore it is also very suitable for video data.
 
-The main idea is having a `header` with instructions on how many points exists, where, and how to connect them.
+At the core of the file format is `Header` and a `Body`.
 
-The binary spec can be found in [docs/specs/v0.1.md](docs/specs/v0.1.md).
+* The header for example contains the following information:
 
-### Python Usage
+    - The total number of pose points. (How many points exist.)
+    - The exact positions of these points. (Where do they exist.)
+    - The connections between these points. (How are they connected.)
+
+More about the header and the body details and their binary specifics can be found in [docs/specs/v0.1.md](specs_v01.rst#specs_v01).
+
+### Python Implementation Guide: 
+
+#### 1. Installation: 
+
 ```bash
 pip install pose-format
 ```
 
-To load a `.pose` file, use the `Pose` class:
+#### 2. Reading `.pose` Files: 
+
+To load a `.pose` file, use the `Pose` class.
 
 ```python
 from pose_format import Pose
 
-buffer = open("file.pose", "rb").read()
-p = Pose.read(buffer)
+data_buffer = open("file.pose", "rb").read()
+pose_instance = Pose.read(data_buffer)
 
-numpy_data = p.body.data
-numpy_conf = p.body.confidence
+numpy_data = pose_instance.body.data
+confidence_measure  = pose_instance.body.confidence
 ```
-By default, it uses NumPy for the data, but you can also use `torch` and `tensorflow` by writing:
+By default, the library uses NumPy (`numpy`) for storing and manipulating pose data. However, integration with PyTorch (`torch` ) and TensorFlow (`tensorflow`) is supported, just do the following: 
 
 ```python
 from pose_format.pose import Pose
 from pose_format.torch import TorchPoseBody
 from pose_format.tensorflow.pose_body import TensorflowPoseBody
 
-buffer = open("file.pose", "rb").read()
+data_buffer = open("file.pose", "rb").read()
 
-p = Pose.read(buffer, TorchPoseBody)
-p = Pose.read(buffer, TensorflowPoseBody)
+# Load data as a PyTorch tensor:
+pose_instance = Pose.read(buffer, TorchPoseBody)
+
+# Or as a TensorFlow tensor:
+pose_instance = Pose.read(buffer, TensorflowPoseBody)
 ```
 
-After creating a pose object that holds numpy data, it can also be converted to torch or tensorflow:
+If you initially loaded the data in a NumPy format and want to convert it to PyTorch or TensorFlow format, do the following:
 
 ```python
 from pose_format.numpy import NumPyPoseBody
 
-# create a pose object that internally stores the data as a numpy array
-p = Pose.read(buffer, NumPyPoseBody)
+# Create a pose object that internally stores data as a NumPy array
+pose_instance = Pose.read(buffer, NumPyPoseBody)
 
-# return stored data as a torch tensor
-p.torch()
+# Convert to PyTorch:
+pose_instance.torch()
 
-# return stored data as a tensorflow tensor
-p.tensorflow()
+# Convert to TensorFlow:
+pose_instance.tensorflow()
 ```
 
-### Common pose processing operations
 
-Once poses are loaded, the library offers many ways to manipulate `Pose` objects.
+#### 3. Data Manipulation: 
 
-#### Data normalization (skeleton scale)
-To normalize all of the data to be in the same scale, we can normalize every pose by a constant feature of their body.
-For example, for people we can use the average span of their shoulders throughout the video to be a constant width.
+Once poses are loaded, the library offers many ways to manipulate the created `Pose` objects. 
+
+##### Normalizing Data: 
+
+It is very important that your data stays consistant. One way to achieve this is by normalization. When normalizing all data we have then the same scale and can normalize every pose by a constant feature of their body.
+
+For instance, you can set the shoulder width to a consistent measurement across all data points.:
+
+* See this example for using a standard body feature, such as the shoulder width, for normalization:
+
 ```python
-p.normalize(p.header.normalization_info(
+pose_instance.normalize(p.header.normalization_info(
     p1=("pose_keypoints_2d", "RShoulder"),
     p2=("pose_keypoints_2d", "LShoulder")
 ))
 ```
 
-#### Data normalization (keypoint distribution)
-Keypoint values can be standardized to have a mean of zero and unit variance:
-```python
-p.normalize_distribution()
-```
-
-The default behaviour is to compute a separate mean and standard deviation for each keypoint and each dimension (usually x and y).
-The `axis` argument can be used to customize this. For instance, to compute only two global means and standard deviations for the
-x and y dimension:
+* Keypoint values can be standardized to have a mean of zero and unit variance:
 
 ```python
-p.normalize_distribution(axis=(0, 1, 2))
+
+# Normalize all keypoints:
+pose_instance.normalize_distribution()
 ```
 
-#### Data augmentation
+The usual way to do this is to compute a separate mean and standard deviation for each keypoint and each dimension (usually x and y). This can be achieved with the `axis` argument of `normalize_distribution`. 
+
+
 ```python
-p.augment2d(rotation_std=0.2, shear_std=0.2, scale_std=0.2)
+
+# Normalize each keypoint separately:
+pose_instance.normalize_distribution(axis=(0, 1, 2))
 ```
 
-#### Data interpolation
+##### Augmentation: 
+Data augmentation is very important for improving the performance of machine learning models. We now provide a simple way to augment pose data.
+
+* Apply 2D data augmentation:
+
+```python
+
+pose_instance.augment2d(rotation_std=0.2, shear_std=0.2, scale_std=0.2)
+```
+
+##### Interpolation
+If you're dealing with video data and need to adjust its frame rate, use the interpolation functions. 
+
 To change the frame rate of a video, using data interpolation, use the `interpolate_fps` method which gets a new `fps` and a interpolation `kind`.
+
 ```python
-p.interpolate_fps(24, kind='cubic')
-p.interpolate_fps(24, kind='linear')
+pose_instance.interpolate_fps(24, kind='cubic')
+pose_instance.interpolate_fps(24, kind='linear')
 ```
 
-### Visualization
+#### 4. Visualization
+You can visualize the poses stored in the `.pose` files.
+Use the `PoseVisualizer` class for visualization tasks, such as generating videos or overlaying pose data on existing videos.
 
-Visualize an existing pose file:
-
+* To save as a video: 
 ```python
 from pose_format import Pose
 from pose_format.pose_visualizer import PoseVisualizer
 
-with open("example.pose", "rb") as f:
-    p = Pose.read(f.read())
 
-v = PoseVisualizer(p)
+with open("example.pose", "rb") as f:
+    pose_instance = Pose.read(f.read())
+
+v = PoseVisualizer(pose_instance)
 
 v.save_video("example.mp4", v.draw())
 ```
 
-Draw pose on top of video:
+* To overlay pose on an existing video: 
+
 
 ```python
+# Draws pose on top of video. 
 v.save_video("example.mp4", v.draw_on_video("background_video_path.mp4"))
 ```
 
-Convert pose to gif to easily inspect the result in Colab:
+* Convert to GIF: 
+For those using Google Colab, poses can be converted to GIFs for easy inspection. 
 
 ```python
-# in a Colab notebook
+# In a Colab notebook
 
 from IPython.display import Image
 
@@ -128,9 +164,15 @@ v.save_gif("test.gif", v.draw())
 display(Image(open('test.gif','rb').read()))
 ```
 
-### Loading OpenPose and Mediapipe Holistic data
+#### 5. Integration with External Data Sources:
+If you have pose data in OpenPose or Mediapipe Holistic format, you can easily import it. 
+
+##### Loading OpenPose and Mediapipe Holistic Data
+
+* For OpenPose: 
 
 To load an OpenPose `directory`, use the `load_openpose_directory` utility:
+
 
 ```python
 from pose_format.utils.openpose import load_openpose_directory
@@ -138,6 +180,8 @@ from pose_format.utils.openpose import load_openpose_directory
 directory = "/path/to/openpose/directory"
 p = load_openpose_directory(directory, fps=24, width=1000, height=1000)
 ```
+
+* For mediapipe Holistic: 
 
 Similarly, to load a Mediapipe Holistic `directory`, use the `load_mediapipe_directory` utility:
 
@@ -148,20 +192,28 @@ directory = "/path/to/holistic/directory"
 p = load_mediapipe_directory(directory, fps=24, width=1000, height=1000)
 ```
 
-### Testing
-Use bazel to run tests
-```sh
+### Running Tests:
+
+To ensure the integrity of the toolkit, you can run tests using Bazel:
+
+* Using bazel:
+
+```bash
 cd pose_format
 bazel test ... --test_output=errors
 ```
 
-Alternatively, use a different testing framework to run tests, such as pytest. To run an individual
-test file:
-```sh
+Alternatively, use a different testing framework to run tests, such as pytest. To run an individual test file.
+
+* Or employ pytest:
+
+```bash
 pytest pose_format/tensorflow/masked/tensor_test.py
 ```
 
-## Cite
+### Acknowledging the Work 
+
+If you use our toolkit in your research or projects, please consider citing the work:
 
 ```bibtex
 @misc{moryossef2021pose-format, 
@@ -170,4 +222,7 @@ pytest pose_format/tensorflow/masked/tensor_test.py
     howpublished={\url{https://github.com/sign-language-processing/pose}},
     year={2021}
 }
+
 ```
+
+

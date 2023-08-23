@@ -1,3 +1,6 @@
+"""
+Module for testing optical flow computations. Provides test cases for optical flow computation from pose landmarks data.
+"""
 import tempfile
 
 from unittest import TestCase
@@ -10,7 +13,20 @@ from pose_format.utils.optical_flow import OpticalFlowCalculator
 
 
 class TestOpticalFlow(TestCase):
+    """
+    Test cases for optical flow computation.
+    """
     def test_optical_flow(self):
+        """
+        Tests optical flow from pose landmarks data and 
+        visualize the computed flow using a heatmap. 
+        
+        Compares the generated heatmap with the reference image provided in `data/optical_flow.png` to validate the correctness of the omputed optical flow.
+        
+        Raises:
+            AssertionError: If the computed optical flow visualization does not match the reference image.
+        
+        """
         calculator = OpticalFlowCalculator(fps=30, distance=DistanceRepresentation())
 
         with open('data/mediapipe.pose', 'rb') as f:

@@ -18,8 +18,19 @@ from pose_format.tensorflow.pose_body import TensorflowPoseBody
 def _create_pose_header_component(name: str,
                                   num_keypoints: int) -> PoseHeaderComponent:
     """
+    Create a PoseHeaderComponent with randomized limbs and colors.
 
-    :return:
+    Parameters
+    ----------
+    name : str
+        Name of the component.
+    num_keypoints : int
+        Number of keypoints for the component.
+
+    Returns
+    -------
+    PoseHeaderComponent
+        Component with specified name, randomized limbs and colors.
     """
 
     points = string.ascii_letters[:num_keypoints]
@@ -53,12 +64,25 @@ def _create_pose_header(width: int,
                         num_components: int,
                         num_keypoints: int) -> PoseHeader:
     """
+    Create a PoseHeader with given dimensions and components.
 
-    :param width:
-    :param height:
-    :param depth:
-    :param num_components:
-    :return:
+    Parameters
+    ----------
+    width : int
+        Width dimension.
+    height : int
+        Height dimension.
+    depth : int
+        Depth dimension.
+    num_components : int
+        Number of components.
+    num_keypoints : int
+        Number of keypoints for each component.
+
+    Returns
+    -------
+    PoseHeader
+        Header with specified dimensions and components.
     """
     dimensions = PoseHeaderDimensions(width=width, height=height, depth=depth)
 
@@ -75,13 +99,25 @@ def _create_random_tensorflow_data(frames_min: Optional[int] = None,
                                    num_keypoints: int = 137,
                                    num_dimensions: int = 2) -> Tuple[tf.Tensor, tf.Tensor, tf.Tensor]:
     """
+    Creates random TensorFlow data for testing.
 
-    :param frames_min:
-    :param frames_max:
-    :param num_frames:
-    :param num_keypoints:
-    :param num_dimensions:
-    :return:
+    Parameters
+    ----------
+    frames_min : Optional[int], default=None
+        Minimum number of frames for random generation if `num_frames` is not specified.
+    frames_max : Optional[int], default=None
+        Maximum number of frames for random generation if `num_frames` is not specified.
+    num_frames : Optional[int], default=None
+        Specific number of frames.
+    num_keypoints : int, default=137
+        Number of keypoints in the pose data.
+    num_dimensions : int, default=2
+        Number of dimensions in the pose data.
+
+    Returns
+    -------
+    Tuple[tf.Tensor, tf.Tensor, tf.Tensor]
+        Random tensor data, mask, and confidence values.
     """
     if num_frames is None:
         assert None not in [frames_min, frames_max]
@@ -110,14 +146,27 @@ def _create_random_numpy_data(frames_min: Optional[int] = None,
                               num_dimensions: int = 2,
                               probability_for_masked: float = 0.2) -> Tuple[np.array, np.array, np.array]:
     """
+    Creates random Numpy data for testing.
 
-    :param frames_min:
-    :param frames_max:
-    :param num_frames:
-    :param num_keypoints:
-    :param num_dimensions:
-    :param probability_for_masked:
-    :return:
+    Parameters
+    ----------
+    frames_min : Optional[int], default=None
+        Minimum number of frames for random generation if `num_frames` is not specified.
+    frames_max : Optional[int], default=None
+        Maximum number of frames for random generation if `num_frames` is not specified.
+    num_frames : Optional[int], default=None
+        Specific number of frames.
+    num_keypoints : int, default=137
+        Number of keypoints in the pose data.
+    num_dimensions : int, default=2
+        Number of dimensions in the pose data.
+    probability_for_masked : float, default=0.2
+        Probability for generating masked values.
+
+    Returns
+    -------
+    Tuple[np.array, np.array, np.array]
+        Random numpy array data, mask, and confidence values.
     """
     if num_frames is None:
         assert None not in [frames_min, frames_max]
@@ -143,6 +192,24 @@ def _create_random_numpy_data(frames_min: Optional[int] = None,
 def _get_random_pose_object_with_tf_posebody(num_keypoints: int,
                                              frames_min: int = 1,
                                              frames_max: int = 10) -> Pose:
+    
+    """
+    Generates a random Pose object with TensorFlow pose body for testing.
+
+    Parameters
+    ----------
+    num_keypoints : int
+        Number of keypoints in the pose data.
+    frames_min : int, default=1
+        Minimum number of frames for random generation.
+    frames_max : int, default=10
+        Maximum number of frames for random generation.
+
+    Returns
+    -------
+    Pose
+        Randomly generated Pose object.
+    """
 
     tensor, mask, confidence = _create_random_tensorflow_data(frames_min=frames_min,
                                                               frames_max=frames_max,
@@ -159,6 +226,23 @@ def _get_random_pose_object_with_tf_posebody(num_keypoints: int,
 def _get_random_pose_object_with_numpy_posebody(num_keypoints: int,
                                                 frames_min: int = 1,
                                                 frames_max: int = 10) -> Pose:
+    """
+    Creates a random Pose object with Numpy pose body for testing.
+
+    Parameters
+    ----------
+    num_keypoints : int
+        Number of keypoints in the pose data.
+    frames_min : int, default=1
+        Minimum number of frames for random generation.
+    frames_max : int, default=10
+        Maximum number of frames for random generation.
+
+    Returns
+    -------
+    Pose
+        Randomly generated Pose object.
+    """
 
     tensor, mask, confidence = _create_random_numpy_data(frames_min=frames_min,
                                                          frames_max=frames_max,
@@ -174,14 +258,25 @@ def _get_random_pose_object_with_numpy_posebody(num_keypoints: int,
 
 
 class TestPose(TestCase):
+    """
+    A suite of tests for the Pose object.
+    """
     def test_pose_object_should_be_callable(self):
+        """
+        Tests if the Pose object is callable.
+        """
         assert callable(Pose)
 
 
 class TestPoseTensorflowPoseBody(TestCase):
+    """
+    Tests for Pose objects containing TensorFlow PoseBody data.
+    """
 
     def test_pose_tf_posebody_normalize_eager_mode_preserves_shape(self):
-
+        """
+        Tests if the normalization of Pose object with TensorFlow PoseBody in eager mode preserves tensor shape.
+        """
         pose = _get_random_pose_object_with_tf_posebody(num_keypoints=5)
 
         shape_before = pose.body.data.tensor.shape
@@ -198,7 +293,9 @@ class TestPoseTensorflowPoseBody(TestCase):
         self.assertEqual(shape_before, shape_after, "Normalize did not preserve tensor shape.")
 
     def test_pose_tf_posebody_normalize_distribution_eager_mode_correct_result(self):
-
+        """
+        Tests if the normalization of distribution for Pose object with TensorFlow PoseBody returns expected result.
+        """
         pose = _get_random_pose_object_with_tf_posebody(num_keypoints=5, frames_min=2)
 
         tensor_as_numpy = pose.body.data.tensor.numpy()
@@ -222,7 +319,9 @@ class TestPoseTensorflowPoseBody(TestCase):
                         "Normalize distribution did not return the expected result.")
 
     def test_pose_tf_posebody_frame_dropout_normal_eager_mode_num_frames_not_zero(self):
-
+        """
+        Tests if frame dropout using normal distribution in Pose object with TensorFlow PoseBody preserves frame count.
+        """
         pose = _get_random_pose_object_with_tf_posebody(num_keypoints=5, frames_min=3)
 
         pose_after_dropout, _ = pose.frame_dropout_normal()
@@ -232,7 +331,9 @@ class TestPoseTensorflowPoseBody(TestCase):
         self.assertNotEqual(num_frames, 0, "Number of frames after dropout can never be 0.")
 
     def test_pose_tf_posebody_frame_dropout_uniform_eager_mode_num_frames_not_zero(self):
-
+        """
+        Checks if frame dropout using uniform distribution in Pose object with TensorFlow PoseBody preserves frame count.
+        """
         pose = _get_random_pose_object_with_tf_posebody(num_keypoints=5, frames_min=3)
 
         pose_after_dropout, _ = pose.frame_dropout_uniform()
@@ -244,7 +345,9 @@ class TestPoseTensorflowPoseBody(TestCase):
     # test if pose object methods can be used as tf.data.Dataset operations
 
     def test_pose_normalize_can_be_used_in_tf_dataset_map(self):
-
+        """
+        Tests if the normalize method of Pose object can be used within a tf.data.Dataset map operation.
+        """
         num_examples = 10
 
         dataset = tf.data.Dataset.range(num_examples)
@@ -263,7 +366,9 @@ class TestPoseTensorflowPoseBody(TestCase):
         dataset.map(create_and_normalize_pose)
 
     def test_pose_normalize_distribution_can_be_used_in_tf_dataset_map(self):
-
+        """
+        Tests if the normalize_distribution method of Pose object can be used within a tf.data.Dataset map operation.
+        """
         num_examples = 10
 
         dataset = tf.data.Dataset.range(num_examples)
@@ -280,6 +385,9 @@ class TestPoseTensorflowPoseBody(TestCase):
 
     def test_pose_frame_dropout_normal_can_be_used_in_tf_dataset_map(self):
 
+        """
+        Tests if the frame_dropout_normal method of Pose object can be used within a tf.data.Dataset map operation.
+        """
         num_examples = 10
 
         dataset = tf.data.Dataset.range(num_examples)
@@ -295,7 +403,9 @@ class TestPoseTensorflowPoseBody(TestCase):
         dataset.map(create_pose_and_frame_dropout_normal)
 
     def test_pose_frame_dropout_uniform_can_be_used_in_tf_dataset_map(self):
-
+        """
+        Tests if the frame_dropout_uniform method of Pose object can be used within a tf.data.Dataset map operation.
+        """
         num_examples = 10
 
         dataset = tf.data.Dataset.range(num_examples)
@@ -312,9 +422,14 @@ class TestPoseTensorflowPoseBody(TestCase):
 
 
 class TestPoseNumpyPoseBody(TestCase):
+    """
+    Testcases for Pose objects containing NumPy PoseBody data.
+    """
 
     def test_pose_numpy_posebody_normalize_preserves_shape(self):
-
+        """
+        Tests if the normalization of Pose object with NumPy PoseBody preserves array shape.
+        """
         pose = _get_random_pose_object_with_numpy_posebody(num_keypoints=5, frames_min=3)
 
         shape_before = pose.body.data.shape
@@ -331,7 +446,9 @@ class TestPoseNumpyPoseBody(TestCase):
         self.assertEqual(shape_before, shape_after, "Normalize did not preserve tensor shape.")
 
     def test_pose_numpy_posebody_frame_dropout_normal_eager_mode_num_frames_not_zero(self):
-
+        """
+        Tests if frame dropout using normal distribution in Pose object with NumPy PoseBody preserves frame count.
+        """
         pose = _get_random_pose_object_with_numpy_posebody(num_keypoints=5, frames_min=3)
 
         pose_after_dropout, _ = pose.frame_dropout_normal()
@@ -341,7 +458,9 @@ class TestPoseNumpyPoseBody(TestCase):
         self.assertNotEqual(num_frames, 0, "Number of frames after dropout can never be 0.")
 
     def test_pose_numpy_posebody_frame_dropout_uniform_eager_mode_num_frames_not_zero(self):
-
+        """
+        Tests if frame dropout using uniform distribution in Pose object with NumPy PoseBody preserves frame count.
+        """
         pose = _get_random_pose_object_with_numpy_posebody(num_keypoints=5, frames_min=3)
 
         pose_after_dropout, _ = pose.frame_dropout_uniform()

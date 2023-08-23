@@ -9,12 +9,23 @@ from pose_format.utils.normalization_3d import PoseNormalizer
 
 
 class Test3DNormalization(TestCase):
+    """
+    Test cases for 3D Normalization of pose data.
+    """
     def test_normal(self):
         """
-        https://sites.math.washington.edu/~king/coursedir/m445w04/notes/vector/normals-planes.html#:~:text=Thus%20for%20a%20plane%20(or,4%2B4)%20%3D%203.
+        Test the calculation of the normal vector for given 3 points on a plane.
+
+        Note
+        ----
+
+        See the description and calculations on `link`_.
+
         Example (Plane Equation Example revisited) Given,
         P = (1, 1, 1), Q = (1, 2, 0), R = (-1, 2, 1).
         The normal vector A is the cross product (Q - P) x (R - P) = (1, 2, 2)
+
+        .. _link: https://sites.math.washington.edu/~king/coursedir/m445w04/notes/vector/normals-planes.html#:~:text=Thus%20for%20a%20plane%20(or,4%2B4)%20%3D%203.
         """
         p1 = (1, 1, 1)
         p2 = (1, 2, 0)
@@ -31,6 +42,9 @@ class Test3DNormalization(TestCase):
         self.assertEqual(ma.allclose(normal, gold_vec), True)
 
     def test_rotate_vector_by_90_degrees(self):
+        """
+        Test the rotation of a vector by 90 degrees.
+        """
         plane = PoseNormalizationInfo(p1=0, p2=1, p3=2)
         line = PoseNormalizationInfo(p1=0, p2=1)
         normalizer = PoseNormalizer(plane, line)
@@ -47,6 +61,9 @@ class Test3DNormalization(TestCase):
         assert np.allclose(rotated_vector, expected_rotated_vector, atol=1e-5)
 
     def test_hand_normalization(self):
+        """
+        Test the normalization of hand pose data using the PoseNormalizer.
+        """
         with open('data/mediapipe.pose', 'rb') as f:
             pose = Pose.read(f.read())
             pose = pose.get_components(["RIGHT_HAND_LANDMARKS"])
@@ -72,6 +89,9 @@ class Test3DNormalization(TestCase):
         self.assertTrue(ma.allclose(pose.body.data, pose_gold.body.data))
 
     def test_hand_normalization_results(self):
+        """
+        Test the normalization results of hand data taken from sign translate.
+        """
         # Normalization results taken from sign translate
         NORMALIZATIONS = [
             [

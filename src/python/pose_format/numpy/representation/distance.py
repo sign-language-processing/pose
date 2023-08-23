@@ -13,12 +13,12 @@ class DistanceRepresentation:
         p1s : ma.MaskedArray
             First set of points.
         p2s : ma.MaskedArray
-            Second set of points.
+            Second set of points
 
         Returns
         -------
         ma.MaskedArray
-            Euclidean distances between two sets of points. Returned array has one fewer dimension than input arrays.
+            Euclidean distances between two sets of points. The array which is returned has one fewer dimension than the input arrays
 
         Note
         -----

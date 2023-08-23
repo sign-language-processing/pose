@@ -18,15 +18,13 @@ class NumPyPoseBody(PoseBody):
      * Implements pose info using NumPy operations and structures.
      * Provides method for operations:  matrix, multiplication, interpolation and data type conversions 
 
-    The `NumPyPoseBody` is an implementation of  `PoseBody` abstract base class. 
-    This subclass is optimized for NumPy operations, and utilizes NumPy masked arrays to 
-    handle pose data. Makes it suitable for applications where 
-    NumPy-based operations on pose data are used. The use of masked arrays 
-    allows for efficient handling of missing or invalid pose values
+    The `NumPyPoseBody` is an implementation of  `PoseBody` base class. 
+    This subclass uses NumPy masked arrays to handle pose data. 
+    Makes it suitable for applications where you need NumPy-based operations. 
+    The masked arrays allow for efficient handling of missing or invalid pose values
 
-    The class also comes with methods to transform, modify, and 
-    operate on pose data, including matrix multiplication, interpolation, 
-    and conversions to other popular data types like PyTorch tensors or TensorFlow tensors
+    The class also comes with methods to transform, modify, and operate on pose data, including matrix multiplication, interpolation, 
+    and conversions to other data types like PyTorch tensors or TensorFlow tensors
     
     Parameters
     ----------
@@ -35,10 +33,11 @@ class NumPyPoseBody(PoseBody):
     data : Union[ma.MaskedArray, np.ndarray]
         Pose data either as a masked array or a regular numpy array.
     confidence : np.ndarray
-        Confidence array indicating the reliability of the associated pose keypoints.
+        confidence array of the pose keypoints.
     
     """
-    tensor_reader = 'unpack_numpy' """str: Specifies the method name for unpacking a numpy array. (Value: 'unpack_numpy')."""
+    tensor_reader = 'unpack_numpy'
+    """Specifies the method name for unpacking a numpy array (Value: 'unpack_numpy')."""
 
     def __init__(self, fps: float, data: Union[ma.MaskedArray, np.ndarray], confidence: np.ndarray):
         """
@@ -109,12 +108,12 @@ class NumPyPoseBody(PoseBody):
 
     def write(self, version: float, buffer: BinaryIO):
         """
-        Writes the pose data to a binary buffer using the specified data format version.
+        Writes pose data to a binary buffer using specified data format version.
 
         Parameters
         ----------
         version : float
-            Version of the data format.
+            data format version to use for writing.
         buffer : BinaryIO
             The binary buffer to write to.
         """
@@ -154,7 +153,7 @@ class NumPyPoseBody(PoseBody):
 
     def tensorflow(self):
         """
-        Converts the current instance into a TensorflowPoseBody instance.
+        Converts  current instance into a TensorflowPoseBody instance.
 
         Returns
         -------
@@ -170,29 +169,29 @@ class NumPyPoseBody(PoseBody):
 
     def zero_filled(self):
         """
-        Modifies the data to fill missing values with zeros.
+        fills missing values with zeros.
 
         Returns
         -------
         NumPyPoseBody
-            The modified pose body data.
+            modified pose body data
         """
         self.data = ma.array(self.data.filled(0), mask=self.data.mask)
         return self
 
     def matmul(self, matrix: np.ndarray):
         """
-        Performs matrix multiplication on the pose data.
+        matrix multiplication on pose data
 
         Parameters
         ----------
         matrix : np.ndarray
-            The matrix to multiply the pose data with.
+            matrix to multiply pose data with.
 
         Returns
         -------
         NumPyPoseBody
-            The transformed pose body data.
+            transformed pose body data
         """
         data = ma.dot(self.data, matrix)
         return NumPyPoseBody(self.fps, data, self.confidence)
@@ -230,12 +229,12 @@ class NumPyPoseBody(PoseBody):
 
     def get_points(self, indexes: List[int]):
         """
-        Extracts keypoints based on provided indexes.
+        Gets points based on provided indexes.
 
         Parameters
         ----------
         indexes : List[int]
-             List of indices representing the keypoints to get.
+            List of indices representing the keypoints to "get"
 
         Returns
         -------
@@ -290,7 +289,7 @@ class NumPyPoseBody(PoseBody):
 
     def interpolate(self, new_fps: int = None, kind='cubic'):
         """
-        Interpolates the pose data to match a new frame rate.
+        Interpolates pose data to match a new frame rate (fps).
 
         Parameters
         ----------

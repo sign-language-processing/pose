@@ -10,7 +10,7 @@ import sys
 sys.path.insert(0, os.path.abspath('../src/python'))
 
 project = 'Pose-Format Toolkit'
-copyright = '2023, Moryossef, Amit and Müller, Mathias'
+copyright = '2023, Moryossef, Amit and Müller, Mathias and Fahrni, Rebecka'
 author = 'Amit Moryossef, Mathias Müller, Rebecka Fahrni'
 release = 'v0.2.2'
 

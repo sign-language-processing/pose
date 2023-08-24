@@ -1,10 +1,11 @@
-# Overview
+# `pose-format`
 
 This repository helps developers interested in Sign Language Processing (SLP) by providing a complete toolkit for working with poses. 
 It includes a file format with Python and Javascript readers and writers, which hopefully makes its usage simple.
 
 ### File Format Structure
-* The file format is designed to accommodate any pose type, an any number of individuals, and an indefinite number of frames per seconds. Therefore it is also very suitable for video data.
+The file format is designed to accommodate any pose type, an arbitrary number of people, and an indefinite number of frames. 
+Therefore it is also very suitable for video data, and not only single frames.
 
 At the core of the file format is `Header` and a `Body`.
 
@@ -16,7 +17,7 @@ At the core of the file format is `Header` and a `Body`.
 
 More about the header and the body details and their binary specifics can be found in [docs/specs/v0.1.md](specs_v01.rst#specs_v01).
 
-### Python Implementation Guide: 
+### Python Usage Guide: 
 
 #### 1. Installation: 
 
@@ -42,15 +43,15 @@ By default, the library uses NumPy (`numpy`) for storing and manipulating pose d
 
 ```python
 from pose_format.pose import Pose
-from pose_format.torch import TorchPoseBody
-from pose_format.tensorflow.pose_body import TensorflowPoseBody
 
 data_buffer = open("file.pose", "rb").read()
 
 # Load data as a PyTorch tensor:
+from pose_format.torch import TorchPoseBody
 pose = Pose.read(buffer, TorchPoseBody)
 
 # Or as a TensorFlow tensor:
+from pose_format.tensorflow.pose_body import TensorflowPoseBody
 pose = Pose.read(buffer, TensorflowPoseBody)
 ```
 
@@ -166,9 +167,9 @@ display(Image(open('test.gif','rb').read()))
 ```
 
 #### 5. Integration with External Data Sources:
-If you have pose data in OpenPose or Mediapipe Holistic format, you can easily import it. 
+If you have pose data in OpenPose or MediaPipe Holistic format, you can easily import it. 
 
-##### Loading OpenPose and Mediapipe Holistic Data
+##### Loading OpenPose and MediaPipe Holistic Data
 
 * For OpenPose: 
 
@@ -182,15 +183,15 @@ directory = "/path/to/openpose/directory"
 pose = load_openpose_directory(directory, fps=24, width=1000, height=1000)
 ```
 
-* For mediapipe Holistic: 
+* For MediaPipe Holistic: 
 
-Similarly, to load a Mediapipe Holistic `directory`, use the `load_mediapipe_directory` utility:
+Similarly, to load a MediaPipe Holistic `directory`, use the `load_MediaPipe_directory` utility:
 
 ```python
-from pose_format.utils.holistic import load_mediapipe_directory
+from pose_format.utils.holistic import load_MediaPipe_directory
 
 directory = "/path/to/holistic/directory"
-pose = load_mediapipe_directory(directory, fps=24, width=1000, height=1000)
+pose = load_MediaPipe_directory(directory, fps=24, width=1000, height=1000)
 ```
 
 ### Running Tests:
@@ -200,7 +201,7 @@ To ensure the integrity of the toolkit, you can run tests using Bazel:
 * Using bazel:
 
 ```bash
-cd pose_format
+cd src/python/pose_format
 bazel test ... --test_output=errors
 ```
 
@@ -209,6 +210,8 @@ Alternatively, use a different testing framework to run tests, such as pytest. T
 * Or employ pytest:
 
 ```bash
+pytest .
+# or for a single file
 pytest pose_format/tensorflow/masked/tensor_test.py
 ```
 
@@ -219,7 +222,7 @@ If you use our toolkit in your research or projects, please consider citing the 
 ```bibtex
 @misc{moryossef2021pose-format, 
     title={pose-format: Library for viewing, augmenting, and handling .pose files},
-    author={Moryossef, Amit and M\"{u}ller, Mathias},
+    author={Moryossef, Amit and M\"{u}ller, Mathias and Fahrni, Rebecka},
     howpublished={\url{https://github.com/sign-language-processing/pose}},
     year={2021}
 }

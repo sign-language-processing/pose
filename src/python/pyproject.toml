@@ -1,10 +1,12 @@
 [project]
 name = "pose_format"
 description = "Library for viewing, augmenting, and handling .pose files"
-version = "0.2.1"
+version = "0.2.2"
 keywords = ["Pose Files", "Pose Interpolation", "Pose Augmentation"]
 authors = [
-    { name = "Amit Moryossef", email = "amitmoryossef@gmail.com" }
+    { name = "Amit Moryossef", email = "amitmoryossef@gmail.com" },
+    { name = "Mathias Müller", email = "" },
+    { name = "Rebecka Fahrni", email = "" }
 ]
 dependencies = [
     "numpy",

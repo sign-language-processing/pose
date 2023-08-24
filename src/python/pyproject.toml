@@ -5,8 +5,8 @@ version = "0.2.2"
 keywords = ["Pose Files", "Pose Interpolation", "Pose Augmentation"]
 authors = [
     { name = "Amit Moryossef", email = "amitmoryossef@gmail.com" },
-    { name = "Mathias Müller", email = "" },
-    { name = "Rebecka Fahrni", email = "" }
+    { name = "Mathias Müller", email = "anon1@ymous.com" },
+    { name = "Rebecka Fahrni", email = "anon2@ymous.com" }
 ]
 dependencies = [
     "numpy",

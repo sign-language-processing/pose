@@ -2,7 +2,7 @@ import tensorflow as tf
 
 from unittest import TestCase
 
-from pose_format.pose_test import _get_random_pose_object_with_tf_posebody
+from tests.pose_test import _get_random_pose_object_with_tf_posebody
 
 
 class TestPose(TestCase):

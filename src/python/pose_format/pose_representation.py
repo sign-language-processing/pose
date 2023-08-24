@@ -4,6 +4,34 @@ from .pose_header import PoseHeader
 
 
 class PoseRepresentation:
+    """
+    Represents a pose using various representation modules.
+
+    Parameters
+    ----------
+    header : PoseHeader
+        Header information about the pose.
+    rep_modules1 : List, optional
+        List of modules that use a point-based representation. Defaults to an empty list.
+    rep_modules2 : List, optional
+        List of modules that use a limb-based representation. Defaults to an empty list.
+    rep_modules3 : List, optional
+        List of modules that use a triangle-based representation. Defaults to an empty list.
+
+    Attributes
+    ----------
+    input_size : int
+        Combined point count across all components of the header.
+    rep_modules1_size : int
+        The size represented by the point-based modules.
+    rep_modules2_size : int
+        The size represented by the limb-based modules.
+    rep_modules3_size : int
+        The size represented by the triangle-based modules.
+    output_size : int
+        The overall size of the output representation.
+
+    """
     def __init__(self, header: PoseHeader, rep_modules1: List = [], rep_modules2: List = [], rep_modules3: List = []):
         self.header = header
 
@@ -27,11 +55,26 @@ class PoseRepresentation:
         self.output_size = self.calc_output_size()
 
     def calc_output_size(self):
+        """Calculate total size of output representation, based on active modules
+        
+        Returns
+        -------
+        int
+            Total size of the module representation.
+        """
         return len(self.rep_modules1) * self.rep_modules1_size + \
                len(self.rep_modules2) * self.rep_modules2_size + \
                len(self.rep_modules3) * self.rep_modules3_size
 
     def get_limbs_points(self):
+        """
+        Get points that define limbs 
+
+        Returns
+        -------
+        Tuple[List, List]
+            Two lists containing points that define the start and end of each limb.
+        """
         pt1s = []
         pt2s = []
 
@@ -45,6 +88,14 @@ class PoseRepresentation:
         return pt1s, pt2s
 
     def get_triangles_points(self):
+        """
+        Get points that make up triangles.
+
+        Returns
+        -------
+        Tuple[List, List, List]
+            Three lists which have points that define each corner of the triangles.
+        """
         assert self.limb_pt1s
         assert self.limb_pt2s
 
@@ -60,22 +111,73 @@ class PoseRepresentation:
         return list(zip(*triangles))
 
     def group_embeds(self, embeds: List):
-        """
-        :param embeds: List of tensors size (embed_size, Batch, Len)
-        :return: Size (Batch, Len, embed_size)
+        """Groups given embeddings into a desired format. Must be implemented by subclasses.
+
+        Parameters
+        ----------
+        embeds : List
+            List of tensor embeddings, tensor size: (embed_size, Batch, Len).
+
+        Raises
+        ------
+        NotImplementedError
+            If the method is not implemented by subclasses.
+
+        Returns
+        -------
+        Size (Batch, Len, embed_size)
         """
         raise NotImplementedError('Group embeds is not implemented')
 
     def get_points(self, tensor, points):
+        """
+        get points from a given tensor
+
+        Parameters
+        ----------
+        tensor : torch.Tensor
+            Tensor from which you need the points.
+        points : List[int]
+            Indices of points that need to be extracted.
+
+        Returns
+        -------
+        torch.Tensor
+            Gotten points from tensor.
+        """
         return tensor[points]
 
     def permute(self, src, shape: tuple):
+        """
+        Permutes  given tensor according to shape. 
+
+        Parameters
+        ----------
+        src : torch.Tensor
+            Tensor to  permute.
+        shape : tuple
+            Desired shape of permuted tensor.
+
+        Raises
+        ------
+        NotImplementedError
+            If method is not implemented by subclasses.
+
+        """
         raise NotImplementedError('Group embeds is not implemented')
 
     def __call__(self, src):
-        """
-        :param src: Size (Batch, Len, Points, Dims)
-        :return: Size (Batch, Len, embed_size)
+        """Computes modules representation of the pose using the specified modules.
+
+        Parameters
+        ----------
+        src : torch.Tensor
+            Input tensor of size (Batch, Len, Points, Dims).
+
+        Returns
+        -------
+        torch.Tensor
+            Pose representation tensor of size (Batch, Len, embed_size).
         """
         points = self.permute(src, (2, 0, 1, 3))  # (Points, Batch, Len, Dims)
 

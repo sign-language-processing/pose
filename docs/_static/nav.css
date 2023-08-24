@@ -1,0 +1,7 @@
+.wy-nav-side {
+    width: 300px; /* This should match the width you set for .wy-nav-content-wrap */
+}
+
+.wy-nav-content-wrap {
+    margin-left: 300px; 
+}

@@ -1,9 +1,9 @@
 import torch
 from torch import nn
 
-from .distance import DistanceRepresentation
 from ..masked.tensor import MaskedTensor
 from ..masked.torch import MaskedTorch
+from .distance import DistanceRepresentation
 
 
 class PointLineDistanceRepresentation(nn.Module):
@@ -50,7 +50,7 @@ class PointLineDistanceRepresentation(nn.Module):
             Shape: (Points, Batch, Len).
         
         Note
-        -----
+        ----
         This is following Heron's Formula: https://en.wikipedia.org/wiki/Heron%27s_formula.
         """
         # Following Heron's Formula https://en.wikipedia.org/wiki/Heron%27s_formula

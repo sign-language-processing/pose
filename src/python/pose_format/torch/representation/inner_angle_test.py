@@ -1,10 +1,11 @@
+import math
 from unittest import TestCase
 
-import math
 import torch
 
 from pose_format.torch.masked.tensor import MaskedTensor
-from pose_format.torch.representation.inner_angle import InnerAngleRepresentation
+from pose_format.torch.representation.inner_angle import \
+    InnerAngleRepresentation
 
 representation = InnerAngleRepresentation()
 
@@ -24,7 +25,7 @@ class TestInnerAngleRepresentation(TestCase):
     test_call_masked_value_should_be_zero():
         Tests if a masked value in the input results in a zero output angle.
     """
-    
+
     def test_call_value_should_be_inner_angle(self):
         """
         Tests if the computed angle from the `InnerAngleRepresentation` matches the expected value.

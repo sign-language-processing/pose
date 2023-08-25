@@ -1,19 +1,21 @@
 import json
+import math
 import os
 import re
-from typing import List, Tuple, Dict, Any, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
-import math
 import numpy as np
 from numpy import ma
 
 from ..numpy.pose_body import NumPyPoseBody
 from ..pose import Pose
-from ..pose_header import PoseHeader, PoseHeaderDimensions, PoseHeaderComponent
+from ..pose_header import PoseHeader, PoseHeaderComponent, PoseHeaderDimensions
 
-BODY_POINTS = ["Nose", "Neck", "RShoulder", "RElbow", "RWrist", "LShoulder", "LElbow", "LWrist", "MidHip",
-               "RHip", "RKnee", "RAnkle", "LHip", "LKnee", "LAnkle", "REye", "LEye", "REar", "LEar", "LBigToe",
-               "LSmallToe", "LHeel", "RBigToe", "RSmallToe", "RHeel"]
+BODY_POINTS = [
+    "Nose", "Neck", "RShoulder", "RElbow", "RWrist", "LShoulder", "LElbow", "LWrist", "MidHip", "RHip", "RKnee",
+    "RAnkle", "LHip", "LKnee", "LAnkle", "REye", "LEye", "REar", "LEar", "LBigToe", "LSmallToe", "LHeel", "RBigToe",
+    "RSmallToe", "RHeel"
+]
 
 # Based on https://github.com/CMU-Perceptual-Computing-Lab/openpose/raw/master/.github/media/keypoints_pose_25.png
 # Everything sprouts out of the neck
@@ -64,22 +66,51 @@ BODY_LIMBS = [
 # Anatomy guide https://www.assh.org/handcare/blog/anatomy-101-finger-joints
 HAND_POINTS = [
     "BASE",
-    "T_STT", "T_BCMC", "T_MCP", "T_IP",  # Thumb
-    "I_CMC", "I_MCP", "I_PIP", "I_DIP",  # Index
-    "M_CMC", "M_MCP", "M_PIP", "M_DIP",  # Middle
-    "R_CMC", "R_MCP", "R_PIP", "R_DIP",  # Ring
-    "P_CMC", "P_MCP", "P_PIP", "P_DIP",  # Pinky
+    "T_STT",
+    "T_BCMC",
+    "T_MCP",
+    "T_IP",  # Thumb
+    "I_CMC",
+    "I_MCP",
+    "I_PIP",
+    "I_DIP",  # Index
+    "M_CMC",
+    "M_MCP",
+    "M_PIP",
+    "M_DIP",  # Middle
+    "R_CMC",
+    "R_MCP",
+    "R_PIP",
+    "R_DIP",  # Ring
+    "P_CMC",
+    "P_MCP",
+    "P_PIP",
+    "P_DIP",  # Pinky
 ]
 
 # Based on https://github.com/CMU-Perceptual-Computing-Lab/openpose/raw/master/.github/media/keypoints_hand.png
 # Everything sprouts out of the base
 HAND_LIMBS = [
-    ("BASE", "T_STT"), ("BASE", "I_CMC"), ("BASE", "M_CMC"), ("BASE", "R_CMC"), ("BASE", "P_CMC"),  # Base
-    ("T_STT", "T_BCMC"), ("T_BCMC", "T_MCP"), ("T_MCP", "T_IP"),  # Thumb
-    ("I_CMC", "I_MCP"), ("I_MCP", "I_PIP"), ("I_PIP", "I_DIP"),  # Index
-    ("M_CMC", "M_MCP"), ("M_MCP", "M_PIP"), ("M_PIP", "M_DIP"),  # Middle
-    ("R_CMC", "R_MCP"), ("R_MCP", "R_PIP"), ("R_PIP", "R_DIP"),  # Ring
-    ("P_CMC", "P_MCP"), ("P_MCP", "P_PIP"), ("P_PIP", "P_DIP"),  # Pinky
+    ("BASE", "T_STT"),
+    ("BASE", "I_CMC"),
+    ("BASE", "M_CMC"),
+    ("BASE", "R_CMC"),
+    ("BASE", "P_CMC"),  # Base
+    ("T_STT", "T_BCMC"),
+    ("T_BCMC", "T_MCP"),
+    ("T_MCP", "T_IP"),  # Thumb
+    ("I_CMC", "I_MCP"),
+    ("I_MCP", "I_PIP"),
+    ("I_PIP", "I_DIP"),  # Index
+    ("M_CMC", "M_MCP"),
+    ("M_MCP", "M_PIP"),
+    ("M_PIP", "M_DIP"),  # Middle
+    ("R_CMC", "R_MCP"),
+    ("R_MCP", "R_PIP"),
+    ("R_PIP", "R_DIP"),  # Ring
+    ("P_CMC", "P_MCP"),
+    ("P_MCP", "P_PIP"),
+    ("P_PIP", "P_DIP"),  # Pinky
 ]
 
 # Based on https://github.com/CMU-Perceptual-Computing-Lab/openpose/raw/master/.github/media/keypoints_face.png
@@ -117,22 +148,16 @@ FACE_LIMBS: List[Tuple[str, str]] = FACE_BORDER_LIMBS_LEFT + FACE_BORDER_LIMBS_R
                                     FACE_INNER_LIPS_LIMBS + FACE_NOSE_LIMBS + FACE_EYEBROW_LEFT_LIMBS + \
                                     FACE_EYEBROW_RIGHT_LIMBS + FACE_EYE_LEFT_LIMBS + FACE_EYE_RIGHT_LIMBS
 
-HAND_POINTS_COLOR = [
-    [192, 0, 0],
-    [192, 192, 0],
-    [0, 192, 0],
-    [0, 192, 192],
-    [0, 0, 192],
-    [127, 127, 127]
-]
+HAND_POINTS_COLOR = [[192, 0, 0], [192, 192, 0], [0, 192, 0], [0, 192, 192], [0, 0, 192], [127, 127, 127]]
 
 OPENPOSE_FRAME_PATTERN = "(?:^|\D)(\d+)\\_keypoints.json"
 
-
 # Definition of OpenPose Components
 
+
 def limbs_index(limbs: List[Tuple[str, str]], points: List[str]) -> List[Tuple[int, int]]:
-    """convert limb names to indices based on a list of points.
+    """
+    Convert limb names to indices based on a list of points.
     
     Parameters
     ----------
@@ -149,12 +174,13 @@ def limbs_index(limbs: List[Tuple[str, str]], points: List[str]) -> List[Tuple[i
     return [(points.index(p1), points.index(p2)) for p1, p2 in limbs]
 
 
-hand_colors = [tuple([math.floor(x + 35 * (i % 4)) for x in HAND_POINTS_COLOR[i // 4]])
-               for i in range(-1, len(HAND_POINTS) - 1)]
+hand_colors = [
+    tuple([math.floor(x + 35 * (i % 4)) for x in HAND_POINTS_COLOR[i // 4]]) for i in range(-1,
+                                                                                            len(HAND_POINTS) - 1)
+]
 
-OpenPose_Hand_Component = lambda name: PoseHeaderComponent(name=name, points=HAND_POINTS,
-                                                           limbs=limbs_index(HAND_LIMBS, HAND_POINTS),
-                                                           colors=hand_colors, point_format="XYC")
+OpenPose_Hand_Component = lambda name: PoseHeaderComponent(
+    name=name, points=HAND_POINTS, limbs=limbs_index(HAND_LIMBS, HAND_POINTS), colors=hand_colors, point_format="XYC")
 OpenPose_Hand_Component.__doc__ = """
 This "lambda" function creates a PoseHeaderComponent using 'name' and
 a constants for points, limbs, colors, and format.
@@ -169,10 +195,16 @@ a constants for points, limbs, colors, and format.
 # }
 
 OpenPose_Components = [
-    PoseHeaderComponent(name="pose_keypoints_2d", points=BODY_POINTS, limbs=limbs_index(BODY_LIMBS, BODY_POINTS),
-                        colors=[(255, 0, 0)], point_format="XYC"),
-    PoseHeaderComponent(name="face_keypoints_2d", points=FACE_POINTS, limbs=limbs_index(FACE_LIMBS, FACE_POINTS),
-                        colors=[(128, 0, 0)], point_format="XYC"),
+    PoseHeaderComponent(name="pose_keypoints_2d",
+                        points=BODY_POINTS,
+                        limbs=limbs_index(BODY_LIMBS, BODY_POINTS),
+                        colors=[(255, 0, 0)],
+                        point_format="XYC"),
+    PoseHeaderComponent(name="face_keypoints_2d",
+                        points=FACE_POINTS,
+                        limbs=limbs_index(FACE_LIMBS, FACE_POINTS),
+                        colors=[(128, 0, 0)],
+                        point_format="XYC"),
     OpenPose_Hand_Component("hand_left_keypoints_2d"),
     OpenPose_Hand_Component("hand_right_keypoints_2d"),
 ]
@@ -181,9 +213,14 @@ OpenPoseFrame = Dict[str, Any]
 OpenPoseFrames = Dict[int, OpenPoseFrame]
 
 
-def load_openpose(frames: OpenPoseFrames, fps: float = 24, width: int = 1000, height: int = 1000,
-                  depth: int = 0, num_frames: Optional[int] = None) -> Pose:
-    """Loads a dictionary of OpenPose frames into a Pose object.
+def load_openpose(frames: OpenPoseFrames,
+                  fps: float = 24,
+                  width: int = 1000,
+                  height: int = 1000,
+                  depth: int = 0,
+                  num_frames: Optional[int] = None) -> Pose:
+    """
+    Loads a dictionary of OpenPose frames into a Pose object.
     
     Parameters
     ----------
@@ -243,7 +280,8 @@ def load_openpose(frames: OpenPoseFrames, fps: float = 24, width: int = 1000, he
 
 
 def get_frame_id(filename: str, pattern: str) -> int:
-    """Parses a filename to find the ID of a frame. Example file name for frame with ID 17: `CAM2_000000000017_keypoints.json`.
+    """
+    Parses a filename to find the ID of a frame. Example file name for frame with ID 17: `CAM2_000000000017_keypoints.json`.
 
     Parameters
     ----------
@@ -301,9 +339,14 @@ def load_frames_directory_dict(directory: str, pattern: str) -> OpenPoseFrames:
     return frames
 
 
-def load_openpose_directory(directory: str, fps: float = 24, width: int = 1000, height: int = 1000,
-                            depth: int = 0, num_frames: Optional[int] = None) -> Pose:
-    """Loads pose data from a directory containing OpenPose files and return a `Pose` object.
+def load_openpose_directory(directory: str,
+                            fps: float = 24,
+                            width: int = 1000,
+                            height: int = 1000,
+                            depth: int = 0,
+                            num_frames: Optional[int] = None) -> Pose:
+    """
+    Loads pose data from a directory containing OpenPose files and return a `Pose` object.
 
     Parameters
     ----------

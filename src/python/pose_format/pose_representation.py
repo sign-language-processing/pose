@@ -32,6 +32,7 @@ class PoseRepresentation:
         The overall size of the output representation.
 
     """
+
     def __init__(self, header: PoseHeader, rep_modules1: List = [], rep_modules2: List = [], rep_modules3: List = []):
         self.header = header
 
@@ -55,7 +56,8 @@ class PoseRepresentation:
         self.output_size = self.calc_output_size()
 
     def calc_output_size(self):
-        """Calculate total size of output representation, based on active modules
+        """
+        Calculate total size of output representation, based on active modules
         
         Returns
         -------
@@ -100,8 +102,10 @@ class PoseRepresentation:
         assert self.limb_pt2s
 
         # Limb continuing when limb ended
-        chains = [(p1, p2, p4) for p1, p2 in zip(self.limb_pt1s, self.limb_pt2s)
-                  for p3, p4 in zip(self.limb_pt1s, self.limb_pt2s) if p2 == p3]
+        chains = [(p1, p2, p4)
+                  for p1, p2 in zip(self.limb_pt1s, self.limb_pt2s)
+                  for p3, p4 in zip(self.limb_pt1s, self.limb_pt2s)
+                  if p2 == p3]
         # # Limbs coming out from the same location
         # branches = [(p2, p1, p4) for p1, p2 in zip(self.limb_pt1s, self.limb_pt2s)
         #             for p3, p4 in zip(self.limb_pt1s, self.limb_pt2s) if p1 == p3 and p2 != p4]
@@ -111,7 +115,8 @@ class PoseRepresentation:
         return list(zip(*triangles))
 
     def group_embeds(self, embeds: List):
-        """Groups given embeddings into a desired format. Must be implemented by subclasses.
+        """
+        Groups given embeddings into a desired format. Must be implemented by subclasses.
 
         Parameters
         ----------
@@ -167,7 +172,8 @@ class PoseRepresentation:
         raise NotImplementedError('Group embeds is not implemented')
 
     def __call__(self, src):
-        """Computes modules representation of the pose using the specified modules.
+        """
+        Computes modules representation of the pose using the specified modules.
 
         Parameters
         ----------

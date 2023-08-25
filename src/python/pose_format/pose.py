@@ -1,18 +1,21 @@
 from itertools import chain
-from typing import List, BinaryIO, Dict, Type, Tuple
+from typing import BinaryIO, Dict, List, Tuple, Type
 
 import numpy as np
 import numpy.ma as ma
 
 from pose_format.numpy import NumPyPoseBody
 from pose_format.pose_body import PoseBody
-from pose_format.pose_header import PoseHeader, PoseHeaderDimensions, PoseNormalizationInfo, PoseHeaderComponent
+from pose_format.pose_header import (PoseHeader, PoseHeaderComponent,
+                                     PoseHeaderDimensions,
+                                     PoseNormalizationInfo)
 from pose_format.utils.fast_math import distance_batch
 from pose_format.utils.reader import BufferReader
 
 
 class Pose:
-    """File IO for '.pose' file format, including the header and body.
+    """
+    File IO for '.pose' file format, including the header and body.
     
     Parameters
     ----------
@@ -28,7 +31,8 @@ class Pose:
 
     @staticmethod
     def read(buffer: bytes, pose_body: Type[PoseBody] = NumPyPoseBody, **kwargs):
-        """Read Pose object from buffer.
+        """
+        Read Pose object from buffer.
 
         Parameters
         ----------
@@ -49,7 +53,8 @@ class Pose:
         return Pose(header, body)
 
     def write(self, buffer: BinaryIO):
-        """Write Pose object to buffer.
+        """
+        Write Pose object to buffer.
 
         Parameters
         ----------
@@ -60,7 +65,8 @@ class Pose:
         self.body.write(self.header.version, buffer)
 
     def focus(self):
-        """Gets the pose to start at (0,0) and have dimensions as big as needed
+        """
+        Gets the pose to start at (0,0) and have dimensions as big as needed
         """
         mins = ma.min(self.body.data, axis=(0, 1, 2))
         maxs = ma.max(self.body.data, axis=(0, 1, 2))
@@ -145,10 +151,7 @@ class Pose:
         """
         self.body.data = (self.body.data * std) + mu
 
-    def frame_dropout_uniform(self,
-                              dropout_min: float = 0.2,
-                              dropout_max: float = 1.0) -> Tuple["Pose", List[int]]:
-        
+    def frame_dropout_uniform(self, dropout_min: float = 0.2, dropout_max: float = 1.0) -> Tuple["Pose", List[int]]:
         """
         Perform uniform frame dropout on Pose
 
@@ -167,9 +170,7 @@ class Pose:
         body, selected_indexes = self.body.frame_dropout_uniform(dropout_min=dropout_min, dropout_max=dropout_max)
         return Pose(header=self.header, body=body), selected_indexes
 
-    def frame_dropout_normal(self,
-                             dropout_mean: float = 0.5,
-                             dropout_std: float = 0.1) -> Tuple["Pose", List[int]]:
+    def frame_dropout_normal(self, dropout_mean: float = 0.5, dropout_std: float = 0.1) -> Tuple["Pose", List[int]]:
         """
         Normal frame dropout on Pose.
 
@@ -189,7 +190,8 @@ class Pose:
         return Pose(header=self.header, body=body), selected_indexes
 
     def get_components(self, components: List[str], points: Dict[str, List[str]] = None):
-        """get pose components based on criteria.
+        """
+        get pose components based on criteria.
 
         Parameters
         ----------
@@ -209,13 +211,17 @@ class Pose:
         idx = 0
         for component in self.header.components:
             if component.name in components:
-                new_component = PoseHeaderComponent(component.name, component.points,
-                                                    component.limbs, component.colors, component.format)
+                new_component = PoseHeaderComponent(component.name, component.points, component.limbs, component.colors,
+                                                    component.format)
                 if points is not None and component.name in points:  # copy and permute points
-                    new_component.points = points[component.name] 
-                    point_index_mapping = {component.points.index(point): i for i, point in enumerate(new_component.points)}
+                    new_component.points = points[component.name]
+                    point_index_mapping = {
+                        component.points.index(point): i for i, point in enumerate(new_component.points)
+                    }
                     old_indexes_set = set(point_index_mapping.keys())
-                    new_component.limbs = [(point_index_mapping[l1], point_index_mapping[l2]) for l1, l2 in component.limbs if l1 in old_indexes_set and l2 in old_indexes_set]
+                    new_component.limbs = [(point_index_mapping[l1], point_index_mapping[l2])
+                                           for l1, l2 in component.limbs
+                                           if l1 in old_indexes_set and l2 in old_indexes_set]
 
                     indexes[component.name] = [idx + component.points.index(p) for p in new_component.points]
                 else:  # Copy component as is
@@ -235,7 +241,8 @@ class Pose:
         return Pose(header=new_header, body=new_body)
 
     def bbox(self):
-        """Calculates bounding box for Pose.
+        """
+        Calculates bounding box for Pose.
 
         Returns
         -------
@@ -254,7 +261,8 @@ class Pose:
         "tensorflow",  # Convert body to tensorflow
         "slice_step",  # Step through the data
     }
-    """A set of method names which define actions that can be applied to the pose data.
+    """
+A set of method names which define actions that can be applied to the pose data.
 
     Parameters
     ----------
@@ -271,8 +279,6 @@ class Pose:
     slice_step : str
         Represents a method to step through the data.
     """
-    
-    
 
     def __getattr__(self, attr):
         """

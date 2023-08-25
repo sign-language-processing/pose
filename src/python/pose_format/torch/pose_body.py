@@ -3,16 +3,18 @@ from typing import List, Union
 import numpy as np
 import torch
 
-from .masked.tensor import MaskedTensor
-from ..pose_body import PoseBody, POINTS_DIMS
+from ..pose_body import POINTS_DIMS, PoseBody
 from ..pose_header import PoseHeader
 from ..utils.reader import BufferReader
+from .masked.tensor import MaskedTensor
 
 
 class TorchPoseBody(PoseBody):
-    """TorchPoseBody class of pose information with PyTorch tensors.
+    """
+    TorchPoseBody class of pose information with PyTorch tensors.
 
-    This class extends the PoseBody class and provides methods for manipulating pose data using PyTorch tensors."""
+    This class extends the PoseBody class and provides methods for manipulating pose data using PyTorch tensors.
+    """
     tensor_reader = 'unpack_torch' """str: Reader format for unpacking Torch tensors."""
 
     def __init__(self, fps: float, data: Union[MaskedTensor, torch.Tensor], confidence: torch.Tensor):
@@ -72,7 +74,8 @@ class TorchPoseBody(PoseBody):
         return self.data.permute(POINTS_DIMS)
 
     def get_points(self, indexes: List[int]):
-        """Get specific points from pose data.
+        """
+        Get specific points from pose data.
 
         Parameters
         ----------

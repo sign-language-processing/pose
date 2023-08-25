@@ -7,16 +7,15 @@ from pose_format.torch.masked.tensor import MaskedTensor
 
 class TorchFallback(type):
     """Meta class that gives a fallback mechanism to use torch functions on :class:`~pose_format.torch.masked.tensor.MaskedTensor` objects. :noindex:"""
-    doesnt_change_mask = {
-        "sqrt", "square", "unsqueeze",
-        "cos", "sin", "tan", "acos", "asin", "atan"
-    }
+    doesnt_change_mask = {"sqrt", "square", "unsqueeze", "cos", "sin", "tan", "acos", "asin", "atan"}
 
     def __getattr__(cls, attr):
-        """Redirects calls to PyTorch functions to handle :class:`~pose_format.torch.masked.tensor.MaskedTensor` instances.
+        """
+        Redirects calls to PyTorch functions to handle :class:`~pose_format.torch.masked.tensor.MaskedTensor` instances.
 
         If the first argument is a :class:`~pose_format.torch.masked.tensor.MaskedTensor`, its mask is taken into account.
         """
+
         def func(*args, **kwargs):
             if len(args) > 0 and isinstance(args[0], MaskedTensor):
                 args = list(args)
@@ -40,7 +39,8 @@ class MaskedTorch(metaclass=TorchFallback):
 
     @staticmethod
     def cat(tensors: List[Union[MaskedTensor, torch.Tensor]], dim: int) -> MaskedTensor:
-        """Concatenate :class:`~pose_format.torch.masked.tensor.MaskedTensor` objects along a specified dimension.
+        """
+        Concatenate :class:`~pose_format.torch.masked.tensor.MaskedTensor` objects along a specified dimension.
 
         Parameters
         ----------
@@ -61,7 +61,8 @@ class MaskedTorch(metaclass=TorchFallback):
 
     @staticmethod
     def stack(tensors: List[MaskedTensor], dim: int) -> MaskedTensor:
-        """Stack :class:`~pose_format.torch.masked.tensor.MaskedTensor` objects along a new dimension.
+        """
+        Stack :class:`~pose_format.torch.masked.tensor.MaskedTensor` objects along a new dimension.
 
         Parameters
         ----------
@@ -81,7 +82,8 @@ class MaskedTorch(metaclass=TorchFallback):
 
     @staticmethod
     def zeros(*size, dtype=None) -> MaskedTensor:
-        """Creates a :class:`~pose_format.torch.masked.tensor.MaskedTensor` of zeros with a given shape and data type.
+        """
+        Creates a :class:`~pose_format.torch.masked.tensor.MaskedTensor` of zeros with a given shape and data type.
 
         Parameters
         ----------
@@ -101,7 +103,8 @@ class MaskedTorch(metaclass=TorchFallback):
 
     @staticmethod
     def squeeze(masked_tensor: MaskedTensor) -> MaskedTensor:
-        """Remove dimensions of size 1 from :class:`~pose_format.torch.masked.tensor.MaskedTensor`.
+        """
+        Remove dimensions of size 1 from :class:`~pose_format.torch.masked.tensor.MaskedTensor`.
 
         Parameters
         ----------

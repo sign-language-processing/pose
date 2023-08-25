@@ -8,6 +8,7 @@ from pose_format.torch.masked.torch import MaskedTorch
 
 class TestMaskedTorch(TestCase):
     """Test cases for the :class:`~pose_format.torch.masked.tensor.MaskedTensor` class """
+
     # cat
     def test_cat(self):
         """Test `cat` method for concatenating :class:`~pose_format.torch.masked.tensor.MaskedTensor` objects along a specified dimension."""

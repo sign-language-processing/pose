@@ -2,8 +2,8 @@ import tensorflow as tf
 
 
 class DistanceRepresentation:
-    """
-    A class to represent the Euclidean distance between two sets of points."""
+    """A class to represent the Euclidean distance between two sets of points."""
+
     def distance(self, p1s: tf.Tensor, p2s: tf.Tensor) -> tf.Tensor:
         """
         Computes the Euclidean distance between two sets of points.
@@ -22,7 +22,7 @@ class DistanceRepresentation:
             with shape (Points, Batch, Len).
         
         Note
-        -----
+        ----
         The function computes the difference between the two sets of points,
         squares the differences, sums the squared differences along the last axis,
         and then takes the square root to calculate the Euclidean distance.
@@ -52,7 +52,7 @@ class DistanceRepresentation:
             with shape (Points, Batch, Len).
         
         Note
-        -----
+        ----
         This method is essentially an alias for the `distance` method.
         """
         return self.distance(p1s, p2s)

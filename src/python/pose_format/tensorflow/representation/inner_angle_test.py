@@ -1,19 +1,20 @@
+import math
 import os
 from unittest import TestCase
-
-import math
 
 os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
 
 import tensorflow as tf
 
-from pose_format.tensorflow.representation.inner_angle import InnerAngleRepresentation
+from pose_format.tensorflow.representation.inner_angle import \
+    InnerAngleRepresentation
 
 representation = InnerAngleRepresentation()
 
 
 class TestInnerAngleRepresentation(TestCase):
     """Test case for InnerAngleRepresentation class"""
+
     def test_call_value_should_be_inner_angle(self):
         """Test if the calculated inner angles are correct."""
         p1s = tf.constant([[[[2, 3, 4]]]], dtype=tf.float32)

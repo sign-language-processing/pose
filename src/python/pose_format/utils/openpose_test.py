@@ -1,31 +1,39 @@
-from unittest import TestCase
-from typing import Optional, List
-from tempfile import TemporaryDirectory
-from contextlib import contextmanager
-
-import os
 import json
+import os
+from contextlib import contextmanager
+from tempfile import TemporaryDirectory
+from typing import List, Optional
+from unittest import TestCase
+
 import numpy as np
 
-from pose_format.utils.openpose import get_frame_id, load_openpose, load_openpose_directory, OPENPOSE_FRAME_PATTERN
-from pose_format.utils.openpose import OpenPoseFrames, OpenPose_Components
 from pose_format.pose import Pose
-
+from pose_format.utils.openpose import (OPENPOSE_FRAME_PATTERN,
+                                        OpenPose_Components, OpenPoseFrames,
+                                        get_frame_id, load_openpose,
+                                        load_openpose_directory)
 
 OPENPOSE_TOTAL_KEYPOINTS = 137
-OPENPOSE_COMPONENTS_USED = ["pose_keypoints_2d", "face_keypoints_2d", "hand_left_keypoints_2d", "hand_right_keypoints_2d"]
-OPENPOSE_COMPONENTS_UNUSED = ["pose_keypoints_3d", "face_keypoints_3d", "hand_left_keypoints_3d", "hand_right_keypoints_3d"]
-OPENPOSE_NUM_POINTS_PER_COMPONENT = {"pose_keypoints_2d": 25,
-                                     "face_keypoints_2d": 70,
-                                     "hand_left_keypoints_2d": 21,
-                                     "hand_right_keypoints_2d": 21}
+OPENPOSE_COMPONENTS_USED = [
+    "pose_keypoints_2d", "face_keypoints_2d", "hand_left_keypoints_2d", "hand_right_keypoints_2d"
+]
+OPENPOSE_COMPONENTS_UNUSED = [
+    "pose_keypoints_3d", "face_keypoints_3d", "hand_left_keypoints_3d", "hand_right_keypoints_3d"
+]
+OPENPOSE_NUM_POINTS_PER_COMPONENT = {
+    "pose_keypoints_2d": 25,
+    "face_keypoints_2d": 70,
+    "hand_left_keypoints_2d": 21,
+    "hand_right_keypoints_2d": 21
+}
 
 
 def _generate_random_frames_dict(num_frames: int = 10,
                                  num_people: int = 1,
                                  num_dimensions: int = 2,
                                  num_missing_frames: int = 0) -> OpenPoseFrames:
-    """Generates dictionary of random frames for testing 
+    """
+    Generates dictionary of random frames for testing 
     
     Parameters
     ----------
@@ -277,6 +285,7 @@ class TestLoadOpenpose(TestCase):
 
 class TestLoadOpenposeDirectory(TestCase):
     """Testcases for loading OpenPose data from a directory"""
+
     def test_get_frame_id_zero(self):
         """Test if frame ID extraction works correctly for a filename with ID 0."""
         filename = "CAM2_000000000000_keypoints.json"

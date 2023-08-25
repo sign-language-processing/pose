@@ -1,5 +1,6 @@
 class OpticalFlowCalculator:
-    """Classe used for computing optical flow between frames using distance function
+    """
+    Classe used for computing optical flow between frames using distance function
     
     Parameters
     ----------
@@ -7,14 +8,15 @@ class OpticalFlowCalculator:
         frames per second; used to normalize optical flow computation
     distance : callable
         function to compute distance (or optical flow) between two frames (post/pre-src)
-    
     """
+
     def __init__(self, fps, distance):
         self.fps = fps
         self.distance = distance
 
     def __call__(self, src):
-        """Calculate the optical flow norm between frames, normalized by fps
+        """
+        Calculate the optical flow norm between frames, normalized by fps
         
         Parameters
         ----------

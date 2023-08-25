@@ -13,8 +13,7 @@ class TestMaskedTensorflow(TestCase):
 
     # cat
     def test_cat(self):
-        """
-        Test the `concat` concatination method for two tensors along axis=0."""
+        """Test the `concat` concatination method for two tensors along axis=0."""
         tensor1 = MaskedTensor(tf.constant([1, 2]))
         tensor2 = MaskedTensor(tf.constant([3, 4]))
         stack = MaskedTensorflow.concat([tensor1, tensor2], axis=0)
@@ -59,8 +58,7 @@ class TestMaskedTensorflow(TestCase):
         self.assertEqual(zeros.tensor.dtype, dtype)
 
     def test_zeros_tensor_type_bool(self):
-        """
-        Test the dtype of the tensor obtained from `zeros` method with dtype=tf.bool."""
+        """Test the dtype of the tensor obtained from `zeros` method with dtype=tf.bool."""
         dtype = tf.bool
         zeros = MaskedTensorflow.zeros((1, 2, 3), dtype=dtype)
         self.assertEqual(zeros.tensor.dtype, dtype)

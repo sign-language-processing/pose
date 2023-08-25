@@ -1,6 +1,6 @@
+import math
 from unittest import TestCase
 
-import math
 import torch
 
 from pose_format.torch.masked.tensor import MaskedTensor
@@ -13,6 +13,7 @@ class TestAngleRepresentation(TestCase):
     """
     Test cases to make sure the correct functioning of ``AngleRepresentation``.
     """
+
     def test_call_value_should_be_angle(self):
         """
         Tests the computed angle value matches expected value.

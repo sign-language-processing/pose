@@ -2,13 +2,12 @@
 Module for testing optical flow computations. Provides test cases for optical flow computation from pose landmarks data.
 """
 import tempfile
-
 from unittest import TestCase
 
 from matplotlib.testing.compare import compare_images
-from pose_format.pose import Pose
 
 from pose_format.numpy.representation.distance import DistanceRepresentation
+from pose_format.pose import Pose
 from pose_format.utils.optical_flow import OpticalFlowCalculator
 
 
@@ -16,6 +15,7 @@ class TestOpticalFlow(TestCase):
     """
     Test cases for optical flow computation.
     """
+
     def test_optical_flow(self):
         """
         Tests optical flow from pose landmarks data and 
@@ -25,7 +25,6 @@ class TestOpticalFlow(TestCase):
         
         Raises:
             AssertionError: If the computed optical flow visualization does not match the reference image.
-        
         """
         calculator = OpticalFlowCalculator(fps=30, distance=DistanceRepresentation())
 
@@ -46,4 +45,3 @@ class TestOpticalFlow(TestCase):
         plt.savefig(fp.name, format='png')
 
         self.assertTrue(compare_images('data/optical_flow.png', fp.name, 0.001) is None)
-

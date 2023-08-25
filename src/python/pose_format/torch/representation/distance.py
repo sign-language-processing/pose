@@ -9,6 +9,7 @@ class DistanceRepresentation(nn.Module):
     """
     Represents the Euclidean distance between two points in space.
     """
+
     def distance(self, p1s: MaskedTensor, p2s: MaskedTensor) -> MaskedTensor:
         """
         Calculate the Euclidean distance between two sets of points.

@@ -7,11 +7,13 @@ import torch
 
 os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
 import tensorflow as tf
+
 from pose_format.utils.reader import BufferReader, ConstStructs
 
 
 class TestBufferReader(TestCase):
     """ Tests for the BufferReader class"""
+
     def test_bytes_left(self):
         """ Test that bytes_left returns the correct number of bytes left to read"""
         reader = BufferReader(bytes(range(6)))

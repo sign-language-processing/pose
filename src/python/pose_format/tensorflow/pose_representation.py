@@ -6,14 +6,15 @@ from ..pose_representation import PoseRepresentation
 
 
 class TensorflowPoseRepresentation(PoseRepresentation):
-    """Class for pose representations using TensorFlow tensors.
+    """
+    Class for pose representations using TensorFlow tensors.
 
         * Inherites from ``PoseRepresentation`` 
         
         This class extends PoseRepresentation and provides methods for manipulating pose representations
         using TensorFlow tensors.
-        
         """
+
     def group_embeds(self, embeds: List[tf.Tensor]):
         """
         Group embeddings (list of tensors) along the first dimension.

@@ -7,7 +7,8 @@ from ..pose_representation import PoseRepresentation
 
 
 class TorchPoseRepresentation(PoseRepresentation):
-    """TorchPoseRepresentation class representing pose information using PyTorch tensors.
+    """
+    TorchPoseRepresentation class representing pose information using PyTorch tensors.
 
     This class extends the PoseRepresentation class and provides methods for manipulating and representing pose data
     using PyTorch tensors.
@@ -23,6 +24,7 @@ class TorchPoseRepresentation(PoseRepresentation):
     rep_modules3 : List
         List of additional representation modules (level 3) to apply to pose data.
     """
+
     def __init__(self, header: PoseHeader, rep_modules1: List = [], rep_modules2: List = [], rep_modules3: List = []):
         super(TorchPoseRepresentation, self).__init__(header, rep_modules1, rep_modules2, rep_modules3)
 

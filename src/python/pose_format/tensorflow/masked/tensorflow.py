@@ -8,11 +8,8 @@ from pose_format.tensorflow.masked.tensor import MaskedTensor
 class TensorflowFallback(type):
     """A metaclass for managing the fallback operations on MaskedTensors with Tensorflow functions."""
 
-    doesnt_change_mask = {
-        "sqrt", "square",
-        "cos", "sin", "tan", "acos", "asin", "atan"
-    }
-    
+    doesnt_change_mask = {"sqrt", "square", "cos", "sin", "tan", "acos", "asin", "atan"}
+
     def __getattr__(cls, attr):
         """
         to return Tensorflow functions that can work on MaskedTensors.
@@ -27,6 +24,7 @@ class TensorflowFallback(type):
         function
             function that can handle both MaskedTensor and regular/unmasked Tensorflow Tensor objects.
         """
+
         def func(*args, **kwargs):
             if len(args) > 0 and isinstance(args[0], MaskedTensor):
                 args = list(args)
@@ -50,6 +48,7 @@ class MaskedTensorflow(metaclass=TensorflowFallback):
     Class that performs Tensorflow operations on MaskedTensors. 
     It uses the TensorflowFallback metaclass to handle functions not explicitly defined in this class.
     """
+
     @staticmethod
     def concat(tensors: List[Union[MaskedTensor, tensorflow.Tensor]], axis: int) -> MaskedTensor:
         """

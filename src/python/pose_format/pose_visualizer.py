@@ -2,7 +2,7 @@ import itertools
 import logging
 import math
 from functools import lru_cache
-from typing import Tuple, Iterable
+from typing import Iterable, Tuple
 
 import numpy as np
 import numpy.ma as ma
@@ -16,7 +16,7 @@ class PoseVisualizer:
     A class for visualizing Pose objects using OpenCV.
 
     Parameters
-    -----------
+    ----------
     pose : Pose
         The Pose object to visualize.
     thickness : int or None
@@ -26,9 +26,9 @@ class PoseVisualizer:
     *cv2 : module
         OpenCV Python binding.
     """
+
     def __init__(self, pose: Pose, thickness=None):
-        """
-        Initialize the PoseVisualizer class."""
+        """Initialize the PoseVisualizer class."""
         self.pose = pose
         self.thickness = thickness
         self.pose_fps = float(self.pose.body.fps)
@@ -37,9 +37,7 @@ class PoseVisualizer:
             import cv2
             self.cv2 = cv2
         except ImportError:
-            raise ImportError(
-                "Please install OpenCV with: pip install opencv-python"
-            )
+            raise ImportError("Please install OpenCV with: pip install opencv-python")
 
     def _draw_frame(self, frame: ma.MaskedArray, frame_confidence: np.ndarray, img) -> np.ndarray:
         """
@@ -59,7 +57,7 @@ class PoseVisualizer:
         np.ndarray
             Image with drawn pose data.
         """
-        
+
         background_color = img[0][0]  # Estimation of background color for opacity. `mean` is slow
 
         thickness = self.thickness if self.thickness is not None else round(
@@ -82,8 +80,12 @@ class PoseVisualizer:
                 # Draw Points
                 for i, point_name in enumerate(component.points):
                     if c[i + idx] > 0:
-                        self.cv2.circle(img=img, center=tuple(person[i + idx][:2]), radius=radius,
-                                        color=_point_color(i), thickness=-1, lineType=16)
+                        self.cv2.circle(img=img,
+                                        center=tuple(person[i + idx][:2]),
+                                        radius=radius,
+                                        color=_point_color(i),
+                                        thickness=-1,
+                                        lineType=16)
 
                 if self.pose.header.is_bbox:
                     point1 = points_2d[0 + idx]
@@ -128,7 +130,8 @@ class PoseVisualizer:
         # ...
         int_frames = np.array(np.around(self.pose.body.data.data), dtype="int32")
         background = np.full((self.pose.header.dimensions.height, self.pose.header.dimensions.width, 3),
-                             fill_value=background_color, dtype="uint8")
+                             fill_value=background_color,
+                             dtype="uint8")
         for frame, confidence in itertools.islice(zip(int_frames, self.pose.body.confidence), max_frames):
             yield self._draw_frame(frame, confidence, img=background.copy())
 
@@ -174,8 +177,7 @@ class PoseVisualizer:
             background_video = iter(get_frames(background_video))
 
         for frame, confidence, background in itertools.islice(
-                zip(int_data, self.pose.body.confidence, background_video),
-                max_frames):
+                zip(int_data, self.pose.body.confidence, background_video), max_frames):
             background = self.cv2.resize(background,
                                          (self.pose.header.dimensions.width, self.pose.header.dimensions.height))
 
@@ -202,7 +204,8 @@ class PoseVisualizer:
         self.cv2.imwrite(f_name, frame)
 
     def save_gif(self, f_name: str, frames: Iterable[np.ndarray]):
-        """Save pose frames as GIF.
+        """
+        Save pose frames as GIF.
 
         Parameters
         ----------
@@ -216,20 +219,22 @@ class PoseVisualizer:
         None
 
         Raises
-        -------
+        ------
         ImportError 
             If Pillow is not installed.
         """
         try:
             from PIL import Image
         except ImportError:
-            raise ImportError(
-                "Please install Pillow with: pip install Pillow"
-            )
+            raise ImportError("Please install Pillow with: pip install Pillow")
 
         images = [Image.fromarray(self.cv2.cvtColor(frame, self.cv2.COLOR_BGR2RGB)) for frame in frames]
-        images[0].save(f_name, format="GIF", append_images=images,
-                       save_all=True, duration=1000 / self.pose.body.fps, loop=0)
+        images[0].save(f_name,
+                       format="GIF",
+                       append_images=images,
+                       save_all=True,
+                       duration=1000 / self.pose.body.fps,
+                       loop=0)
 
     def save_video(self, f_name: str, frames: Iterable[np.ndarray], custom_ffmpeg=None):
         """
@@ -249,16 +254,14 @@ class PoseVisualizer:
         None
 
         Raises
-        -------
+        ------
         ImportError 
             If vidgear is not installed.
         """
         try:
             from vidgear.gears import WriteGear
         except ImportError:
-            raise ImportError(
-                "Please install vidgear with: pip install vidgear"
-            )
+            raise ImportError("Please install vidgear with: pip install vidgear")
 
         # image_size = (self.pose.header.dimensions.width, self.pose.header.dimensions.height)
 
@@ -326,7 +329,8 @@ class FastAndUglyPoseVisualizer(PoseVisualizer):
         return img
 
     def draw(self, background_color: int = 0, foreground_color: int = 255):
-        """draws the pose on plain background using a foreground (pose) color.
+        """
+        draws the pose on plain background using a foreground (pose) color.
 
         Parameters
         ----------
@@ -342,6 +346,7 @@ class FastAndUglyPoseVisualizer(PoseVisualizer):
         """
         int_frames = np.array(np.around(self.pose.body.data.data), dtype="int32")
         background = np.full((self.pose.header.dimensions.height, self.pose.header.dimensions.width),
-                             fill_value=background_color, dtype="uint8")
+                             fill_value=background_color,
+                             dtype="uint8")
         for frame in int_frames:
             yield self._draw_frame(frame, img=background.copy(), color=foreground_color)

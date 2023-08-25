@@ -1,14 +1,13 @@
-import tensorflow as tf
-
 from unittest import TestCase
 
-from pose_format.tensorflow.pose_body import TensorflowPoseBody
+import tensorflow as tf
+
 from pose_format.tensorflow.masked.tensor import MaskedTensor
+from pose_format.tensorflow.pose_body import TensorflowPoseBody
 
 
 class TestTensorflowPoseBody(TestCase):
-    """
-    TestsCases for the `TensorflowPoseBody` class."""
+    """TestsCases for the `TensorflowPoseBody` class."""
 
     def test_tf_pose_body_zero_filled_fills_in_zeros(self):
         """

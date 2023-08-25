@@ -1,11 +1,10 @@
 import numpy as np
 from tqdm import tqdm
 
-from .openpose import hand_colors
 from ..numpy.pose_body import NumPyPoseBody
 from ..pose import Pose
 from ..pose_header import PoseHeader, PoseHeaderComponent, PoseHeaderDimensions
-from .openpose import load_frames_directory_dict
+from .openpose import hand_colors, load_frames_directory_dict
 
 try:
     import mediapipe as mp
@@ -14,8 +13,9 @@ except ImportError:
 
 mp_holistic = mp.solutions.holistic
 
-FACEMESH_CONTOURS_POINTS = [str(p) for p in
-                            sorted(set([p for p_tup in list(mp_holistic.FACEMESH_CONTOURS) for p in p_tup]))]
+FACEMESH_CONTOURS_POINTS = [
+    str(p) for p in sorted(set([p for p_tup in list(mp_holistic.FACEMESH_CONTOURS) for p in p_tup]))
+]
 
 BODY_POINTS = mp_holistic.PoseLandmark._member_names_
 BODY_LIMBS = [(int(a), int(b)) for a, b in mp_holistic.POSE_CONNECTIONS]
@@ -54,16 +54,46 @@ list[str]
 
 FACE_LIMBS = [(int(a), int(b)) for a, b in mp_holistic.FACEMESH_TESSELATION]
 
-FLIPPED_BODY_POINTS = ['NOSE', 'RIGHT_EYE_INNER', 'RIGHT_EYE', 'RIGHT_EYE_OUTER', 'LEFT_EYE_INNER', 'LEFT_EYE',
-                       'LEFT_EYE_OUTER', 'RIGHT_EAR', 'LEFT_EAR', 'MOUTH_RIGHT', 'MOUTH_LEFT', 'RIGHT_SHOULDER',
-                       'LEFT_SHOULDER', 'RIGHT_ELBOW', 'LEFT_ELBOW', 'RIGHT_WRIST', 'LEFT_WRIST', 'RIGHT_PINKY',
-                       'LEFT_PINKY', 'RIGHT_INDEX', 'LEFT_INDEX', 'RIGHT_THUMB', 'LEFT_THUMB', 'RIGHT_HIP', 'LEFT_HIP',
-                       'RIGHT_KNEE', 'LEFT_KNEE', 'RIGHT_ANKLE', 'LEFT_ANKLE', 'RIGHT_HEEL', 'LEFT_HEEL',
-                       'RIGHT_FOOT_INDEX', 'LEFT_FOOT_INDEX', ]
+FLIPPED_BODY_POINTS = [
+    'NOSE',
+    'RIGHT_EYE_INNER',
+    'RIGHT_EYE',
+    'RIGHT_EYE_OUTER',
+    'LEFT_EYE_INNER',
+    'LEFT_EYE',
+    'LEFT_EYE_OUTER',
+    'RIGHT_EAR',
+    'LEFT_EAR',
+    'MOUTH_RIGHT',
+    'MOUTH_LEFT',
+    'RIGHT_SHOULDER',
+    'LEFT_SHOULDER',
+    'RIGHT_ELBOW',
+    'LEFT_ELBOW',
+    'RIGHT_WRIST',
+    'LEFT_WRIST',
+    'RIGHT_PINKY',
+    'LEFT_PINKY',
+    'RIGHT_INDEX',
+    'LEFT_INDEX',
+    'RIGHT_THUMB',
+    'LEFT_THUMB',
+    'RIGHT_HIP',
+    'LEFT_HIP',
+    'RIGHT_KNEE',
+    'LEFT_KNEE',
+    'RIGHT_ANKLE',
+    'LEFT_ANKLE',
+    'RIGHT_HEEL',
+    'LEFT_HEEL',
+    'RIGHT_FOOT_INDEX',
+    'LEFT_FOOT_INDEX',
+]
 
 
 def component_points(component, width: int, height: int, num: int):
-    """Gets component points
+    """
+    Gets component points
 
     Parameters
     ----------
@@ -115,7 +145,13 @@ def body_points(component, width: int, height: int, num: int):
     return np.zeros((num, 3)), np.zeros(num)
 
 
-def process_holistic(frames: list, fps: float, w: int, h: int, kinect=None, progress=False, additional_face_points=0,
+def process_holistic(frames: list,
+                     fps: float,
+                     w: int,
+                     h: int,
+                     kinect=None,
+                     progress=False,
+                     additional_face_points=0,
                      additional_holistic_config={}) -> NumPyPoseBody:
     """
     process frames using holistic model from mediapipe
@@ -185,7 +221,8 @@ def process_holistic(frames: list, fps: float, w: int, h: int, kinect=None, prog
 
 
 def holistic_hand_component(name, pf="XYZC") -> PoseHeaderComponent:
-    """Creates holistic hand component
+    """
+    Creates holistic hand component
 
     Parameters
     ----------
@@ -203,7 +240,8 @@ def holistic_hand_component(name, pf="XYZC") -> PoseHeaderComponent:
 
 
 def holistic_components(pf="XYZC", additional_face_points=0):
-    """Creates list of holistic components
+    """
+    Creates list of holistic components
 
     Parameters
     ----------
@@ -218,20 +256,36 @@ def holistic_components(pf="XYZC", additional_face_points=0):
         List of holistic components.
     """
     return [
-        PoseHeaderComponent(name="POSE_LANDMARKS", points=BODY_POINTS, limbs=BODY_LIMBS,
-                            colors=[(255, 0, 0)], point_format=pf),
-        PoseHeaderComponent(name="FACE_LANDMARKS", points=FACE_POINTS(additional_face_points), limbs=FACE_LIMBS,
-                            colors=[(128, 0, 0)], point_format=pf),
+        PoseHeaderComponent(name="POSE_LANDMARKS",
+                            points=BODY_POINTS,
+                            limbs=BODY_LIMBS,
+                            colors=[(255, 0, 0)],
+                            point_format=pf),
+        PoseHeaderComponent(name="FACE_LANDMARKS",
+                            points=FACE_POINTS(additional_face_points),
+                            limbs=FACE_LIMBS,
+                            colors=[(128, 0, 0)],
+                            point_format=pf),
         holistic_hand_component("LEFT_HAND_LANDMARKS", pf),
         holistic_hand_component("RIGHT_HAND_LANDMARKS", pf),
-        PoseHeaderComponent(name="POSE_WORLD_LANDMARKS", points=BODY_POINTS, limbs=BODY_LIMBS,
-                            colors=[(255, 0, 0)], point_format=pf),
+        PoseHeaderComponent(name="POSE_WORLD_LANDMARKS",
+                            points=BODY_POINTS,
+                            limbs=BODY_LIMBS,
+                            colors=[(255, 0, 0)],
+                            point_format=pf),
     ]
 
 
-def load_holistic(frames: list, fps: float = 24, width=1000, height=1000, depth=0, kinect=None, progress=False,
+def load_holistic(frames: list,
+                  fps: float = 24,
+                  width=1000,
+                  height=1000,
+                  depth=0,
+                  kinect=None,
+                  progress=False,
                   additional_holistic_config={}) -> Pose:
-    """Loads holistic pose data
+    """
+    Loads holistic pose data
 
     Parameters
     ----------
@@ -264,7 +318,8 @@ def load_holistic(frames: list, fps: float = 24, width=1000, height=1000, depth=
     refine_face_landmarks = 'refine_face_landmarks' in additional_holistic_config and additional_holistic_config[
         'refine_face_landmarks']
     additional_face_points = 10 if refine_face_landmarks else 0
-    header: PoseHeader = PoseHeader(version=0.1, dimensions=dimensions,
+    header: PoseHeader = PoseHeader(version=0.1,
+                                    dimensions=dimensions,
                                     components=holistic_components(pf, additional_face_points))
     body: NumPyPoseBody = process_holistic(frames, fps, width, height, kinect, progress, additional_face_points,
                                            additional_holistic_config)
@@ -273,7 +328,8 @@ def load_holistic(frames: list, fps: float = 24, width=1000, height=1000, depth=
 
 
 def formatted_holistic_pose(width: int, height: int, additional_face_points: int = 0):
-    """Formatted holistic pose
+    """
+    Formatted holistic pose
 
     Parameters
     ----------
@@ -290,17 +346,21 @@ def formatted_holistic_pose(width: int, height: int, additional_face_points: int
         Formatted pose components
     """
     dimensions = PoseHeaderDimensions(width=width, height=height, depth=1000)
-    header = PoseHeader(version=0.1, dimensions=dimensions, components=holistic_components("XYZC", additional_face_points))
-    body = NumPyPoseBody(fps=0, # to be overridden later
-                         data=np.zeros(shape=(1, 1, header.total_points(), 3)),
-                         confidence=np.zeros(shape=(1, 1, header.total_points())))
+    header = PoseHeader(version=0.1,
+                        dimensions=dimensions,
+                        components=holistic_components("XYZC", additional_face_points))
+    body = NumPyPoseBody(
+        fps=0,  # to be overridden later
+        data=np.zeros(shape=(1, 1, header.total_points(), 3)),
+        confidence=np.zeros(shape=(1, 1, header.total_points())))
     pose = Pose(header, body)
     return pose.get_components(["POSE_LANDMARKS", "FACE_LANDMARKS", "LEFT_HAND_LANDMARKS", "RIGHT_HAND_LANDMARKS"],
                                {"FACE_LANDMARKS": FACEMESH_CONTOURS_POINTS})
 
 
 def load_mediapipe_directory(directory: str, fps: int, width: int, height: int, num_face_points: int = 128) -> Pose:
-    """Load pose data from a directory of MediaPipe
+    """
+    Load pose data from a directory of MediaPipe
 
     Parameters
     ----------
@@ -320,7 +380,7 @@ def load_mediapipe_directory(directory: str, fps: int, width: int, height: int, 
     Pose
         Loaded pose data
     """
-    
+
     frames = load_frames_directory_dict(directory=directory, pattern="(?:^|\D)?(\d+).*?.json")
 
     if len(frames) > 0:
@@ -333,7 +393,8 @@ def load_mediapipe_directory(directory: str, fps: int, width: int, height: int, 
         return ValueError("No frames found in directory: {}".format(directory))
 
     def load_mediapipe_frame(frame):
-        """Get landmarks data of face landmarks, pose landmarks, and left & right hand landmarks (body_data, face_data, lh_data, rh_data) and confidence values from a given frame.
+        """
+        Get landmarks data of face landmarks, pose landmarks, and left & right hand landmarks (body_data, face_data, lh_data, rh_data) and confidence values from a given frame.
 
     Parameters
     ----------
@@ -347,13 +408,14 @@ def load_mediapipe_directory(directory: str, fps: int, width: int, height: int, 
         The first array is the landmarks data including x, y, z coordinates. 
         The second array is the confidence scores for each landmark.
          """
-        
+
         def load_landmarks(name, num_points: int):
             points = [[float(p) for p in r.split(",")] for r in frame[name]["landmarks"]]
             points = [(ps + [1.0])[:4] for ps in points]  # Add visibility to all points
             if len(points) == 0:
                 points = [[0, 0, 0, 0] for _ in range(num_points)]
             return np.array([[x, y, z] for x, y, z, c in points]), np.array([c for x, y, z, c in points])
+
         face_data, face_confidence = load_landmarks("face_landmarks", num_face_points)
         body_data, body_confidence = load_landmarks("pose_landmarks", num_pose_points)
         lh_data, lh_confidence = load_landmarks("left_hand_landmarks", num_left_hand_points)
@@ -363,7 +425,8 @@ def load_mediapipe_directory(directory: str, fps: int, width: int, height: int, 
         return data, conf
 
     def load_mediapipe_frames() -> NumPyPoseBody:
-        """From a list of frames, load  pose data and confidance into a NumPyPoseBody
+        """
+        From a list of frames, load  pose data and confidance into a NumPyPoseBody
         
         Processes each frame from `frames` to extract the data and confidence values
         for pose landmarks, face landmarks, and left & right hand landmarks.
@@ -374,8 +437,12 @@ def load_mediapipe_directory(directory: str, fps: int, width: int, height: int, 
             PoseBody object with data and confidence for each frame.
         """
         max_frames = int(max(frames.keys())) + 1
-        pose_body_data = np.zeros(shape=(max_frames, 1, num_left_hand_points + num_right_hand_points + num_pose_points + num_face_points, 3), dtype=float)
-        pose_body_conf = np.zeros(shape=(max_frames, 1, num_left_hand_points + num_right_hand_points + num_pose_points + num_face_points), dtype=float)
+        pose_body_data = np.zeros(shape=(max_frames, 1, num_left_hand_points + num_right_hand_points + num_pose_points +
+                                         num_face_points, 3),
+                                  dtype=float)
+        pose_body_conf = np.zeros(shape=(max_frames, 1, num_left_hand_points + num_right_hand_points + num_pose_points +
+                                         num_face_points),
+                                  dtype=float)
         for frame_id, frame in frames.items():
             data, conf = load_mediapipe_frame(frame)
             pose_body_data[frame_id][0] = data
@@ -387,4 +454,3 @@ def load_mediapipe_directory(directory: str, fps: int, width: int, height: int, 
     pose.body = load_mediapipe_frames()
 
     return pose
-

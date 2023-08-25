@@ -2,12 +2,16 @@ from unittest import TestCase
 
 import tensorflow as tf
 
-from pose_format.pose_header import PoseHeaderDimensions, PoseHeader
-from pose_format.tensorflow.pose_representation import TensorflowPoseRepresentation
+from pose_format.pose_header import PoseHeader, PoseHeaderDimensions
+from pose_format.tensorflow.pose_representation import \
+    TensorflowPoseRepresentation
 from pose_format.tensorflow.representation.angle import AngleRepresentation
-from pose_format.tensorflow.representation.distance import DistanceRepresentation
-from pose_format.tensorflow.representation.inner_angle import InnerAngleRepresentation
-from pose_format.tensorflow.representation.point_line_distance import PointLineDistanceRepresentation
+from pose_format.tensorflow.representation.distance import \
+    DistanceRepresentation
+from pose_format.tensorflow.representation.inner_angle import \
+    InnerAngleRepresentation
+from pose_format.tensorflow.representation.point_line_distance import \
+    PointLineDistanceRepresentation
 from pose_format.utils.openpose import OpenPose_Hand_Component
 
 dimensions = PoseHeaderDimensions(width=0, height=0, depth=0)
@@ -18,8 +22,7 @@ representation = TensorflowPoseRepresentation(
     header=header,
     rep_modules1=[],
     rep_modules2=[AngleRepresentation(), DistanceRepresentation()],
-    rep_modules3=[InnerAngleRepresentation(), PointLineDistanceRepresentation()]
-)
+    rep_modules3=[InnerAngleRepresentation(), PointLineDistanceRepresentation()])
 
 
 class TestTensorflowPoseRepresentation(TestCase):
@@ -29,6 +32,7 @@ class TestTensorflowPoseRepresentation(TestCase):
     Validates the functionalities associated with the Tensorflow representation
     of pose data, such as ensuring that input sizes, output calculations, and representations are accurate.
     """
+
     def test_input_size(self):
         """Checks that the input size is correct"""
         input_size = representation.input_size

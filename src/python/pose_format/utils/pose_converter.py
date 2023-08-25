@@ -6,8 +6,8 @@ from pose_format import Pose, PoseHeader
 from pose_format.numpy import NumPyPoseBody
 from pose_format.pose_header import PoseHeaderComponent
 from pose_format.pose_visualizer import PoseVisualizer
-from pose_format.utils.holistic import HAND_POINTS as HOLISTIC_HAND_POINTS, holistic_components
-
+from pose_format.utils.holistic import HAND_POINTS as HOLISTIC_HAND_POINTS
+from pose_format.utils.holistic import holistic_components
 from pose_format.utils.openpose import HAND_POINTS as OPENPOSE_HAND_POINTS
 
 LEFT_HAND_MAP = [(("hand_left_keypoints_2d", k1), ("LEFT_HAND_LANDMARKS", k2))
@@ -57,9 +57,7 @@ def convert_pose(pose: Pose, pose_components: List[PoseHeaderComponent]) -> Pose
     Pose
         Converted pose object
     """
-    pose_header = PoseHeader(version=pose.header.version,
-                             dimensions=pose.header.dimensions,
-                             components=pose_components)
+    pose_header = PoseHeader(version=pose.header.version, dimensions=pose.header.dimensions, components=pose_components)
 
     base_shape = (pose.body.data.shape[0], pose.body.data.shape[1], pose_header.total_points())
     data = np.zeros(shape=(*base_shape, len(pose_components[0].format) - 1), dtype=np.float32)

@@ -2,8 +2,10 @@ import numpy.ma as ma
 
 
 class DistanceRepresentation:
-    """A class to compute the Euclidean distance between two sets of points.
     """
+    A class to compute the Euclidean distance between two sets of points.
+    """
+
     def distance(self, p1s: ma.MaskedArray, p2s: ma.MaskedArray) -> ma.MaskedArray:
         """
         Compute the Euclidean distance between two sets of points.
@@ -21,7 +23,7 @@ class DistanceRepresentation:
             Euclidean distances between the two sets of points. The returned array has one fewer dimension than the input arrays, as the distance calculation collapses the last dimension.
 
         Note
-        -----
+        ----
         this method assumes that input arrays `p1s` and `p2s` have same shape.
         """
         diff = p1s - p2s

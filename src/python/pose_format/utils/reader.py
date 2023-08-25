@@ -1,34 +1,39 @@
 import struct
+from dataclasses import dataclass
 from typing import Tuple
 
 import numpy as np
-from dataclasses import dataclass
 
 
 @dataclass
 class ConstStructs:
-    """Class hold collection of predefined struct formats to reuse
+    """
+    Class hold collection of predefined struct formats to reuse
     """
     float: struct.Struct = struct.Struct("<f")
-    """Struct format for floating-point number"""
-    
+    """
+Struct format for floating-point number"""
 
     short: struct.Struct = struct.Struct("<h")
-    """Struct format for signed short integer,'<h' """
-    
+    """
+Struct format for signed short integer,'<h' """
+
     ushort: struct.Struct = struct.Struct("<H")
-    """Struct format for unsigned short integer"""
-    
+    """
+Struct format for unsigned short integer"""
 
     double_ushort: struct.Struct = struct.Struct("<HH")
-    """Struct format for two unsigned short integers"""
+    """
+Struct format for two unsigned short integers"""
 
     triple_ushort: struct.Struct = struct.Struct("<HHH")
-    """Struct format for three unsigned short integers"""
+    """
+Struct format for three unsigned short integers"""
 
 
 class BufferReader:
-    """Class is used to read binary data from buffer
+    """
+    Class is used to read binary data from buffer
     
     Parameters
     ----------
@@ -37,12 +42,14 @@ class BufferReader:
         read_offset: int
             current read offset in buffer
     """
+
     def __init__(self, buffer: bytes):
         self.buffer = buffer
         self.read_offset = 0
 
     def bytes_left(self):
-        """gives number of bytes left to read from buffer
+        """
+        gives number of bytes left to read from buffer
         
         Returns
         -------
@@ -52,7 +59,8 @@ class BufferReader:
         return len(self.buffer) - self.read_offset
 
     def unpack_f(self, s_format: str):
-        """unpacks data from buffer using given struct format
+        """
+        unpacks data from buffer using given struct format
         
         Parameters
         ----------
@@ -70,7 +78,8 @@ class BufferReader:
         return self.unpack(getattr(ConstStructs, s_format))
 
     def unpack_numpy(self, s: struct.Struct, shape: Tuple):
-        """unpacks data from buffer into a numpy array using struct format and shape
+        """
+        unpacks data from buffer into a numpy array using struct format and shape
         
         Parameters
         ----------
@@ -109,7 +118,8 @@ class BufferReader:
         return torch.from_numpy(arr)
 
     def unpack_tensorflow(self, s: struct.Struct, shape: Tuple):
-        """Unpacks into a tensorflow tensor using struct format and shape
+        """
+        Unpacks into a tensorflow tensor using struct format and shape
         
         Parameters
         ----------
@@ -129,7 +139,8 @@ class BufferReader:
         return tf.constant(arr)
 
     def unpack(self, s: struct.Struct):
-        """Unpacks data from the buffer using a given struct format.
+        """
+        Unpacks data from the buffer using a given struct format.
         
         Parameters
         ----------
@@ -147,7 +158,8 @@ class BufferReader:
         return unpack
 
     def advance(self, s: struct.Struct, times=1):
-        """Updates read_offset by number of times and size of given struct -> advances read offset in buffer
+        """
+        Updates read_offset by number of times and size of given struct -> advances read offset in buffer
         
         Parameters
         ----------
@@ -159,7 +171,8 @@ class BufferReader:
         self.read_offset += s.size * times
 
     def unpack_str(self) -> str:
-        """Unpacks a string from the buffer.
+        """
+        Unpacks a string from the buffer.
         
         Returns
         -------

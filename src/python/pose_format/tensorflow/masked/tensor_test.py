@@ -1,11 +1,9 @@
+from typing import Tuple
 from unittest import TestCase
 
-import numpy.ma as ma
 import numpy as np
-
+import numpy.ma as ma
 import tensorflow as tf
-
-from typing import Tuple
 
 from pose_format.tensorflow.masked.tensor import MaskedTensor
 
@@ -45,12 +43,11 @@ class TestMaskedTensor(TestCase):
     """Unit tests for the MaskedTensor class."""
 
     def test_fix_nan(self):
-        """Test if NaN values in a MaskedTensor are fixed (removed).
+        """
+        Test if NaN values in a MaskedTensor are fixed (removed).
         """
 
-        tensor, mask = create_random_numpy_tensor_and_mask(shape=(5, 7, 11),
-                                                           probability_for_masked=0.2,
-                                                           num_nans=20)
+        tensor, mask = create_random_numpy_tensor_and_mask(shape=(5, 7, 11), probability_for_masked=0.2, num_nans=20)
 
         masked_tf = MaskedTensor(tensor=tf.constant(tensor), mask=tf.constant(mask))
 
@@ -95,7 +92,8 @@ class TestMaskedTensor(TestCase):
         self.assertTrue(np.allclose(np_tf, np_ma), msg="STD is not equal to expected")
 
     def test_reshape_identical_to_numpy_reshape(self):
-        """Test if the reshape method of a MaskedTensor produces results identical to numpy's reshape.
+        """
+        Test if the reshape method of a MaskedTensor produces results identical to numpy's reshape.
         """
 
         input_shape = (7, 3, 4)
@@ -110,10 +108,12 @@ class TestMaskedTensor(TestCase):
         reshaped_tf = masked_tf.reshape(shape=target_shape)
         reshaped_actual = reshaped_tf.zero_filled().numpy()
 
-        self.assertTrue(np.allclose(reshaped_actual, reshaped_expected), msg="Reshape operations do not produce the same result")
+        self.assertTrue(np.allclose(reshaped_actual, reshaped_expected),
+                        msg="Reshape operations do not produce the same result")
 
     def test_reshape_return_type_is_correct(self):
-        """Test if the return type of the reshape method of a MaskedTensor is itself a MaskedTensor.
+        """
+        Test if the return type of the reshape method of a MaskedTensor is itself a MaskedTensor.
         """
         input_shape = (12,)
         target_shape = (3, 4)

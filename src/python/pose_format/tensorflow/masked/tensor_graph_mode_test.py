@@ -1,10 +1,10 @@
-import tensorflow as tf
-
 from unittest import TestCase
 
-from pose_format.tensorflow.masked.tensor import MaskedTensor
+import tensorflow as tf
 
-from pose_format.tensorflow.masked.tensor_test import create_random_numpy_tensor_and_mask
+from pose_format.tensorflow.masked.tensor import MaskedTensor
+from pose_format.tensorflow.masked.tensor_test import \
+    create_random_numpy_tensor_and_mask
 
 
 class TestMaskedTensor(TestCase):
@@ -17,7 +17,7 @@ class TestMaskedTensor(TestCase):
         Test if attempting to convert a MaskedTensor to float raises a TypeError during graph execution.
 
         Note
-        -----
+        ----
         This test ensures that if a user attempts to convert a MaskedTensor instance 
         to a floating point number during TensorFlow graph execution, 
         a TypeError should be raised.
@@ -40,7 +40,7 @@ class TestMaskedTensor(TestCase):
         Test the equality operation on a MaskedTensor during graph execution.
 
         Note
-        -----
+        ----
         This test evaluates if the MaskedTensor can be compared with a 
         float number during TensorFlow graph execution without any errors.
         """

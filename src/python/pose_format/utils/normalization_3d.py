@@ -2,8 +2,9 @@ from typing import Tuple
 
 import numpy as np
 import numpy.ma as ma
-from pose_format.pose_header import PoseNormalizationInfo
 from scipy.spatial.transform import Rotation
+
+from pose_format.pose_header import PoseNormalizationInfo
 
 
 class PoseNormalizer:
@@ -17,10 +18,8 @@ class PoseNormalizer:
     :param size: The desired size after normalization, defaults to 1
     :type size: float
     """
-    def __init__(self,
-                 plane: PoseNormalizationInfo,
-                 line: PoseNormalizationInfo,
-                 size: float = 1):
+
+    def __init__(self, plane: PoseNormalizationInfo, line: PoseNormalizationInfo, size: float = 1):
 
         self.size = size
         self.plane = plane
@@ -55,7 +54,6 @@ class PoseNormalizer:
         >>> normal = ma.masked_array([0, 0, 1])
         >>> around = ma.masked_array([1, 1])
         >>> rotated_pose = normalizer.rotate_to_normal(pose, normal, around)
-        
         """
         # Move pose to origin
         pose = pose - around[:, np.newaxis]
@@ -88,9 +86,8 @@ class PoseNormalizer:
             Base point -> triangle[:,0] used to compute normal
         
         Note
-        -----
+        ----
         Important that plane attributes (p1, p2, p3) are correctly initialized for normal to be correctly computed
-        
         """
         triangle = pose[:, [self.plane.p1, self.plane.p2, self.plane.p3]]
 
@@ -104,7 +101,8 @@ class PoseNormalizer:
         return normal, triangle[:, 0]
 
     def get_rotation_angle(self, pose: ma.masked_array) -> ma.masked_array:
-        """Gets rotation angle required to rotate pose such that the line is on the Y axis.
+        """
+        Gets rotation angle required to rotate pose such that the line is on the Y axis.
 
         Parameters
         ----------
@@ -196,7 +194,8 @@ class PoseNormalizer:
         return pose
 
     def __call__(self, poses: ma.masked_array) -> ma.masked_array:
-        """Normalization to a batch of poses. 
+        """
+        Normalization to a batch of poses. 
 
         TReshapes the input to combine frames and people dimensions, 
         applies pose normalization, then reshapes back to the original structure.

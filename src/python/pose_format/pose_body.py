@@ -1,5 +1,5 @@
 from random import sample
-from typing import List, Tuple, BinaryIO
+from typing import BinaryIO, List, Tuple
 
 import numpy as np
 
@@ -27,12 +27,10 @@ class PoseBody:
     tensor_reader = 'ABSTRACT-DO-NOT-USE'
 
     def __init__(self, fps: float, data, confidence):
-        """
-        Initialize a PoseBody instance."""
+        """Initialize a PoseBody instance."""
         self.fps = fps
         self.data = data  # Shape (Frames, People, Points, Dims) - eg (93, 1, 137, 2)
         self.confidence = confidence  # Shape (Frames, People, Points) - eg (93, 1, 137)
-
 
     @classmethod
     def read(cls, header: PoseHeader, reader: BufferReader, **kwargs) -> "PoseBody":
@@ -68,7 +66,8 @@ class PoseBody:
 
     @classmethod
     def read_v0_0(cls, header: PoseHeader, reader: BufferReader, **unused_kwargs):
-        """reads version 0.0 pose data.
+        """
+        reads version 0.0 pose data.
 
         Parameters
         ----------
@@ -87,8 +86,12 @@ class PoseBody:
         raise NotImplementedError("'read_v0_0' not implemented on '%s'" % cls.__class__)
 
     @classmethod
-    def read_v0_1_frames(cls, frames: int, shape: List[int], reader: BufferReader,
-                         start_frame: int = None, end_frame: int = None):
+    def read_v0_1_frames(cls,
+                         frames: int,
+                         shape: List[int],
+                         reader: BufferReader,
+                         start_frame: int = None,
+                         end_frame: int = None):
         """
         Reads frame data for version 0.1 from a buffer.
 
@@ -140,8 +143,12 @@ class PoseBody:
         return tensor
 
     @classmethod
-    def read_v0_1(cls, header: PoseHeader, reader: BufferReader,
-                  start_frame: int = None, end_frame: int = None, **unused_kwargs) -> "PoseBody":
+    def read_v0_1(cls,
+                  header: PoseHeader,
+                  reader: BufferReader,
+                  start_frame: int = None,
+                  end_frame: int = None,
+                  **unused_kwargs) -> "PoseBody":
         """
         Reads pose data for version 0.1 from a buffer.
 
@@ -323,7 +330,7 @@ class PoseBody:
             Augmented PoseBody instance.
         
         Note
-        -----
+        ----
         - The method modifies the PoseBody based on shear, rotation, and scaling.
         - **shear_std** based on https://en.wikipedia.org/wiki/Shear_matrix
         - **rotation_std** based on https://en.wikipedia.org/wiki/Rotation_matrix 
@@ -358,7 +365,8 @@ class PoseBody:
         return self.matmul(dim_matrix.astype(dtype=np.float32))
 
     def zero_filled(self) -> __qualname__:
-        """Creates a new PoseBody instance with data replaced by zeros.
+        """
+        Creates a new PoseBody instance with data replaced by zeros.
 
         Returns
         -------
@@ -373,7 +381,8 @@ class PoseBody:
         raise NotImplementedError("'zero_filled' not implemented on '%s'" % self.__class__)
 
     def matmul(self, matrix: np.ndarray) -> __qualname__:
-        """Multiplies PoseBody data with a numpy.ndarray matrix.
+        """
+        Multiplies PoseBody data with a numpy.ndarray matrix.
         
         Parameters
         ----------
@@ -433,7 +442,7 @@ class PoseBody:
         NotImplementedError
             If the `bbox` is not implemented in class.
         """
-        
+
         raise NotImplementedError("'bbox' not implemented on '%s'" % self.__class__)
 
     def points_perspective(self):
@@ -453,7 +462,8 @@ class PoseBody:
         raise NotImplementedError("'points_perspective' not implemented on '%s'" % self.__class__)
 
     def select_frames(self, frame_indexes: List[int]) -> "PoseBody":
-        """Selects specific frames from PoseBody object.
+        """
+        Selects specific frames from PoseBody object.
 
         Parameters
         ----------
@@ -490,10 +500,10 @@ class PoseBody:
             - List of frame indexes.
         
         Note
-        -----
+        ----
         Actual number of dropped frames might be slightly different due to rounding!
         """
-        
+
         data_len = len(self.data)
         dropout_number = min(int(data_len * dropout_percent), int(data_len * 0.99))
         dropout_indexes = set(sample(range(0, data_len), dropout_number))
@@ -501,10 +511,9 @@ class PoseBody:
 
         return self.select_frames(select_indexes), select_indexes
 
-    def frame_dropout_uniform(self,
-                              dropout_min: float = 0.2,
-                              dropout_max: float = 1.0) -> Tuple["PoseBody", List[int]]:
-        """Randomly drops frames depending on a uniform distribution - given minimum and maximum percentages.
+    def frame_dropout_uniform(self, dropout_min: float = 0.2, dropout_max: float = 1.0) -> Tuple["PoseBody", List[int]]:
+        """
+        Randomly drops frames depending on a uniform distribution - given minimum and maximum percentages.
 
         Parameters
         ----------
@@ -523,9 +532,7 @@ class PoseBody:
 
         return self.frame_dropout_given_percent(dropout_percent)
 
-    def frame_dropout_normal(self,
-                             dropout_mean: float = 0.5,
-                             dropout_std: float = 0.1) -> Tuple["PoseBody", List[int]]:
+    def frame_dropout_normal(self, dropout_mean: float = 0.5, dropout_std: float = 0.1) -> Tuple["PoseBody", List[int]]:
         """
         drop frames depending on normal distribution with given mean and standard deviation.
 

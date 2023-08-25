@@ -3,16 +3,17 @@ from typing import BinaryIO, List, Union
 import numpy as np
 import numpy.ma as ma
 
-from ..pose_body import PoseBody, POINTS_DIMS
+from ..pose_body import POINTS_DIMS, PoseBody
 from ..pose_header import PoseHeader
 from ..utils.reader import BufferReader, ConstStructs
-
 
 # import numpy as np
 # np.seterr(all='raise')
 
+
 class NumPyPoseBody(PoseBody):
-    """Represents pose information leveraging NumPy operations and structures.
+    """
+    Represents pose information leveraging NumPy operations and structures.
 
      * Inherits from:  `PoseBody`
      * Implements pose info using NumPy operations and structures.
@@ -34,16 +35,14 @@ class NumPyPoseBody(PoseBody):
         Pose data either as a masked array or a regular numpy array.
     confidence : np.ndarray
         confidence array of the pose keypoints.
-    
     """
 
-    tensor_reader = 'unpack_numpy' 
-    """Specifies the method name for unpacking a numpy array (Value: 'unpack_numpy')."""
+    tensor_reader = 'unpack_numpy' """Specifies the method name for unpacking a numpy array (Value: 'unpack_numpy')."""
 
     def __init__(self, fps: float, data: Union[ma.MaskedArray, np.ndarray], confidence: np.ndarray):
         """
         Initializes the NumPyPoseBody instance
-        """   
+        """
         if isinstance(data, np.ndarray):  # If array is not masked
             mask = confidence == 0  # 0 means no-mask, 1 means with-mask
             stacked_mask = np.stack([mask] * data.shape[-1], axis=3)
@@ -131,7 +130,8 @@ class NumPyPoseBody(PoseBody):
         return self.data.mask
 
     def torch(self):
-        """converts current instance into a TorchPoseBody instance.
+        """
+        converts current instance into a TorchPoseBody instance.
 
         Returns
         -------
@@ -141,11 +141,10 @@ class NumPyPoseBody(PoseBody):
         try:
             import torch
         except ImportError:
-            raise ImportError(
-                "Please install torch. https://pytorch.org/"
-            )
+            raise ImportError("Please install torch. https://pytorch.org/")
 
         import torch
+
         from ..torch.pose_body import TorchPoseBody
 
         torch_confidence = torch.from_numpy(self.confidence)
@@ -162,6 +161,7 @@ class NumPyPoseBody(PoseBody):
             pose body data represented in TensorFlow tensors
         """
         import tensorflow
+
         from ..tensorflow.pose_body import TensorflowPoseBody
 
         tf_confidence = tensorflow.constant(self.confidence)
@@ -361,11 +361,12 @@ class NumPyPoseBody(PoseBody):
                             new_frames.append(np.zeros((len(new_steps), frames.shape[1])))
                         else:
                             frame_data = f(new_steps[first_step_index:last_step_index])
-                            new_frames.append(np.concatenate([
-                                np.zeros((first_step_index, frames.shape[1])),
-                                np.array(frame_data),
-                                np.zeros((len(new_steps) - last_step_index, frames.shape[1]))
-                            ]))
+                            new_frames.append(
+                                np.concatenate([
+                                    np.zeros((first_step_index, frames.shape[1])),
+                                    np.array(frame_data),
+                                    np.zeros((len(new_steps) - last_step_index, frames.shape[1]))
+                                ]))
             new_people.append(np.stack(new_frames, axis=0))
 
         new_data = np.stack(new_people, axis=0).transpose([2, 1, 0, 3])
@@ -375,13 +376,14 @@ class NumPyPoseBody(PoseBody):
         return NumPyPoseBody(fps=new_fps, data=dimensions, confidence=confidence)
 
     def flatten(self):
-        """Flattens data and confidence arrays.
+        """
+        Flattens data and confidence arrays.
 
         method reshapes data and confidence arrays to a two-dimensional array.
         The flattened array is filtered to remove rows where confidence is zero.
 
         Returns
-        --------
+        -------
         numpy.ndarray
             flattened and filtered version of the data array.
 

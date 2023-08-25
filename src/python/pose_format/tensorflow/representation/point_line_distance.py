@@ -13,6 +13,7 @@ class PointLineDistanceRepresentation:
         Instance of the `DistanceRepresentation` class to compute the Euclidean distance.
 
     """
+
     def __init__(self):
         """
         Initializes the PointLineDistanceRepresentation with an instance of DistanceRepresentation.
@@ -39,7 +40,7 @@ class PointLineDistanceRepresentation:
             A tensor representing the distance of point `p1s` from the line segment with shape (Points, Batch, Len).
 
         Note
-        -----
+        ----
         This method computes the distance using Heron's formula to first compute the area of the 
         triangle formed by the three points, and then determines the "height" of this triangle 
         with respect to the base formed by the line segment.
@@ -47,7 +48,7 @@ class PointLineDistanceRepresentation:
         * References: 
             Following Heron's Formula https://en.wikipedia.org/wiki/Heron%27s_formula
         """
-                
+
         # Following Heron's Formula https://en.wikipedia.org/wiki/Heron%27s_formula
         a = self.distance.distance(p1s, p2s)
         b = self.distance.distance(p2s, p3s)

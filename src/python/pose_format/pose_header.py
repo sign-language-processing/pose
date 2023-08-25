@@ -1,7 +1,6 @@
-import struct
-from typing import List, Tuple, BinaryIO
-
 import math
+import struct
+from typing import BinaryIO, List, Tuple
 
 from .utils.reader import BufferReader, ConstStructs
 
@@ -19,18 +18,18 @@ class PoseNormalizationInfo:
             Second pose value.
         p3 : int, optional
             Third pose value. Defaults to None.
-        
     """
+
     def __init__(self, p1: int, p2: int, p3: int = None):
-        """
-        Initialize a PoseNormalizationInfo instance."""
+        """Initialize a PoseNormalizationInfo instance."""
         self.p1 = p1
         self.p2 = p2
         self.p3 = p3
 
 
 class PoseHeaderComponent:
-    """Class for pose header component
+    """
+    Class for pose header component
 
     Parameters
     ----------
@@ -50,14 +49,9 @@ class PoseHeaderComponent:
         Limbs and colors should have the same length. 
         The index in the limbs list corresponds to a color in the colors list.
     
-    
     """
-        
-    def __init__(self,
-                 name: str,
-                 points: List[str],
-                 limbs: List[Tuple[int, int]],
-                 colors: List[Tuple[int, int, int]],
+
+    def __init__(self, name: str, points: List[str], limbs: List[Tuple[int, int]], colors: List[Tuple[int, int, int]],
                  point_format: str):
         """
         Initializes PoseHeadComponent
@@ -129,7 +123,8 @@ class PoseHeaderComponent:
             buffer.write(ConstStructs.triple_ushort.pack(r, g, b))
 
     def get_relative_limbs(self):
-        """Get relative limbs mapping.
+        """
+        Get relative limbs mapping.
 
         Constructs a mapping from the second point in each limb tuple to its index in the limbs list. 
         Then, it attempts to map each first point in the limbs tuple to its corresponding index.
@@ -140,7 +135,7 @@ class PoseHeaderComponent:
             List of relative limb indices or None if the limb does not have a relative mapping.
 
         Note
-        -----
+        ----
         returned list is based on the `self.limbs` of the instance, its structure is expected to be a list of tuples, where each tuple represents a limb with two points.
 
         """
@@ -172,6 +167,7 @@ class PoseHeaderDimensions:
     >>> print(dimensions.width)
     10
     """
+
     def __init__(self, width: int, height: int, depth: int = 0, *args):
         self.width = math.ceil(width)
         self.height = math.ceil(height)
@@ -198,7 +194,8 @@ class PoseHeaderDimensions:
         return PoseHeaderDimensions(width, height, depth)
 
     def write(self, buffer: BinaryIO):
-        """Writes dimensions to a buffer.
+        """
+        Writes dimensions to a buffer.
 
         Parameters
         ----------
@@ -235,7 +232,7 @@ class PoseHeader:
     is_bbox : bool, optional
         If bounding box needed. Default is False.
     Note
-    -----
+    ----
     - Use the `read` method to generate an instance from a BufferReader.
     - `total_points` method returns the total number of points across all components.
     - Convert the header to bounding boxes using the `bbox` method.
@@ -246,6 +243,7 @@ class PoseHeader:
     >>> print(header.is_bbox)
     True
     """
+
     def __init__(self,
                  version: float,
                  dimensions: PoseHeaderDimensions,
@@ -272,7 +270,7 @@ class PoseHeader:
         PoseHeader
             An instance of PoseHeader.
         """
-                
+
         version = reader.unpack(ConstStructs.float)
         dimensions = PoseHeaderDimensions.read(version, reader)
 
@@ -298,7 +296,8 @@ class PoseHeader:
             component.write(buffer)
 
     def total_points(self):
-        """Returns number of points
+        """
+        Returns number of points
 
         Returns
         -------
@@ -341,7 +340,8 @@ class PoseHeader:
                                      p3=None if p3 is None else self._get_point_index(*p3))
 
     def bbox(self):
-        """Converts header to bounding boxes (bbox).
+        """
+        Converts header to bounding boxes (bbox).
 
         Returns
         -------
@@ -352,7 +352,6 @@ class PoseHeader:
         box_points = ['TOP_LEFT', 'BOTTOM_RIGHT']
         box_limbs = [(0, 1)]
         box_colors = [(255, 0, 0)]
-        components = [PoseHeaderComponent(c.name, box_points, box_limbs, box_colors, c.format)
-                      for c in self.components]
+        components = [PoseHeaderComponent(c.name, box_points, box_limbs, box_colors, c.format) for c in self.components]
 
         return PoseHeader(self.version, self.dimensions, components, True)

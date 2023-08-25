@@ -1,10 +1,10 @@
-from typing import Union, List
+from typing import List, Union
 
 import numpy as np
 import tensorflow as tf
 
+from ..pose_body import POINTS_DIMS, PoseBody
 from .masked.tensor import MaskedTensor
-from ..pose_body import PoseBody, POINTS_DIMS
 
 TF_POSE_RECORD_DESCRIPTION = {
     'fps': tf.io.FixedLenFeature([], tf.int64, default_value=0),
@@ -94,10 +94,9 @@ class TensorflowPoseBody(PoseBody):
 
         return self.select_frames(select_indexes), select_indexes
 
-    def frame_dropout_uniform(self,
-                              dropout_min: float = 0.2,
-                              dropout_max: float = 1.0):
-        """Drops randomly frames based on a given uniform distribution
+    def frame_dropout_uniform(self, dropout_min: float = 0.2, dropout_max: float = 1.0):
+        """
+        Drops randomly frames based on a given uniform distribution
         
         Parameters
         ----------
@@ -116,9 +115,7 @@ class TensorflowPoseBody(PoseBody):
 
         return self.frame_dropout_given_percent(dropout_percent)
 
-    def frame_dropout_normal(self,
-                             dropout_mean: float = 0.5,
-                             dropout_std: float = 0.1):
+    def frame_dropout_normal(self, dropout_mean: float = 0.5, dropout_std: float = 0.1):
         """
         Given mean and standard deviation, randomly drops out based on normal distribution. 
 
@@ -154,7 +151,8 @@ class TensorflowPoseBody(PoseBody):
         return self.data.transpose(perm=POINTS_DIMS)
 
     def get_points(self, indexes: List[int]):
-        """Gets and returns points from pose data based on indexes 
+        """
+        Gets and returns points from pose data based on indexes 
 
         Parameters
         ----------

@@ -2,7 +2,8 @@ import torch
 
 
 class MaskedTensor:
-    """Container for a PyTorch tensor, providing utility functions for tensor masking.
+    """
+    Container for a PyTorch tensor, providing utility functions for tensor masking.
 
     Parameters
     ----------
@@ -13,12 +14,14 @@ class MaskedTensor:
         of `tensor` corresponding to `True` values in the mask are considered valid. 
         Defaults to a tensor of all `True` values.
     """
+
     def __init__(self, tensor: torch.Tensor, mask: torch.Tensor = None):
         self.tensor = tensor
         self.mask = mask if mask is not None else torch.ones(tensor.shape, dtype=torch.bool).to(tensor.device)
 
     def __getattr__(self, item):
-        """Gets attributes of tensor.
+        """
+        Gets attributes of tensor.
 
         Raises
         ------
@@ -33,7 +36,8 @@ class MaskedTensor:
             return val
 
     def __len__(self):
-        """Gets size of first dimension of the tensor.
+        """
+        Gets size of first dimension of the tensor.
 
         Returns
         -------
@@ -43,7 +47,8 @@ class MaskedTensor:
         return self.tensor.shape[0]
 
     def __getitem__(self, key):
-        """Get a subset of a tensor based on a key or slice.
+        """
+        Get a subset of a tensor based on a key or slice.
 
         Returns
         -------
@@ -55,7 +60,8 @@ class MaskedTensor:
         return MaskedTensor(tensor=tensor, mask=mask)
 
     def arithmetic(self, action: str, other):
-        """Helper method to perform arithmetic operations on tensors.
+        """
+        Helper method to perform arithmetic operations on tensors.
 
         Parameters
         ----------
@@ -78,7 +84,8 @@ class MaskedTensor:
         return MaskedTensor(tensor=tensor, mask=mask)
 
     def __add__(self, other):
-        """Performs element-wise addition with another tensor or scalar.
+        """
+        Performs element-wise addition with another tensor or scalar.
 
         Parameters
         ----------
@@ -93,7 +100,8 @@ class MaskedTensor:
         return self.arithmetic("__add__", other)
 
     def __sub__(self, other):
-        """Performs element-wise subtraction with another tensor or scalar.
+        """
+        Performs element-wise subtraction with another tensor or scalar.
 
         Parameters
         ----------
@@ -108,7 +116,8 @@ class MaskedTensor:
         return self.arithmetic("__sub__", other)
 
     def __mul__(self, other):
-        """Performs element-wise multiplication with another tensor or scalar.
+        """
+        Performs element-wise multiplication with another tensor or scalar.
 
         Parameters
         ----------
@@ -123,7 +132,8 @@ class MaskedTensor:
         return self.arithmetic("__mul__", other)
 
     def __truediv__(self, other):
-        """Performs element-wise division with another tensor or scalar.
+        """
+        Performs element-wise division with another tensor or scalar.
 
         Parameters
         ----------
@@ -138,7 +148,8 @@ class MaskedTensor:
         return self.arithmetic("__truediv__", other)
 
     def __eq__(self, other):
-        """Compares the tensor for element-wise equality with another tensor.
+        """
+        Compares the tensor for element-wise equality with another tensor.
 
         Parameters
         ----------
@@ -153,7 +164,8 @@ class MaskedTensor:
         return self.tensor == other
 
     def pow_(self, exponent: float):
-        """Raises tensor to power of a given exponent in-place.
+        """
+        Raises tensor to power of a given exponent in-place.
 
         Parameters
         ----------
@@ -169,7 +181,8 @@ class MaskedTensor:
         return self
 
     def sum(self, dim: int):
-        """Sums along a specified dimension.
+        """
+        Sums along a specified dimension.
 
         Parameters
         ----------
@@ -186,7 +199,8 @@ class MaskedTensor:
         return MaskedTensor(tensor=tensor, mask=mask)
 
     def size(self, *args):
-        """Get size of tensor for specified dimensions.
+        """
+        Get size of tensor for specified dimensions.
 
         Returns
         -------
@@ -196,7 +210,8 @@ class MaskedTensor:
         return self.tensor.size(*args)
 
     def fix_nan(self):  # TODO think of faster way
-        """Replaces any NaN values in the tensor with zeros.
+        """
+        Replaces any NaN values in the tensor with zeros.
 
         Returns
         -------
@@ -207,7 +222,8 @@ class MaskedTensor:
         return self
 
     def to(self, device):
-        """Moves tensor to a custom device.
+        """
+        Moves tensor to a custom device.
 
         Parameters
         ----------
@@ -224,7 +240,8 @@ class MaskedTensor:
         return MaskedTensor(tensor=tensor, mask=mask)
 
     def cuda(self, device=None, non_blocking: bool = False):
-        """Moves tensor to the GPU.
+        """
+        Moves tensor to the GPU.
 
         Parameters
         ----------
@@ -243,7 +260,8 @@ class MaskedTensor:
         return MaskedTensor(tensor=tensor, mask=mask)
 
     def zero_filled(self) -> torch.Tensor:
-        """Get tensor with masked values set to zero.
+        """
+        Get tensor with masked values set to zero.
 
         Returns
         -------
@@ -253,7 +271,8 @@ class MaskedTensor:
         return self.tensor.mul(self.mask)
 
     def div(self, other: "MaskedTensor", in_place=False, update_mask=True):
-        """Performs element-wise division with another tensor.
+        """
+        Performs element-wise division with another tensor.
 
         Parameters
         ----------
@@ -274,7 +293,8 @@ class MaskedTensor:
         return MaskedTensor(tensor, mask)
 
     def matmul(self, matrix: torch.Tensor):
-        """Perform matrix multiplication.
+        """
+        Perform matrix multiplication.
 
         Parameters
         ----------
@@ -290,7 +310,8 @@ class MaskedTensor:
         return MaskedTensor(tensor, self.mask)
 
     def transpose(self, dim0, dim1):
-        """Transposes tensor along two dimensions.
+        """
+        Transposes tensor along two dimensions.
 
         Parameters
         ----------
@@ -307,7 +328,8 @@ class MaskedTensor:
         return MaskedTensor(tensor=tensor, mask=mask)
 
     def permute(self, dims: tuple):
-        """Permute dimensions of tensor.
+        """
+        Permute dimensions of tensor.
 
         Parameters
         ----------
@@ -324,7 +346,8 @@ class MaskedTensor:
         return MaskedTensor(tensor=tensor, mask=mask)
 
     def squeeze(self, dim):
-        """Squeeze tensor along chosen dimension.
+        """
+        Squeeze tensor along chosen dimension.
 
         Parameters
         ----------
@@ -341,7 +364,8 @@ class MaskedTensor:
         return MaskedTensor(tensor=tensor, mask=mask)
 
     def split(self, split_size_or_sections, dim=0):
-        """Split tensor into multiple tensors.
+        """
+        Split tensor into multiple tensors.
 
         Parameters
         ----------
@@ -360,7 +384,8 @@ class MaskedTensor:
         return [MaskedTensor(tensor=tensor, mask=mask) for tensor, mask in zip(tensors, masks)]
 
     def reshape(self, shape: tuple):
-        """Reshape tensor to given shape.
+        """
+        Reshape tensor to given shape.
 
         Parameters
         ----------
@@ -377,7 +402,8 @@ class MaskedTensor:
         return MaskedTensor(tensor=tensor, mask=mask)
 
     def rename(self, *names):
-        """Rename tensor's dimensions.
+        """
+        Rename tensor's dimensions.
 
         Parameters
         ----------

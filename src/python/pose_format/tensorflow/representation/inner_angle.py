@@ -50,7 +50,7 @@ class InnerAngleRepresentation:
             for the triangle with shape (Points, Batch, Len).
         
         Note
-        -----
+        ----
         This method determines the vectors pointing towards `p1s` and `p3s` 
         from the point `p2s`, normalizes these vectors, and then computes 
         the dot product between them. The angle between these vectors is 

@@ -56,7 +56,7 @@ class InnerAngleRepresentation(nn.Module):
             A tensor representing the computed angles at point `p2s`, with shape (Points, Batch, Len).
 
         Note
-        -----
+        ----
         The method is based on the approach suggested in: 
         https://stackoverflow.com/questions/19729831/angle-between-3-points-in-3d-space
         

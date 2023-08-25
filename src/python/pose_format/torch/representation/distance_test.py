@@ -1,6 +1,6 @@
+import math
 from unittest import TestCase
 
-import math
 import torch
 
 from pose_format.torch.masked.tensor import MaskedTensor
@@ -13,6 +13,7 @@ class TestDistanceRepresentation(TestCase):
     """
     Test cases of distance representation between points.
     """
+
     def test_call_value_should_be_distance(self):
         """
         Tests if the returned distance is as expected for given non-masked/unmasked points.

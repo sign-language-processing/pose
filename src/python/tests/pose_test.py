@@ -1,22 +1,21 @@
-import string
 import random
+import string
+from typing import Optional, Tuple
+from unittest import TestCase
 
 import numpy as np
 import numpy.ma as ma
 import tensorflow as tf
 
-from unittest import TestCase
-from typing import Optional, Tuple
-
-from pose_format.pose import Pose
-from pose_format.pose_header import PoseHeader, PoseHeaderDimensions, PoseHeaderComponent
 from pose_format.numpy.pose_body import NumPyPoseBody
+from pose_format.pose import Pose
+from pose_format.pose_header import (PoseHeader, PoseHeaderComponent,
+                                     PoseHeaderDimensions)
 from pose_format.tensorflow.masked.tensor import MaskedTensor
 from pose_format.tensorflow.pose_body import TensorflowPoseBody
 
 
-def _create_pose_header_component(name: str,
-                                  num_keypoints: int) -> PoseHeaderComponent:
+def _create_pose_header_component(name: str, num_keypoints: int) -> PoseHeaderComponent:
     """
     Create a PoseHeaderComponent with randomized limbs and colors.
 
@@ -43,26 +42,16 @@ def _create_pose_header_component(name: str,
         limb = (random.randint(0, num_keypoints), random.randint(0, num_keypoints))
         limbs.append(limb)
 
-        color = (random.randint(0, 256),
-                 random.randint(0, 256),
-                 random.randint(0, 256))
+        color = (random.randint(0, 256), random.randint(0, 256), random.randint(0, 256))
 
         colors.append(color)
 
-    component = PoseHeaderComponent(name=name,
-                                    points=points,
-                                    limbs=limbs,
-                                    colors=colors,
-                                    point_format="XYC")
+    component = PoseHeaderComponent(name=name, points=points, limbs=limbs, colors=colors, point_format="XYC")
 
     return component
 
 
-def _create_pose_header(width: int,
-                        height: int,
-                        depth: int,
-                        num_components: int,
-                        num_keypoints: int) -> PoseHeader:
+def _create_pose_header(width: int, height: int, depth: int, num_components: int, num_keypoints: int) -> PoseHeader:
     """
     Create a PoseHeader with given dimensions and components.
 
@@ -86,7 +75,9 @@ def _create_pose_header(width: int,
     """
     dimensions = PoseHeaderDimensions(width=width, height=height, depth=depth)
 
-    components = [_create_pose_header_component(name=str(index), num_keypoints=num_keypoints) for index in range(num_components)]
+    components = [
+        _create_pose_header_component(name=str(index), num_keypoints=num_keypoints) for index in range(num_components)
+    ]
 
     header = PoseHeader(version=1.0, dimensions=dimensions, components=components)
 
@@ -189,10 +180,7 @@ def _create_random_numpy_data(frames_min: Optional[int] = None,
     return tensor, mask, confidence
 
 
-def _get_random_pose_object_with_tf_posebody(num_keypoints: int,
-                                             frames_min: int = 1,
-                                             frames_max: int = 10) -> Pose:
-    
+def _get_random_pose_object_with_tf_posebody(num_keypoints: int, frames_min: int = 1, frames_max: int = 10) -> Pose:
     """
     Generates a random Pose object with TensorFlow pose body for testing.
 
@@ -223,9 +211,7 @@ def _get_random_pose_object_with_tf_posebody(num_keypoints: int,
     return Pose(header=header, body=body)
 
 
-def _get_random_pose_object_with_numpy_posebody(num_keypoints: int,
-                                                frames_min: int = 1,
-                                                frames_max: int = 10) -> Pose:
+def _get_random_pose_object_with_numpy_posebody(num_keypoints: int, frames_min: int = 1, frames_max: int = 10) -> Pose:
     """
     Creates a random Pose object with Numpy pose body for testing.
 
@@ -261,6 +247,7 @@ class TestPose(TestCase):
     """
     A suite of tests for the Pose object.
     """
+
     def test_pose_object_should_be_callable(self):
         """
         Tests if the Pose object is callable.
@@ -283,10 +270,7 @@ class TestPoseTensorflowPoseBody(TestCase):
 
         # in the mock data header components are named 0, 1, and so on
         # individual points are named 0_a, 0_b, and so on
-        pose.normalize(pose.header.normalization_info(
-            p1=("0", "0_a"),
-            p2=("0", "0_b")
-        ))
+        pose.normalize(pose.header.normalization_info(p1=("0", "0_a"), p2=("0", "0_b")))
 
         shape_after = pose.body.data.tensor.shape
 
@@ -356,10 +340,7 @@ class TestPoseTensorflowPoseBody(TestCase):
 
             pose = _get_random_pose_object_with_tf_posebody(num_keypoints=5)
 
-            _ = pose.normalize(pose.header.normalization_info(
-                p1=("0", "0_a"),
-                p2=("0", "0_b")
-            ))
+            _ = pose.normalize(pose.header.normalization_info(p1=("0", "0_a"), p2=("0", "0_b")))
 
             return example
 
@@ -384,7 +365,6 @@ class TestPoseTensorflowPoseBody(TestCase):
         dataset.map(create_pose_and_normalize_distribution)
 
     def test_pose_frame_dropout_normal_can_be_used_in_tf_dataset_map(self):
-
         """
         Tests if the frame_dropout_normal method of Pose object can be used within a tf.data.Dataset map operation.
         """
@@ -436,10 +416,7 @@ class TestPoseNumpyPoseBody(TestCase):
 
         # in the mock data header components are named 0, 1, and so on
         # individual points are named 0_a, 0_b, and so on
-        pose.normalize(pose.header.normalization_info(
-            p1=("0", "0_a"),
-            p2=("0", "0_b")
-        ))
+        pose.normalize(pose.header.normalization_info(p1=("0", "0_a"), p2=("0", "0_b")))
 
         shape_after = pose.body.data.shape
 

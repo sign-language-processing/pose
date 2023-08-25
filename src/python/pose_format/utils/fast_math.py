@@ -1,5 +1,6 @@
 def distance_batch(p1s, p2s):
-    """Computes Euclidean distance between two sets of points in batch
+    """
+    Computes Euclidean distance between two sets of points in batch
 
     Parameters
     ----------
@@ -19,9 +20,9 @@ def distance_batch(p1s, p2s):
     array([1.41421356, 1.41421356])
 
     Note
-    -----
+    ----
     Function assumes that the inputs `p1s` and `p2s` have the same shape
     """
-    squared = (p1s - p2s) ** 2
+    squared = (p1s - p2s)**2
     summed = squared.sum(axis=-1)
-    return summed ** 0.5
+    return summed**0.5

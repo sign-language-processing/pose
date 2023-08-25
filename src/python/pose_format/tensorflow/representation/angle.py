@@ -5,6 +5,7 @@ class AngleRepresentation:
     """
     A class to represent the angle between the X/Y axis and line formed by two points.
     """
+
     def __call__(self, p1s: tf.Tensor, p2s: tf.Tensor) -> tf.Tensor:
         """
         Computes the angle of the X/Y axis between two points.
@@ -23,7 +24,7 @@ class AngleRepresentation:
             with shape (Points, Batch, Len).
         
         Note
-        -----
+        ----
         The function computes the difference between the two point sets, 
         splits the difference into X and Y components, and then calculates 
         the slope and the angle using the arctan function. 

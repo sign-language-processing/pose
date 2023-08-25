@@ -4,6 +4,7 @@ import tensorflow as tf
 
 
 class MaskedTensor:
+
     def __init__(self, tensor: tf.Tensor, mask: tf.Tensor = None):
 
         self.tensor = tensor
@@ -31,32 +32,32 @@ class MaskedTensor:
 
     def __len__(self):
         """
-    Return the length of the tensor.
+        Return the length of the tensor.
 
-    Returns
-    -------
-    int
-        Length of the tensor along the first dimension.
+        Returns
+        -------
+        int
+            Length of the tensor along the first dimension.
 
-    """
+        """
         shape = self.tensor.shape
         return shape[0] if len(shape) > 0 else 1
 
     def __getitem__(self, key):
         """
-    Get elements from tensor and corresponding mask based on a key.
+        Get elements from tensor and corresponding mask based on a key.
 
-    Parameters
-    ----------
-    key : list or int or slice or tf.Tensor
-        Indexing key used to get the elements.
+        Parameters
+        ----------
+        key : list or int or slice or tf.Tensor
+            Indexing key used to get the elements.
 
-    Returns
-    -------
-    :class:`pose_format.tensorflow.masked.tensor.MaskedTensor`
-        A new MaskedTensor containing elements selected by the indexing key.
+        Returns
+        -------
+        :class:`pose_format.tensorflow.masked.tensor.MaskedTensor`
+            A new MaskedTensor containing elements selected by the indexing key.
 
-    """
+        """
         if isinstance(key, list):
             tensor = tf.gather(self.tensor, key)
             mask = tf.gather(self.mask, key)
@@ -66,21 +67,22 @@ class MaskedTensor:
         return MaskedTensor(tensor=tensor, mask=mask)
 
     def arithmetic(self, action: str, other):
-        """For element-wise arithmetic operations with another tensor.
+        """
+        For element-wise arithmetic operations with another tensor.
 
-    Parameters
-    ----------
-    action : str
-        Name of the arithmetic operation
-    other : :class:`pose_format.tensorflow.masked.tensor.MaskedTensor` or tf.Tensor
-        Tensor or MaskedTensor to perform the operation with.
+        Parameters
+        ----------
+        action : str
+            Name of the arithmetic operation
+        other : :class:`pose_format.tensorflow.masked.tensor.MaskedTensor` or tf.Tensor
+            Tensor or MaskedTensor to perform the operation with.
 
-    Returns
-    -------
-    :class:`pose_format.tensorflow.masked.tensor.MaskedTensor`
-        A new MaskedTensor containing the result of the arithmetic operation.
+        Returns
+        -------
+        :class:`pose_format.tensorflow.masked.tensor.MaskedTensor`
+            A new MaskedTensor containing the result of the arithmetic operation.
 
-    """
+        """
         if isinstance(other, MaskedTensor):
             tensor = getattr(self.tensor, action)(other.tensor)
             mask = self.mask & other.mask
@@ -119,78 +121,83 @@ class MaskedTensor:
         return tf.round(self.tensor * multiplier) / multiplier
 
     def square(self):
-        """Element-wise square of the tensor.
+        """
+        Element-wise square of the tensor.
 
-    Returns
-    -------
-    :class:`pose_format.tensorflow.masked.tensor.MaskedTensor`
-        A new MaskedTensor containing the squared values of the original tensor.
+        Returns
+        -------
+        :class:`pose_format.tensorflow.masked.tensor.MaskedTensor`
+            A new MaskedTensor containing the squared values of the original tensor.
 
-    """
+        """
         tensor = tf.math.square(self.tensor)
         return MaskedTensor(tensor=tensor, mask=self.mask)
 
     def float(self):
         """
-    Convert tensor's data type to float32 while preserving mask.
+        Convert tensor's data type to float32 while preserving mask.
 
-    Returns
-    -------
-    :class:`pose_format.tensorflow.masked.tensor.MaskedTensor`
-        A new MaskedTensor with the tensor's data type converted to float32.
+        Returns
+        -------
+        :class:`pose_format.tensorflow.masked.tensor.MaskedTensor`
+            A new MaskedTensor with the tensor's data type converted to float32.
 
-    """
+        """
         tensor = tf.cast(self.tensor, dtype=tf.float32)
         return MaskedTensor(tensor=tensor, mask=self.mask)
 
     def sqrt(self):
-        """Element-wise square root of the tensor 
+        """
+        Element-wise square root of the tensor
 
-    Returns
-    -------
-    :class:`pose_format.tensorflow.masked.tensor.MaskedTensor`
-        A new MaskedTensor containing the square root values of the original tensor.
+        Returns
+        -------
+        :class:`pose_format.tensorflow.masked.tensor.MaskedTensor`
+            A new MaskedTensor containing the square root values of the original tensor.
 
-    """
+        """
         tensor = tf.math.sqrt(self.tensor)
         return MaskedTensor(tensor=tensor, mask=self.mask)
 
     def sum(self, axis):
-        """Sum of tensor along specified axis while updating mask.
+        """
+        Sum of tensor along specified axis while updating mask.
 
-    Parameters
-    ----------
-    axis : int or None
-        Axis along which to compute sum. If None, compute the sum over all elements.
+        Parameters
+        ----------
+        axis : int or None
+            Axis along which to compute sum. If None, compute the sum over all elements.
 
-    Returns
-    -------
-    :class:`pose_format.tensorflow.masked.tensor.MaskedTensor`
-        A new MaskedTensor containing the sums of the tensor along the specified axis.
+        Returns
+        -------
+        :class:`pose_format.tensorflow.masked.tensor.MaskedTensor`
+            A new MaskedTensor containing the sums of the tensor along the specified axis.
 
-    """
+        """
         tensor = tf.math.reduce_sum(self.tensor, axis=axis)
         mask = tf.cast(tf.math.reduce_prod(tf.cast(self.mask, tf.int32), axis=axis), tf.bool)
         return MaskedTensor(tensor=tensor, mask=mask)
 
     def size(self, *args):
-        """Get tensor's size along dimensions.
+        """
+        Get tensor's size along dimensions.
 
-    Parameters
-    ----------
-    *args : int
-        Dimensions for which to get size
+        Parameters
+        ----------
+        *args : int
+            Dimensions for which to get size
 
-    Returns
-    -------
-    int or tuple of int
-        Size of tensor of specified dimensions.
+        Returns
+        -------
+        int or tuple of int
+            Size of tensor of specified dimensions.
 
-    """
+        """
         return self.tensor.size(*args)
 
     def fix_nan(self):
-        """Replace NaN values with zeros while keeping mask.
+        """
+        Replace NaN values with zeros while keeping mask.
 
         Returns
         -------
@@ -202,7 +209,8 @@ class MaskedTensor:
         return self
 
     def zero_filled(self) -> tf.Tensor:
-        """Fill invalid values (as indicated by the mask) with zeros.
+        """
+        Fill invalid values (as indicated by the mask) with zeros.
 
         Returns
         -------
@@ -212,7 +220,8 @@ class MaskedTensor:
         return self.tensor * tf.cast(self.mask, dtype=self.tensor.dtype)
 
     def div(self, other: "MaskedTensor", in_place=False, update_mask=True) -> "MaskedTensor":
-        """Divide tensor by another tensor.
+        """
+        Divide tensor by another tensor.
 
         Parameters
         ----------
@@ -233,7 +242,8 @@ class MaskedTensor:
         return MaskedTensor(tensor, mask)
 
     def matmul(self, matrix: tf.Tensor) -> "MaskedTensor":
-        """Matrix multiplication a given matrix.
+        """
+        Matrix multiplication a given matrix.
 
     Parameters
     ----------
@@ -250,7 +260,8 @@ class MaskedTensor:
         return MaskedTensor(tensor=tensor, mask=self.mask)
 
     def transpose(self, perm: List[int]) -> "MaskedTensor":
-        """Transpose tensor according to given permutation.
+        """
+        Transpose tensor according to given permutation.
 
         Parameters
         ----------
@@ -286,7 +297,8 @@ class MaskedTensor:
         return MaskedTensor(tensor=tensor, mask=mask)
 
     def squeeze(self, axis) -> "MaskedTensor":
-        """Remove dimensions with size 1 while updating the mask.
+        """
+        Remove dimensions with size 1 while updating the mask.
 
         Parameters
         ----------
@@ -402,7 +414,8 @@ class MaskedTensor:
         return mt.fix_nan()
 
     def variance(self, axis=None) -> "MaskedTensor":
-        """Compute variance of tensor along a specified axis
+        """
+        Compute variance of tensor along a specified axis
 
         Parameters
         ----------

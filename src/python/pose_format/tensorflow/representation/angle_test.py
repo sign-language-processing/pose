@@ -1,7 +1,6 @@
+import math
 import os
 from unittest import TestCase
-
-import math
 
 os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
 
@@ -14,6 +13,7 @@ representation = AngleRepresentation()
 
 class TestAngleRepresentation(TestCase):
     """Test case for AngleRepresentation class"""
+
     def test_call_value_should_be_angle(self):
         """Test if the calculated angles are correct."""
         p1s = tf.constant([[[[1, 2, 3]]]], dtype=tf.float32)

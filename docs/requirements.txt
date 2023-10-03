@@ -102,7 +102,7 @@ termcolor==2.3.0
 torch==2.0.1
 tqdm==4.66.1
 typing_extensions==4.7.1
-urllib3==1.26.16
+urllib3==1.26.17
 vidgear==0.3.1
 Werkzeug==2.3.7
 wheel==0.41.1

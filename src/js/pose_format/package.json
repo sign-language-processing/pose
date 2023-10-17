@@ -1,6 +1,6 @@
 {
   "name": "pose-format",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "Library for handling .pose files",
   "scripts": {
     "build": "tsc",

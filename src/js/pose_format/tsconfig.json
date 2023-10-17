@@ -5,6 +5,7 @@
     "noUnusedLocals": true,
     "outDir": "dist",
     "sourceMap": true,
+    "declaration": true,
     "strict": true,
     "target": "es2017",
     "moduleResolution": "node"
@@ -14,8 +15,8 @@
     "node_modules/binary-parser/dist/binary_parser.d.ts"
   ],
   "include": [
-    "pose_format/src/**/*",
-    "pose_format/src/**/*.json"
+    "src/**/*",
+    "src/**/*.json"
   ],
   "exclude": [
     "node_modules",

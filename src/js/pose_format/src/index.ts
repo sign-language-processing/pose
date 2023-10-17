@@ -26,7 +26,7 @@ export class Pose {
     }
     const res = await fetch(url, init);
     if (!res.ok) {
-      let message = res.statusText ?? res.status;
+      let message = res.statusText ?? String(res.status);
       try {
         const json = await res.json();
         message = json.message;

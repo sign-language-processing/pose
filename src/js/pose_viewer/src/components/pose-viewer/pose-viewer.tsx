@@ -1,7 +1,8 @@
 // @ts-ignore
-import {Component, Element, Event, EventEmitter, h, Host, Method, Prop, Watch} from '@stencil/core';
-import {Pose, PoseModel} from "pose-format";
-// import {Pose, PoseModel} from "../../../../pose_format_js/dist";
+import {Component, Element, Event, EventEmitter, h, Host, Method, Prop, State, Watch} from '@stencil/core';
+import type {PoseModel} from "pose-format/dist/types";
+import {Pose} from "pose-format";
+// import {Pose, PoseModel} from "../../../../pose_format/dist";
 import {PoseRenderer} from "./renderers/pose-renderer";
 import {SVGPoseRenderer} from "./renderers/svg.pose-renderer";
 import {CanvasPoseRenderer} from "./renderers/canvas.pose-renderer";
@@ -69,7 +70,7 @@ export class PoseViewer {
   media: HTMLMediaElement;
   pose: PoseModel;
 
-  error: Error;
+  @State() error: Error;
 
   private loopInterval: any;
 
@@ -134,9 +135,11 @@ export class PoseViewer {
     this.loadstart$.emit();
 
     delete this.error;
+    console.log('Deletion 1')
     try {
       await this.getRemotePose();
       this.initPose();
+      console.log('Deletion 2')
       delete this.error;
     } catch (e) {
       console.error('PoseViewer error', e);

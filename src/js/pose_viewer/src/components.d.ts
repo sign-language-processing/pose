@@ -5,8 +5,8 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { PoseModel } from "pose-format";
-export { PoseModel } from "pose-format";
+import { PoseModel } from "pose-format/dist/types";
+export { PoseModel } from "pose-format/dist/types";
 export namespace Components {
     interface PoseViewer {
         "aspectRatio": number;

@@ -134,11 +134,11 @@ export class PoseViewer {
     this.ended = false;
     this.loadstart$.emit();
 
-    delete this.error;
+    this.error = null;
     try {
       await this.getRemotePose();
       this.initPose();
-      delete this.error;
+      this.error = null;
     } catch (e) {
       console.error('PoseViewer error', e);
       this.error = e;

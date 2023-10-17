@@ -9,7 +9,7 @@
   <script nomodule src="/build/pose-viewer.js"></script>
 </head>
 <body>
-<pose-viewer src="bad.pose"></pose-viewer>
+<!--<pose-viewer src="bad.pose"></pose-viewer>-->
 <br />
 <pose-viewer src="sample-data/example.pose" id="example" loop="true"></pose-viewer>
 <!--<br/>-->
@@ -72,8 +72,12 @@
     const poseViewer = document.querySelector('pose-viewer#example');
 
     const url = 'https://us-central1-sign-mt.cloudfunctions.net/spoken_text_to_signed_pose?spoken=en&signed=ase&text=';
-    const sentence = 'test';
+    const sentence = 'wa';
     poseViewer.setAttribute('src', url + sentence);
+
+    setTimeout(() => {
+      poseViewer.setAttribute('src', url + 'test');
+    }, 2000);
 
 
     // for(let i = 0; i < sentence.length; i++) {

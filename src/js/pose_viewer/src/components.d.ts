@@ -65,6 +65,7 @@ declare namespace LocalJSX {
         "onLoadstart$"?: (event: PoseViewerCustomEvent<void>) => void;
         "onPause$"?: (event: PoseViewerCustomEvent<void>) => void;
         "onPlay$"?: (event: PoseViewerCustomEvent<void>) => void;
+        "onRender$"?: (event: PoseViewerCustomEvent<void>) => void;
         "padding"?: string;
         "paused"?: boolean;
         "playbackRate"?: number;

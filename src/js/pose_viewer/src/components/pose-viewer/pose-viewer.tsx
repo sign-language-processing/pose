@@ -58,6 +58,7 @@ export class PoseViewer {
   @Event() pause$: EventEmitter<void>;
   @Event() play$: EventEmitter<void>;
   @Event() firstRender$: EventEmitter<void>;
+  @Event() render$: EventEmitter<void>;
   // @Event() ratechange$: EventEmitter<void>;
   // @Event() seeked$: EventEmitter<void>;
   // @Event() seeking$: EventEmitter<void>;
@@ -322,6 +323,7 @@ export class PoseViewer {
         this.firstRender$.emit();
       });
     }
+    requestAnimationFrame(() => this.render$.emit());
 
     return (
       <Host>

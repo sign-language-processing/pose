@@ -39,6 +39,7 @@
 | `loadstart$`      |             | `CustomEvent<void>` |
 | `pause$`          |             | `CustomEvent<void>` |
 | `play$`           |             | `CustomEvent<void>` |
+| `render$`         |             | `CustomEvent<void>` |
 
 
 ## Methods

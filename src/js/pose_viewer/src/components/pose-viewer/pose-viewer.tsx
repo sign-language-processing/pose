@@ -317,6 +317,7 @@ export class PoseViewer {
     const frameId = Math.floor(currentTime * this.pose.body.fps);
     const frame = this.pose.body.frames[frameId];
 
+    const render = this.renderer.render(frame);
     if (!this.hasRendered) {
       requestAnimationFrame(() => {
         this.hasRendered = true;
@@ -325,11 +326,7 @@ export class PoseViewer {
     }
     requestAnimationFrame(() => this.render$.emit());
 
-    return (
-      <Host>
-        {this.renderer.render(frame)}
-      </Host>
-    );
+    return (<Host>{render}</Host>);
   }
 }
 

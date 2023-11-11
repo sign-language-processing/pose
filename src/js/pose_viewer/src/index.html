@@ -79,6 +79,11 @@
       poseViewer.setAttribute('src', url + 'test');
     }, 2000);
 
+    poseViewer.addEventListener('render$', (e) => {
+      console.log(poseViewer.shadowRoot.querySelector('canvas').width);
+      console.log(poseViewer.shadowRoot.querySelector('canvas').height);
+    });
+
 
     // for(let i = 0; i < sentence.length; i++) {
     //   setTimeout(() => {

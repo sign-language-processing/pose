@@ -37,7 +37,8 @@ class NumPyPoseBody(PoseBody):
         confidence array of the pose keypoints.
     """
 
-    tensor_reader = 'unpack_numpy' """Specifies the method name for unpacking a numpy array (Value: 'unpack_numpy')."""
+    """Specifies the method name for unpacking a numpy array (Value: 'unpack_numpy')."""
+    tensor_reader = 'unpack_numpy'
 
     def __init__(self, fps: float, data: Union[ma.MaskedArray, np.ndarray], confidence: np.ndarray):
         """

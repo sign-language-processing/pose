@@ -15,7 +15,9 @@ class TorchPoseBody(PoseBody):
 
     This class extends the PoseBody class and provides methods for manipulating pose data using PyTorch tensors.
     """
-    tensor_reader = 'unpack_torch' """str: Reader format for unpacking Torch tensors."""
+
+    """str: Reader format for unpacking Torch tensors."""
+    tensor_reader = 'unpack_torch'
 
     def __init__(self, fps: float, data: Union[MaskedTensor, torch.Tensor], confidence: torch.Tensor):
         if isinstance(data, torch.Tensor):  # If array is not masked

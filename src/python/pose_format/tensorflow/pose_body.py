@@ -28,7 +28,9 @@ class TensorflowPoseBody(PoseBody):
     confidence : tf.Tensor
         The confidence scores for the pose data.
     """
-    tensor_reader = 'unpack_tensorflow' """str: The method used to read the tensor data. (Type: str)"""
+
+    """str: The method used to read the tensor data. (Type: str)"""
+    tensor_reader = 'unpack_tensorflow'
 
     def __init__(self, fps: float, data: Union[MaskedTensor, tf.Tensor], confidence: tf.Tensor):
         """

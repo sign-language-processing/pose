@@ -20,6 +20,8 @@ def pad_tensors(batch: List[Union[torch.Tensor, MaskedTensor]], pad_value=0):
 
         if missing[0] > 0:
             padding_tensor = torch.full(missing, fill_value=pad_value, dtype=tensor.dtype, device=tensor.device)
+            if isinstance(tensor, MaskedTensor):
+                padding_tensor = MaskedTensor(tensor=padding_tensor, mask=torch.zeros_like(padding_tensor, dtype=torch.bool))
             tensor = torch_cls.cat([tensor, padding_tensor], dim=0)
 
         new_batch.append(tensor)

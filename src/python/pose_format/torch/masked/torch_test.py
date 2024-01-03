@@ -1,3 +1,4 @@
+import pickle
 from unittest import TestCase
 
 import torch
@@ -61,3 +62,12 @@ class TestMaskedTorch(TestCase):
         tensor = MaskedTensor(tensor=torch.tensor([1, 2, 3]))
         torch_sum = MaskedTorch.sum(tensor)
         self.assertEqual(torch_sum, torch.tensor(6))
+
+    def test_pickle(self):
+        tensor = MaskedTensor(torch.tensor([1, 2, 3]))
+        pickled_tensor = pickle.dumps(tensor)
+        loaded_tensor = pickle.loads(pickled_tensor)
+        self.assertTrue(torch.all(tensor.tensor == loaded_tensor.tensor),
+                        msg="Pickled tensor is not equal to original tensor")
+        self.assertTrue(torch.all(tensor.mask == loaded_tensor.mask),
+                        msg="Pickled tensor mask is not equal to original tensor")

@@ -29,6 +29,7 @@ dev = [
 [tool.setuptools]
 packages = [
     "pose_format",
+    "pose_format.bin",
     "pose_format.utils",
     "pose_format.testing",
     "pose_format.numpy",
@@ -55,3 +56,8 @@ testpaths = [
 [tool.yapf]
 based_on_style = "google"
 column_limit = 120
+
+[project.scripts]
+video_to_pose = "pose_format.bin.pose_estimation:main"
+videos_to_poses = "pose_format.bin.directory:main"
+visualize_pose = "pose_format.bin.pose_visualizer:main"

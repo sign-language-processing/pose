@@ -25,7 +25,15 @@ More about the header and the body details and their binary specifics can be fou
 pip install pose-format
 ```
 
-#### 2. Reading `.pose` Files: 
+#### 2. Estimating Pose from Video:
+
+```bash
+video_to_pose --format mediapipe -i example.mp4 -o example.pose
+# Or if you have a directory of videos
+videos_to_poses --format mediapipe --directory /path/to/videos
+```
+
+#### 3. Reading `.pose` Files: 
 
 To load a `.pose` file, use the `Pose` class.
 
@@ -70,8 +78,7 @@ pose.torch()
 pose.tensorflow()
 ```
 
-
-#### 3. Data Manipulation: 
+#### 4. Data Manipulation: 
 
 Once poses are loaded, the library offers many ways to manipulate the created `Pose` objects. 
 
@@ -127,7 +134,7 @@ pose.interpolate_fps(24, kind='cubic')
 pose.interpolate_fps(24, kind='linear')
 ```
 
-#### 4. Visualization
+#### 5. Visualization
 You can visualize the poses stored in the `.pose` files.
 Use the `PoseVisualizer` class for visualization tasks, such as generating videos or overlaying pose data on existing videos.
 
@@ -166,7 +173,7 @@ v.save_gif("test.gif", v.draw())
 display(Image(open('test.gif','rb').read()))
 ```
 
-#### 5. Integration with External Data Sources:
+#### 6. Integration with External Data Sources:
 If you have pose data in OpenPose or MediaPipe Holistic format, you can easily import it. 
 
 ##### Loading OpenPose and MediaPipe Holistic Data

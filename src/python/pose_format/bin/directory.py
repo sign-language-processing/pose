@@ -3,7 +3,7 @@
 import argparse
 import os
 
-from pose_format.bin.bin import pose_video
+from pose_format.bin.pose_estimation import pose_video
 from tqdm import tqdm
 
 

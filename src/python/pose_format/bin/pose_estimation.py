@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import argparse
+import os
 
 import cv2
 from pose_format.utils.holistic import load_holistic
@@ -52,5 +53,8 @@ def main():
     parser.add_argument('-o', required=True, type=str, help='path to output pose file')
 
     args = parser.parse_args()
+
+    if not os.path.exists(args.i):
+        raise FileNotFoundError(f"Video file {args.i} not found")
 
     pose_video(args.i, args.o, args.format)

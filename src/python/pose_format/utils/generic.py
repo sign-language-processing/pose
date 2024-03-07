@@ -65,13 +65,13 @@ def pose_normalization_info(pose_header: PoseHeader):
 def hands_components(pose_header: PoseHeader):
     if pose_header.components[0].name in ["POSE_LANDMARKS", "LEFT_HAND_LANDMARKS", "RIGHT_HAND_LANDMARKS"]:
         return ("LEFT_HAND_LANDMARKS", "RIGHT_HAND_LANDMARKS"), \
-               ("WRIST", "PINKY_MCP", "INDEX_FINGER_MCP"), \
-               ("WRIST", "MIDDLE_FINGER_MCP")
+            ("WRIST", "PINKY_MCP", "INDEX_FINGER_MCP"), \
+            ("WRIST", "MIDDLE_FINGER_MCP")
 
     if pose_header.components[0].name in ["pose_keypoints_2d", "hand_left_keypoints_2d", "hand_right_keypoints_2d"]:
         return ("hand_left_keypoints_2d", "hand_right_keypoints_2d"), \
-               ("BASE", "P_CMC", "I_CMC"), \
-               ("BASE", "M_CMC")
+            ("BASE", "P_CMC", "I_CMC"), \
+            ("BASE", "M_CMC")
 
     raise ValueError("Unknown pose header")
 
@@ -140,9 +140,23 @@ def reduce_holistic(pose: Pose) -> Pose:
     if pose.header.components[0].name != "POSE_LANDMARKS":
         return pose
 
-    import mediapipe as mp
-    points_set = set([p for p_tup in list(mp.solutions.holistic.FACEMESH_CONTOURS) for p in p_tup])
-    face_contours = [str(p) for p in sorted(points_set)]
+    """
+    # from mediapipe.python.solutions.face_mesh_connections import FACEMESH_CONTOURS
+    # points_set = set([p for p_tup in list(FACEMESH_CONTOURS) for p in p_tup])
+    # face_contours = [str(p) for p in sorted(points_set)]
+    # print(face_contours)
+    """
+    # To avoid installing mediapipe, we just hardcode the face contours given the above code
+    face_contours = [
+        '0', '7', '10', '13', '14', '17', '21', '33', '37', '39', '40', '46', '52', '53', '54', '55', '58', '61', '63',
+        '65', '66', '67', '70', '78', '80', '81', '82', '84', '87', '88', '91', '93', '95', '103', '105', '107', '109',
+        '127', '132', '133', '136', '144', '145', '146', '148', '149', '150', '152', '153', '154', '155', '157', '158',
+        '159', '160', '161', '162', '163', '172', '173', '176', '178', '181', '185', '191', '234', '246', '249', '251',
+        '263', '267', '269', '270', '276', '282', '283', '284', '285', '288', '291', '293', '295', '296', '297', '300',
+        '308', '310', '311', '312', '314', '317', '318', '321', '323', '324', '332', '334', '336', '338', '356', '361',
+        '362', '365', '373', '374', '375', '377', '378', '379', '380', '381', '382', '384', '385', '386', '387', '388',
+        '389', '390', '397', '398', '400', '402', '405', '409', '415', '454', '466'
+    ]
 
     ignore_names = [
         "EAR", "NOSE", "MOUTH", "EYE",  # Face

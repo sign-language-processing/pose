@@ -48,10 +48,10 @@ class PoseBody {
         1;
     _frames = reader.bytesLeft() ~/ (_people * _points * (_dims + 1) * 4);
 
-    final List data = read_v0_1_frames(_frames, [_people, _points, _dims], reader,
-        kwargs['startFrame'], kwargs['endFrame']);
-    final List confidence = read_v0_1_frames(_frames, [_people, _points], reader,
-        kwargs['startFrame'], kwargs['endFrame']);
+    final List data = read_v0_1_frames(_frames, [_people, _points, _dims],
+        reader, kwargs['startFrame'], kwargs['endFrame']);
+    final List confidence = read_v0_1_frames(_frames, [_people, _points],
+        reader, kwargs['startFrame'], kwargs['endFrame']);
 
     return PoseBody(fps.toDouble(), data, confidence);
   }
@@ -64,7 +64,7 @@ class PoseBody {
       BufferReader reader, int? startFrame, int? endFrame) {
     final Struct s = ConstStructs.float;
     int _frames = frames;
-    
+
     if (startFrame != null && startFrame > 0) {
       if (startFrame >= frames) {
         throw ArgumentError("Start frame is greater than the number of frames");
@@ -80,7 +80,8 @@ class PoseBody {
       _frames -= removeFrames;
     }
 
-    final List tensor = reader.unpackNum(ConstStructs.float, [_frames, ...shape]);
+    final List tensor =
+        reader.unpackNum(ConstStructs.float, [_frames, ...shape]);
     if (removeFrames != 0) {
       reader.advance(s, (removeFrames * shape.reduce((a, b) => a * b)));
     }

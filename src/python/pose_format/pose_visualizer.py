@@ -39,7 +39,7 @@ class PoseVisualizer:
         except ImportError:
             raise ImportError("Please install OpenCV with: pip install opencv-python")
 
-    def _draw_frame(self, frame: ma.MaskedArray, frame_confidence: np.ndarray, img) -> np.ndarray:
+    def _draw_frame(self, frame: ma.MaskedArray, frame_confidence: np.ndarray, img, transparency: bool = False) -> np.ndarray:
         """
         Draw frame of pose data of an image.
 
@@ -51,6 +51,8 @@ class PoseVisualizer:
             Confidence values for each point in the frame.
         img : np.ndarray
             Background image where upon pose will be drawn.
+        transparency : bool
+            transparency decides opacity of background color,
 
         Returns
         -------
@@ -74,8 +76,9 @@ class PoseVisualizer:
                 @lru_cache(maxsize=None)
                 def _point_color(p_i: int):
                     opacity = c[p_i + idx]
-                    np_color = colors[p_i % len(component.colors)] * opacity + (1 - opacity) * background_color[:3]
-                    np_color = np.append(np_color, opacity * 255)
+                    np_color = colors[p_i % len(component.colors)] * opacity + (1 - opacity) * background_color[:3] # [:3] ignores alpha value if present
+                    if transparency:
+                        np_color = np.append(np_color, opacity * 255)
                     return tuple([int(c) for c in np_color])
 
                 # Draw Points
@@ -111,7 +114,7 @@ class PoseVisualizer:
 
         return img
 
-    def draw(self, background_color: Tuple[int, int, int] = (255, 255, 255), max_frames: int = None, alpha: int = 0):
+    def draw(self, background_color: Tuple[int, int, int] = (255, 255, 255), max_frames: int = None, transparency: bool = False):
         """
         draws pose on plain background using the specified color - for a number of frames.
 
@@ -121,23 +124,22 @@ class PoseVisualizer:
             RGB value for background color, default is white (255, 255, 255).
         max_frames : int, optional
             Maximum number of frames to process, if it is None, it processes all frames.
-        alpha : int, optional
-			Alpha value for opacity of background color, it is only used in the case of PNG i.e It doesn't affect GIF. 
-
+        transparency : bool
+            transparency decides opacity of background color, it is only used in the case of PNG i.e It doesn't affect GIF.
         Yields
         ------
         np.ndarray
             Frames with the pose data drawn on a custom background color.
-
         """
         # ...
-        background_color += (alpha,)
+        if transparency:
+            background_color += (0,)
         int_frames = np.array(np.around(self.pose.body.data.data), dtype="int32")
-        background = np.full((self.pose.header.dimensions.height, self.pose.header.dimensions.width, 4),
+        background = np.full((self.pose.header.dimensions.height, self.pose.header.dimensions.width, len(background_color)),
                              fill_value=background_color,
                              dtype="uint8")
         for frame, confidence in itertools.islice(zip(int_frames, self.pose.body.confidence), max_frames):
-            yield self._draw_frame(frame, confidence, img=background.copy())
+            yield self._draw_frame(frame, confidence, img=background.copy(), transparency=transparency)
 
     def draw_on_video(self, background_video, max_frames: int = None, blur=False):
         """
@@ -207,6 +209,49 @@ class PoseVisualizer:
         """
         self.cv2.imwrite(f_name, frame)
 
+    def _save_image(self, f_name: str, frames: Iterable[np.ndarray], format: str = "GIF", transparency: bool = False):
+        """
+        Save pose frames as Image (GIF or PNG).
+
+        Parameters
+        ----------
+        f_name : str
+            filename to save Image to.
+        frames : Iterable[np.ndarray]
+            Series of pose frames to be included in Image.
+        format : str
+            format to save takes either GIF or PNG.
+        transparency : bool
+            transparency decides opacity of background color.
+
+        Returns
+        -------
+        None
+
+        Raises
+        ------
+        ImportError 
+            If Pillow is not installed.
+        """
+        try:
+            from PIL import Image
+        except ImportError:
+            raise ImportError("Please install Pillow with: pip install Pillow")
+
+        if transparency:
+            cv_code = self.cv2.COLOR_BGR2RGBA
+        else:
+            cv_code = self.cv2.COLOR_BGR2RGB
+            
+        images = [Image.fromarray(self.cv2.cvtColor(frame, cv_code)) for frame in frames]
+        images[0].save(f_name,
+                       format=format,
+                       append_images=images[1:],
+                       save_all=True,
+                       duration=1000 / self.pose.body.fps,
+                       loop=0,
+                       disposal=2 if transparency else 0)
+    
     def save_gif(self, f_name: str, frames: Iterable[np.ndarray]):
         """
         Save pose frames as GIF.
@@ -227,20 +272,9 @@ class PoseVisualizer:
         ImportError 
             If Pillow is not installed.
         """
-        try:
-            from PIL import Image
-        except ImportError:
-            raise ImportError("Please install Pillow with: pip install Pillow")
-
-        images = [Image.fromarray(self.cv2.cvtColor(frame, self.cv2.COLOR_BGR2RGB)) for frame in frames]
-        images[0].save(f_name,
-                       format="GIF",
-                       append_images=images[1:],
-                       save_all=True,
-                       duration=1000 / self.pose.body.fps,
-                       loop=0)
+        self._save_image(f_name, frames, "GIF", False)
     
-    def save_png(self, f_name: str, frames: Iterable[np.ndarray]):
+    def save_png(self, f_name: str, frames: Iterable[np.ndarray], transparency: bool = True):
         """
         Save pose frames as PNG.
 
@@ -250,6 +284,8 @@ class PoseVisualizer:
             filename to save PNG to.
         frames : Iterable[np.ndarray]
             Series of pose frames to be included in PNG.
+        transparency : bool
+            transparency decides opacity of background color.
 
         Returns
         -------
@@ -260,19 +296,7 @@ class PoseVisualizer:
         ImportError 
             If Pillow is not installed.
         """        
-        try:
-            from PIL import Image
-        except ImportError:
-            raise ImportError("Please install Pillow with: pip install Pillow")
-        
-        images = [Image.fromarray(self.cv2.cvtColor(frame, self.cv2.COLOR_BGR2RGBA)) for frame in frames]
-        images[0].save(f_name,
-                       format="PNG",
-                       append_images=images[1:],
-                       save_all=True,
-                       duration=1000 / self.pose.body.fps,
-                       loop=0,
-                       disposal=2)
+        self._save_image(f_name, frames, "PNG", transparency)
  
     def save_video(self, f_name: str, frames: Iterable[np.ndarray], custom_ffmpeg=None):
         """

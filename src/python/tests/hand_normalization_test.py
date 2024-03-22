@@ -65,7 +65,7 @@ class Test3DNormalization(TestCase):
         """
         Test the normalization of hand pose data using the PoseNormalizer.
         """
-        with open('data/mediapipe.pose', 'rb') as f:
+        with open('tests/data/mediapipe.pose', 'rb') as f:
             pose = Pose.read(f.read())
             pose = pose.get_components(["RIGHT_HAND_LANDMARKS"])
 
@@ -80,7 +80,7 @@ class Test3DNormalization(TestCase):
         pose.body.data = tensor
         pose.focus()
 
-        with open('data/mediapipe_hand_normalized.pose', 'rb') as f:
+        with open('tests/data/mediapipe_hand_normalized.pose', 'rb') as f:
             pose_gold = Pose.read(f.read())
 
         self.assertTrue(ma.allclose(pose.body.data, pose_gold.body.data))

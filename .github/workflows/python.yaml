@@ -1,11 +1,10 @@
-name: Build
+name: Python Tests
 
 on:
   push:
-    branches: [ master, main ]
+    branches: [master, main]
   pull_request:
-    branches: [ master, main ]
-
+    branches: [master, main]
 
 jobs:
   test:
@@ -13,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [ "3.10" ]
+        python-version: ["3.10"]
 
     steps:
       - uses: actions/checkout@v3
@@ -28,3 +27,7 @@ jobs:
       - name: Run tests
         working-directory: src/python
         run: pytest pose_format
+
+      - name: Run additional tests
+        working-directory: src/python
+        run: pytest tests -s

@@ -28,7 +28,7 @@ class TestOpticalFlow(TestCase):
         """
         calculator = OpticalFlowCalculator(fps=30, distance=DistanceRepresentation())
 
-        with open('data/mediapipe.pose', 'rb') as f:
+        with open('tests/data/mediapipe.pose', 'rb') as f:
             pose = Pose.read(f.read())
             pose = pose.get_components(["POSE_LANDMARKS", "RIGHT_HAND_LANDMARKS", "LEFT_HAND_LANDMARKS"])
 
@@ -44,4 +44,4 @@ class TestOpticalFlow(TestCase):
         fp = tempfile.NamedTemporaryFile()
         plt.savefig(fp.name, format='png')
 
-        self.assertTrue(compare_images('data/optical_flow.png', fp.name, 0.001) is None)
+        self.assertTrue(compare_images('tests/data/optical_flow.png', fp.name, 0.001) is None)

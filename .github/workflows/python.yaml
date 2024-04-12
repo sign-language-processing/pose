@@ -30,4 +30,4 @@ jobs:
 
       - name: Run additional tests
         working-directory: src/python
-        run: pytest tests -s
+        run: pytest tests

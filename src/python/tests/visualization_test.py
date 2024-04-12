@@ -35,7 +35,7 @@ class TestPoseVisualizer(TestCase):
         v = PoseVisualizer(pose)
 
         with tempfile.NamedTemporaryFile(suffix='.png', delete=False) as temp_png:
-            v.save_png(temp_png, v.draw(transparency=True))
+            v.save_png(temp_png.name, v.draw(transparency=True))
             self.assertTrue(os.path.exists(temp_png))
             self.assertGreater(os.path.getsize(temp_png), 0)
 

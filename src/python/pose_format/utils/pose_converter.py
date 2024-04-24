@@ -196,7 +196,6 @@ def convert_pose(pose: Pose, pose_components: List[PoseHeaderComponent]) -> Pose
     Pose
         Converted pose object
     """
-    print("new5.")
     pose_header = PoseHeader(version=pose.header.version, dimensions=pose.header.dimensions, components=pose_components)
 
     base_shape = (pose.body.data.shape[0], pose.body.data.shape[1], pose_header.total_points())

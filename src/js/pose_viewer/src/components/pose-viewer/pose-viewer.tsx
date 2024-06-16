@@ -192,7 +192,7 @@ export class PoseViewer {
     if (poseAR > elAR) {
       this.elPadding.height += (poseAR - elAR) * ratioHeight / 2;
     } else {
-      this.elPadding.width += (1 / poseAR - 1 / elAR) * ratioWidth / 2;
+      this.elPadding.width += (elAR - poseAR) * ratioWidth / 2;
     }
   }
 

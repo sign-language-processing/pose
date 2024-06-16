@@ -2,7 +2,8 @@ import itertools
 import logging
 import math
 from functools import lru_cache
-from typing import Iterable, Tuple
+from typing import Iterable, Tuple, Union
+from io import BytesIO
 
 import numpy as np
 import numpy.ma as ma
@@ -209,14 +210,14 @@ class PoseVisualizer:
         """
         self.cv2.imwrite(f_name, frame)
 
-    def _save_image(self, f_name: str, frames: Iterable[np.ndarray], format: str = "GIF", transparency: bool = False):
+    def _save_image(self, f_name: Union[str, None], frames: Iterable[np.ndarray], format: str = "GIF", transparency: bool = False) -> Union[None, bytes]:
         """
         Save pose frames as Image (GIF or PNG).
 
         Parameters
         ----------
-        f_name : str
-            filename to save Image to.
+        f_name : Union[str, None]
+        	Filename to save Image to. If None, image will be saved to memory and returned as bytes.
         frames : Iterable[np.ndarray]
             Series of pose frames to be included in Image.
         format : str
@@ -226,7 +227,8 @@ class PoseVisualizer:
 
         Returns
         -------
-        None
+        Union[None, bytes]
+        	If f_name is None, returns the image data as bytes. Otherwise, returns None.
 
         Raises
         ------
@@ -244,44 +246,54 @@ class PoseVisualizer:
             cv_code = self.cv2.COLOR_BGR2RGB
             
         images = [Image.fromarray(self.cv2.cvtColor(frame, cv_code)) for frame in frames]
-        images[0].save(f_name,
-                       format=format,
-                       append_images=images[1:],
-                       save_all=True,
-                       duration=1000 / self.pose.body.fps,
-                       loop=0,
-                       disposal=2 if transparency else 0)
-    
-    def save_gif(self, f_name: str, frames: Iterable[np.ndarray]):
+
+        def save_to(obj: Union[str, None]):
+            images[0].save(obj,
+							format=format,
+							append_images=images[1:],
+							save_all=True,
+							duration=1000 / self.pose.body.fps,
+							loop=0,
+							disposal=2 if transparency else 0)
+        
+        if f_name:
+            save_to(f_name)
+        else:
+            with BytesIO() as mem:
+                save_to(mem)
+                return mem.getvalue()
+
+    def save_gif(self, f_name: Union[str, None], frames: Iterable[np.ndarray]) -> Union[None, bytes]:
         """
         Save pose frames as GIF.
 
         Parameters
         ----------
-        f_name : str
-            filename to save GIF to.
+        f_name : Union[str, None]
+       		Filename to save PNG to. If None, image will be saved to memory and returned as bytes.
         frames : Iterable[np.ndarray]
             Series of pose frames to be included in GIF.
 
         Returns
         -------
-        None
+        Union[None, bytes]
+        	If f_name is None, returns the PNG image data as bytes. Otherwise, returns None.
 
         Raises
         ------
         ImportError 
             If Pillow is not installed.
         """
-        self._save_image(f_name, frames, "GIF", False)
+        return self._save_image(f_name, frames, "GIF", False)
     
-    def save_png(self, f_name: str, frames: Iterable[np.ndarray], transparency: bool = True):
+    def save_png(self, f_name: Union[str, None], frames: Iterable[np.ndarray], transparency: bool = True) -> Union[None, bytes]:
         """
         Save pose frames as PNG.
 
         Parameters
         ----------
-        f_name : str
-            filename to save PNG to.
+        f_name : Union[str, None]
+        	Filename to save PNG to. If None, image will be saved to memory and returned as bytes.
         frames : Iterable[np.ndarray]
             Series of pose frames to be included in PNG.
         transparency : bool
@@ -289,14 +301,15 @@ class PoseVisualizer:
 
         Returns
         -------
-        None
+        Union[None, bytes]
+        	If f_name is None, returns the PNG image data as bytes. Otherwise, returns None.
 
         Raises
         ------
         ImportError 
             If Pillow is not installed.
         """        
-        self._save_image(f_name, frames, "PNG", transparency)
+        return self._save_image(f_name, frames, "PNG", transparency)
  
     def save_video(self, f_name: str, frames: Iterable[np.ndarray], custom_ffmpeg=None):
         """

@@ -38,7 +38,144 @@ BODY_MAP = [
     {("pose_keypoints_2d", "RHeel"), ("POSE_LANDMARKS", "RIGHT_HEEL")},
 ]
 
-POSES_MAP = BODY_MAP + LEFT_HAND_MAP + RIGHT_HAND_MAP
+FACE_MAP = [
+    # face border mappings and interpolations:
+    (("face_keypoints_2d", "FB_0"), ("FACE_LANDMARKS", "127")),
+    (("face_keypoints_2d", "FB_1"), ("FACE_LANDMARKS", "234")),
+    (("face_keypoints_2d", "FB_2"), ("FACE_LANDMARKS", "93")),
+    (("face_keypoints_2d", "FB_3"), ("FACE_LANDMARKS", "132")),
+    (("face_keypoints_2d", "FB_4"), ("FACE_LANDMARKS", "58")),
+    (("face_keypoints_2d", "FB_5"), ("FACE_LANDMARKS", "172")),
+    (("face_keypoints_2d", "FB_6"), ("FACE_LANDMARKS", "136")),
+    (("face_keypoints_2d", "FB_7"), ("FACE_LANDMARKS", "149")),
+    (("face_keypoints_2d", "FB_8"), ("FACE_LANDMARKS", "152")),
+    (("face_keypoints_2d", "FB_9"), ("FACE_LANDMARKS", "378")),
+    (("face_keypoints_2d", "FB_10"), ("FACE_LANDMARKS", "365")),
+    (("face_keypoints_2d", "FB_11"), ("FACE_LANDMARKS", "397")),
+    (("face_keypoints_2d", "FB_12"), ("FACE_LANDMARKS", "288")),
+    (("face_keypoints_2d", "FB_13"), ("FACE_LANDMARKS", "361")),
+    (("face_keypoints_2d", "FB_14"), ("FACE_LANDMARKS", "323")),
+    (("face_keypoints_2d", "FB_15"), ("FACE_LANDMARKS", "454")),
+    (("face_keypoints_2d", "FB_16"), ("FACE_LANDMARKS", "356")),
+    {("face_keypoints_2d", ("FB_6", "FB_7")), ("FACE_LANDMARKS", "150")},
+    {("face_keypoints_2d", ("FB_7", "FB_8")), ("FACE_LANDMARKS", "176")},
+    {("face_keypoints_2d", ("FB_7", "FB_8")), ("FACE_LANDMARKS", "148")},
+    {("face_keypoints_2d", ("FB_8", "FB_9")), ("FACE_LANDMARKS", "377")},
+    {("face_keypoints_2d", ("FB_8", "FB_8")), ("FACE_LANDMARKS", "400")},
+    {("face_keypoints_2d", ("FB_9", "FB_10")), ("FACE_LANDMARKS", "379")},
+
+    # Right eye mappings and interpolations:
+    (("face_keypoints_2d", "FE_42"), ("FACE_LANDMARKS", "362")),
+    (("face_keypoints_2d", "FE_43"), ("FACE_LANDMARKS", "385")),
+    (("face_keypoints_2d", "FE_44"), ("FACE_LANDMARKS", "387")),
+    (("face_keypoints_2d", "FE_45"), ("FACE_LANDMARKS", "263")),
+    (("face_keypoints_2d", "FE_46"), ("FACE_LANDMARKS", "373")),
+    (("face_keypoints_2d", "FE_47"), ("FACE_LANDMARKS", "380")),
+    {("face_keypoints_2d", ("FE_42", "FE_43")), ("FACE_LANDMARKS", "398")},
+    {("face_keypoints_2d", ("FE_42", "FE_43")), ("FACE_LANDMARKS", "384")},
+    {("face_keypoints_2d", ("FE_43", "FE_44")), ("FACE_LANDMARKS", "386")},
+    {("face_keypoints_2d", ("FE_44", "FE_45")), ("FACE_LANDMARKS", "388")},
+    {("face_keypoints_2d", ("FE_44", "FE_45")), ("FACE_LANDMARKS", "466")},
+    {("face_keypoints_2d", ("FE_45", "FE_46")), ("FACE_LANDMARKS", "249")},
+    {("face_keypoints_2d", ("FE_45", "FE_46")), ("FACE_LANDMARKS", "390")},
+    {("face_keypoints_2d", ("FE_46", "FE_47")), ("FACE_LANDMARKS", "374")},
+    {("face_keypoints_2d", ("FE_47", "FE_42")), ("FACE_LANDMARKS", "381")},
+    {("face_keypoints_2d", ("FE_47", "FE_42")), ("FACE_LANDMARKS", "382")},
+
+    # Left eye mappings and interpolations:
+    (("face_keypoints_2d", "FE_36"), ("FACE_LANDMARKS", "33")),
+    (("face_keypoints_2d", "FE_37"), ("FACE_LANDMARKS", "160")),
+    (("face_keypoints_2d", "FE_38"), ("FACE_LANDMARKS", "158")),
+    (("face_keypoints_2d", "FE_39"), ("FACE_LANDMARKS", "133")),
+    (("face_keypoints_2d", "FE_40"), ("FACE_LANDMARKS", "153")),
+    (("face_keypoints_2d", "FE_41"), ("FACE_LANDMARKS", "144")),
+    {("face_keypoints_2d", ("FE_36", "FE_37")), ("FACE_LANDMARKS", "246")},
+    {("face_keypoints_2d", ("FE_36", "FE_37")), ("FACE_LANDMARKS", "161")},
+    {("face_keypoints_2d", ("FE_37", "FE_38")), ("FACE_LANDMARKS", "159")},
+    {("face_keypoints_2d", ("FE_38", "FE_39")), ("FACE_LANDMARKS", "157")},
+    {("face_keypoints_2d", ("FE_38", "FE_39")), ("FACE_LANDMARKS", "173")},
+    {("face_keypoints_2d", ("FE_39", "FE_40")), ("FACE_LANDMARKS", "155")},
+    {("face_keypoints_2d", ("FE_39", "FE_40")), ("FACE_LANDMARKS", "154")},
+    {("face_keypoints_2d", ("FE_40", "FE_41")), ("FACE_LANDMARKS", "145")},
+    {("face_keypoints_2d", ("FE_41", "FE_36")), ("FACE_LANDMARKS", "163")},
+    {("face_keypoints_2d", ("FE_41", "FE_36")), ("FACE_LANDMARKS", "7")},
+
+    # Nose mappings and interpolations:
+    (("face_keypoints_2d", "FN_27"), ("FACE_LANDMARKS", "168")),
+    (("face_keypoints_2d", "FN_28"), ("FACE_LANDMARKS", "197")),
+    (("face_keypoints_2d", "FN_29"), ("FACE_LANDMARKS", "5")),
+    (("face_keypoints_2d", "FN_30"), ("FACE_LANDMARKS", "4")),
+    {("face_keypoints_2d", ("FN_27", "FN_28")), ("FACE_LANDMARKS", "6")},
+    {("face_keypoints_2d", ("FN_28", "FN_29")), ("FACE_LANDMARKS", "195")},
+
+    (("face_keypoints_2d", "FN_31"), ("FACE_LANDMARKS", "219")),
+    (("face_keypoints_2d", "FN_32"), ("FACE_LANDMARKS", "237")),
+    (("face_keypoints_2d", "FN_33"), ("FACE_LANDMARKS", "1")),
+    (("face_keypoints_2d", "FN_34"), ("FACE_LANDMARKS", "457")),
+    (("face_keypoints_2d", "FN_35"), ("FACE_LANDMARKS", "439")),
+    {("face_keypoints_2d", ("FN_31", "FN_32")), ("FACE_LANDMARKS", "218")},
+    {("face_keypoints_2d", ("FN_32", "FN_33")), ("FACE_LANDMARKS", "44")},
+    {("face_keypoints_2d", ("FN_33", "FN_34")), ("FACE_LANDMARKS", "274")},
+    {("face_keypoints_2d", ("FN_34", "FN_35")), ("FACE_LANDMARKS", "438")},
+
+    # Mouth mappings and interpolations:
+    (("face_keypoints_2d", "FLO_48"), ("FACE_LANDMARKS", "61")),
+    (("face_keypoints_2d", "FLO_49"), ("FACE_LANDMARKS", "40")),
+    (("face_keypoints_2d", "FLO_50"), ("FACE_LANDMARKS", "37")),
+    (("face_keypoints_2d", "FLO_51"), ("FACE_LANDMARKS", "0")),
+    (("face_keypoints_2d", "FLO_52"), ("FACE_LANDMARKS", "267")),
+    (("face_keypoints_2d", "FLO_53"), ("FACE_LANDMARKS", "270")),
+    (("face_keypoints_2d", "FLO_54"), ("FACE_LANDMARKS", "291")),
+    (("face_keypoints_2d", "FLO_55"), ("FACE_LANDMARKS", "321")),
+    (("face_keypoints_2d", "FLO_56"), ("FACE_LANDMARKS", "314")),
+    (("face_keypoints_2d", "FLO_57"), ("FACE_LANDMARKS", "17")),
+    (("face_keypoints_2d", "FLO_58"), ("FACE_LANDMARKS", "84")),
+    (("face_keypoints_2d", "FLO_59"), ("FACE_LANDMARKS", "91")),
+    {("face_keypoints_2d", ("FLO_48", "FLO_49")), ("FACE_LANDMARKS", "185")},
+    {("face_keypoints_2d", ("FLO_49", "FLO_50")), ("FACE_LANDMARKS", "39")},
+    {("face_keypoints_2d", ("FLO_52", "FLO_53")), ("FACE_LANDMARKS", "269")},
+    {("face_keypoints_2d", ("FLO_53", "FLO_54")), ("FACE_LANDMARKS", "409")},
+    {("face_keypoints_2d", ("FLO_54", "FLO_55")), ("FACE_LANDMARKS", "375")},
+    {("face_keypoints_2d", ("FLO_55", "FLO_56")), ("FACE_LANDMARKS", "405")},
+    {("face_keypoints_2d", ("FLO_58", "FLO_59")), ("FACE_LANDMARKS", "181")},
+    {("face_keypoints_2d", ("FLO_59", "FLO_48")), ("FACE_LANDMARKS", "146")},
+
+    # Inner mouth mappings and interpolations:
+    (("face_keypoints_2d", "FLI_60"), ("FACE_LANDMARKS", "78")),
+    (("face_keypoints_2d", "FLI_61"), ("FACE_LANDMARKS", "81")),
+    (("face_keypoints_2d", "FLI_62"), ("FACE_LANDMARKS", "13")),
+    (("face_keypoints_2d", "FLI_63"), ("FACE_LANDMARKS", "311")),
+    (("face_keypoints_2d", "FLI_64"), ("FACE_LANDMARKS", "308")),
+    (("face_keypoints_2d", "FLI_65"), ("FACE_LANDMARKS", "402")),
+    (("face_keypoints_2d", "FLI_66"), ("FACE_LANDMARKS", "14")),
+    (("face_keypoints_2d", "FLI_67"), ("FACE_LANDMARKS", "178")),
+    {("face_keypoints_2d", ("FLI_60", "FLI_61")), ("FACE_LANDMARKS", "191")},
+    {("face_keypoints_2d", ("FLI_60", "FLI_61")), ("FACE_LANDMARKS", "80")},
+    {("face_keypoints_2d", ("FLI_61", "FLI_62")), ("FACE_LANDMARKS", "82")},
+    {("face_keypoints_2d", ("FLI_62", "FLI_63")), ("FACE_LANDMARKS", "312")},
+    {("face_keypoints_2d", ("FLI_63", "FLI_64")), ("FACE_LANDMARKS", "310")},
+    {("face_keypoints_2d", ("FLI_63", "FLI_64")), ("FACE_LANDMARKS", "415")},
+    {("face_keypoints_2d", ("FLI_64", "FLI_65")), ("FACE_LANDMARKS", "318")},
+    {("face_keypoints_2d", ("FLI_64", "FLI_65")), ("FACE_LANDMARKS", "324")},
+    {("face_keypoints_2d", ("FLI_65", "FLI_66")), ("FACE_LANDMARKS", "317")},
+    {("face_keypoints_2d", ("FLI_66", "FLI_67")), ("FACE_LANDMARKS", "87")},
+    {("face_keypoints_2d", ("FLI_67", "FLI_60")), ("FACE_LANDMARKS", "88")},
+    {("face_keypoints_2d", ("FLI_67", "FLI_60")), ("FACE_LANDMARKS", "95")},
+
+    # FEB
+    (("face_keypoints_2d", "FEB_17"), ("FACE_LANDMARKS", "70")),
+    (("face_keypoints_2d", "FEB_18"), ("FACE_LANDMARKS", "63")),
+    (("face_keypoints_2d", "FEB_19"), ("FACE_LANDMARKS", "105")),
+    (("face_keypoints_2d", "FEB_20"), ("FACE_LANDMARKS", "66")),
+    (("face_keypoints_2d", "FEB_21"), ("FACE_LANDMARKS", "107")),
+    (("face_keypoints_2d", "FEB_22"), ("FACE_LANDMARKS", "336")),
+    (("face_keypoints_2d", "FEB_23"), ("FACE_LANDMARKS", "296")),
+    (("face_keypoints_2d", "FEB_24"), ("FACE_LANDMARKS", "334")),
+    (("face_keypoints_2d", "FEB_25"), ("FACE_LANDMARKS", "293")),
+    (("face_keypoints_2d", "FEB_26"), ("FACE_LANDMARKS", "300")),
+]
+
+POSES_MAP = BODY_MAP + LEFT_HAND_MAP + RIGHT_HAND_MAP + FACE_MAP
 
 
 def convert_pose(pose: Pose, pose_components: List[PoseHeaderComponent]) -> Pose:
@@ -92,7 +229,6 @@ def convert_pose(pose: Pose, pose_components: List[PoseHeaderComponent]) -> Pose
     pose_body = NumPyPoseBody(fps=pose.body.fps, data=data, confidence=conf)
 
     return Pose(pose_header, pose_body)
-
 
 def save_image(pose: Pose, name: str):
     """

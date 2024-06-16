@@ -23,8 +23,7 @@ class TestPoseVisualizer(TestCase):
         with tempfile.NamedTemporaryFile(suffix='.gif', delete=False) as temp_gif:
             v.save_gif(temp_gif.name, v.draw())
             self.assertTrue(os.path.exists(temp_gif.name))
-            self.assertGreater(os.path.getsize(
-                temp_gif.name), 0)
+            self.assertGreater(os.path.getsize(temp_gif.name), 0)
 
     def test_save_png(self):
         """
@@ -35,11 +34,10 @@ class TestPoseVisualizer(TestCase):
 
         v = PoseVisualizer(pose)
 
-        with tempfile.TemporaryDirectory() as temp_dir:
-            temp_png = os.path.join(temp_dir, 'example.png')
-            v.save_png(temp_png, v.draw(transparency=True))
-            self.assertTrue(os.path.exists(temp_png))
-            self.assertGreater(os.path.getsize(temp_png), 0)
+        with tempfile.NamedTemporaryFile(suffix='.png', delete=False) as temp_png:
+            v.save_png(temp_png.name, v.draw(transparency=True))
+            self.assertTrue(os.path.exists(temp_png.name))
+            self.assertGreater(os.path.getsize(temp_png.name), 0)
 
     def test_save_mp4(self):
         """
@@ -54,3 +52,14 @@ class TestPoseVisualizer(TestCase):
             v.save_video(temp_mp4.name, v.draw())
             self.assertTrue(os.path.exists(temp_mp4.name))
             self.assertGreater(os.path.getsize(temp_mp4.name), 0)
+
+    def test_save_to_memory(self):
+        """
+        Test saving pose visualization as bytes.
+        """
+        with open("tests/data/mediapipe_long_hand_normalized.pose", "rb") as f:
+            pose = Pose.read(f.read())
+
+        v = PoseVisualizer(pose)
+        file_bytes = v.save_png(None, v.draw())
+        self.assertGreater(len(file_bytes), 0)

@@ -2,8 +2,8 @@ import itertools
 import logging
 import math
 from functools import lru_cache
-from typing import Iterable, Tuple, Union
 from io import BytesIO
+from typing import Iterable, Tuple, Union
 
 import numpy as np
 import numpy.ma as ma
@@ -40,7 +40,8 @@ class PoseVisualizer:
         except ImportError:
             raise ImportError("Please install OpenCV with: pip install opencv-python")
 
-    def _draw_frame(self, frame: ma.MaskedArray, frame_confidence: np.ndarray, img, transparency: bool = False) -> np.ndarray:
+    def _draw_frame(self, frame: ma.MaskedArray, frame_confidence: np.ndarray, img,
+                    transparency: bool = False) -> np.ndarray:
         """
         Draw frame of pose data of an image.
 
@@ -63,13 +64,17 @@ class PoseVisualizer:
 
         background_color = img[0][0]  # Estimation of background color for opacity. `mean` is slow
 
-        thickness = self.thickness if self.thickness is not None else round(
-            math.sqrt(img.shape[0] * img.shape[1]) / 150)
+        # Estimation of thickness and radius for drawing
+        thickness = self.thickness
+        if self.thickness is None:
+            thickness = round(math.sqrt(img.shape[0] * img.shape[1]) / 150)
         radius = round(thickness / 2)
+
+        draw_operations = []
 
         for person, person_confidence in zip(frame, frame_confidence):
             c = person_confidence.tolist()
-            points_2d = [tuple(p) for p in person[:, :2].tolist()]
+            points = [p for p in person.tolist()]
             idx = 0
             for component in self.pose.header.components:
                 colors = [np.array(c[::-1]) for c in component.colors]
@@ -77,45 +82,89 @@ class PoseVisualizer:
                 @lru_cache(maxsize=None)
                 def _point_color(p_i: int):
                     opacity = c[p_i + idx]
-                    np_color = colors[p_i % len(component.colors)] * opacity + (1 - opacity) * background_color[:3] # [:3] ignores alpha value if present
+                    np_color = colors[p_i % len(component.colors)] * opacity + (1 - opacity) * background_color[
+                                                                                               :3]  # [:3] ignores alpha value if present
                     if transparency:
                         np_color = np.append(np_color, opacity * 255)
                     return tuple([int(c) for c in np_color])
 
-                # Draw Points
+                # Collect Points
                 for i, point_name in enumerate(component.points):
                     if c[i + idx] > 0:
-                        self.cv2.circle(img=img,
-                                        center=tuple(person[i + idx][:2]),
-                                        radius=radius,
-                                        color=_point_color(i),
-                                        thickness=-1,
-                                        lineType=16)
+                        center = points[i + idx]
+                        draw_operations.append({
+                            'type': 'circle',
+                            'center': center,
+                            'radius': radius,
+                            'color': _point_color(i),
+                            'thickness': -1,
+                            'lineType': 16,
+                            'z': center[2] if len(center) > 2 else 0
+                        })
 
                 if self.pose.header.is_bbox:
-                    point1 = points_2d[0 + idx]
-                    point2 = points_2d[1 + idx]
+                    point1 = points[0 + idx]
+                    point2 = points[1 + idx]
                     color = tuple(np.mean([_point_color(0), _point_color(1)], axis=0))
 
-                    self.cv2.rectangle(img=img, pt1=point1, pt2=point2, color=color, thickness=thickness)
+                    draw_operations.append({
+                        'type': 'rectangle',
+                        'pt1': point1,
+                        'pt2': point2,
+                        'color': color,
+                        'thickness': thickness,
+                        'z': (point1[2] + point2[2]) / 2 if len(point1) > 2 else 0
+                    })
                 else:
-                    # Draw Limbs
+                    # Collect Limbs
                     for (p1, p2) in component.limbs:
                         if c[p1 + idx] > 0 and c[p2 + idx] > 0:
-                            point1 = points_2d[p1 + idx]
-                            point2 = points_2d[p2 + idx]
-
-                            # length = ((point1[0] - point2[0]) ** 2 + (point1[1] - point2[1]) ** 2) ** 0.5
+                            point1 = points[p1 + idx]
+                            point2 = points[p2 + idx]
 
                             color = tuple(np.mean([_point_color(p1), _point_color(p2)], axis=0))
 
-                            self.cv2.line(img, point1, point2, color, thickness, lineType=self.cv2.LINE_AA)
+                            draw_operations.append({
+                                'type': 'line',
+                                'pt1': point1,
+                                'pt2': point2,
+                                'color': color,
+                                'thickness': thickness,
+                                'lineType': self.cv2.LINE_AA,
+                                'z': (point1[2] + point2[2]) / 2 if len(point1) > 2 else 0
+                            })
 
                 idx += len(component.points)
 
+        draw_operations = sorted(draw_operations, key=lambda op: op['z'])
+
+        # Execute draw operations
+        for op in draw_operations:
+            if op['type'] == 'circle':
+                self.cv2.circle(img=img,
+                                center=tuple(op['center'][:2]),
+                                radius=op['radius'],
+                                color=op['color'],
+                                thickness=op['thickness'],
+                                lineType=op['lineType'])
+            elif op['type'] == 'rectangle':
+                self.cv2.rectangle(img=img,
+                                   pt1=tuple(op['pt1'][:2]),
+                                   pt2=tuple(op['pt2'][:2]),
+                                   color=op['color'],
+                                   thickness=op['thickness'])
+            elif op['type'] == 'line':
+                self.cv2.line(img,
+                              pt1=tuple(op['pt1'][:2]),
+                              pt2=tuple(op['pt2'][:2]),
+                              color=op['color'],
+                              thickness=op['thickness'],
+                              lineType=op['lineType'])
+
         return img
 
-    def draw(self, background_color: Tuple[int, int, int] = (255, 255, 255), max_frames: int = None, transparency: bool = False):
+    def draw(self, background_color: Tuple[int, int, int] = (255, 255, 255), max_frames: int = None,
+             transparency: bool = False):
         """
         draws pose on plain background using the specified color - for a number of frames.
 
@@ -136,9 +185,10 @@ class PoseVisualizer:
         if transparency:
             background_color += (0,)
         int_frames = np.array(np.around(self.pose.body.data.data), dtype="int32")
-        background = np.full((self.pose.header.dimensions.height, self.pose.header.dimensions.width, len(background_color)),
-                             fill_value=background_color,
-                             dtype="uint8")
+        background = np.full(
+            (self.pose.header.dimensions.height, self.pose.header.dimensions.width, len(background_color)),
+            fill_value=background_color,
+            dtype="uint8")
         for frame, confidence in itertools.islice(zip(int_frames, self.pose.body.confidence), max_frames):
             yield self._draw_frame(frame, confidence, img=background.copy(), transparency=transparency)
 
@@ -210,7 +260,8 @@ class PoseVisualizer:
         """
         self.cv2.imwrite(f_name, frame)
 
-    def _save_image(self, f_name: Union[str, None], frames: Iterable[np.ndarray], format: str = "GIF", transparency: bool = False) -> Union[None, bytes]:
+    def _save_image(self, f_name: Union[str, None], frames: Iterable[np.ndarray], format: str = "GIF",
+                    transparency: bool = False) -> Union[None, bytes]:
         """
         Save pose frames as Image (GIF or PNG).
 
@@ -244,18 +295,18 @@ class PoseVisualizer:
             cv_code = self.cv2.COLOR_BGR2RGBA
         else:
             cv_code = self.cv2.COLOR_BGR2RGB
-            
+
         images = [Image.fromarray(self.cv2.cvtColor(frame, cv_code)) for frame in frames]
 
         def save_to(obj: Union[str, None]):
             images[0].save(obj,
-							format=format,
-							append_images=images[1:],
-							save_all=True,
-							duration=1000 / self.pose.body.fps,
-							loop=0,
-							disposal=2 if transparency else 0)
-        
+                           format=format,
+                           append_images=images[1:],
+                           save_all=True,
+                           duration=1000 / self.pose.body.fps,
+                           loop=0,
+                           disposal=2 if transparency else 0)
+
         if f_name:
             save_to(f_name)
         else:
@@ -285,8 +336,9 @@ class PoseVisualizer:
             If Pillow is not installed.
         """
         return self._save_image(f_name, frames, "GIF", False)
-    
-    def save_png(self, f_name: Union[str, None], frames: Iterable[np.ndarray], transparency: bool = True) -> Union[None, bytes]:
+
+    def save_png(self, f_name: Union[str, None], frames: Iterable[np.ndarray],
+                 transparency: bool = True) -> Union[None, bytes]:
         """
         Save pose frames as PNG.
 
@@ -308,9 +360,9 @@ class PoseVisualizer:
         ------
         ImportError 
             If Pillow is not installed.
-        """        
+        """
         return self._save_image(f_name, frames, "PNG", transparency)
- 
+
     def save_video(self, f_name: str, frames: Iterable[np.ndarray], custom_ffmpeg=None):
         """
         Save pose frames as a video.

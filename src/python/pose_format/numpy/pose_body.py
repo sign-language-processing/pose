@@ -119,8 +119,11 @@ class NumPyPoseBody(PoseBody):
             The binary buffer to write to.
         """
         _frames, _people, _points, _dims = self.data.shape
-        _frames = _frames if _frames < 65535 else 0  # TODO change from short to int
-        buffer.write(ConstStructs.triple_ushort.pack(self.fps, _frames, _people))
+        if _frames > 4_294_967_295: # about 4.5 years of video at 30fps
+            raise ValueError("Too many frames to write. Maximum is 2^32 - 1.")
+        buffer.write(ConstStructs.float.pack(self.fps))
+        buffer.write(ConstStructs.uint.pack(_frames))
+        buffer.write(ConstStructs.ushort.pack(_people))
 
         buffer.write(np.array(self.data.data, dtype=np.float32).tobytes())
         buffer.write(np.array(self.confidence, dtype=np.float32).tobytes())

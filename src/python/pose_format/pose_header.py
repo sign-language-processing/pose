@@ -4,7 +4,7 @@ from typing import BinaryIO, List, Tuple
 
 from .utils.reader import BufferReader, ConstStructs
 
-VERSION = 0.1
+VERSION = 0.2
 
 
 class PoseNormalizationInfo:

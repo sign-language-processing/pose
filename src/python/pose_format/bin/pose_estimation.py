@@ -21,7 +21,7 @@ def pose_video(input_path: str, output_path: str, format: str):
     cap = cv2.VideoCapture(input_path)
     width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
     height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-    fps = int(cap.get(cv2.CAP_PROP_FPS))
+    fps = cap.get(cv2.CAP_PROP_FPS)
     frames = load_video_frames(cap)
 
     # Perform pose estimation

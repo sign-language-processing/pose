@@ -30,6 +30,10 @@ Struct format for two unsigned short integers"""
     """
 Struct format for three unsigned short integers"""
 
+    uint: struct.Struct = struct.Struct("<I")
+    """
+Struct format for unsigned integer"""
+
 
 class BufferReader:
     """

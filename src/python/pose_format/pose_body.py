@@ -61,6 +61,8 @@ class PoseBody:
             return cls.read_v0_0(header, reader, **kwargs)
         elif round(header.version, 3) == 0.1:
             return cls.read_v0_1(header, reader, **kwargs)
+        elif round(header.version, 3) == 0.2:
+            return cls.read_v0_2(header, reader, **kwargs)
 
         raise NotImplementedError("Unknown version - %f" % header.version)
 
@@ -178,6 +180,46 @@ class PoseBody:
 
         # _frames is defined as short, which sometimes is not enough! TODO change to int
         _frames = int(reader.bytes_left() / (_people * _points * (_dims + 1) * 4))
+
+        data = cls.read_v0_1_frames(_frames, (_people, _points, _dims), reader, start_frame, end_frame)
+        confidence = cls.read_v0_1_frames(_frames, (_people, _points), reader, start_frame, end_frame)
+
+        return cls(fps, data, confidence)
+
+    @classmethod
+    def read_v0_2(cls,
+                  header: PoseHeader,
+                  reader: BufferReader,
+                  start_frame: int = None,
+                  end_frame: int = None,
+                  **unused_kwargs) -> "PoseBody":
+        """
+        Reads pose data for version 0.2 from a buffer.
+
+        Parameters
+        ----------
+        header : PoseHeader
+            Header containing the version of the pose data.
+        reader : BufferReader
+            Buffer from which to read the pose data.
+        start_frame : int, optional
+            Index of the first frame to read. Default is None.
+        end_frame : int, optional
+            Index of the last frame to read. Default is None.
+        **unused_kwargs : dict
+            Unused additional parameters for this version.
+
+        Returns
+        -------
+        PoseBody
+            PoseBody object initialized with the read data for version 0.2.
+        """
+        fps = reader.unpack(ConstStructs.float)  # Changed from v0.1, uint -> float
+        _frames = reader.unpack(ConstStructs.uint)  # Changed from v0.1, ushort -> uint
+
+        _people = reader.unpack(ConstStructs.ushort)
+        _points = sum([len(c.points) for c in header.components])
+        _dims = max([len(c.format) for c in header.components]) - 1
 
         data = cls.read_v0_1_frames(_frames, (_people, _points, _dims), reader, start_frame, end_frame)
         confidence = cls.read_v0_1_frames(_frames, (_people, _points), reader, start_frame, end_frame)

@@ -1,6 +1,6 @@
 {
   "name": "pose-viewer",
-  "version": "0.9.0",
+  "version": "0.10.0",
   "description": "Stencil Component Starter",
   "main": "dist/index.cjs.js",
   "module": "dist/index.js",
@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "@stencil/core": "4.5.0",
-    "pose-format": "1.4.0"
+    "pose-format": "1.5.1"
   },
   "license": "MIT",
   "devDependencies": {

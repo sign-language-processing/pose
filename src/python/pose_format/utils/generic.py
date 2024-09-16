@@ -140,10 +140,11 @@ def correct_wrist(pose: Pose, hand: str) -> Pose:
     body_wrist = pose.body.data[:, :, body_wrist_index]
     body_wrist_conf = pose.body.confidence[:, :, body_wrist_index]
 
-    new_wrist_data = ma.where(wrist.data == 0, body_wrist, wrist)
+    stacked_conf = np.stack([wrist_conf] * 3, axis=-1)
+    new_wrist_data = ma.where(stacked_conf == 0, body_wrist, wrist)
     new_wrist_conf = ma.where(wrist_conf == 0, body_wrist_conf, wrist_conf)
 
-    pose.body.data[:, :, body_wrist_index] = ma.masked_equal(new_wrist_data, 0)
+    pose.body.data[:, :, body_wrist_index] = new_wrist_data
     pose.body.confidence[:, :, body_wrist_index] = new_wrist_conf
     return pose
 

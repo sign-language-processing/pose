@@ -27,7 +27,7 @@ jobs:
 
     - name: Run tests for pose_format
       working-directory: ./src/js/pose_format
-      run: npm test
+      run: npm run test
 
     - name: Install dependencies for pose_viewer
       working-directory: ./src/js/pose_viewer
@@ -35,4 +35,4 @@ jobs:
 
     - name: Run tests for pose_viewer
       working-directory: ./src/js/pose_viewer
-      run: npm test
+      run: npm run test

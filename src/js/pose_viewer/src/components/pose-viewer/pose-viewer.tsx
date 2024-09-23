@@ -2,6 +2,7 @@
 import {Component, Element, Event, EventEmitter, h, Host, Method, Prop, State, Watch} from '@stencil/core';
 import type {PoseModel} from "pose-format/dist/types";
 import {Pose} from "pose-format";
+import type {Buffer} from "buffer";
 // import {Pose, PoseModel} from "../../../../pose_format/dist";
 import {PoseRenderer} from "./renderers/pose-renderer";
 import {SVGPoseRenderer} from "./renderers/svg.pose-renderer";
@@ -21,8 +22,8 @@ export class PoseViewer {
   private resizeObserver: ResizeObserver;
   private fetchAbortController: AbortController;
 
-  private lastSrc: string;
-  @Prop() src: string; // Source URL for .pose file
+  private lastSrc: string | Buffer;
+  @Prop() src: string | Buffer; // Source URL for .pose file or path to a local file or Buffer
   @Prop() svg: boolean = false; // Render in an SVG instead of a canvas
 
   // Dimensions
@@ -86,14 +87,27 @@ export class PoseViewer {
     this.resizeObserver.observe(this.element);
   }
 
-  private async getRemotePose() {
-    // Abort previous request
+  private async loadPose() {
+    // Abort previous request if it exists
     if (this.fetchAbortController) {
       this.fetchAbortController.abort();
     }
 
-    this.fetchAbortController = new AbortController();
-    this.pose = await Pose.fromRemote(this.src, this.fetchAbortController);
+    if(typeof this.src === 'string') {
+      const isRemoteUrl = this.src.startsWith('http') || this.src.startsWith('//');
+      const isBrowserEnvironment = typeof window !== 'undefined';
+
+      if (isRemoteUrl || isBrowserEnvironment) {
+        // Remote URL or Browser environment
+        this.fetchAbortController = new AbortController();
+        this.pose = await Pose.fromRemote(this.src, this.fetchAbortController);
+      } else {
+        // Local environment
+        this.pose = await Pose.fromLocal(this.src);
+      }
+    } else {
+      this.pose = Pose.from(this.src);
+    }
   }
 
   private initPose() {
@@ -137,7 +151,7 @@ export class PoseViewer {
 
     this.error = null;
     try {
-      await this.getRemotePose();
+      await this.loadPose();
       this.initPose();
       this.error = null;
     } catch (e) {

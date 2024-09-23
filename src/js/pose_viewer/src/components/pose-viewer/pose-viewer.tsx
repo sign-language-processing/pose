@@ -2,7 +2,7 @@
 import {Component, Element, Event, EventEmitter, h, Host, Method, Prop, State, Watch} from '@stencil/core';
 import type {PoseModel} from "pose-format/dist/types";
 import {Pose} from "pose-format";
-import {Buffer} from "buffer";
+import type {Buffer} from "buffer";
 // import {Pose, PoseModel} from "../../../../pose_format/dist";
 import {PoseRenderer} from "./renderers/pose-renderer";
 import {SVGPoseRenderer} from "./renderers/svg.pose-renderer";
@@ -93,10 +93,7 @@ export class PoseViewer {
       this.fetchAbortController.abort();
     }
 
-    if (this.src instanceof Buffer) {
-      // Handle Buffer input
-      this.pose = Pose.from(this.src);
-    } else if (typeof this.src === 'string') {
+    if(typeof this.src === 'string') {
       const isRemoteUrl = this.src.startsWith('http') || this.src.startsWith('//');
       const isBrowserEnvironment = typeof window !== 'undefined';
 
@@ -109,7 +106,7 @@ export class PoseViewer {
         this.pose = await Pose.fromLocal(this.src);
       }
     } else {
-      throw new Error('Invalid src type. Expected Buffer or string.');
+      this.pose = Pose.from(this.src);
     }
   }
 

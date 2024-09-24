@@ -1,0 +1,38 @@
+name: JavaScript Tests
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+    branches: [master, main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [16.x, 18.x]
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+    
+    - name: Install dependencies for pose_format
+      working-directory: ./src/js/pose_format
+      run: npm ci
+
+    - name: Run tests for pose_format
+      working-directory: ./src/js/pose_format
+      run: npm run build # we can have test command when we have test files
+
+    - name: Install dependencies for pose_viewer
+      working-directory: ./src/js/pose_viewer
+      run: npm ci # && npm install --save-dev @types/jest@27.0.3 jest@27.0.3 puppeteer@20
+
+    - name: Run tests for pose_viewer
+      working-directory: ./src/js/pose_viewer
+      run: npm run build # we can have test command when we have test files

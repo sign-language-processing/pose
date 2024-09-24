@@ -176,7 +176,7 @@ class PoseBody:
 
         _people = reader.unpack(ConstStructs.ushort)
         _points = sum([len(c.points) for c in header.components])
-        _dims = max([len(c.format) for c in header.components]) - 1
+        _dims = header.num_dims()
 
         # _frames is defined as short, which sometimes is not enough! TODO change to int
         _frames = int(reader.bytes_left() / (_people * _points * (_dims + 1) * 4))
@@ -219,7 +219,7 @@ class PoseBody:
 
         _people = reader.unpack(ConstStructs.ushort)
         _points = sum([len(c.points) for c in header.components])
-        _dims = max([len(c.format) for c in header.components]) - 1
+        _dims = header.num_dims()
 
         data = cls.read_v0_1_frames(_frames, (_people, _points, _dims), reader, start_frame, end_frame)
         confidence = cls.read_v0_1_frames(_frames, (_people, _points), reader, start_frame, end_frame)

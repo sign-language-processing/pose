@@ -235,6 +235,7 @@ class PoseHeader:
     ----
     - Use the `read` method to generate an instance from a BufferReader.
     - `total_points` method returns the total number of points across all components.
+    - `num_dims` method returns the number of dimensions (X, Y, Z, ...).
     - Convert the header to bounding boxes using the `bbox` method.
 
     Examples
@@ -305,6 +306,17 @@ class PoseHeader:
             Total number of points.
         """
         return sum(map(lambda c: len(c.points), self.components))
+
+    def num_dims(self):
+        """
+        Returns number of dimensions
+
+        Returns
+        -------
+        int
+            Total number of dimensions (X, Y, Z, ...).
+        """
+        return max([len(c.format) for c in self.components]) - 1
 
     def _get_point_index(self, component: str, point: str):
         idx = 0

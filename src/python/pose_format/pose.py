@@ -3,7 +3,6 @@ from typing import BinaryIO, Dict, List, Tuple, Type
 
 import numpy as np
 import numpy.ma as ma
-
 from pose_format.numpy import NumPyPoseBody
 from pose_format.pose_body import PoseBody
 from pose_format.pose_header import (PoseHeader, PoseHeaderComponent,
@@ -61,6 +60,17 @@ class Pose:
         buffer : BinaryIO
             buffer
         """
+
+        # Sanity check: The body should have 4 dimensions
+        if len(self.body.data.shape) != 4:
+            raise ValueError(f"Body data should have 4 dimensions, not {len(self.body.data.shape)}")
+
+        # Sanity check: Body should have as many dimensions as header
+        header_dims = self.header.num_dims()
+        body_dims = self.body.data.shape[-1]
+        if header_dims != body_dims:
+            raise ValueError(f"Header has {header_dims} dimensions, but body has {body_dims}")
+
         self.header.write(buffer)
         self.body.write(self.header.version, buffer)
 

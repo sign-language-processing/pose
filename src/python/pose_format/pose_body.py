@@ -594,3 +594,11 @@ class PoseBody:
         dropout_percent = np.abs(np.random.normal(loc=dropout_mean, scale=dropout_std, size=1))[0]
 
         return self.frame_dropout_given_percent(dropout_percent)
+
+    def __str__(self):
+        text = f"{self.__class__.__name__}\n"
+        text += f"FPS: {self.fps}\n"
+        text += f"Data: {type(self.data)} {self.data.shape}, {self.data.dtype}\n"
+        text += f"Confidence shape: {type(self.confidence)} {self.confidence.shape}, {self.data.dtype}\n"
+        text += f"Duration (seconds): {len(self.data) / self.fps}\n"
+        return text

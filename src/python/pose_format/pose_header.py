@@ -142,6 +142,13 @@ class PoseHeaderComponent:
         limbs_map = {p2: i for i, (p1, p2) in enumerate(self.limbs)}
         return [limbs_map[p1] if p1 in limbs_map else None for p1, p2 in self.limbs]
 
+    def __str__(self):
+        text = f"PoseHeaderComponent: {self.name}\n"
+        text += f"  Format: {self.format}\n"
+        text += f"  Points: {self.points}\n"
+        text += f"  Limbs: {len(self.limbs)}\n"
+        text += f"  Colors: {len(self.colors)}\n"
+        return text
 
 class PoseHeaderDimensions:
     """
@@ -215,6 +222,9 @@ class PoseHeaderDimensions:
             raise ValueError(f"Depth must be between 0 and 65535. Got {self.depth}")
 
         buffer.write(ConstStructs.triple_ushort.pack(self.width, self.height, self.depth))
+
+    def __str__(self):
+        return f"PoseHeaderDimensions(width={self.width}, height={self.height}, depth={self.depth})"
 
 
 class PoseHeader:
@@ -367,3 +377,14 @@ class PoseHeader:
         components = [PoseHeaderComponent(c.name, box_points, box_limbs, box_colors, c.format) for c in self.components]
 
         return PoseHeader(self.version, self.dimensions, components, True)
+
+    def __str__(self):
+        text = "PoseHeader\n"
+        text += f"Version: {self.version}\n"
+        text += str(self.dimensions) + "\n"
+        text += f"Bounding Box: {self.is_bbox}\n"
+
+        text += "Components:\n"
+        for c in self.components:
+            text += str(c) + "\n"
+        return text

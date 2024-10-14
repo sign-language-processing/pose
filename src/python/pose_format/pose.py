@@ -328,3 +328,6 @@ A set of method names which define actions that can be applied to the pose data.
             return body_res
 
         return func
+
+    def __str__(self):
+        return f"Pose\n{self.header}\n{self.body}"

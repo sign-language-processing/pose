@@ -220,7 +220,7 @@ class PoseVisualizer:
             cap = self.cv2.VideoCapture(video_path)
             video_fps = cap.get(self.cv2.CAP_PROP_FPS)
 
-            assert math.isclose(video_fps, self.pose_fps, abs_tol=0.5), \
+            assert math.isclose(video_fps, self.pose_fps, abs_tol=0.1), \
                 "Fps of pose and video do not match: %f != %f" % (self.pose_fps, video_fps)
 
             while True:

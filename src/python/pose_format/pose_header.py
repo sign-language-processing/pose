@@ -1,3 +1,4 @@
+import hashlib
 import math
 import struct
 from typing import BinaryIO, List, Tuple
@@ -150,6 +151,7 @@ class PoseHeaderComponent:
         text += f"  Colors: {len(self.colors)}\n"
         return text
 
+
 class PoseHeaderDimensions:
     """
     Represents width, height, and depth dimensions for a pose header.
@@ -227,6 +229,32 @@ class PoseHeaderDimensions:
         return f"PoseHeaderDimensions(width={self.width}, height={self.height}, depth={self.depth})"
 
 
+class PoseHeaderCache:
+    start_offset: int = None
+    end_offset: int = None
+    hash: str = None
+    header: 'PoseHeader' = None
+
+    @staticmethod
+    def calc_hash(buffer: bytes):
+        return hashlib.md5(buffer[PoseHeaderCache.start_offset:PoseHeaderCache.end_offset]).hexdigest()
+
+    @staticmethod
+    def check_cache(buffer: bytes) -> 'PoseHeader':
+        if PoseHeaderCache.hash is None:
+            return None
+
+        if PoseHeaderCache.hash == PoseHeaderCache.calc_hash(buffer):
+            return PoseHeaderCache.header
+
+    @staticmethod
+    def set_cache(header: 'PoseHeader', buffer: bytes, start_offset: int, end_offset: int):
+        PoseHeaderCache.start_offset = start_offset
+        PoseHeaderCache.end_offset = end_offset
+        PoseHeaderCache.header = header
+        PoseHeaderCache.hash = PoseHeaderCache.calc_hash(buffer)
+
+
 class PoseHeader:
     """
     Main header for a pose.
@@ -281,14 +309,23 @@ class PoseHeader:
         PoseHeader
             An instance of PoseHeader.
         """
+        cached_header = PoseHeaderCache.check_cache(reader.buffer)
+        if cached_header is not None:
+            reader.read_offset = PoseHeaderCache.end_offset
+            return cached_header
 
+        start_offset = reader.read_offset
         version = reader.unpack(ConstStructs.float)
         dimensions = PoseHeaderDimensions.read(version, reader)
 
         _components = reader.unpack(ConstStructs.ushort)
         components = [PoseHeaderComponent.read(version, reader) for _ in range(_components)]
+        end_offset = reader.read_offset
 
-        return PoseHeader(version, dimensions, components)
+        pose_header = PoseHeader(version, dimensions, components)
+        PoseHeaderCache.set_cache(pose_header, reader.buffer, start_offset, end_offset)
+
+        return pose_header
 
     def write(self, buffer: BinaryIO):
         """

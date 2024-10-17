@@ -29,8 +29,13 @@ pip install pose-format
 
 ```bash
 video_to_pose --format mediapipe -i example.mp4 -o example.pose
+
 # Or if you have a directory of videos
 videos_to_poses --format mediapipe --directory /path/to/videos
+
+# You can also specify additional arguments
+video_to_pose --format mediapipe -i example.mp4 -o example.pose \
+  --additional-config="model_complexity=2,smooth_landmarks=false,refine_face_landmarks=true"
 ```
 
 #### 3. Reading `.pose` Files: 

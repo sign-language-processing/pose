@@ -2,6 +2,7 @@ from random import sample
 from typing import BinaryIO, List, Tuple
 
 import numpy as np
+import math
 
 from pose_format.pose_header import PoseHeader
 from pose_format.utils.reader import BufferReader, ConstStructs
@@ -192,6 +193,8 @@ class PoseBody:
                   reader: BufferReader,
                   start_frame: int = None,
                   end_frame: int = None,
+                  start_time: int = None,
+                  end_time: int = None,
                   **unused_kwargs) -> "PoseBody":
         """
         Reads pose data for version 0.2 from a buffer.
@@ -206,6 +209,10 @@ class PoseBody:
             Index of the first frame to read. Default is None.
         end_frame : int, optional
             Index of the last frame to read. Default is None.
+        start_time : int, optional
+            Start time of the pose data (in milliseconds). Default is None.
+        end_time : int, optional
+            End time of the pose data (in milliseconds). Default is None.
         **unused_kwargs : dict
             Unused additional parameters for this version.
 
@@ -214,12 +221,23 @@ class PoseBody:
         PoseBody
             PoseBody object initialized with the read data for version 0.2.
         """
+
+        if start_time is not None and start_frame is not None:
+            raise ValueError("Cannot specify both start_time and start_frame")
+        if end_time is not None and end_frame is not None:
+            raise ValueError("Cannot specify both end_time and end_frame")
+
         fps = reader.unpack(ConstStructs.float)  # Changed from v0.1, uint -> float
         _frames = reader.unpack(ConstStructs.uint)  # Changed from v0.1, ushort -> uint
 
         _people = reader.unpack(ConstStructs.ushort)
         _points = sum([len(c.points) for c in header.components])
         _dims = header.num_dims()
+
+        if start_time is not None:
+            start_frame = math.floor(start_time / 1000 * fps)
+        if end_time is not None:
+            end_frame = math.ceil(end_time / 1000 * fps)
 
         data = cls.read_v0_1_frames(_frames, (_people, _points, _dims), reader, start_frame, end_frame)
         confidence = cls.read_v0_1_frames(_frames, (_people, _points), reader, start_frame, end_frame)

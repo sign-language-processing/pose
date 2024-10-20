@@ -182,7 +182,9 @@ def process_holistic(frames: list,
     NumPyPoseBody
         Processed pose data
     """
-    holistic = mp_holistic.Holistic(static_image_mode=False, **additional_holistic_config)
+    if 'static_image_mode' not in additional_holistic_config:
+        additional_holistic_config['static_image_mode'] = False
+    holistic = mp_holistic.Holistic(**additional_holistic_config)
 
     try:
         datas = []

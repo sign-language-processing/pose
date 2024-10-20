@@ -8,6 +8,7 @@ from .openpose import hand_colors, load_frames_directory_dict
 
 try:
     import mediapipe as mp
+    from mediapipe.python.solutions.face_mesh_connections import FACEMESH_IRISES
 except ImportError:
     raise ImportError("Please install mediapipe with: pip install mediapipe")
 
@@ -53,6 +54,7 @@ list[str]
 """
 
 FACE_LIMBS = [(int(a), int(b)) for a, b in mp_holistic.FACEMESH_TESSELATION]
+FACE_IRISES = [(int(a), int(b)) for a, b in FACEMESH_IRISES]
 
 FLIPPED_BODY_POINTS = [
     'NOSE',
@@ -256,6 +258,10 @@ def holistic_components(pf="XYZC", additional_face_points=0):
     list of PoseHeaderComponent
         List of holistic components.
     """
+    face_limbs = list(FACE_LIMBS)
+    if additional_face_points > 0:
+        face_limbs += FACE_IRISES
+
     return [
         PoseHeaderComponent(name="POSE_LANDMARKS",
                             points=BODY_POINTS,
@@ -264,7 +270,7 @@ def holistic_components(pf="XYZC", additional_face_points=0):
                             point_format=pf),
         PoseHeaderComponent(name="FACE_LANDMARKS",
                             points=FACE_POINTS(additional_face_points),
-                            limbs=FACE_LIMBS,
+                            limbs=face_limbs,
                             colors=[(128, 0, 0)],
                             point_format=pf),
         holistic_hand_component("LEFT_HAND_LANDMARKS", pf),

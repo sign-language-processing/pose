@@ -33,11 +33,17 @@ export abstract class PoseRenderer {
   abstract renderLimb(from: PosePointModel, to: PosePointModel, color: RGBColor);
 
   renderLimbs(limbs: PoseLimb[], joints: PosePointModel[], colors: RGBColor[]) {
-    return limbs.map(({from, to}) => {
+    /**
+     This implementation is a bit different from the python one.
+     In python, we sort all limbs of all people and all components by depth and then render them.
+     Here, we only sort the limbs of the current component by depth.
+     */
+
+    const lines = limbs.map(({from, to}) => {
       const a = joints[from];
       const b = joints[to];
       if (!this.isJointValid(a) || !this.isJointValid(b)) {
-        return "";
+        return null;
       }
 
       const c1 = colors[from % colors.length];
@@ -48,8 +54,13 @@ export abstract class PoseRenderer {
         B: (c1.B + c2.B) / 2,
       };
 
-      return this.renderLimb(a, b, color);
+      return {from: a, to: b, color, z: (a.Z + b.Z) / 2};
     });
+
+    return lines
+      .filter(Boolean) // Remove invalid lines
+      .sort((a, b) => a.z - b.z) // Sort lines by depth
+      .map(({from, to, color}) => this.renderLimb(from, to, color));
   }
 
   renderFrame(frame: PoseBodyFrameModel) {

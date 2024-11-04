@@ -97,15 +97,22 @@ function parseBodyV0_0(header: PoseHeaderModel, buffer: Buffer): PoseBodyModel {
     return getBodyParserV0_0(header).parse(buffer) as unknown as PoseBodyModel
 }
 
-function parseBodyV0_1(header: PoseHeaderModel, buffer: Buffer): PoseBodyModel {
+function parseBodyV0_1(header: PoseHeaderModel, buffer: Buffer, version:  number): PoseBodyModel {
     const _points = header.components.map(c => c.points.length).reduce((a, b) => a + b, 0);
     const _dims = Math.max(...header.components.map(c => c.format.length)) - 1;
 
-    const infoParser = newParser()
-        .seek(header.headerLength)
-        .uint16("fps")
-        .uint16("_frames")
-        .uint16("_people");
+    let infoParser = newParser().seek(header.headerLength);
+    let infoSize = 0;
+    if (version === 0.1) {
+        infoParser = infoParser.uint16("fps").uint16("_frames");
+        infoSize = 6;
+    } else if (version === 0.2) {
+        infoParser = infoParser.floatle("fps").uint32("_frames");
+        infoSize = 10;
+    } else {
+        throw new Error(`Invalid version ${version}`);
+    }
+    infoParser = infoParser.uint16("_people");
 
     const info = infoParser.parse(buffer);
 
@@ -128,8 +135,8 @@ function parseBodyV0_1(header: PoseHeaderModel, buffer: Buffer): PoseBodyModel {
         return vars;
     };
 
-    const data = parseFloat32Array(info._frames * info._people * _points * _dims, header.headerLength + 6)
-    const confidence = parseFloat32Array(info._frames * info._people * _points, data.offset)
+    const data = parseFloat32Array(info._frames * info._people * _points * _dims, header.headerLength + infoSize);
+    const confidence = parseFloat32Array(info._frames * info._people * _points, data.offset);
 
     function frameRepresentation(i: number) {
         const people: any[] = new Array(info._people);
@@ -187,7 +194,8 @@ export function parsePose(buffer: Buffer): PoseModel {
             break;
 
         case 0.1:
-            body = parseBodyV0_1(header, buffer);
+        case 0.2:
+            body = parseBodyV0_1(header, buffer, version);
             break;
 
         default:

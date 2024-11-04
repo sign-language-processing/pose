@@ -8,6 +8,7 @@ from .openpose import hand_colors, load_frames_directory_dict
 
 try:
     import mediapipe as mp
+    from mediapipe.python.solutions.face_mesh_connections import FACEMESH_IRISES
 except ImportError:
     raise ImportError("Please install mediapipe with: pip install mediapipe")
 
@@ -53,6 +54,7 @@ list[str]
 """
 
 FACE_LIMBS = [(int(a), int(b)) for a, b in mp_holistic.FACEMESH_TESSELATION]
+FACE_IRISES = [(int(a), int(b)) for a, b in FACEMESH_IRISES]
 
 FLIPPED_BODY_POINTS = [
     'NOSE',
@@ -180,44 +182,47 @@ def process_holistic(frames: list,
     NumPyPoseBody
         Processed pose data
     """
-    holistic = mp_holistic.Holistic(static_image_mode=False, **additional_holistic_config)
+    if 'static_image_mode' not in additional_holistic_config:
+        additional_holistic_config['static_image_mode'] = False
+    holistic = mp_holistic.Holistic(**additional_holistic_config)
 
-    datas = []
-    confs = []
+    try:
+        datas = []
+        confs = []
 
-    for i, frame in enumerate(tqdm(frames, disable=not progress)):
-        results = holistic.process(frame)
+        for i, frame in enumerate(tqdm(frames, disable=not progress)):
+            results = holistic.process(frame)
 
-        body_data, body_confidence = body_points(results.pose_landmarks, w, h, 33)
-        face_data, face_confidence = component_points(results.face_landmarks, w, h,
-                                                      FACE_POINTS_NUM(additional_face_points))
-        lh_data, lh_confidence = component_points(results.left_hand_landmarks, w, h, 21)
-        rh_data, rh_confidence = component_points(results.right_hand_landmarks, w, h, 21)
-        body_world_data, body_world_confidence = body_points(results.pose_world_landmarks, w, h, 33)
+            body_data, body_confidence = body_points(results.pose_landmarks, w, h, 33)
+            face_data, face_confidence = component_points(results.face_landmarks, w, h,
+                                                          FACE_POINTS_NUM(additional_face_points))
+            lh_data, lh_confidence = component_points(results.left_hand_landmarks, w, h, 21)
+            rh_data, rh_confidence = component_points(results.right_hand_landmarks, w, h, 21)
+            body_world_data, body_world_confidence = body_points(results.pose_world_landmarks, w, h, 33)
 
-        data = np.concatenate([body_data, face_data, lh_data, rh_data, body_world_data])
-        conf = np.concatenate([body_confidence, face_confidence, lh_confidence, rh_confidence, body_world_confidence])
+            data = np.concatenate([body_data, face_data, lh_data, rh_data, body_world_data])
+            conf = np.concatenate([body_confidence, face_confidence, lh_confidence, rh_confidence, body_world_confidence])
 
-        if kinect is not None:
-            kinect_depth = []
-            for x, y, z in np.array(data, dtype="int32"):
-                if 0 < x < w and 0 < y < h:
-                    kinect_depth.append(kinect[i, y, x, 0])
-                else:
-                    kinect_depth.append(0)
+            if kinect is not None:
+                kinect_depth = []
+                for x, y, z in np.array(data, dtype="int32"):
+                    if 0 < x < w and 0 < y < h:
+                        kinect_depth.append(kinect[i, y, x, 0])
+                    else:
+                        kinect_depth.append(0)
 
-            kinect_vec = np.expand_dims(np.array(kinect_depth), axis=-1)
-            data = np.concatenate([data, kinect_vec], axis=-1)
+                kinect_vec = np.expand_dims(np.array(kinect_depth), axis=-1)
+                data = np.concatenate([data, kinect_vec], axis=-1)
 
-        datas.append(data)
-        confs.append(conf)
+            datas.append(data)
+            confs.append(conf)
 
-    pose_body_data = np.expand_dims(np.stack(datas), axis=1)
-    pose_body_conf = np.expand_dims(np.stack(confs), axis=1)
+        pose_body_data = np.expand_dims(np.stack(datas), axis=1)
+        pose_body_conf = np.expand_dims(np.stack(confs), axis=1)
 
-    holistic.close()
-
-    return NumPyPoseBody(data=pose_body_data, confidence=pose_body_conf, fps=fps)
+        return NumPyPoseBody(data=pose_body_data, confidence=pose_body_conf, fps=fps)
+    finally:
+        holistic.close()
 
 
 def holistic_hand_component(name, pf="XYZC") -> PoseHeaderComponent:
@@ -255,6 +260,10 @@ def holistic_components(pf="XYZC", additional_face_points=0):
     list of PoseHeaderComponent
         List of holistic components.
     """
+    face_limbs = list(FACE_LIMBS)
+    if additional_face_points > 0:
+        face_limbs += FACE_IRISES
+
     return [
         PoseHeaderComponent(name="POSE_LANDMARKS",
                             points=BODY_POINTS,
@@ -263,7 +272,7 @@ def holistic_components(pf="XYZC", additional_face_points=0):
                             point_format=pf),
         PoseHeaderComponent(name="FACE_LANDMARKS",
                             points=FACE_POINTS(additional_face_points),
-                            limbs=FACE_LIMBS,
+                            limbs=face_limbs,
                             colors=[(128, 0, 0)],
                             point_format=pf),
         holistic_hand_component("LEFT_HAND_LANDMARKS", pf),

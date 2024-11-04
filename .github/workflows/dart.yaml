@@ -1,0 +1,35 @@
+name: Dart Tests
+
+on:
+  pull_request:
+    branches: [master, main]
+  push:
+    branches: [master, main]
+
+jobs:
+  build:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dart-lang/setup-dart@v1
+        with:
+          sdk: 3.0
+
+      - name: Install Requirements
+        working-directory: src/dart
+        run: dart pub get
+
+      # Verify the use of 'dart format' on each commit.
+      - name: Check formatting
+        working-directory: src/dart
+        run: dart format --output=none --set-exit-if-changed .
+
+      # Passing '--fatal-infos' for slightly stricter analysis.
+      - name: Analyze
+        working-directory: src/dart
+        run: dart analyze --fatal-infos
+
+      - name: Run tests
+        working-directory: src/dart
+        run: dart test

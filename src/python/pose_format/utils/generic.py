@@ -113,19 +113,38 @@ def fake_pose(num_frames: int, fps=25, dims=2, components=OpenPose_Components):
     return Pose(header, body)
 
 
+def get_hand_wrist_index(pose: Pose, hand: str):
+    if pose.header.components[0].name == "POSE_LANDMARKS":
+        return pose.header._get_point_index(f'{hand.upper()}_HAND_LANDMARKS', 'WRIST')
+    elif pose.header.components[0].name == "pose_keypoints_2d":
+        return pose.header._get_point_index(f'hand_{hand.lower()}_keypoints_2d', 'BASE')
+    else:
+        raise ValueError("Unknown pose header schema for get_hand_wrist_index")
+
+
+def get_body_hand_wrist_index(pose: Pose, hand: str):
+    if pose.header.components[0].name == "POSE_LANDMARKS":
+        return pose.header._get_point_index('POSE_LANDMARKS', f'{hand.upper()}_WRIST')
+    elif pose.header.components[0].name == "pose_keypoints_2d":
+        return pose.header._get_point_index('pose_keypoints_2d', f'{hand.upper()[0]}Wrist')
+    else:
+        raise ValueError("Unknown pose header schema for get_hand_wrist_index")
+
+
 def correct_wrist(pose: Pose, hand: str) -> Pose:
-    wrist_index = pose.header._get_point_index(f'{hand}_HAND_LANDMARKS', 'WRIST')
+    wrist_index = get_hand_wrist_index(pose, hand)
     wrist = pose.body.data[:, :, wrist_index]
     wrist_conf = pose.body.confidence[:, :, wrist_index]
 
-    body_wrist_index = pose.header._get_point_index('POSE_LANDMARKS', f'{hand}_WRIST')
+    body_wrist_index = get_body_hand_wrist_index(pose, hand)
     body_wrist = pose.body.data[:, :, body_wrist_index]
     body_wrist_conf = pose.body.confidence[:, :, body_wrist_index]
 
-    new_wrist_data = ma.where(wrist.data == 0, body_wrist, wrist)
+    stacked_conf = np.stack([wrist_conf] * 3, axis=-1)
+    new_wrist_data = ma.where(stacked_conf == 0, body_wrist, wrist)
     new_wrist_conf = ma.where(wrist_conf == 0, body_wrist_conf, wrist_conf)
 
-    pose.body.data[:, :, body_wrist_index] = ma.masked_equal(new_wrist_data, 0)
+    pose.body.data[:, :, body_wrist_index] = new_wrist_data
     pose.body.confidence[:, :, body_wrist_index] = new_wrist_conf
     return pose
 

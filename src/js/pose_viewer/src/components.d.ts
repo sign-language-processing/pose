@@ -25,7 +25,7 @@ export namespace Components {
         "play": () => Promise<void>;
         "playbackRate": number;
         "readyState": number;
-        "src": string;
+        "src": string | Buffer;
         "svg": boolean;
         "syncMedia": (media: HTMLMediaElement) => Promise<void>;
         "thickness": number;
@@ -70,7 +70,7 @@ declare namespace LocalJSX {
         "paused"?: boolean;
         "playbackRate"?: number;
         "readyState"?: number;
-        "src"?: string;
+        "src"?: string | Buffer;
         "svg"?: boolean;
         "thickness"?: number;
         "width"?: string;

@@ -2,6 +2,7 @@ from random import sample
 from typing import BinaryIO, List, Tuple
 
 import numpy as np
+import math
 
 from pose_format.pose_header import PoseHeader
 from pose_format.utils.reader import BufferReader, ConstStructs
@@ -61,6 +62,8 @@ class PoseBody:
             return cls.read_v0_0(header, reader, **kwargs)
         elif round(header.version, 3) == 0.1:
             return cls.read_v0_1(header, reader, **kwargs)
+        elif round(header.version, 3) == 0.2:
+            return cls.read_v0_2(header, reader, **kwargs)
 
         raise NotImplementedError("Unknown version - %f" % header.version)
 
@@ -174,10 +177,67 @@ class PoseBody:
 
         _people = reader.unpack(ConstStructs.ushort)
         _points = sum([len(c.points) for c in header.components])
-        _dims = max([len(c.format) for c in header.components]) - 1
+        _dims = header.num_dims()
 
         # _frames is defined as short, which sometimes is not enough! TODO change to int
         _frames = int(reader.bytes_left() / (_people * _points * (_dims + 1) * 4))
+
+        data = cls.read_v0_1_frames(_frames, (_people, _points, _dims), reader, start_frame, end_frame)
+        confidence = cls.read_v0_1_frames(_frames, (_people, _points), reader, start_frame, end_frame)
+
+        return cls(fps, data, confidence)
+
+    @classmethod
+    def read_v0_2(cls,
+                  header: PoseHeader,
+                  reader: BufferReader,
+                  start_frame: int = None,
+                  end_frame: int = None,
+                  start_time: int = None,
+                  end_time: int = None,
+                  **unused_kwargs) -> "PoseBody":
+        """
+        Reads pose data for version 0.2 from a buffer.
+
+        Parameters
+        ----------
+        header : PoseHeader
+            Header containing the version of the pose data.
+        reader : BufferReader
+            Buffer from which to read the pose data.
+        start_frame : int, optional
+            Index of the first frame to read. Default is None.
+        end_frame : int, optional
+            Index of the last frame to read. Default is None.
+        start_time : int, optional
+            Start time of the pose data (in milliseconds). Default is None.
+        end_time : int, optional
+            End time of the pose data (in milliseconds). Default is None.
+        **unused_kwargs : dict
+            Unused additional parameters for this version.
+
+        Returns
+        -------
+        PoseBody
+            PoseBody object initialized with the read data for version 0.2.
+        """
+
+        if start_time is not None and start_frame is not None:
+            raise ValueError("Cannot specify both start_time and start_frame")
+        if end_time is not None and end_frame is not None:
+            raise ValueError("Cannot specify both end_time and end_frame")
+
+        fps = reader.unpack(ConstStructs.float)  # Changed from v0.1, uint -> float
+        _frames = reader.unpack(ConstStructs.uint)  # Changed from v0.1, ushort -> uint
+
+        _people = reader.unpack(ConstStructs.ushort)
+        _points = sum([len(c.points) for c in header.components])
+        _dims = header.num_dims()
+
+        if start_time is not None:
+            start_frame = math.floor(start_time / 1000 * fps)
+        if end_time is not None:
+            end_frame = math.ceil(end_time / 1000 * fps)
 
         data = cls.read_v0_1_frames(_frames, (_people, _points, _dims), reader, start_frame, end_frame)
         confidence = cls.read_v0_1_frames(_frames, (_people, _points), reader, start_frame, end_frame)
@@ -552,3 +612,11 @@ class PoseBody:
         dropout_percent = np.abs(np.random.normal(loc=dropout_mean, scale=dropout_std, size=1))[0]
 
         return self.frame_dropout_given_percent(dropout_percent)
+
+    def __str__(self):
+        text = f"{self.__class__.__name__}\n"
+        text += f"FPS: {self.fps}\n"
+        text += f"Data: {type(self.data)} {self.data.shape}, {self.data.dtype}\n"
+        text += f"Confidence shape: {type(self.confidence)} {self.confidence.shape}, {self.data.dtype}\n"
+        text += f"Duration (seconds): {len(self.data) / self.fps}\n"
+        return text

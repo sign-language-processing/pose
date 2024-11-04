@@ -1,7 +1,7 @@
 [project]
 name = "pose_format"
 description = "Library for viewing, augmenting, and handling .pose files"
-version = "0.4.1"
+version = "0.6.2"
 keywords = ["Pose Files", "Pose Interpolation", "Pose Augmentation"]
 authors = [
     { name = "Amit Moryossef", email = "amitmoryossef@gmail.com" },
@@ -13,6 +13,7 @@ dependencies = [
     "scipy",
     "tqdm"
 ]
+requires-python = ">= 3.8"
 
 [project.optional-dependencies]
 dev = [
@@ -58,6 +59,7 @@ based_on_style = "google"
 column_limit = 120
 
 [project.scripts]
+pose_info = "pose_format.bin.pose_info:main"
 video_to_pose = "pose_format.bin.pose_estimation:main"
 videos_to_poses = "pose_format.bin.directory:main"
 visualize_pose = "pose_format.bin.pose_visualizer:main"

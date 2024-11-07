@@ -68,7 +68,7 @@ class PoseVisualizer:
         thickness = self.thickness
         if self.thickness is None:
             thickness = round(math.sqrt(img.shape[0] * img.shape[1]) / 150)
-        radius = round(thickness / 2)
+        radius = math.ceil(thickness / 2)
 
         draw_operations = []
 

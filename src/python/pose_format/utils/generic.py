@@ -9,6 +9,14 @@ from pose_format.utils.normalization_3d import PoseNormalizer
 from pose_format.utils.openpose import OpenPose_Components
 
 
+def normalize_pose_size(pose: Pose, target_width: int = 512):
+    shift = 1.25
+    shoulder_width = (target_width / shift) / 2
+    shift_vec = np.full(shape=(pose.body.data.shape[-1]), fill_value=shift, dtype=np.float32)
+    pose.body.data = (pose.body.data + shift_vec) * shoulder_width
+    pose.header.dimensions.height = pose.header.dimensions.width = target_width
+
+
 def pose_hide_legs(pose: Pose):
     if pose.header.components[0].name == "POSE_LANDMARKS":
         point_names = ["KNEE", "ANKLE", "HEEL", "FOOT_INDEX"]

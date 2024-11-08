@@ -221,10 +221,13 @@ def convert_pose(pose: Pose, pose_components: List[PoseHeaderComponent]) -> Pose
     dims = min(len(pose_header.components[0].format), len(pose.header.components[0].format)) - 1
     for (c1, p1), (c2, p2) in mapping.items():
         p2 = tuple([p2]) if isinstance(p2, str) else p2
-        p2s = [pose.header._get_point_index(c2, p) for p in list(p2)]
-        p1_index = pose_header._get_point_index(c1, p1)
-        data[:, :, p1_index, :dims] = pose.body.data[:, :, p2s, :dims].mean(axis=2)
-        conf[:, :, p1_index] = pose.body.confidence[:, :, p2s].mean(axis=2)
+        try:
+            p2s = [pose.header._get_point_index(c2, p) for p in list(p2)]
+            p1_index = pose_header._get_point_index(c1, p1)
+            data[:, :, p1_index, :dims] = pose.body.data[:, :, p2s, :dims].mean(axis=2)
+            conf[:, :, p1_index] = pose.body.confidence[:, :, p2s].mean(axis=2)
+        except Exception as e:
+            print(f"Error in mapping {c1} {p1} to {c2} {p2}: {e}")
 
     pose_body = NumPyPoseBody(fps=pose.body.fps, data=data, confidence=conf)
 

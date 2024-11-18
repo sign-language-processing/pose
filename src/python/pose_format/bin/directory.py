@@ -1,45 +1,42 @@
 import argparse
-import os
-
+from pathlib import Path
 from pose_format.bin.pose_estimation import pose_video, parse_additional_config
 from tqdm import tqdm
 
 
-def removesuffix(text: str, suffix: str):
-	if text.endswith(suffix):
-		return text[:-len(suffix)]
-	else:
-		return text
+_SUPPORTED_VIDEO_FORMATS= [".mp4"] # TODO: add .webm support
 
+def find_missing_pose_files(directory: Path, video_suffix:str=".mp4", recursive:bool=False):
+    if recursive:
+        vid_files = directory.rglob(f"*{video_suffix}")
+    else:
+        vid_files = directory.glob(f"*{video_suffix}")
 
-def find_missing_pose_files(directory: str):
-    all_files = os.listdir(directory)
-    mp4_files = [f for f in all_files if f.endswith(".mp4")]
-    pose_files = {removesuffix(f, ".pose") for f in all_files if f.endswith(".pose")}
     missing_pose_files = []
 
-    for mp4_file in mp4_files:
-        base_name = removesuffix(mp4_file, ".mp4")
-        if base_name not in pose_files:
-            missing_pose_files.append(os.path.join(directory, mp4_file))
-
-    return sorted(missing_pose_files)
+    for vid_file in vid_files:
+        if not vid_file.with_suffix(".pose").is_file():
+            missing_pose_files.append(vid_file)
+    return missing_pose_files
 
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--format',
+    parser.add_argument('-f','--format',
                         choices=['mediapipe'],
                         default='mediapipe',
                         type=str,
                         help='type of pose estimation to use')
-    parser.add_argument("--directory", type=str, required=True)
+    parser.add_argument("-d","--directory", type=Path, required=True, help="Directory to search for videos in")
+    parser.add_argument("-r", "--recursive", action="store_true", help="Whether to search for videos recursively")
+    parser.add_argument("--video_suffix", type=str, 
+                        choices=_SUPPORTED_VIDEO_FORMATS,
+                        default=".mp4", help="Video extension to search for")
     parser.add_argument('--additional-config', type=str, help='additional configuration for the pose estimator')
     args = parser.parse_args()
 
-    missing_pose_files = find_missing_pose_files(args.directory)
+    missing_pose_files = find_missing_pose_files(args.directory, video_suffix=args.video_suffix, recursive=args.recursive)
     additional_config = parse_additional_config(args.additional_config)
 
-    for mp4_path in tqdm(missing_pose_files):
-        pose_file_name = removesuffix(mp4_path, ".mp4") + ".pose"
-        pose_video(mp4_path, pose_file_name, args.format, additional_config)
+    for vid_path in tqdm(missing_pose_files):
+        pose_video(vid_path, vid_path.with_suffix(".pose"), args.format, additional_config)

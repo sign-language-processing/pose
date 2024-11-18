@@ -222,6 +222,7 @@ Alternatively, use a different testing framework to run tests, such as pytest. T
 * Or employ pytest:
 
 ```bash
+# From src/python directory
 pytest .
 # or for a single file
 pytest pose_format/tensorflow/masked/tensor_test.py

@@ -50,12 +50,8 @@ def find_videos_with_missing_pose_files(
     videos_with_missing_pose_files = []
 
     for vid_path in video_files:
-        if (
-            not get_corresponding_pose_path(
-                video_path=vid_path, keep_video_suffixes=keep_video_suffixes
-            )
-            in pose_files
-        ):
+        corresponding_pose = get_corresponding_pose_path(video_path=vid_path, keep_video_suffixes=keep_video_suffixes)
+        if corresponding_pose not in pose_files:
             videos_with_missing_pose_files.append(vid_path)
 
     return videos_with_missing_pose_files

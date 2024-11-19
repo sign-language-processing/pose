@@ -130,16 +130,14 @@ def main():
 
     print(f"Found {len(videos_with_missing_pose_files)} videos missing pose files.")
 
-    pose_files_that_will_be_created = {
-        get_corresponding_pose_path(vid_path, args.keep_video_suffixes) for vid_path in videos_with_missing_pose_files
-    }
+    pose_files_that_will_be_created = {get_corresponding_pose_path(vid_path, args.keep_video_suffixes) for vid_path in videos_with_missing_pose_files}
 
     if len(pose_files_that_will_be_created) < len(videos_with_missing_pose_files):
         continue_input = input(
             f"With current naming strategy (without --keep-video-suffixes), name collisions will result in only {len(pose_files_that_will_be_created)} .pose files being created. Continue? [y/n]"
         )
         if continue_input.lower() != "y":
-            print(f"Exiting. To keep video suffixes and , use --keep-video-suffixes")
+            print(f"Exiting. To keep video suffixes and avoid collisions, use --keep-video-suffixes")
             exit()
 
     additional_config = parse_additional_config(args.additional_config)

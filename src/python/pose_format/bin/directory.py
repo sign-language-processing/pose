@@ -27,8 +27,8 @@ def find_videos_with_missing_pose_files(
     recursive: bool, optional
         Whether to look for video files recursively, or just the top-level. Defaults to false.
     keep_video_suffixes: bool, optional
-        If true, when checking will append .pose suffix (e.g. foo.mp4->foo.mp4.pose, foo.webm->foo.webm.pose), 
-        If false, will replace it (foo.mp4 becomes foo.pose, and foo.webm ALSO becomes foo.pose). 
+        If true, when checking will append .pose suffix (e.g. foo.mp4->foo.mp4.pose, foo.webm->foo.webm.pose),
+        If false, will replace it (foo.mp4 becomes foo.pose, and foo.webm ALSO becomes foo.pose).
         Default is false, which can cause name collisions.
 
     Returns
@@ -37,10 +37,10 @@ def find_videos_with_missing_pose_files(
         List of video paths without corresponding .pose files.
     """
 
-    # Prevents the common gotcha with mutable default arg lists: 
+    # Prevents the common gotcha with mutable default arg lists:
     # https://docs.python-guide.org/writing/gotchas/#mutable-default-arguments
     if video_suffixes is None:
-        video_suffixes = _SUPPORTED_VIDEO_FORMATS
+        video_suffixes = SUPPORTED_VIDEO_FORMATS
 
     glob_method = getattr(directory, "rglob" if recursive else "glob")
     all_files = list(glob_method(f"*"))
@@ -57,9 +57,7 @@ def find_videos_with_missing_pose_files(
     return videos_with_missing_pose_files
 
 
-def get_corresponding_pose_path(
-    video_path: Path, keep_video_suffixes: bool = False
-) -> Path:
+def get_corresponding_pose_path(video_path: Path, keep_video_suffixes: bool = False) -> Path:
     """
     Given a video path, and whether to keep the suffix, returns the expected corresponding path with .pose extension.
 
@@ -68,7 +66,7 @@ def get_corresponding_pose_path(
     video_path : Path
         Path to a video file
     keep_video_suffixes : bool, optional
-        Whether to keep suffix (e.g. foo.mp4 -> foo.mp4.pose) 
+        Whether to keep suffix (e.g. foo.mp4 -> foo.mp4.pose)
         or replace (foo.mp4->foo.pose). Defaults to replace.
 
     Returns
@@ -112,8 +110,8 @@ def main():
     parser.add_argument(
         "--video-suffixes",
         type=str,
-        choices=_SUPPORTED_VIDEO_FORMATS,
-        default=_SUPPORTED_VIDEO_FORMATS,
+        choices=SUPPORTED_VIDEO_FORMATS,
+        default=SUPPORTED_VIDEO_FORMATS,
         help="Video extensions to search for. Defaults to searching for all supported.",
     )
     parser.add_argument(
@@ -132,12 +130,10 @@ def main():
 
     print(f"Found {len(videos_with_missing_pose_files)} videos missing pose files.")
 
-    pose_files_that_will_be_created = set(
-        [
-            get_corresponding_pose_path(vid_path, args.keep_video_suffixes)
-            for vid_path in videos_with_missing_pose_files
-        ]
-    )
+    pose_files_that_will_be_created = {
+        get_corresponding_pose_path(vid_path, args.keep_video_suffixes) for vid_path in videos_with_missing_pose_files
+    }
+
     if len(pose_files_that_will_be_created) < len(videos_with_missing_pose_files):
         continue_input = input(
             f"With current naming strategy (without --keep-video-suffixes), name collisions will result in only {len(pose_files_that_will_be_created)} .pose files being created. Continue? [y/n]"
@@ -148,19 +144,17 @@ def main():
 
     additional_config = parse_additional_config(args.additional_config)
 
-    pose_with_no_errors = []
+    pose_with_no_errors_count = 0
 
     for vid_path in tqdm(videos_with_missing_pose_files):
         try:
-            pose_path = get_corresponding_pose_path(
-                video_path=vid_path, keep_video_suffixes=args.keep_video_suffixes
-            )
+            pose_path = get_corresponding_pose_path(video_path=vid_path, keep_video_suffixes=args.keep_video_suffixes)
             if pose_path.is_file():
                 print(f"Skipping {vid_path}, corresponding .pose file already created.")
                 continue
             pose_video(vid_path, pose_path, args.format, additional_config)
-            pose_with_no_errors.append(vid_path)
+            pose_with_no_errors_count += 1
         except ValueError as e:
             print(f"ValueError on {vid_path}")
             logging.exception(e)
-    print(f"Successfully created pose files for {len(pose_with_no_errors)}/{len(videos_with_missing_pose_files)} video files")
+    print(f"Successfully created pose files for {pose_with_no_errors_count}/{len(videos_with_missing_pose_files)} video files")

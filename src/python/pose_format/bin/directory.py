@@ -1,42 +1,171 @@
 import argparse
 from pathlib import Path
 from pose_format.bin.pose_estimation import pose_video, parse_additional_config
+from typing import List
+import logging
 from tqdm import tqdm
 
+# Note: untested other than .mp4. Support for .webm may have issues: https://github.com/sign-language-processing/pose/pull/126
+_SUPPORTED_VIDEO_FORMATS = [".mp4", ".mov", ".avi", ".mkv", ".flv", ".wmv", ".webm"]
 
-_SUPPORTED_VIDEO_FORMATS= [".mp4"] # TODO: add .webm support
 
-def find_missing_pose_files(directory: Path, video_suffix:str=".mp4", recursive:bool=False):
-    if recursive:
-        vid_files = directory.rglob(f"*{video_suffix}")
+def find_videos_with_missing_pose_files(
+    directory: Path,
+    video_suffixes: List[str] = None,
+    recursive: bool = False,
+    keep_video_suffixes: bool = False,
+) -> List[Path]:
+    """
+    Finds videos with missing .pose files.
+
+    Parameters
+    ----------
+    directory: Path,
+        Directory to search for videos in.
+    video_suffixes:  List[str], optional
+        Suffixes to look for, e.g. [".mp4", ".webm"]. If None, will use _SUPPORTED_VIDEO_FORMATS
+    recursive: bool, optional
+        Whether to look for video files recursively, or just the top-level. Defaults to false.
+    keep_video_suffixes: bool, optional
+        If true, when checking will append .pose suffix (e.g. foo.mp4->foo.mp4.pose, foo.webm->foo.webm.pose), 
+        If false, will replace it (foo.mp4 becomes foo.pose, and foo.webm ALSO becomes foo.pose). 
+        Default is false, which can cause name collisions.
+
+    Returns
+    -------
+    List[Path]
+        List of video paths without corresponding .pose files.
+    """
+
+    # Prevents the common gotcha with mutable default arg lists: 
+    # https://docs.python-guide.org/writing/gotchas/#mutable-default-arguments
+    if video_suffixes is None:
+        video_suffixes = _SUPPORTED_VIDEO_FORMATS
+
+    glob_method = getattr(directory, "rglob" if recursive else "glob")
+    all_files = list(glob_method(f"*"))
+    video_files = [path for path in all_files if path.suffix in video_suffixes]
+    pose_files = [path for path in all_files if path.suffix == ".pose"]
+
+    videos_with_missing_pose_files = []
+
+    for vid_path in video_files:
+        if (
+            not get_corresponding_pose_path(
+                video_path=vid_path, keep_video_suffixes=keep_video_suffixes
+            )
+            in pose_files
+        ):
+            videos_with_missing_pose_files.append(vid_path)
+
+    return videos_with_missing_pose_files
+
+
+def get_corresponding_pose_path(
+    video_path: Path, keep_video_suffixes: bool = False
+) -> Path:
+    """
+    Given a video path, and whether to keep the suffix, returns the expected corresponding path with .pose extension.
+
+    Parameters
+    ----------
+    video_path : Path
+        Path to a video file
+    keep_video_suffixes : bool, optional
+        Whether to keep suffix (e.g. foo.mp4 -> foo.mp4.pose) 
+        or replace (foo.mp4->foo.pose). Defaults to replace.
+
+    Returns
+    -------
+    Path
+        pathlib Path
+    """
+    if keep_video_suffixes:
+        return video_path.with_name(f"{video_path.name}.pose")
     else:
-        vid_files = directory.glob(f"*{video_suffix}")
-
-    missing_pose_files = []
-
-    for vid_file in vid_files:
-        if not vid_file.with_suffix(".pose").is_file():
-            missing_pose_files.append(vid_file)
-    return missing_pose_files
+        return video_path.with_suffix(".pose")
 
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-f','--format',
-                        choices=['mediapipe'],
-                        default='mediapipe',
-                        type=str,
-                        help='type of pose estimation to use')
-    parser.add_argument("-d","--directory", type=Path, required=True, help="Directory to search for videos in")
-    parser.add_argument("-r", "--recursive", action="store_true", help="Whether to search for videos recursively")
-    parser.add_argument("--video_suffix", type=str, 
-                        choices=_SUPPORTED_VIDEO_FORMATS,
-                        default=".mp4", help="Video extension to search for")
-    parser.add_argument('--additional-config', type=str, help='additional configuration for the pose estimator')
+    parser.add_argument(
+        "-f",
+        "--format",
+        choices=["mediapipe"],
+        default="mediapipe",
+        type=str,
+        help="type of pose estimation to use",
+    )
+    parser.add_argument(
+        "-d",
+        "--directory",
+        type=Path,
+        required=True,
+        help="Directory to search for videos in",
+    )
+    parser.add_argument(
+        "-r",
+        "--recursive",
+        action="store_true",
+        help="Whether to search for videos recursively",
+    )
+    parser.add_argument(
+        "--keep-video-suffixes",
+        action="store_true",
+        help="Whether to drop the video extension (output for foo.mp4 becomes foo.pose, and foo.webm ALSO becomes foo.pose) or append to it (foo.mp4 becomes foo.mp4.pose, foo.webm output is foo.webm.pose). If there are multiple videos with the same basename but different extensions, this will create a .pose file for each. Otherwise only the first video will be posed.",
+    )
+    parser.add_argument(
+        "--video-suffixes",
+        type=str,
+        choices=_SUPPORTED_VIDEO_FORMATS,
+        default=_SUPPORTED_VIDEO_FORMATS,
+        help="Video extensions to search for. Defaults to searching for all supported.",
+    )
+    parser.add_argument(
+        "--additional-config",
+        type=str,
+        help="additional configuration for the pose estimator",
+    )
     args = parser.parse_args()
 
-    missing_pose_files = find_missing_pose_files(args.directory, video_suffix=args.video_suffix, recursive=args.recursive)
+    videos_with_missing_pose_files = find_videos_with_missing_pose_files(
+        args.directory,
+        video_suffixes=args.video_suffixes,
+        recursive=args.recursive,
+        keep_video_suffixes=args.keep_video_suffixes,
+    )
+
+    print(f"Found {len(videos_with_missing_pose_files)} videos missing pose files.")
+
+    pose_files_that_will_be_created = set(
+        [
+            get_corresponding_pose_path(vid_path, args.keep_video_suffixes)
+            for vid_path in videos_with_missing_pose_files
+        ]
+    )
+    if len(pose_files_that_will_be_created) < len(videos_with_missing_pose_files):
+        continue_input = input(
+            f"With current naming strategy (without --keep-video-suffixes), name collisions will result in only {len(pose_files_that_will_be_created)} .pose files being created. Continue? [y/n]"
+        )
+        if continue_input.lower() != "y":
+            print(f"Exiting. To keep video suffixes and , use --keep-video-suffixes")
+            exit()
+
     additional_config = parse_additional_config(args.additional_config)
 
-    for vid_path in tqdm(missing_pose_files):
-        pose_video(vid_path, vid_path.with_suffix(".pose"), args.format, additional_config)
+    pose_with_no_errors = []
+
+    for vid_path in tqdm(videos_with_missing_pose_files):
+        try:
+            pose_path = get_corresponding_pose_path(
+                video_path=vid_path, keep_video_suffixes=args.keep_video_suffixes
+            )
+            if pose_path.is_file():
+                print(f"Skipping {vid_path}, corresponding .pose file already created.")
+                continue
+            pose_video(vid_path, pose_path, args.format, additional_config)
+            pose_with_no_errors.append(vid_path)
+        except ValueError as e:
+            print(f"ValueError on {vid_path}")
+            logging.exception(e)
+    print(f"Successfully created pose files for {len(pose_with_no_errors)}/{len(videos_with_missing_pose_files)} video files")

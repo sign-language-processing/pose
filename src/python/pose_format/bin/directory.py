@@ -45,7 +45,7 @@ def find_videos_with_missing_pose_files(
     glob_method = getattr(directory, "rglob" if recursive else "glob")
     all_files = list(glob_method(f"*"))
     video_files = [path for path in all_files if path.suffix in video_suffixes]
-    pose_files = [path for path in all_files if path.suffix == ".pose"]
+    pose_files = {path for path in all_files if path.suffix == ".pose"}
 
     videos_with_missing_pose_files = []
 

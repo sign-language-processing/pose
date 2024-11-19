@@ -6,7 +6,7 @@ import logging
 from tqdm import tqdm
 
 # Note: untested other than .mp4. Support for .webm may have issues: https://github.com/sign-language-processing/pose/pull/126
-_SUPPORTED_VIDEO_FORMATS = [".mp4", ".mov", ".avi", ".mkv", ".flv", ".wmv", ".webm"]
+SUPPORTED_VIDEO_FORMATS = [".mp4", ".mov", ".avi", ".mkv", ".flv", ".wmv", ".webm"]
 
 
 def find_videos_with_missing_pose_files(

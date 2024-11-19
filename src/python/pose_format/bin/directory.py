@@ -78,8 +78,7 @@ def get_corresponding_pose_path(
     """
     if keep_video_suffixes:
         return video_path.with_name(f"{video_path.name}.pose")
-    else:
-        return video_path.with_suffix(".pose")
+    return video_path.with_suffix(".pose")
 
 
 def main():

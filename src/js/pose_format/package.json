@@ -1,6 +1,6 @@
 {
   "name": "pose-format",
-  "version": "1.5.1",
+  "version": "1.6.0",
   "description": "Library for handling .pose files",
   "scripts": {
     "build": "tsc",
@@ -18,7 +18,7 @@
     "binary-parser": "2.2.1"
   },
   "devDependencies": {
-    "@types/node": "20.8.6",
-    "typescript": "5.5.4"
+    "@types/node": "22.10.0",
+    "typescript": "5.7.2"
   }
 }

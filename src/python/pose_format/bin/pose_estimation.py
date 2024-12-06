@@ -15,7 +15,7 @@ def load_video_frames(cap: cv2.VideoCapture):
     cap.release()
 
 
-def pose_video(input_path: str, output_path: str, format: str, additional_config: dict):
+def pose_video(input_path: str, output_path: str, format: str, additional_config: dict = {'model_complexity': 1}, progress: bool = True):
     # Load video frames
     print('Loading video ...')
     cap = cv2.VideoCapture(input_path)
@@ -27,13 +27,12 @@ def pose_video(input_path: str, output_path: str, format: str, additional_config
     # Perform pose estimation
     print('Estimating pose ...')
     if format == 'mediapipe':
-        additional_holistic_config = {'model_complexity': 1} | additional_config
         pose = load_holistic(frames,
                              fps=fps,
                              width=width,
                              height=height,
-                             progress=True,
-                             additional_holistic_config=additional_holistic_config)
+                             progress=progress,
+                             additional_holistic_config=additional_config)
     else:
         raise NotImplementedError('Pose format not supported')
 

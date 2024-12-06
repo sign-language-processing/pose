@@ -36,6 +36,10 @@ videos_to_poses --format mediapipe --directory /path/to/videos
 # You can also specify additional arguments
 video_to_pose --format mediapipe -i example.mp4 -o example.pose \
   --additional-config="model_complexity=2,smooth_landmarks=false,refine_face_landmarks=true"
+
+# Recursively search for videos within a directory, and process them 10 at a time
+videos_to_poses --format mediapipe -num_workers 10 --recursive --directory /path/to/videos 
+
 ```
 
 #### 3. Reading `.pose` Files: 

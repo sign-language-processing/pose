@@ -36,6 +36,10 @@ videos_to_poses --format mediapipe --directory /path/to/videos
 # You can also specify additional arguments
 video_to_pose --format mediapipe -i example.mp4 -o example.pose \
   --additional-config="model_complexity=2,smooth_landmarks=false,refine_face_landmarks=true"
+
+# Recursively search for videos within a directory, and process them 10 at a time
+videos_to_poses --format mediapipe -num-workers 10 --recursive --directory /path/to/videos 
+
 ```
 
 #### 3. Reading `.pose` Files: 
@@ -222,6 +226,7 @@ Alternatively, use a different testing framework to run tests, such as pytest. T
 * Or employ pytest:
 
 ```bash
+# From src/python directory
 pytest .
 # or for a single file
 pytest pose_format/tensorflow/masked/tensor_test.py

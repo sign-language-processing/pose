@@ -1,6 +1,6 @@
 {
   "name": "pose-viewer",
-  "version": "0.10.0",
+  "version": "1.0.0",
   "description": "Stencil Component Starter",
   "homepage": "https://github.com/sign-language-processing/pose",
   "main": "dist/index.cjs.js",
@@ -24,12 +24,12 @@
     "prepare": "npm run build"
   },
   "dependencies": {
-    "@stencil/core": "4.5.0",
-    "pose-format": "1.5.1"
+    "@stencil/core": "4.22.3",
+    "pose-format": "1.6.0"
   },
   "license": "MIT",
   "devDependencies": {
     "rollup-plugin-node-polyfills": "0.2.1",
-    "@types/node": "^22.5.5"
+    "@types/node": "22.10.0"
   }
 }

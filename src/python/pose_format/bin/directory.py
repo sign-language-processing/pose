@@ -91,7 +91,10 @@ def process_video(keep_video_suffixes: bool, pose_format: str, additional_config
         if pose_path.is_file():
             print(f"Skipping {vid_path}, corresponding .pose file already created.")
         else:
-            pose_video(vid_path, pose_path, pose_format, additional_config, progress=False)
+            # pose_video function expects string, and passes it unchanged to cv2.VideoCapture(input_path)
+            # if you give cv2.VideoCapture(input_path) a Path it crashes on older versions.
+            # https://github.com/opencv/opencv/issues/15731
+            pose_video(str(vid_path.resolve()), str(pose_path.resolve()), pose_format, additional_config, progress=False)
             return True
             
     except ValueError as e:

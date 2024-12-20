@@ -10,9 +10,28 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+
       - uses: actions/setup-python@v4
         with:
           python-version: "3.10"
+
+      - name: Extract release version
+        id: get_version
+        run: echo "version=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+
+      - name: Update version in pyproject.toml
+        working-directory: src/python
+        run: |
+          sed -i '' 's/^version = .*/version = "${{ env.version }}"/' pyproject.toml
+
+      - name: Commit updated pyproject.toml
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add pyproject.toml
+          git commit -m "Bump version to ${{ env.version }}"
+          git push
+        working-directory: src/python
 
       - name: Install dependencies
         working-directory: src/python
@@ -20,7 +39,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install build
 
-      - name: build a binary wheel dist
+      - name: Build a binary wheel dist
         working-directory: src/python
         run: |
           rm -rf dist

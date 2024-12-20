@@ -26,11 +26,13 @@ jobs:
 
       - name: Commit updated pyproject.toml
         run: |
+          git fetch origin main
+          git checkout main
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
           git add pyproject.toml
           git commit -m "Bump version to ${{ env.version }}"
-          git push
+          git push origin main
         working-directory: src/python
 
       - name: Install dependencies

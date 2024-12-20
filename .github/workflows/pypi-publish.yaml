@@ -22,7 +22,7 @@ jobs:
       - name: Update version in pyproject.toml
         working-directory: src/python
         run: |
-          sed -i '' 's/^version = .*/version = "${{ env.version }}"/' pyproject.toml
+          sed -i 's/^version = .*/version = "${{ env.version }}"/' pyproject.toml
 
       - name: Commit updated pyproject.toml
         run: |

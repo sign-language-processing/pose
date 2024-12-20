@@ -148,9 +148,10 @@ FACE_LIMBS: List[Tuple[str, str]] = FACE_BORDER_LIMBS_LEFT + FACE_BORDER_LIMBS_R
                                     FACE_INNER_LIPS_LIMBS + FACE_NOSE_LIMBS + FACE_EYEBROW_LEFT_LIMBS + \
                                     FACE_EYEBROW_RIGHT_LIMBS + FACE_EYE_LEFT_LIMBS + FACE_EYE_RIGHT_LIMBS
 
-HAND_POINTS_COLOR = [[192, 0, 0], [192, 192, 0], [0, 192, 0], [0, 192, 192], [0, 0, 192], [127, 127, 127]]
+HAND_POINTS_COLOR = [[192, 0, 0], [0, 0, 192], [0, 192, 0], [0, 192, 192], [192, 127, 0], [127, 127, 127]]
 
 OPENPOSE_FRAME_PATTERN = "(?:^|\D)(\d+)\\_keypoints.json"
+
 
 # Definition of OpenPose Components
 
@@ -175,9 +176,13 @@ def limbs_index(limbs: List[Tuple[str, str]], points: List[str]) -> List[Tuple[i
 
 
 hand_colors = [
-    tuple([math.floor(x + 35 * (i % 4)) for x in HAND_POINTS_COLOR[i // 4]]) for i in range(-1,
-                                                                                            len(HAND_POINTS) - 1)
+    tuple([math.floor(x + 35 * (i % 4)) for x in HAND_POINTS_COLOR[i // 4]])
+    for i in range(-1, len(HAND_POINTS) - 1)
 ]
+# Override pinky, for accessibility
+hand_colors[17] = hand_colors[20] = (255, 128, 0)
+hand_colors[19] = (255, 153, 51)
+hand_colors[18] = (255, 178, 102)
 
 OpenPose_Hand_Component = lambda name: PoseHeaderComponent(
     name=name, points=HAND_POINTS, limbs=limbs_index(HAND_LIMBS, HAND_POINTS), colors=hand_colors, point_format="XYC")

@@ -12,6 +12,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+            submodules: true
       - uses: dart-lang/setup-dart@v1
         with:
           sdk: 3.0

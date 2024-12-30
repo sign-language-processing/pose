@@ -16,7 +16,7 @@ jobs:
             submodules: true
       - uses: dart-lang/setup-dart@v1
         with:
-          sdk: 3.0
+          sdk: 3.1.0
 
       - name: Install Requirements
         working-directory: src/dart

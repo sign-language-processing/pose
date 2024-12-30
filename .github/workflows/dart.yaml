@@ -20,12 +20,10 @@ jobs:
         working-directory: src/dart
         run: dart pub get
 
-      # Verify the use of 'dart format' on each commit.
       - name: Check formatting
         working-directory: src/dart
         run: dart format --output=none --set-exit-if-changed .
 
-      # Passing '--fatal-infos' for slightly stricter analysis.
       - name: Analyze
         working-directory: src/dart
         run: dart analyze --fatal-infos

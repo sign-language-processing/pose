@@ -1,3 +1,6 @@
 [submodule "examples/pose-pipelines"]
 	path = examples/pose-pipelines
 	url = git@github.com:J22Melody/pose-pipelines.git
+[submodule "src/dart"]
+	path = src/dart
+	url = https://github.com/bipinkrish/pose-dart.git

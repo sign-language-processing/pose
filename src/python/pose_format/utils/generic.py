@@ -1,4 +1,4 @@
-from typing import Tuple
+from typing import Tuple, Literal
 
 import numpy as np
 from numpy import ma
@@ -7,7 +7,36 @@ from pose_format.numpy import NumPyPoseBody
 from pose_format.pose_header import PoseHeader, PoseHeaderDimensions
 from pose_format.utils.normalization_3d import PoseNormalizer
 from pose_format.utils.openpose import OpenPose_Components
+from pose_format.utils.openpose_135 import OpenPose_Components as OpenPose135_Components
+# from pose_format.utils.holistic import holistic_components # creates an error: ImportError: Please install mediapipe with: pip install mediapipe
 
+SupportedPoseFormat = Literal["holistic", "openpose", "openpose_135"]
+
+def detect_pose_format(pose: Pose) -> SupportedPoseFormat:
+    component_names = [c.name for c in pose.header.components]
+
+    # would be better to import from pose_format.utils.holistic but that creates a dep on mediapipe
+    mediapipe_components = [
+        "POSE_LANDMARKS",
+        "FACE_LANDMARKS",
+        "LEFT_HAND_LANDMARKS",
+        "RIGHT_HAND_LANDMARKS",
+        "POSE_WORLD_LANDMARKS",
+    ]
+    
+    openpose_components = [c.name for c in OpenPose_Components]
+    openpose_135_components = [c.name for c in OpenPose135_Components]
+    for component_name in component_names:
+        if component_name in mediapipe_components:
+            return "holistic"
+        if component_name in openpose_components:
+            return "openpose"
+        if component_name in openpose_135_components:
+            return "openpose_135"
+
+    raise ValueError(
+        f"Unknown pose header schema with component names: {component_names}"
+    )
 
 def normalize_pose_size(pose: Pose, target_width: int = 512):
     shift = 1.25

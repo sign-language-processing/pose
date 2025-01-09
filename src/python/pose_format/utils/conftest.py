@@ -2,7 +2,7 @@ import copy
 from typing import List
 import pytest
 from pose_format import Pose
-from pose_format.utils.generic import get_standard_components_for_known_format
+from pose_format.utils.generic import get_standard_components_for_known_format, fake_pose
 @pytest.fixture
 def fake_poses(request) -> List[Pose]:
     # Access the parameter passed to the fixture

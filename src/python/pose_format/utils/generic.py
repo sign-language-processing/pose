@@ -1,6 +1,6 @@
 from pathlib import Path
 from typing import Tuple, Literal, List, get_args
-import json
+import copy
 import numpy as np
 from numpy import ma
 from pose_format import Pose
@@ -9,17 +9,22 @@ from pose_format.pose_header import PoseHeader, PoseHeaderDimensions, PoseHeader
 from pose_format.utils.normalization_3d import PoseNormalizer
 from pose_format.utils.openpose import OpenPose_Components
 from pose_format.utils.openpose_135 import OpenPose_Components as OpenPose135_Components
-# from pose_format.utils.holistic import holistic_components # creates an error: ImportError: Please install mediapipe with: pip install mediapipe
+
+# from pose_format.utils.holistic import holistic_components
+# The import above creates an error: ImportError: Please install mediapipe with: pip install mediapipe
 
 SupportedPoseFormat = Literal["holistic", "openpose", "openpose_135"]
 
-def get_component_names(pose_or_header_or_components: Pose|PoseHeader|List[PoseHeaderComponent]|List[str]) -> List[str]:
+
+def get_component_names(
+    pose_or_header_or_components: Pose | PoseHeader | List[PoseHeaderComponent] | List[str],
+) -> List[str]:
     if isinstance(pose_or_header_or_components, Pose):
         return [c.name for c in pose_or_header_or_components.header.components]
-    elif isinstance(pose_or_header_or_components, PoseHeader):
+    if isinstance(pose_or_header_or_components, PoseHeader):
         return [c.name for c in pose_or_header_or_components.components]
 
-    elif isinstance(pose_or_header_or_components, List):
+    if isinstance(pose_or_header_or_components, List):
         component_names = []
         for input_item in pose_or_header_or_components:
             if isinstance(input_item, PoseHeaderComponent):
@@ -28,6 +33,7 @@ def get_component_names(pose_or_header_or_components: Pose|PoseHeader|List[PoseH
                 component_names.append(input_item)
         return component_names
     raise ValueError(f"Could not get component_names from {pose_or_header_or_components}")
+
 
 def detect_known_pose_format(component_names: List[str]) -> SupportedPoseFormat:
 
@@ -39,7 +45,7 @@ def detect_known_pose_format(component_names: List[str]) -> SupportedPoseFormat:
         "RIGHT_HAND_LANDMARKS",
         "POSE_WORLD_LANDMARKS",
     ]
-    
+
     openpose_components = [c.name for c in OpenPose_Components]
     openpose_135_components = [c.name for c in OpenPose135_Components]
     for component_name in component_names:
@@ -54,6 +60,7 @@ def detect_known_pose_format(component_names: List[str]) -> SupportedPoseFormat:
         f"Could not detect pose format, unknown pose header schema with component names: {component_names}"
     )
 
+
 def normalize_pose_size(pose: Pose, target_width: int = 512):
     shift = 1.25
     shoulder_width = (target_width / shift) / 2
@@ -64,7 +71,7 @@ def normalize_pose_size(pose: Pose, target_width: int = 512):
 
 def pose_hide_legs(pose: Pose):
     known_pose_format = detect_known_pose_format(get_component_names(pose))
-    if known_pose_format == 'holistic':
+    if known_pose_format == "holistic":
         point_names = ["KNEE", "ANKLE", "HEEL", "FOOT_INDEX"]
         # pylint: disable=protected-access
         points = [
@@ -74,51 +81,58 @@ def pose_hide_legs(pose: Pose):
         ]
         pose.body.data[:, :, points, :] = 0
         pose.body.confidence[:, :, points] = 0
-    elif known_pose_format == 'openpose':
+    elif known_pose_format == "openpose":
         point_names = ["Hip", "Knee", "Ankle", "BigToe", "SmallToe", "Heel"]
         # pylint: disable=protected-access
         points = [
-            pose.header._get_point_index("pose_keypoints_2d", side + n)
-            for n in point_names
-            for side in ["L", "R"]
+            pose.header._get_point_index("pose_keypoints_2d", side + n) for n in point_names for side in ["L", "R"]
         ]
         pose.body.data[:, :, points, :] = 0
         pose.body.confidence[:, :, points] = 0
     elif known_pose_format in get_args(SupportedPoseFormat):
-        raise NotImplementedError(f"Unsupported pose header schema {known_pose_format} for {pose_hide_legs.__name__}: {pose.header}")
-    else: 
+        raise NotImplementedError(
+            f"Unsupported pose header schema {known_pose_format} for {pose_hide_legs.__name__}: {pose.header}"
+        )
+    else:
         raise ValueError(f"Unknown pose header schema for {pose_hide_legs.__name__}: {pose.header}")
 
 
 def pose_shoulders(pose_header: PoseHeader):
     known_pose_format = detect_known_pose_format(get_component_names(pose_header))
 
-    if known_pose_format == 'holistic':
+    if known_pose_format == "holistic":
         return ("POSE_LANDMARKS", "RIGHT_SHOULDER"), ("POSE_LANDMARKS", "LEFT_SHOULDER")
 
-    if known_pose_format == 'openpose_135':
+    if known_pose_format == "openpose_135":
         return ("BODY_135", "RShoulder"), ("BODY_135", "LShoulder")
 
-    if known_pose_format == 'openpose':
+    if known_pose_format == "openpose":
         return ("pose_keypoints_2d", "RShoulder"), ("pose_keypoints_2d", "LShoulder")
 
-
     if known_pose_format in get_args(SupportedPoseFormat):
-        raise NotImplementedError(f"Unsupported pose header schema {known_pose_format} for {pose_shoulders.__name__}: {pose_header}")
+        raise NotImplementedError(
+            f"Unsupported pose header schema {known_pose_format} for {pose_shoulders.__name__}: {pose_header}"
+        )
     raise ValueError(f"Unknown pose header schema for {pose_shoulders.__name__}: {pose_header}")
 
 
 def hands_indexes(pose_header: PoseHeader):
     known_pose_format = detect_known_pose_format(get_component_names(pose_header))
-    if known_pose_format == 'holistic':
-        return [pose_header._get_point_index("LEFT_HAND_LANDMARKS", "MIDDLE_FINGER_MCP"),
-                pose_header._get_point_index("RIGHT_HAND_LANDMARKS", "MIDDLE_FINGER_MCP")]
+    if known_pose_format == "holistic":
+        return [
+            pose_header._get_point_index("LEFT_HAND_LANDMARKS", "MIDDLE_FINGER_MCP"),
+            pose_header._get_point_index("RIGHT_HAND_LANDMARKS", "MIDDLE_FINGER_MCP"),
+        ]
 
-    if known_pose_format == 'openpose':
-        return [pose_header._get_point_index("hand_left_keypoints_2d", "M_CMC"),
-                pose_header._get_point_index("hand_right_keypoints_2d", "M_CMC")]
+    if known_pose_format == "openpose":
+        return [
+            pose_header._get_point_index("hand_left_keypoints_2d", "M_CMC"),
+            pose_header._get_point_index("hand_right_keypoints_2d", "M_CMC"),
+        ]
     if known_pose_format in get_args(SupportedPoseFormat):
-        raise NotImplementedError(f"Unsupported pose header schema {known_pose_format} for {hands_indexes.__name__}: {pose_header}")
+        raise NotImplementedError(
+            f"Unsupported pose header schema {known_pose_format} for {hands_indexes.__name__}: {pose_header}"
+        )
     raise ValueError(f"Unknown pose header schema for {hands_indexes.__name__}: {pose_header}")
 
 
@@ -129,31 +143,31 @@ def pose_normalization_info(pose_header: PoseHeader):
 
 def hands_components(pose_header: PoseHeader):
     known_pose_format = detect_known_pose_format(get_component_names(pose_header))
-    if known_pose_format == 'holistic':
-        return ("LEFT_HAND_LANDMARKS", "RIGHT_HAND_LANDMARKS"), \
-            ("WRIST", "PINKY_MCP", "INDEX_FINGER_MCP"), \
-            ("WRIST", "MIDDLE_FINGER_MCP")
+    if known_pose_format == "holistic":
+        return (
+            ("LEFT_HAND_LANDMARKS", "RIGHT_HAND_LANDMARKS"),
+            ("WRIST", "PINKY_MCP", "INDEX_FINGER_MCP"),
+            ("WRIST", "MIDDLE_FINGER_MCP"),
+        )
 
-    if known_pose_format == 'openpose':
-        return ("hand_left_keypoints_2d", "hand_right_keypoints_2d"), \
-            ("BASE", "P_CMC", "I_CMC"), \
-            ("BASE", "M_CMC")
+    if known_pose_format == "openpose":
+        return ("hand_left_keypoints_2d", "hand_right_keypoints_2d"), ("BASE", "P_CMC", "I_CMC"), ("BASE", "M_CMC")
 
     if known_pose_format in get_args(SupportedPoseFormat):
-        raise NotImplementedError(f"Unsupported pose header schema '{known_pose_format}' for {hands_components.__name__}: {pose_header}")
+        raise NotImplementedError(
+            f"Unsupported pose header schema '{known_pose_format}' for {hands_components.__name__}: {pose_header}"
+        )
     raise ValueError(f"Unknown pose header schema for {hands_components.__name__}: {pose_header}")
 
 
 def normalize_component_3d(pose, component_name: str, plane: Tuple[str, str, str], line: Tuple[str, str]):
     hand_pose = pose.get_components([component_name])
-    plane = hand_pose.header.normalization_info(p1=(component_name, plane[0]),
-                                                p2=(component_name, plane[1]),
-                                                p3=(component_name, plane[2]))
-    line = hand_pose.header.normalization_info(p1=(component_name, line[0]),
-                                               p2=(component_name, line[1]))
-    
+    plane_info = hand_pose.header.normalization_info(
+        p1=(component_name, plane[0]), p2=(component_name, plane[1]), p3=(component_name, plane[2])
+    )
+    line_info = hand_pose.header.normalization_info(p1=(component_name, line[0]), p2=(component_name, line[1]))
 
-    normalizer = PoseNormalizer(plane=plane, line=line)
+    normalizer = PoseNormalizer(plane=plane_info, line=line_info)
     normalized_hand = normalizer(hand_pose.body.data)
 
     # Add normalized hand to pose
@@ -169,28 +183,29 @@ def normalize_hands_3d(pose: Pose, left_hand=True, right_hand=True):
         normalize_component_3d(pose, right_hand_component, plane, line)
 
 
-def get_standard_components_for_known_format(known_pose_format: SupportedPoseFormat)-> List[PoseHeaderComponent]:
-    if known_pose_format == 'holistic':
-        try: 
+def get_standard_components_for_known_format(known_pose_format: SupportedPoseFormat) -> List[PoseHeaderComponent]:
+    if known_pose_format == "holistic":
+        try:
             import pose_format.utils.holistic as holistic_utils
             return holistic_utils.holistic_components()
         except ImportError:
-            #TODO: test this branch
-            test_file_path = Path('tests/data/mediapipe.pose')
+            # TODO: test this branch
+            test_file_path = Path("tests/data/mediapipe.pose")
             with test_file_path.open("rb") as f:
                 pose = Pose.read(f.read())
                 return pose.header.components
-    if known_pose_format == 'openpose':
+    if known_pose_format == "openpose":
         return OpenPose_Components
-    if known_pose_format == 'openpose_135':
+    if known_pose_format == "openpose_135":
         return OpenPose135_Components
     if known_pose_format in get_args(SupportedPoseFormat):
         raise NotImplementedError(f"Unsupported pose header schema {known_pose_format}")
     raise ValueError(f"Unknown pose format {known_pose_format}, cannot get standard components")
 
 
-
-def fake_pose(num_frames: int, fps=25, dims=2, components=OpenPose_Components):
+def fake_pose(num_frames: int, fps=25, dims=2, components=None):
+    if components is None:
+        components = copy.deepcopy(OpenPose_Components) # fixes W0102, dangerous default value
     dimensions = PoseHeaderDimensions(width=1, height=1, depth=1)
     header = PoseHeader(version=0.1, dimensions=dimensions, components=components)
 
@@ -206,26 +221,28 @@ def fake_pose(num_frames: int, fps=25, dims=2, components=OpenPose_Components):
 
 def get_hand_wrist_index(pose: Pose, hand: str):
     known_pose_format = detect_known_pose_format(get_component_names(pose))
-    if known_pose_format == 'holistic':
-        return pose.header._get_point_index(f'{hand.upper()}_HAND_LANDMARKS', 'WRIST')
-    elif known_pose_format == 'openpose':
-        return pose.header._get_point_index(f'hand_{hand.lower()}_keypoints_2d', 'BASE')
-    elif known_pose_format in get_args(SupportedPoseFormat):
-        raise NotImplementedError(f"{known_pose_format} pose header schema unsupported for get_hand_wrist_index: {pose.header}")
-    else:
-        raise ValueError(f"Unknown schema for {get_hand_wrist_index}: {pose.header}")
+    if known_pose_format == "holistic":
+        return pose.header._get_point_index(f"{hand.upper()}_HAND_LANDMARKS", "WRIST")
+    if known_pose_format == "openpose":
+        return pose.header._get_point_index(f"hand_{hand.lower()}_keypoints_2d", "BASE")
+    if known_pose_format in get_args(SupportedPoseFormat):
+        raise NotImplementedError(
+            f"{known_pose_format} pose header schema unsupported for get_hand_wrist_index: {pose.header}"
+        )
+    raise ValueError(f"Unknown schema for {get_hand_wrist_index}: {pose.header}")
 
 
 def get_body_hand_wrist_index(pose: Pose, hand: str):
     known_pose_format = detect_known_pose_format(get_component_names(pose))
-    if known_pose_format == 'holistic':
-        return pose.header._get_point_index('POSE_LANDMARKS', f'{hand.upper()}_WRIST')
-    elif known_pose_format == 'openpose':
-        return pose.header._get_point_index('pose_keypoints_2d', f'{hand.upper()[0]}Wrist')
-    elif known_pose_format in get_args(SupportedPoseFormat):
-        raise NotImplementedError(f"{known_pose_format} pose header schema unsupported for {get_body_hand_wrist_index.__name__}: {pose.header}")
-    else:
-        raise ValueError(f"Unknown pose header schema for {get_body_hand_wrist_index.__name__} {pose.header}")
+    if known_pose_format == "holistic":
+        return pose.header._get_point_index("POSE_LANDMARKS", f"{hand.upper()}_WRIST")
+    if known_pose_format == "openpose":
+        return pose.header._get_point_index("pose_keypoints_2d", f"{hand.upper()[0]}Wrist")
+    if known_pose_format in get_args(SupportedPoseFormat):
+        raise NotImplementedError(
+            f"{known_pose_format} pose header schema unsupported for {get_body_hand_wrist_index.__name__}"
+        )
+    raise ValueError(f"Unknown pose header schema for {get_body_hand_wrist_index.__name__} {pose.header}")
 
 
 def correct_wrist(pose: Pose, hand: str) -> Pose:
@@ -247,14 +264,14 @@ def correct_wrist(pose: Pose, hand: str) -> Pose:
 
 
 def correct_wrists(pose: Pose) -> Pose:
-    pose = correct_wrist(pose, 'LEFT')
-    pose = correct_wrist(pose, 'RIGHT')
+    pose = correct_wrist(pose, "LEFT")
+    pose = correct_wrist(pose, "RIGHT")
     return pose
 
 
 def reduce_holistic(pose: Pose) -> Pose:
     known_pose_format = detect_known_pose_format(get_component_names(pose))
-    if known_pose_format != 'holistic':
+    if known_pose_format != "holistic":
         return pose
 
     """
@@ -265,27 +282,152 @@ def reduce_holistic(pose: Pose) -> Pose:
     """
     # To avoid installing mediapipe, we just hardcode the face contours given the above code
     face_contours = [
-        '0', '7', '10', '13', '14', '17', '21', '33', '37', '39', '40', '46', '52', '53', '54', '55', '58', '61', '63',
-        '65', '66', '67', '70', '78', '80', '81', '82', '84', '87', '88', '91', '93', '95', '103', '105', '107', '109',
-        '127', '132', '133', '136', '144', '145', '146', '148', '149', '150', '152', '153', '154', '155', '157', '158',
-        '159', '160', '161', '162', '163', '172', '173', '176', '178', '181', '185', '191', '234', '246', '249', '251',
-        '263', '267', '269', '270', '276', '282', '283', '284', '285', '288', '291', '293', '295', '296', '297', '300',
-        '308', '310', '311', '312', '314', '317', '318', '321', '323', '324', '332', '334', '336', '338', '356', '361',
-        '362', '365', '373', '374', '375', '377', '378', '379', '380', '381', '382', '384', '385', '386', '387', '388',
-        '389', '390', '397', '398', '400', '402', '405', '409', '415', '454', '466'
+        "0",
+        "7",
+        "10",
+        "13",
+        "14",
+        "17",
+        "21",
+        "33",
+        "37",
+        "39",
+        "40",
+        "46",
+        "52",
+        "53",
+        "54",
+        "55",
+        "58",
+        "61",
+        "63",
+        "65",
+        "66",
+        "67",
+        "70",
+        "78",
+        "80",
+        "81",
+        "82",
+        "84",
+        "87",
+        "88",
+        "91",
+        "93",
+        "95",
+        "103",
+        "105",
+        "107",
+        "109",
+        "127",
+        "132",
+        "133",
+        "136",
+        "144",
+        "145",
+        "146",
+        "148",
+        "149",
+        "150",
+        "152",
+        "153",
+        "154",
+        "155",
+        "157",
+        "158",
+        "159",
+        "160",
+        "161",
+        "162",
+        "163",
+        "172",
+        "173",
+        "176",
+        "178",
+        "181",
+        "185",
+        "191",
+        "234",
+        "246",
+        "249",
+        "251",
+        "263",
+        "267",
+        "269",
+        "270",
+        "276",
+        "282",
+        "283",
+        "284",
+        "285",
+        "288",
+        "291",
+        "293",
+        "295",
+        "296",
+        "297",
+        "300",
+        "308",
+        "310",
+        "311",
+        "312",
+        "314",
+        "317",
+        "318",
+        "321",
+        "323",
+        "324",
+        "332",
+        "334",
+        "336",
+        "338",
+        "356",
+        "361",
+        "362",
+        "365",
+        "373",
+        "374",
+        "375",
+        "377",
+        "378",
+        "379",
+        "380",
+        "381",
+        "382",
+        "384",
+        "385",
+        "386",
+        "387",
+        "388",
+        "389",
+        "390",
+        "397",
+        "398",
+        "400",
+        "402",
+        "405",
+        "409",
+        "415",
+        "454",
+        "466",
     ]
 
     ignore_names = [
-        "EAR", "NOSE", "MOUTH", "EYE",  # Face
-        "THUMB", "PINKY", "INDEX",  # Hands
-        "KNEE", "ANKLE", "HEEL", "FOOT_INDEX"  # Feet
-    ]
+        "EAR",
+        "NOSE",
+        "MOUTH",
+        "EYE",
+        "THUMB",
+        "PINKY",
+        "INDEX",
+        "KNEE",
+        "ANKLE",
+        "HEEL",
+        "FOOT_INDEX",
+    ]  # Face  # Hands  # Feet
 
-    body_component = [c for c in pose.header.components if c.name == 'POSE_LANDMARKS'][0]
+    body_component = [c for c in pose.header.components if c.name == "POSE_LANDMARKS"][0]
     body_no_face_no_hands = [p for p in body_component.points if all([i not in p for i in ignore_names])]
 
-    components = [c.name for c in pose.header.components if c.name != 'POSE_WORLD_LANDMARKS']
-    return pose.get_components(components, {
-        "FACE_LANDMARKS": face_contours,
-        "POSE_LANDMARKS": body_no_face_no_hands
-    })
+    components = [c.name for c in pose.header.components if c.name != "POSE_WORLD_LANDMARKS"]
+    return pose.get_components(components, {"FACE_LANDMARKS": face_contours, "POSE_LANDMARKS": body_no_face_no_hands})

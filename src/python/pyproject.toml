@@ -58,6 +58,9 @@ testpaths = [
 based_on_style = "google"
 column_limit = 120
 
+[tool.pylint.format]
+max-line-length = 120
+
 [project.scripts]
 pose_info = "pose_format.bin.pose_info:main"
 video_to_pose = "pose_format.bin.pose_estimation:main"

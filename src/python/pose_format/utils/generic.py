@@ -199,3 +199,28 @@ def reduce_holistic(pose: Pose) -> Pose:
         "FACE_LANDMARKS": face_contours,
         "POSE_LANDMARKS": body_no_face_no_hands
     })
+
+
+def is_left_handed(pose: Pose) -> bool:
+    left_hand = pose.get_components(["LEFT_HAND_LANDMARKS"])
+    right_hand = pose.get_components(["RIGHT_HAND_LANDMARKS"])
+    left_hand_variance = np.nan_to_num(left_hand.body.data).var(axis=0).sum()
+    left_hand_variance = left_hand_variance if left_hand_variance != 'masked' else 0
+    right_hand_variance = np.nan_to_num(right_hand.body.data).var(axis=0).sum()
+    right_hand_variance = right_hand_variance if right_hand_variance != 'masked' else 0
+    return left_hand_variance > right_hand_variance
+
+
+def flip_holistic(pose: Pose) -> Pose:
+    FLIPPED_COMPONENTS = ["POSE_LANDMARKS", "FACE_LANDMARKS", "RIGHT_HAND_LANDMARKS", "LEFT_HAND_LANDMARKS"]
+    FLIPPED_BODY_POINTS = ['NOSE', 'RIGHT_EYE_INNER', 'RIGHT_EYE', 'RIGHT_EYE_OUTER', 'LEFT_EYE_INNER', 'LEFT_EYE', 'LEFT_EYE_OUTER', 'RIGHT_EAR', 'LEFT_EAR', 'MOUTH_RIGHT', 'MOUTH_LEFT', 'RIGHT_SHOULDER', 'LEFT_SHOULDER', 'RIGHT_ELBOW', 'LEFT_ELBOW', 'RIGHT_WRIST', 'LEFT_WRIST', 'RIGHT_PINKY', 'LEFT_PINKY', 'RIGHT_INDEX', 'LEFT_INDEX', 'RIGHT_THUMB', 'LEFT_THUMB', 'RIGHT_HIP', 'LEFT_HIP', 'RIGHT_KNEE', 'LEFT_KNEE', 'RIGHT_ANKLE', 'LEFT_ANKLE', 'RIGHT_HEEL', 'LEFT_HEEL', 'RIGHT_FOOT_INDEX', 'LEFT_FOOT_INDEX']
+    # face flipping based on https://storage.googleapis.com/mediapipe-assets/documentation/mediapipe_face_landmark_fullsize.png
+    # CAUTION: works on reduced set of face keypoints (face_contours) only
+    FLIPPED_FACE_POINTS = ['0', '249', '10', '13', '14', '17', '251', '263', '267', '269', '270', '276', '282', '283', '284', '285', '288', '291', '293', '295', '296', '297', '300', '308', '310', '311', '312', '314', '317', '318', '321', '323', '324', '332', '334', '336', '338', '356', '361', '362', '365', '373', '374', '375', '377', '378', '379', '152', '380', '381', '382', '384', '385', '386', '387', '388', '389', '390', '397', '398', '400', '402', '405', '409', '415', '454', '466', \
+                                '7', '21', '33', '37', '39', '40', '46', '52', '53', '54', '55', '58', '61', '63', '65', '66', '67', '70', '78', '80', '81', '82', '84', '87', '88', '91', '93', '95', '103', '105', '107', '109', '127', '132', '133', '136', '144', '145', '146', '148', '149', '150', '153', '154', '155', '157', '158', '159', '160', '161', '162', '163', '172', '173', '176', '178', '181', '185', '191', '234', '246']
+    body = [p for p in FLIPPED_BODY_POINTS if p in pose.header.components[0].points]
+    face = [p for p in FLIPPED_FACE_POINTS if p in pose.header.components[1].points]
+    header = pose.header
+    pose = pose.flip(0).get_components(FLIPPED_COMPONENTS, {"POSE_LANDMARKS": body, "FACE_LANDMARKS": face})
+    pose.header = header
+    return pose

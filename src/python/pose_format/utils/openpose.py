@@ -250,7 +250,7 @@ def load_openpose(frames: OpenPoseFrames,
     """
     dimensions = PoseHeaderDimensions(width=width, height=height, depth=depth)
 
-    header: PoseHeader = PoseHeader(version=0.1, dimensions=dimensions, components=OpenPose_Components)
+    header: PoseHeader = PoseHeader(version=0.2, dimensions=dimensions, components=OpenPose_Components)
 
     total_points = header.total_points()
 

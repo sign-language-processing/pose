@@ -207,7 +207,7 @@ def fake_pose(num_frames: int, fps=25, dims=2, components=None):
     if components is None:
         components = copy.deepcopy(OpenPose_Components) # fixes W0102, dangerous default value
     dimensions = PoseHeaderDimensions(width=1, height=1, depth=1)
-    header = PoseHeader(version=0.1, dimensions=dimensions, components=components)
+    header = PoseHeader(version=0.2, dimensions=dimensions, components=components)
 
     total_points = header.total_points()
     data = np.random.randn(num_frames, 1, total_points, dims)

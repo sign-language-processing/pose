@@ -16,7 +16,7 @@ from pose_format.utils.openpose import OpenPose_Hand_Component
 
 dimensions = PoseHeaderDimensions(width=0, height=0, depth=0)
 components = [OpenPose_Hand_Component("hand_left_keypoints_2d")]
-header: PoseHeader = PoseHeader(version=0.1, dimensions=dimensions, components=components)
+header: PoseHeader = PoseHeader(version=0.2, dimensions=dimensions, components=components)
 
 representation = TensorflowPoseRepresentation(
     header=header,

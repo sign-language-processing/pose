@@ -109,7 +109,7 @@ def normalize_hands_3d(pose: Pose, left_hand=True, right_hand=True):
 
 def fake_pose(num_frames: int, fps=25, dims=2, components=OpenPose_Components):
     dimensions = PoseHeaderDimensions(width=1, height=1, depth=1)
-    header = PoseHeader(version=0.1, dimensions=dimensions, components=components)
+    header = PoseHeader(version=0.2, dimensions=dimensions, components=components)
 
     total_points = header.total_points()
     data = np.random.randn(num_frames, 1, total_points, dims)

@@ -59,7 +59,7 @@ export abstract class PoseRenderer {
 
     return lines
       .filter(Boolean) // Remove invalid lines
-      .sort((a, b) => a.z - b.z) // Sort lines by depth
+      .sort((a, b) => b.z - a.z) // Sort lines by depth
       .map(({from, to, color}) => this.renderLimb(from, to, color));
   }
 

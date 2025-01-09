@@ -327,7 +327,7 @@ def load_holistic(frames: list,
     refine_face_landmarks = 'refine_face_landmarks' in additional_holistic_config and additional_holistic_config[
         'refine_face_landmarks']
     additional_face_points = 10 if refine_face_landmarks else 0
-    header: PoseHeader = PoseHeader(version=0.1,
+    header: PoseHeader = PoseHeader(version=0.2,
                                     dimensions=dimensions,
                                     components=holistic_components(pf, additional_face_points))
     body: NumPyPoseBody = process_holistic(frames, fps, width, height, kinect, progress, additional_face_points,
@@ -355,7 +355,7 @@ def formatted_holistic_pose(width: int, height: int, additional_face_points: int
         Formatted pose components
     """
     dimensions = PoseHeaderDimensions(width=width, height=height, depth=1000)
-    header = PoseHeader(version=0.1,
+    header = PoseHeader(version=0.2,
                         dimensions=dimensions,
                         components=holistic_components("XYZC", additional_face_points))
     body = NumPyPoseBody(

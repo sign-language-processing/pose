@@ -128,7 +128,7 @@ def load_openpose_135_directory(*args, **kwargs) -> Pose:
 
 if __name__ == "__main__":
     dimensions = PoseHeaderDimensions(width=512, height=512, depth=0)
-    header = PoseHeader(version=0.1, dimensions=dimensions, components=OpenPose_Components)
+    header = PoseHeader(version=0.2, dimensions=dimensions, components=OpenPose_Components)
 
     with open(
             "/home/nlp/amit/sign-language/sign-language-datasets/sign_language_datasets/datasets/autsl/openpose_135.poseheader",

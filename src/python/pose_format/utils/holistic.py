@@ -399,7 +399,7 @@ def load_mediapipe_directory(directory: str, fps: int, width: int, height: int, 
         num_right_hand_points = first_frame["right_hand_landmarks"]["num_landmarks"]
         additional_face_points = 10 if (num_face_points == 478 or num_face_points == 128) else 0
     else:
-        return ValueError("No frames found in directory: {}".format(directory))
+        raise ValueError("No frames found in directory: {}".format(directory))
 
     def load_mediapipe_frame(frame):
         """

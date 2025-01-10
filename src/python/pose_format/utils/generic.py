@@ -183,12 +183,8 @@ def get_standard_components_for_known_format(known_pose_format: KnownPoseFormat)
         try:
             import pose_format.utils.holistic as holistic_utils
             return holistic_utils.holistic_components()
-        except ImportError:
-            # TODO: test this branch
-            test_file_path = Path("tests/data/mediapipe.pose")
-            with test_file_path.open("rb") as f:
-                pose = Pose.read(f.read())
-                return pose.header.components
+        except ImportError as e:
+            raise e 
     if known_pose_format == "openpose":
         return OpenPose_Components
     if known_pose_format == "openpose_135":

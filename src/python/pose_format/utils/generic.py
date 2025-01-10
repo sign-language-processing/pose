@@ -158,9 +158,14 @@ def hands_components(pose_header: PoseHeader)-> Tuple[Tuple[str, str], Tuple[str
 def normalize_component_3d(pose, component_name: str, plane: Tuple[str, str, str], line: Tuple[str, str]):
     hand_pose = pose.get_components([component_name])
     plane_info = hand_pose.header.normalization_info(
-        p1=(component_name, plane[0]), p2=(component_name, plane[1]), p3=(component_name, plane[2])
+        p1=(component_name, plane[0]), 
+        p2=(component_name, plane[1]), 
+        p3=(component_name, plane[2])
     )
-    line_info = hand_pose.header.normalization_info(p1=(component_name, line[0]), p2=(component_name, line[1]))
+    line_info = hand_pose.header.normalization_info(
+        p1=(component_name, line[0]), 
+        p2=(component_name, line[1])
+        )
 
     normalizer = PoseNormalizer(plane=plane_info, line=line_info)
     normalized_hand = normalizer(hand_pose.body.data)

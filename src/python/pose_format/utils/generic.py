@@ -5,7 +5,7 @@ import numpy as np
 from numpy import ma
 from pose_format import Pose
 from pose_format.numpy import NumPyPoseBody
-from pose_format.pose_header import PoseHeader, PoseHeaderDimensions, PoseHeaderComponent
+from pose_format.pose_header import PoseHeader, PoseHeaderDimensions, PoseHeaderComponent, PoseNormalizationInfo
 from pose_format.utils.normalization_3d import PoseNormalizer
 from pose_format.utils.openpose import OpenPose_Components
 from pose_format.utils.openpose_135 import OpenPose_Components as OpenPose135_Components
@@ -47,7 +47,9 @@ def detect_known_pose_format(component_names: List[str]) -> KnownPoseFormat:
     ]
 
     openpose_components = [c.name for c in OpenPose_Components]
+
     openpose_135_components = [c.name for c in OpenPose135_Components]
+    
     for component_name in component_names:
         if component_name in mediapipe_components:
             return "holistic"
@@ -95,7 +97,7 @@ def pose_hide_legs(pose: Pose):
         )
 
 
-def pose_shoulders(pose_header: PoseHeader):
+def pose_shoulders(pose_header: PoseHeader) -> Tuple[Tuple[str, str], Tuple[str, str]]:
     known_pose_format = detect_known_pose_format(get_component_names(pose_header))
 
     if known_pose_format == "holistic":
@@ -112,7 +114,7 @@ def pose_shoulders(pose_header: PoseHeader):
     )
 
 
-def hands_indexes(pose_header: PoseHeader):
+def hands_indexes(pose_header: PoseHeader)-> List[int]:
     known_pose_format = detect_known_pose_format(get_component_names(pose_header))
     if known_pose_format == "holistic":
         return [
@@ -130,12 +132,12 @@ def hands_indexes(pose_header: PoseHeader):
     )
 
 
-def pose_normalization_info(pose_header: PoseHeader):
+def pose_normalization_info(pose_header: PoseHeader) ->PoseNormalizationInfo:
     (c1, p1), (c2, p2) = pose_shoulders(pose_header)
     return pose_header.normalization_info(p1=(c1, p1), p2=(c2, p2))
 
 
-def hands_components(pose_header: PoseHeader):
+def hands_components(pose_header: PoseHeader)-> Tuple[Tuple[str, str], Tuple[str, str, str], Tuple[str, str]]:
     known_pose_format = detect_known_pose_format(get_component_names(pose_header))
     if known_pose_format == "holistic":
         return (

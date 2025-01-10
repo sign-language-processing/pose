@@ -35,7 +35,8 @@ def get_component_names(
     raise ValueError(f"Could not get component_names from {pose_or_header_or_components}")
 
 
-def detect_known_pose_format(component_names: List[str]) -> KnownPoseFormat:
+def detect_known_pose_format(pose_or_header:Pose|PoseHeader) -> KnownPoseFormat:
+    component_names= get_component_names(pose_or_header)
 
     # would be better to import from pose_format.utils.holistic but that creates a dep on mediapipe
     mediapipe_components = [
@@ -49,7 +50,7 @@ def detect_known_pose_format(component_names: List[str]) -> KnownPoseFormat:
     openpose_components = [c.name for c in OpenPose_Components]
 
     openpose_135_components = [c.name for c in OpenPose135_Components]
-    
+
     for component_name in component_names:
         if component_name in mediapipe_components:
             return "holistic"
@@ -72,7 +73,7 @@ def normalize_pose_size(pose: Pose, target_width: int = 512):
 
 
 def pose_hide_legs(pose: Pose):
-    known_pose_format = detect_known_pose_format(get_component_names(pose))
+    known_pose_format = detect_known_pose_format(pose)
     if known_pose_format == "holistic":
         point_names = ["KNEE", "ANKLE", "HEEL", "FOOT_INDEX"]
         # pylint: disable=protected-access
@@ -98,7 +99,7 @@ def pose_hide_legs(pose: Pose):
 
 
 def pose_shoulders(pose_header: PoseHeader) -> Tuple[Tuple[str, str], Tuple[str, str]]:
-    known_pose_format = detect_known_pose_format(get_component_names(pose_header))
+    known_pose_format = detect_known_pose_format(pose_header)
 
     if known_pose_format == "holistic":
         return ("POSE_LANDMARKS", "RIGHT_SHOULDER"), ("POSE_LANDMARKS", "LEFT_SHOULDER")
@@ -115,7 +116,7 @@ def pose_shoulders(pose_header: PoseHeader) -> Tuple[Tuple[str, str], Tuple[str,
 
 
 def hands_indexes(pose_header: PoseHeader)-> List[int]:
-    known_pose_format = detect_known_pose_format(get_component_names(pose_header))
+    known_pose_format = detect_known_pose_format(pose_header)
     if known_pose_format == "holistic":
         return [
             pose_header._get_point_index("LEFT_HAND_LANDMARKS", "MIDDLE_FINGER_MCP"),
@@ -138,7 +139,7 @@ def pose_normalization_info(pose_header: PoseHeader) ->PoseNormalizationInfo:
 
 
 def hands_components(pose_header: PoseHeader)-> Tuple[Tuple[str, str], Tuple[str, str, str], Tuple[str, str]]:
-    known_pose_format = detect_known_pose_format(get_component_names(pose_header))
+    known_pose_format = detect_known_pose_format(pose_header)
     if known_pose_format == "holistic":
         return (
             ("LEFT_HAND_LANDMARKS", "RIGHT_HAND_LANDMARKS"),
@@ -213,7 +214,7 @@ def fake_pose(num_frames: int, fps=25, dims=2, components=None)->Pose:
 
 
 def get_hand_wrist_index(pose: Pose, hand: str)-> int:
-    known_pose_format = detect_known_pose_format(get_component_names(pose))
+    known_pose_format = detect_known_pose_format(pose)
     if known_pose_format == "holistic":
         return pose.header._get_point_index(f"{hand.upper()}_HAND_LANDMARKS", "WRIST")
     if known_pose_format == "openpose":
@@ -224,7 +225,7 @@ def get_hand_wrist_index(pose: Pose, hand: str)-> int:
 
 
 def get_body_hand_wrist_index(pose: Pose, hand: str)-> int:
-    known_pose_format = detect_known_pose_format(get_component_names(pose))
+    known_pose_format = detect_known_pose_format(pose)
     if known_pose_format == "holistic":
         return pose.header._get_point_index("POSE_LANDMARKS", f"{hand.upper()}_WRIST")
     if known_pose_format == "openpose":
@@ -259,7 +260,7 @@ def correct_wrists(pose: Pose) -> Pose:
 
 
 def reduce_holistic(pose: Pose) -> Pose:
-    known_pose_format = detect_known_pose_format(get_component_names(pose))
+    known_pose_format = detect_known_pose_format(pose)
     if known_pose_format != "holistic":
         return pose
 

@@ -19,24 +19,27 @@ from pose_format.utils.generic import (
     hands_components,
 )
 
-
+TEST_POSE_FORMATS = list(get_args(KnownPoseFormat))
+TEST_POSE_FORMATS_WITH_UNKNOWN = list(get_args(KnownPoseFormat)) +["unknown"]
 
 @pytest.mark.parametrize(
-    "fake_poses, expected_type", [(fmt, fmt) for fmt in get_args(KnownPoseFormat)], indirect=["fake_poses"]
+    "fake_poses, expected_type", [(fmt, fmt) for fmt in TEST_POSE_FORMATS_WITH_UNKNOWN], indirect=["fake_poses"]
 )
 def test_detect_format(fake_poses, expected_type):
+    known_formats = get_args(KnownPoseFormat)
     for pose in fake_poses:
-        detected_format = detect_known_pose_format(get_component_names(pose))
-        assert detected_format == expected_type
-
-    with pytest.raises(
-        ValueError, match="Could not detect pose format, unknown pose header schema with component names:"
-    ):
-        detect_known_pose_format(["POSE_WROLD_LANDMARKS"])
+        if expected_type in known_formats:
+            detected_format = detect_known_pose_format(pose)
+            assert detected_format == expected_type
+        else:
+            with pytest.raises(
+                ValueError, match="Could not detect pose format, unknown pose header schema with component names:"
+            ):
+                detect_known_pose_format(pose)
 
 
 @pytest.mark.parametrize(
-    "fake_poses, known_pose_format", [(fmt, fmt) for fmt in get_args(KnownPoseFormat)], indirect=["fake_poses"]
+    "fake_poses, known_pose_format", [(fmt, fmt) for fmt in TEST_POSE_FORMATS], indirect=["fake_poses"]
 )
 def test_get_component_names(fake_poses: List[Pose], known_pose_format: KnownPoseFormat):
 
@@ -67,7 +70,7 @@ def test_pose_hide_legs(fake_poses: List[Pose]):
         assert orig_nonzeros_count > new_nonzeros_count
 
 
-@pytest.mark.parametrize("fake_poses", list(get_args(KnownPoseFormat)), indirect=["fake_poses"])
+@pytest.mark.parametrize("fake_poses", TEST_POSE_FORMATS, indirect=["fake_poses"])
 def test_pose_shoulders(fake_poses: List[Pose]):
     for pose in fake_poses:
         shoulders = pose_shoulders(pose.header)
@@ -76,21 +79,21 @@ def test_pose_shoulders(fake_poses: List[Pose]):
         assert "LEFT" in shoulders[1][1] or shoulders[1][1][0] == "L"
 
 
-@pytest.mark.parametrize("fake_poses", list(get_args(KnownPoseFormat)), indirect=["fake_poses"])
+@pytest.mark.parametrize("fake_poses", TEST_POSE_FORMATS, indirect=["fake_poses"])
 def test_hands_indexes(fake_poses: List[Pose]):
     for pose in fake_poses:
         indices = hands_indexes(pose.header)
         assert len(indices) > 0
 
 
-@pytest.mark.parametrize("fake_poses", list(get_args(KnownPoseFormat)), indirect=["fake_poses"])
+@pytest.mark.parametrize("fake_poses", TEST_POSE_FORMATS, indirect=["fake_poses"])
 def test_normalize_pose_size(fake_poses: List[Pose]):
     for pose in fake_poses:
         normalize_pose_size(pose)
     # TODO: more tests, compare with test data
 
 
-@pytest.mark.parametrize("fake_poses", list(get_args(KnownPoseFormat)), indirect=["fake_poses"])
+@pytest.mark.parametrize("fake_poses", TEST_POSE_FORMATS, indirect=["fake_poses"])
 def test_pose_normalization_info(fake_poses: List[Pose]):
     for pose in fake_poses:
         info = pose_normalization_info(pose.header)
@@ -101,7 +104,7 @@ def test_pose_normalization_info(fake_poses: List[Pose]):
         # TODO: more tests, compare with test data
 
 
-@pytest.mark.parametrize("fake_poses", list(get_args(KnownPoseFormat)), indirect=["fake_poses"])
+@pytest.mark.parametrize("fake_poses", TEST_POSE_FORMATS, indirect=["fake_poses"])
 def test_get_hand_wrist_index(fake_poses: List[Pose]):
     for pose in fake_poses:
         for hand in ["LEFT", "RIGHT"]:
@@ -110,7 +113,7 @@ def test_get_hand_wrist_index(fake_poses: List[Pose]):
             # TODO: what are the expected values?
 
 
-@pytest.mark.parametrize("fake_poses", list(get_args(KnownPoseFormat)), indirect=["fake_poses"])
+@pytest.mark.parametrize("fake_poses", TEST_POSE_FORMATS, indirect=["fake_poses"])
 def test_get_body_hand_wrist_index(fake_poses: List[Pose]):
     for pose in fake_poses:
         for hand in ["LEFT", "RIGHT"]:
@@ -118,7 +121,7 @@ def test_get_body_hand_wrist_index(fake_poses: List[Pose]):
             # TODO: what are the expected values?
 
 
-@pytest.mark.parametrize("fake_poses", list(get_args(KnownPoseFormat)), indirect=["fake_poses"])
+@pytest.mark.parametrize("fake_poses", TEST_POSE_FORMATS, indirect=["fake_poses"])
 def test_correct_wrists(fake_poses: List[Pose]):
     for pose in fake_poses:
         corrected_pose = correct_wrists(pose)
@@ -126,7 +129,7 @@ def test_correct_wrists(fake_poses: List[Pose]):
         assert corrected_pose != pose
 
 
-@pytest.mark.parametrize("fake_poses", list(get_args(KnownPoseFormat)), indirect=["fake_poses"])
+@pytest.mark.parametrize("fake_poses", TEST_POSE_FORMATS, indirect=["fake_poses"])
 def test_hands_components(fake_poses: List[Pose]):
     for pose in fake_poses:
         hands_components_returned = hands_components(pose.header)

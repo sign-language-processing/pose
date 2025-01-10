@@ -13,7 +13,7 @@ from pose_format.utils.openpose_135 import OpenPose_Components as OpenPose135_Co
 # from pose_format.utils.holistic import holistic_components
 # The import above creates an error: ImportError: Please install mediapipe with: pip install mediapipe
 
-SupportedPoseFormat = Literal["holistic", "openpose", "openpose_135"]
+KnownPoseFormat = Literal["holistic", "openpose", "openpose_135"]
 
 
 def get_component_names(
@@ -35,7 +35,7 @@ def get_component_names(
     raise ValueError(f"Could not get component_names from {pose_or_header_or_components}")
 
 
-def detect_known_pose_format(component_names: List[str]) -> SupportedPoseFormat:
+def detect_known_pose_format(component_names: List[str]) -> KnownPoseFormat:
 
     # would be better to import from pose_format.utils.holistic but that creates a dep on mediapipe
     mediapipe_components = [
@@ -89,7 +89,7 @@ def pose_hide_legs(pose: Pose):
         ]
         pose.body.data[:, :, points, :] = 0
         pose.body.confidence[:, :, points] = 0
-    elif known_pose_format in get_args(SupportedPoseFormat):
+    elif known_pose_format in get_args(KnownPoseFormat):
         raise NotImplementedError(
             f"Unsupported pose header schema {known_pose_format} for {pose_hide_legs.__name__}: {pose.header}"
         )
@@ -109,7 +109,7 @@ def pose_shoulders(pose_header: PoseHeader):
     if known_pose_format == "openpose":
         return ("pose_keypoints_2d", "RShoulder"), ("pose_keypoints_2d", "LShoulder")
 
-    if known_pose_format in get_args(SupportedPoseFormat):
+    if known_pose_format in get_args(KnownPoseFormat):
         raise NotImplementedError(
             f"Unsupported pose header schema {known_pose_format} for {pose_shoulders.__name__}: {pose_header}"
         )
@@ -129,7 +129,7 @@ def hands_indexes(pose_header: PoseHeader):
             pose_header._get_point_index("hand_left_keypoints_2d", "M_CMC"),
             pose_header._get_point_index("hand_right_keypoints_2d", "M_CMC"),
         ]
-    if known_pose_format in get_args(SupportedPoseFormat):
+    if known_pose_format in get_args(KnownPoseFormat):
         raise NotImplementedError(
             f"Unsupported pose header schema {known_pose_format} for {hands_indexes.__name__}: {pose_header}"
         )
@@ -153,7 +153,7 @@ def hands_components(pose_header: PoseHeader):
     if known_pose_format == "openpose":
         return ("hand_left_keypoints_2d", "hand_right_keypoints_2d"), ("BASE", "P_CMC", "I_CMC"), ("BASE", "M_CMC")
 
-    if known_pose_format in get_args(SupportedPoseFormat):
+    if known_pose_format in get_args(KnownPoseFormat):
         raise NotImplementedError(
             f"Unsupported pose header schema '{known_pose_format}' for {hands_components.__name__}: {pose_header}"
         )
@@ -183,7 +183,7 @@ def normalize_hands_3d(pose: Pose, left_hand=True, right_hand=True):
         normalize_component_3d(pose, right_hand_component, plane, line)
 
 
-def get_standard_components_for_known_format(known_pose_format: SupportedPoseFormat) -> List[PoseHeaderComponent]:
+def get_standard_components_for_known_format(known_pose_format: KnownPoseFormat) -> List[PoseHeaderComponent]:
     if known_pose_format == "holistic":
         try:
             import pose_format.utils.holistic as holistic_utils
@@ -198,7 +198,7 @@ def get_standard_components_for_known_format(known_pose_format: SupportedPoseFor
         return OpenPose_Components
     if known_pose_format == "openpose_135":
         return OpenPose135_Components
-    if known_pose_format in get_args(SupportedPoseFormat):
+    if known_pose_format in get_args(KnownPoseFormat):
         raise NotImplementedError(f"Unsupported pose header schema {known_pose_format}")
     raise ValueError(f"Unknown pose format {known_pose_format}, cannot get standard components")
 
@@ -225,7 +225,7 @@ def get_hand_wrist_index(pose: Pose, hand: str):
         return pose.header._get_point_index(f"{hand.upper()}_HAND_LANDMARKS", "WRIST")
     if known_pose_format == "openpose":
         return pose.header._get_point_index(f"hand_{hand.lower()}_keypoints_2d", "BASE")
-    if known_pose_format in get_args(SupportedPoseFormat):
+    if known_pose_format in get_args(KnownPoseFormat):
         raise NotImplementedError(
             f"{known_pose_format} pose header schema unsupported for get_hand_wrist_index: {pose.header}"
         )
@@ -238,11 +238,10 @@ def get_body_hand_wrist_index(pose: Pose, hand: str):
         return pose.header._get_point_index("POSE_LANDMARKS", f"{hand.upper()}_WRIST")
     if known_pose_format == "openpose":
         return pose.header._get_point_index("pose_keypoints_2d", f"{hand.upper()[0]}Wrist")
-    if known_pose_format in get_args(SupportedPoseFormat):
+    if known_pose_format in get_args(KnownPoseFormat):
         raise NotImplementedError(
             f"{known_pose_format} pose header schema unsupported for {get_body_hand_wrist_index.__name__}"
         )
-    raise ValueError(f"Unknown pose header schema for {get_body_hand_wrist_index.__name__} {pose.header}")
 
 
 def correct_wrist(pose: Pose, hand: str) -> Pose:

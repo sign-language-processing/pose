@@ -1,4 +1,4 @@
-from pose_format import Pose
+from pose_format.pose import Pose
 from pose_format.pose_header import (PoseHeader, PoseHeaderComponent,
                                      PoseHeaderDimensions)
 from pose_format.utils.openpose import limbs_index, load_openpose_directory

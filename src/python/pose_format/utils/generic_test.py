@@ -17,6 +17,7 @@ from pose_format.utils.generic import (
     get_body_hand_wrist_index,
     correct_wrists,
     hands_components,
+    fake_pose,
 )
 
 TEST_POSE_FORMATS = list(get_args(KnownPoseFormat))
@@ -154,8 +155,10 @@ def test_correct_wrists(fake_poses: List[Pose]):
 
         else:
             corrected_pose = correct_wrists(pose)
-            assert np.array_equal(corrected_pose.body.data, pose.body.data) is False
             assert corrected_pose != pose
+            assert np.array_equal(corrected_pose.body.data, pose.body.data) is False 
+
+            
 
 
 @pytest.mark.parametrize("fake_poses", TEST_POSE_FORMATS, indirect=["fake_poses"])
@@ -169,3 +172,46 @@ def test_hands_components(fake_poses: List[Pose]):
             hands_components_returned = hands_components(pose.header)
             assert "LEFT" in hands_components_returned[0][0].upper()
             assert "RIGHT" in hands_components_returned[0][1].upper()
+
+
+@pytest.mark.parametrize("known_pose_format", TEST_POSE_FORMATS)
+def test_fake_pose(known_pose_format: KnownPoseFormat):
+
+    for frame_count in [1, 10, 100]:
+        for fps in [1, 15, 25, 100]:
+            standard_components = get_standard_components_for_known_format(known_pose_format)
+            
+            pose = fake_pose(frame_count, fps=fps, components=standard_components)
+            point_formats = [c.format for c in pose.header.components]
+            data_dimension_expected = 0
+
+            # they should all be consistent
+            for point_format in point_formats:
+                # something like "XYC" or "XYZC"
+                assert point_format == point_formats[0]
+
+            data_dimension_expected = len(point_formats[0]) - 1
+            
+
+            detected_format = detect_known_pose_format(pose)
+
+            if detected_format == 'holistic':
+                assert point_formats[0] == "XYZC"
+            elif detected_format == 'openpose':
+                assert point_formats[0] == "XYC"
+            elif detected_format == 'openpose_135':
+                assert point_formats[0] == "XYC"
+
+            assert detected_format == known_pose_format
+            assert pose.body.fps == fps
+            assert pose.body.data.shape == (frame_count, 1, pose.header.total_points(), data_dimension_expected)
+            assert pose.body.data.shape[0] == frame_count
+            assert pose.header.num_dims() == pose.body.data.shape[-1]
+
+    poses = [fake_pose(25) for _ in range(5)]
+
+            
+
+
+
+    

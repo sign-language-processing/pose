@@ -198,16 +198,23 @@ def get_standard_components_for_known_format(known_pose_format: KnownPoseFormat)
     raise NotImplementedError(f"Unsupported pose header schema {known_pose_format}")
 
 
-def fake_pose(num_frames: int, fps=25, dims=2, components=None)->Pose:
+def fake_pose(num_frames: int, fps: int=25, components: Union[List[PoseHeaderComponent],None]=None)->Pose:
     if components is None:
         components = copy.deepcopy(OpenPose_Components) # fixes W0102, dangerous default value
-    dimensions = PoseHeaderDimensions(width=1, height=1, depth=1)
+    
+    if components[0].format == "XYZC":
+        dimensions = PoseHeaderDimensions(width=1, height=1, depth=1)
+    elif components[0].format == "XYC":
+        dimensions = PoseHeaderDimensions(width=1, height=1)
+    else:
+        raise ValueError(f"Unknown point format: {components[0].format}")
     header = PoseHeader(version=0.2, dimensions=dimensions, components=components)
 
     total_points = header.total_points()
-    data = np.random.randn(num_frames, 1, total_points, dims)
+    data = np.random.randn(num_frames, 1, total_points, header.num_dims())
     confidence = np.random.randn(num_frames, 1, total_points)
     masked_data = ma.masked_array(data)
+    
 
     body = NumPyPoseBody(fps=int(fps), data=masked_data, confidence=confidence)
 
@@ -237,6 +244,7 @@ def get_body_hand_wrist_index(pose: Pose, hand: str)-> int:
 
 
 def correct_wrist(pose: Pose, hand: str) -> Pose:
+    pose = copy.deepcopy(pose) # was previously modifying the input
     wrist_index = get_hand_wrist_index(pose, hand)
     wrist = pose.body.data[:, :, wrist_index]
     wrist_conf = pose.body.confidence[:, :, wrist_index]
@@ -245,13 +253,14 @@ def correct_wrist(pose: Pose, hand: str) -> Pose:
     body_wrist = pose.body.data[:, :, body_wrist_index]
     body_wrist_conf = pose.body.confidence[:, :, body_wrist_index]
 
-    stacked_conf = np.stack([wrist_conf] * 3, axis=-1)
+    point_coordinate_count = wrist.shape[-1]
+    stacked_conf = np.stack([wrist_conf] * point_coordinate_count, axis=-1) 
     new_wrist_data = ma.where(stacked_conf == 0, body_wrist, wrist)
     new_wrist_conf = ma.where(wrist_conf == 0, body_wrist_conf, wrist_conf)
 
     pose.body.data[:, :, body_wrist_index] = new_wrist_data
     pose.body.confidence[:, :, body_wrist_index] = new_wrist_conf
-    return pose
+    return pose  
 
 
 def correct_wrists(pose: Pose) -> Pose:

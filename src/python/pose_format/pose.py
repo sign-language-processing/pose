@@ -10,7 +10,6 @@ from pose_format.pose_header import (PoseHeader, PoseHeaderComponent,
                                      PoseNormalizationInfo)
 from pose_format.utils.fast_math import distance_batch
 from pose_format.utils.reader import BufferReader
-from pose_format.utils.generic import pose_normalization_info
 
 
 class Pose:
@@ -105,7 +104,8 @@ class Pose:
             The normalized Pose object.
         """
         if info is None:
-            info = pose_normalization_info(self)
+            from pose_format.utils.generic import pose_normalization_info
+            info = pose_normalization_info(self.header)
 
         transposed = self.body.points_perspective()
 

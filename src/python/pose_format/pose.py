@@ -105,7 +105,7 @@ class Pose:
             The normalized Pose object.
         """
         if info is None:
-            info = pose_normalization_info(self)
+            info = pose_normalization_info(self.header)
 
         transposed = self.body.points_perspective()
 
@@ -203,7 +203,7 @@ class Pose:
         body, selected_indexes = self.body.frame_dropout_normal(dropout_mean=dropout_mean, dropout_std=dropout_std)
         return Pose(header=self.header, body=body), selected_indexes
 
-    def get_components(self, components: List[str], points: Dict[str, List[str]] = None):
+    def get_components(self, components: List[str], points: Dict[str, List[str]]|None = None):
         """
         get pose components based on criteria.
 

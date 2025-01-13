@@ -1,7 +1,7 @@
 from typing import List, get_args
 import numpy as np
 import pytest
-from pose_format import Pose
+from pose_format.pose import Pose
 from pose_format.pose_header import PoseNormalizationInfo
 from pose_format.utils.generic import (
     detect_known_pose_format,

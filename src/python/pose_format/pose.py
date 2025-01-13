@@ -10,6 +10,7 @@ from pose_format.pose_header import (PoseHeader, PoseHeaderComponent,
                                      PoseNormalizationInfo)
 from pose_format.utils.fast_math import distance_batch
 from pose_format.utils.reader import BufferReader
+from pose_format.utils.generic import pose_normalization_info
 
 
 class Pose:
@@ -87,7 +88,7 @@ class Pose:
         dimensions = (maxs - mins).tolist()
         self.header.dimensions = PoseHeaderDimensions(*dimensions)
 
-    def normalize(self, info: PoseNormalizationInfo, scale_factor: float = 1) -> "Pose":
+    def normalize(self, info: PoseNormalizationInfo|None=None, scale_factor: float = 1) -> "Pose":
         """
         Normalize the points to a fixed distance between two particular points.
 
@@ -103,6 +104,9 @@ class Pose:
         Pose
             The normalized Pose object.
         """
+        if info is None:
+            info = pose_normalization_info(self)
+
         transposed = self.body.points_perspective()
 
         p1s = transposed[info.p1]

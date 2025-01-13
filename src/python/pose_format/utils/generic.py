@@ -3,7 +3,7 @@ from typing import Tuple, Literal, List
 import copy
 import numpy as np
 from numpy import ma
-from pose_format import Pose
+from pose_format.pose import Pose
 from pose_format.numpy import NumPyPoseBody
 from pose_format.pose_header import PoseHeader, PoseHeaderDimensions, PoseHeaderComponent, PoseNormalizationInfo
 from pose_format.utils.normalization_3d import PoseNormalizer

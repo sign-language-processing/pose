@@ -1,7 +1,7 @@
 import copy
 from typing import List, get_args
 import pytest
-from pose_format import Pose
+from pose_format.pose import Pose
 from pose_format.utils.generic import get_standard_components_for_known_format, fake_pose, KnownPoseFormat
 
 @pytest.fixture

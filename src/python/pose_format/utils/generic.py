@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Tuple, Literal, List
+from typing import Tuple, Literal, List, Union
 import copy
 import numpy as np
 from numpy import ma
@@ -17,7 +17,7 @@ KnownPoseFormat = Literal["holistic", "openpose", "openpose_135"]
 
 
 def get_component_names(
-    pose_or_header_or_components: Pose | PoseHeader | List[PoseHeaderComponent] | List[str],
+    pose_or_header_or_components: Union[ Pose , PoseHeader , List[PoseHeaderComponent] , List[str]],
 ) -> List[str]:
     if isinstance(pose_or_header_or_components, Pose):
         return [c.name for c in pose_or_header_or_components.header.components]
@@ -35,7 +35,7 @@ def get_component_names(
     raise ValueError(f"Could not get component_names from {pose_or_header_or_components}")
 
 
-def detect_known_pose_format(pose_or_header:Pose|PoseHeader) -> KnownPoseFormat:
+def detect_known_pose_format(pose_or_header: Union[Pose,PoseHeader]) -> KnownPoseFormat:
     component_names= get_component_names(pose_or_header)
 
     # would be better to import from pose_format.utils.holistic but that creates a dep on mediapipe
@@ -221,7 +221,7 @@ def get_hand_wrist_index(pose: Pose, hand: str)-> int:
     if known_pose_format == "openpose":
         return pose.header._get_point_index(f"hand_{hand.lower()}_keypoints_2d", "BASE")
     raise NotImplementedError(
-        f"{known_pose_format} pose header schema unsupported for get_hand_wrist_index: {pose.header}"
+        f"Unsupported pose header schema {known_pose_format} for {get_hand_wrist_index.__name__}: {pose.header}"
     )
 
 
@@ -232,7 +232,7 @@ def get_body_hand_wrist_index(pose: Pose, hand: str)-> int:
     if known_pose_format == "openpose":
         return pose.header._get_point_index("pose_keypoints_2d", f"{hand.upper()[0]}Wrist")
     raise NotImplementedError(
-        f"{known_pose_format} pose header schema unsupported for {get_body_hand_wrist_index.__name__}"
+        f"Unsupported pose header schema {known_pose_format} for {get_body_hand_wrist_index.__name__}: {pose.header}"
     )
 
 

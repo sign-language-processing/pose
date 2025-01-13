@@ -62,12 +62,19 @@ def test_get_component_names(fake_poses: List[Pose], known_pose_format: KnownPos
 @pytest.mark.parametrize("fake_poses", list(get_args(KnownPoseFormat)), indirect=["fake_poses"])
 def test_pose_hide_legs(fake_poses: List[Pose]):
     for pose in fake_poses:
+        
         orig_nonzeros_count = np.count_nonzero(pose.body.data)
 
-        pose_hide_legs(pose)
-        new_nonzeros_count = np.count_nonzero(pose.body.data)
+        detected_format = detect_known_pose_format(pose)
+        if detected_format == "openpose_135":
+            with pytest.raises(NotImplementedError, match="Unsupported pose header schema"):
+                pose_hide_legs(pose)
+                return
+        else:
+            pose_hide_legs(pose)
+            new_nonzeros_count = np.count_nonzero(pose.body.data)
 
-        assert orig_nonzeros_count > new_nonzeros_count
+            assert orig_nonzeros_count > new_nonzeros_count
 
 
 @pytest.mark.parametrize("fake_poses", TEST_POSE_FORMATS, indirect=["fake_poses"])
@@ -82,8 +89,13 @@ def test_pose_shoulders(fake_poses: List[Pose]):
 @pytest.mark.parametrize("fake_poses", TEST_POSE_FORMATS, indirect=["fake_poses"])
 def test_hands_indexes(fake_poses: List[Pose]):
     for pose in fake_poses:
-        indices = hands_indexes(pose.header)
-        assert len(indices) > 0
+        detected_format = detect_known_pose_format(pose)
+        if detected_format == "openpose_135":
+            with pytest.raises(NotImplementedError, match="Unsupported pose header schema"):
+                indices = hands_indexes(pose.header)
+        else:
+            indices = hands_indexes(pose.header)
+            assert len(indices) > 0
 
 
 @pytest.mark.parametrize("fake_poses", TEST_POSE_FORMATS, indirect=["fake_poses"])
@@ -107,31 +119,53 @@ def test_pose_normalization_info(fake_poses: List[Pose]):
 @pytest.mark.parametrize("fake_poses", TEST_POSE_FORMATS, indirect=["fake_poses"])
 def test_get_hand_wrist_index(fake_poses: List[Pose]):
     for pose in fake_poses:
+        detected_format = detect_known_pose_format(pose)
         for hand in ["LEFT", "RIGHT"]:
-            index = get_hand_wrist_index(pose, hand)
+            if detected_format == "openpose_135":
+                with pytest.raises(NotImplementedError, match="Unsupported pose header schema"):                    
+                    index = get_hand_wrist_index(pose, hand)
+            else:
+                    index = get_hand_wrist_index(pose, hand)
 
-            # TODO: what are the expected values?
+                    # TODO: what are the expected values?
 
 
 @pytest.mark.parametrize("fake_poses", TEST_POSE_FORMATS, indirect=["fake_poses"])
 def test_get_body_hand_wrist_index(fake_poses: List[Pose]):
     for pose in fake_poses:
         for hand in ["LEFT", "RIGHT"]:
-            index = get_body_hand_wrist_index(pose, hand)
-            # TODO: what are the expected values?
+            detected_format = detect_known_pose_format(pose)
+            if detected_format == "openpose_135":
+                with pytest.raises(NotImplementedError, match="Unsupported pose header schema"):
+                    index = get_body_hand_wrist_index(pose, hand)
+                # TODO: what are the expected values?
+            else: 
+                    index = get_body_hand_wrist_index(pose, hand)
+
 
 
 @pytest.mark.parametrize("fake_poses", TEST_POSE_FORMATS, indirect=["fake_poses"])
 def test_correct_wrists(fake_poses: List[Pose]):
     for pose in fake_poses:
-        corrected_pose = correct_wrists(pose)
-        assert np.array_equal(corrected_pose.body.data, pose.body.data) is False
-        assert corrected_pose != pose
+        detected_format = detect_known_pose_format(pose)
+        if detected_format == "openpose_135":
+            with pytest.raises(NotImplementedError, match="Unsupported pose header schema"):
+                corrected_pose = correct_wrists(pose)
+
+        else:
+            corrected_pose = correct_wrists(pose)
+            assert np.array_equal(corrected_pose.body.data, pose.body.data) is False
+            assert corrected_pose != pose
 
 
 @pytest.mark.parametrize("fake_poses", TEST_POSE_FORMATS, indirect=["fake_poses"])
 def test_hands_components(fake_poses: List[Pose]):
     for pose in fake_poses:
-        hands_components_returned = hands_components(pose.header)
-        assert "LEFT" in hands_components_returned[0][0].upper()
-        assert "RIGHT" in hands_components_returned[0][1].upper()
+        detected_format = detect_known_pose_format(pose)
+        if detected_format == "openpose_135":
+            with pytest.raises(NotImplementedError, match="Unsupported pose header schema"):
+                hands_components_returned = hands_components(pose.header)
+        else:
+            hands_components_returned = hands_components(pose.header)
+            assert "LEFT" in hands_components_returned[0][0].upper()
+            assert "RIGHT" in hands_components_returned[0][1].upper()

@@ -2,7 +2,7 @@ import os
 
 import cv2
 import torch
-from pose_format import Pose
+from pose_format.pose import Pose
 from pose_format.pose_visualizer import PoseVisualizer
 from pose_format.utils.generic import reduce_holistic
 from pose_format.utils.openpose import OpenPose_Components

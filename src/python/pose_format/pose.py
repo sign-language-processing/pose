@@ -1,5 +1,5 @@
 from itertools import chain
-from typing import BinaryIO, Dict, List, Tuple, Type
+from typing import BinaryIO, Dict, List, Tuple, Type, Union
 
 import numpy as np
 import numpy.ma as ma
@@ -87,7 +87,7 @@ class Pose:
         dimensions = (maxs - mins).tolist()
         self.header.dimensions = PoseHeaderDimensions(*dimensions)
 
-    def normalize(self, info: PoseNormalizationInfo|None=None, scale_factor: float = 1) -> "Pose":
+    def normalize(self, info: Union[PoseNormalizationInfo,None]=None, scale_factor: float = 1) -> "Pose":
         """
         Normalize the points to a fixed distance between two particular points.
 
@@ -203,7 +203,7 @@ class Pose:
         body, selected_indexes = self.body.frame_dropout_normal(dropout_mean=dropout_mean, dropout_std=dropout_std)
         return Pose(header=self.header, body=body), selected_indexes
 
-    def get_components(self, components: List[str], points: Dict[str, List[str]] = None):
+    def get_components(self, components: List[str], points: Union[Dict[str, List[str]],None] = None):
         """
         get pose components based on criteria.
 

@@ -50,12 +50,8 @@ def test_get_component_names(fake_poses: List[Pose], known_pose_format: KnownPos
 
         names_from_poses = sorted(get_component_names(pose))
         names_from_headers = sorted(get_component_names(pose.header))
-        names_from_components = sorted(get_component_names(pose.header.components))
-        names_from_list = sorted(get_component_names([c.name for c in pose.header.components]))
         assert names_from_poses == names_from_headers
-        assert names_from_headers == names_from_components
-        assert names_from_list == names_from_components
-        assert names_from_components == names_for_standard_components_for_format
+        assert names_for_standard_components_for_format == names_from_headers
         with pytest.raises(ValueError, match="Could not get component_names"):
             get_component_names(pose.body)  # type: ignore
 

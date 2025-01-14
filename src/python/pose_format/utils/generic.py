@@ -17,21 +17,11 @@ KnownPoseFormat = Literal["holistic", "openpose", "openpose_135"]
 
 
 def get_component_names(
-    pose_or_header_or_components: Union[ Pose , PoseHeader , List[PoseHeaderComponent] , List[str]],
-) -> List[str]:
+    pose_or_header_or_components: Union[Pose,PoseHeader]) -> List[str]:
     if isinstance(pose_or_header_or_components, Pose):
         return [c.name for c in pose_or_header_or_components.header.components]
     if isinstance(pose_or_header_or_components, PoseHeader):
         return [c.name for c in pose_or_header_or_components.components]
-
-    if isinstance(pose_or_header_or_components, List):
-        component_names = []
-        for input_item in pose_or_header_or_components:
-            if isinstance(input_item, PoseHeaderComponent):
-                component_names.append(input_item.name)
-            else:
-                component_names.append(input_item)
-        return component_names
     raise ValueError(f"Could not get component_names from {pose_or_header_or_components}")
 
 
@@ -260,7 +250,7 @@ def correct_wrist(pose: Pose, hand: str) -> Pose:
 
     pose.body.data[:, :, body_wrist_index] = new_wrist_data
     pose.body.confidence[:, :, body_wrist_index] = new_wrist_conf
-    return pose  
+    return pose
 
 
 def correct_wrists(pose: Pose) -> Pose:

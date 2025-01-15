@@ -2,7 +2,7 @@ import tempfile
 import os
 from unittest import TestCase
 
-from pose_format import Pose
+from pose_format.pose import Pose
 from pose_format.pose_visualizer import PoseVisualizer
 
 

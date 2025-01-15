@@ -2,7 +2,7 @@ from typing import List
 
 import numpy as np
 
-from pose_format import Pose, PoseHeader
+from pose_format.pose import Pose, PoseHeader
 from pose_format.numpy import NumPyPoseBody
 from pose_format.pose_header import PoseHeaderComponent
 from pose_format.pose_visualizer import PoseVisualizer

@@ -3,7 +3,7 @@
 import argparse
 import os
 
-from pose_format import Pose
+from pose_format.pose import Pose
 from pose_format.pose_visualizer import PoseVisualizer
 from pose_format.utils.generic import pose_normalization_info
 

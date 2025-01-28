@@ -202,6 +202,28 @@ class Pose:
         """
         body, selected_indexes = self.body.frame_dropout_normal(dropout_mean=dropout_mean, dropout_std=dropout_std)
         return Pose(header=self.header, body=body), selected_indexes
+    
+    
+    def remove_components(self, components_to_remove: List[str], points_to_remove: Union[Dict[str, List[str]],None] = None):
+        
+        if isinstance(components_to_remove, str):
+            components_to_remove = [components_to_remove]
+
+        components_to_keep = []
+        points_dict = {}
+
+        for component in self.header.components:
+            if component.name not in components_to_remove:
+                components_to_keep.append(component.name)
+                points_dict[component.name] = []
+                if points_to_remove is not None:
+                    for point in component.points:                    
+                        if point not in points_to_remove[component.name]:
+                            points_dict[component.name].append(point)
+
+        return self.get_components(components_to_keep, points_dict)
+        
+    
 
     def get_components(self, components: List[str], points: Union[Dict[str, List[str]],None] = None):
         """
@@ -253,6 +275,10 @@ class Pose:
         new_body = self.body.get_points(flat_indexes)
 
         return Pose(header=new_header, body=new_body)
+    
+
+    def copy(self):
+        return self.get_components([c.name for c in self.header.components])
 
     def bbox(self):
         """

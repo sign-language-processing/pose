@@ -1,5 +1,5 @@
 from random import sample
-from typing import BinaryIO, List, Tuple
+from typing import BinaryIO, List, Tuple, Optional
 
 import numpy as np
 import math
@@ -93,8 +93,8 @@ class PoseBody:
                          frames: int,
                          shape: List[int],
                          reader: BufferReader,
-                         start_frame: int = None,
-                         end_frame: int = None):
+                         start_frame: Optional[int] = None,
+                         end_frame: Optional[int] = None):
         """
         Reads frame data for version 0.1 from a buffer.
 
@@ -149,8 +149,8 @@ class PoseBody:
     def read_v0_1(cls,
                   header: PoseHeader,
                   reader: BufferReader,
-                  start_frame: int = None,
-                  end_frame: int = None,
+                  start_frame: Optional[int] = None,
+                  end_frame: Optional[int] = None,
                   **unused_kwargs) -> "PoseBody":
         """
         Reads pose data for version 0.1 from a buffer.
@@ -191,10 +191,10 @@ class PoseBody:
     def read_v0_2(cls,
                   header: PoseHeader,
                   reader: BufferReader,
-                  start_frame: int = None,
-                  end_frame: int = None,
-                  start_time: int = None,
-                  end_time: int = None,
+                  start_frame: Optional[int] = None,
+                  end_frame: Optional[int] = None,
+                  start_time: Optional[int] = None,
+                  end_time: Optional[int] = None,
                   **unused_kwargs) -> "PoseBody":
         """
         Reads pose data for version 0.2 from a buffer.
@@ -256,6 +256,12 @@ class PoseBody:
             Buffer to write the pose data to.
         """
         raise NotImplementedError("'write' not implemented on '%s'" % self.__class__)
+    
+    def copy(self)->"PoseBody":
+        return type(self)(fps=self.fps,
+                          data=self.data,
+                          confidence=self.confidence
+                          )
 
     def __getitem__(self, index):
         """
@@ -306,7 +312,7 @@ class PoseBody:
         Raises
         ------
         NotImplementedError
-            If toch is not implemented.
+            If torch is not implemented.
         """
         raise NotImplementedError("'torch' not implemented on '%s'" % self.__class__)
 
@@ -474,7 +480,7 @@ class PoseBody:
         Returns
         -------
         PoseBody
-            PoseBody instance containing only choosen points.
+            PoseBody instance containing only chosen points.
              
         Raises
         ------

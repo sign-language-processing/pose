@@ -32,6 +32,18 @@ class TorchPoseBody(PoseBody):
         self.data = self.data.cuda()
         self.confidence = self.confidence.cuda()
 
+    def copy(self) -> PoseBody:
+        data_copy = MaskedTensor(tensor=self.data.tensor.detach().clone().to(self.data.tensor.device),
+                                 mask=self.data.mask.detach().clone().to(self.data.mask.device),
+                                 )
+        confidence_copy = self.confidence.detach().clone().to(self.confidence.device)
+
+        return self.__class__(fps=self.fps,
+                             data=data_copy,
+                             confidence=confidence_copy
+                             )
+
+
     def zero_filled(self) -> 'TorchPoseBody':
         """
         Fill invalid values with zeros.
@@ -120,3 +132,6 @@ class TorchPoseBody(PoseBody):
         scalar = torch.ones(len(shape) + shape[-1], device=data.device)
         scalar[0] = 1 / self.fps
         return flat * scalar
+
+
+

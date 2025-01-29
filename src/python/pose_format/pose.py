@@ -278,7 +278,7 @@ class Pose:
     
 
     def copy(self):
-        return self.get_components([c.name for c in self.header.components])
+        return self.__class__(self.header, self.body.copy())
 
     def bbox(self):
         """

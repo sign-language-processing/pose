@@ -128,6 +128,12 @@ class NumPyPoseBody(PoseBody):
         buffer.write(np.array(self.data.data, dtype=np.float32).tobytes())
         buffer.write(np.array(self.confidence, dtype=np.float32).tobytes())
 
+    def copy(self) -> PoseBody:
+        return type(self)(fps=self.fps,
+                          data=self.data.copy(),
+                          confidence=self.confidence.copy()
+                          )
+
     @property
     def mask(self):
         """ Returns  mask associated with data. """

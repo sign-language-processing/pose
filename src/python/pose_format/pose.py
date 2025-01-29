@@ -204,7 +204,7 @@ class Pose:
         return Pose(header=self.header, body=body), selected_indexes
     
     
-    def remove_components(self, components_to_remove: List[str], points_to_remove: Union[Dict[str, List[str]],None] = None):
+    def remove_components(self, components_to_remove: Union[str, List[str]], points_to_remove: Union[Dict[str, List[str]],None] = None):
         
         if isinstance(components_to_remove, str):
             components_to_remove = [components_to_remove]

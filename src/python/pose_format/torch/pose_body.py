@@ -4,8 +4,6 @@ import numpy as np
 import torch
 
 from ..pose_body import POINTS_DIMS, PoseBody
-from ..pose_header import PoseHeader
-from ..utils.reader import BufferReader
 from .masked.tensor import MaskedTensor
 
 

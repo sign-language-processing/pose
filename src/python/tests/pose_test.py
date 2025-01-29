@@ -1,10 +1,10 @@
 import random
 import string
-from typing import Optional, Tuple, cast
+from typing import Optional, Tuple
 from unittest import TestCase
 
 import numpy as np
-import numpy.ma as ma
+from numpy import ma
 import tensorflow as tf
 import torch
 
@@ -586,7 +586,7 @@ class TestPoseTorchPoseBody(TestCase):
         pose_copy = pose.copy()
 
         self.assertFalse(pose.body.data.data.requires_grad, "Copied data should be detached from computation graph")
-        self.assertFalse(pose.body.data.mask.requires_grad, "Copied mask should be detached from computation graph")
+        self.assertFalse(pose_copy.body.data.mask.requires_grad, "Copied mask should be detached from computation graph")
 
     def test_pose_torch_posebody_copy_creates_deepcopy(self):
         pose = _get_random_pose_object_with_torch_posebody(num_keypoints=5)

@@ -1,8 +1,9 @@
+import math
 from random import sample
 from typing import BinaryIO, List, Tuple, Optional
 
 import numpy as np
-import math
+
 
 from pose_format.pose_header import PoseHeader
 from pose_format.utils.reader import BufferReader, ConstStructs
@@ -60,9 +61,9 @@ class PoseBody:
 
         if header.version == 0:
             return cls.read_v0_0(header, reader, **kwargs)
-        elif round(header.version, 3) == 0.1:
+        if round(header.version, 3) == 0.1:
             return cls.read_v0_1(header, reader, **kwargs)
-        elif round(header.version, 3) == 0.2:
+        if round(header.version, 3) == 0.2:
             return cls.read_v0_2(header, reader, **kwargs)
 
         raise NotImplementedError("Unknown version - %f" % header.version)
@@ -176,7 +177,7 @@ class PoseBody:
         fps, _frames = reader.unpack(ConstStructs.double_ushort)
 
         _people = reader.unpack(ConstStructs.ushort)
-        _points = sum([len(c.points) for c in header.components])
+        _points = sum(len(c.points) for c in header.components)
         _dims = header.num_dims()
 
         # _frames is defined as short, which sometimes is not enough! TODO change to int

@@ -128,11 +128,10 @@ class NumPyPoseBody(PoseBody):
         buffer.write(np.array(self.data.data, dtype=np.float32).tobytes())
         buffer.write(np.array(self.confidence, dtype=np.float32).tobytes())
 
-    def copy(self) -> PoseBody:
+    def copy(self) -> 'NumPyPoseBody':
         return type(self)(fps=self.fps,
                           data=self.data.copy(),
-                          confidence=self.confidence.copy()
-                          )
+                          confidence=self.confidence.copy())
 
     @property
     def mask(self):
@@ -187,8 +186,9 @@ class NumPyPoseBody(PoseBody):
         NumPyPoseBody
             changed pose body data.
         """
-        self.data = ma.array(self.data.filled(0), mask=self.data.mask)
-        return self
+        copy = self.copy()
+        copy.data = ma.array(copy.data.filled(0), mask=copy.data.mask)
+        return copy
 
     def matmul(self, matrix: np.ndarray):
         """

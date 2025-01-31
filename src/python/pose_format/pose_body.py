@@ -259,10 +259,9 @@ class PoseBody:
         raise NotImplementedError("'write' not implemented on '%s'" % self.__class__)
     
     def copy(self)->"PoseBody":
-        return type(self)(fps=self.fps,
+        return self.__class__(fps=self.fps,
                           data=self.data,
-                          confidence=self.confidence
-                          )
+                          confidence=self.confidence)
 
     def __getitem__(self, index):
         """

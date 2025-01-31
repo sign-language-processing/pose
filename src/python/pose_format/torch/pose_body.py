@@ -26,11 +26,11 @@ class TorchPoseBody(PoseBody):
         super().__init__(fps, data, confidence)
 
     def cuda(self):
-        """Move data and cofidence of tensors to GPU"""
+        """Move data and confidence of tensors to GPU"""
         self.data = self.data.cuda()
         self.confidence = self.confidence.cuda()
 
-    def copy(self) -> PoseBody:
+    def copy(self) -> 'TorchPoseBody':
         data_copy = MaskedTensor(tensor=self.data.tensor.detach().clone().to(self.data.tensor.device),
                                  mask=self.data.mask.detach().clone().to(self.data.mask.device),
                                  )
@@ -38,8 +38,7 @@ class TorchPoseBody(PoseBody):
 
         return self.__class__(fps=self.fps,
                              data=data_copy,
-                             confidence=confidence_copy
-                             )
+                             confidence=confidence_copy)
 
 
     def zero_filled(self) -> 'TorchPoseBody':
@@ -52,8 +51,9 @@ class TorchPoseBody(PoseBody):
             TorchPoseBody instance with masked data filled with zeros.
 
         """
-        self.data.zero_filled()
-        return self
+        copy = self.copy()
+        copy.data = copy.data.zero_filled()
+        return copy
 
     def matmul(self, matrix: np.ndarray) -> 'TorchPoseBody':
         """

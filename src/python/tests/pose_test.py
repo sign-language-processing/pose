@@ -12,10 +12,11 @@ from pose_format.numpy.pose_body import NumPyPoseBody
 from pose_format.pose import Pose
 from pose_format.pose_header import (PoseHeader, PoseHeaderComponent,
                                      PoseHeaderDimensions)
-from pose_format.tensorflow.masked.tensor import MaskedTensor as TF_MaskedTensor
+from pose_format.tensorflow.masked.tensor import MaskedTensor as TensorflowMaskedTensor
+from pose_format.torch.masked import MaskedTensor as TorchMaskedTensor
 from pose_format.tensorflow.pose_body import TensorflowPoseBody
 from pose_format.torch.pose_body import TorchPoseBody
-from pose_format.torch.masked import MaskedTensor as PoseFormatTorchMaskedTensor
+
 
 
 def _create_pose_header_component(name: str, num_keypoints: int) -> PoseHeaderComponent:
@@ -247,7 +248,7 @@ def _get_random_pose_object_with_torch_posebody(num_keypoints: int, frames_min: 
                                                          frames_max=frames_max,
                                                          num_keypoints=num_keypoints)
 
-    masked_tensor = PoseFormatTorchMaskedTensor(tensor=tensor, mask=mask)
+    masked_tensor = TorchMaskedTensor(tensor=tensor, mask=mask)
     body = TorchPoseBody(fps=10, data=masked_tensor, confidence=confidence)
 
     header = _create_pose_header(width=10, height=7, depth=0, num_components=3, num_keypoints=num_keypoints)
@@ -277,7 +278,7 @@ def _get_random_pose_object_with_tf_posebody(num_keypoints: int, frames_min: int
                                                               frames_max=frames_max,
                                                               num_keypoints=num_keypoints)
 
-    masked_tensor = TF_MaskedTensor(tensor=tensor, mask=mask)
+    masked_tensor = TensorflowMaskedTensor(tensor=tensor, mask=mask)
     body = TensorflowPoseBody(fps=10, data=masked_tensor, confidence=confidence)
 
     header = _create_pose_header(width=10, height=7, depth=0, num_components=3, num_keypoints=num_keypoints)
@@ -479,11 +480,11 @@ class TestPoseTensorflowPoseBody(TestCase):
     def test_pose_tf_posebody_copy_creates_deepcopy(self):
         pose = _get_random_pose_object_with_tf_posebody(num_keypoints=5)
         self.assertIsInstance(pose.body, TensorflowPoseBody)
-        self.assertIsInstance(pose.body.data, TF_MaskedTensor)
+        self.assertIsInstance(pose.body.data, TensorflowMaskedTensor)
 
         pose_copy = pose.copy()
         self.assertIsInstance(pose_copy.body, TensorflowPoseBody)
-        self.assertIsInstance(pose_copy.body.data, TF_MaskedTensor)
+        self.assertIsInstance(pose_copy.body.data, TensorflowMaskedTensor)
 
         # Check that pose and pose_copy are not the same object
         self.assertNotEqual(pose, pose_copy, "Copy of pose should not be 'equal' to original")
@@ -492,7 +493,7 @@ class TestPoseTensorflowPoseBody(TestCase):
         self.assertTrue(tf.reduce_all(pose.body.data == pose_copy.body.data), "Copy's data should match original")
 
         # Modify original pose's data and check that copy remains unchanged
-        pose.body.data = TF_MaskedTensor(tf.zeros_like(pose.body.data.tensor), tf.zeros_like(pose.body.data.mask))
+        pose.body.data = TensorflowMaskedTensor(tf.zeros_like(pose.body.data.tensor), tf.zeros_like(pose.body.data.mask))
 
         self.assertFalse(tf.reduce_all(pose.body.data == pose_copy.body.data), "Copy's data should not match original after original is replaced")
 
@@ -591,27 +592,29 @@ class TestPoseTorchPoseBody(TestCase):
     def test_pose_torch_posebody_copy_creates_deepcopy(self):
         pose = _get_random_pose_object_with_torch_posebody(num_keypoints=5)
         self.assertIsInstance(pose.body, TorchPoseBody)
-        self.assertIsInstance(pose.body.data, PoseFormatTorchMaskedTensor)
+        self.assertIsInstance(pose.body.data, TorchMaskedTensor)
         
 
         pose_copy = pose.copy()
         self.assertIsInstance(pose_copy.body, TorchPoseBody)
-        self.assertIsInstance(pose_copy.body.data, PoseFormatTorchMaskedTensor)
+        self.assertIsInstance(pose_copy.body.data, TorchMaskedTensor)
 
         self.assertNotEqual(pose, pose_copy, "Copy of pose should not be 'equal' to original")        
         self.assertTrue(pose.body.data.tensor.equal(pose_copy.body.data.tensor), "Copy's data should match original")
-        # self.assertTrue(pose.body.data.mask == pose_copy.body.data.mask, "Copy's mask should match original")
+        self.assertTrue(pose.body.data.mask.equal(pose_copy.body.data.mask), "Copy's mask should match original")
 
-        # pose.body.data = torch.masked.MaskedTensor(data=torch.zeros_like(pose.body.data.tensor), 
-        #                                            mask=torch.ones_like(pose.body.data.mask))
+        pose.body.data = TorchMaskedTensor(tensor=torch.zeros_like(pose.body.data.tensor), 
+                                                   mask=torch.ones_like(pose.body.data.mask))
 
-        # self.assertFalse(pose.body.data.data == pose_copy.body.data.data, "Copy's data should not match original after original is replaced")
-        # self.assertFalse(pose.body.data.mask == pose_copy.body.data.mask, "Copy's mask should not match original after original is replaced")
 
-        # pose = pose_copy.copy()
+        self.assertFalse(pose.body.data.tensor.equal(pose_copy.body.data.tensor), "Copy's data should not match original after original is replaced")
+        self.assertFalse(pose.body.data.mask.equal(pose_copy.body.data.mask), "Copy's mask should not match original after original is replaced")
 
-        # self.assertTrue(pose.body.data.data == pose_copy.body.data.data, "Copy's data should match original again")
+        pose = pose_copy.copy()
 
-        # pose_copy.body.data.fill_(3.14)
+        self.assertTrue(pose.body.data.tensor.equal(pose_copy.body.data.tensor), "Copy's data should match original again")
+        self.assertTrue(pose.body.data.mask.equal(pose_copy.body.data.mask), "Copy's mask should match original again")
 
-        # self.assertFalse(pose.body.data.data == pose_copy.body.data.data, "Copy's data should not match original after copy is modified")
+        pose_copy.body.data.tensor.fill_(3.14)
+
+        self.assertFalse(pose.body.data.tensor.equal(pose_copy.body.data.tensor), "Copy's data should not match original after copy is modified")

@@ -4,7 +4,7 @@ from typing import Optional, Tuple
 from unittest import TestCase
 
 import numpy as np
-from numpy import ma
+import numpy.ma as ma
 import tensorflow as tf
 import torch
 

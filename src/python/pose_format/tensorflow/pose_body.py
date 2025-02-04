@@ -17,7 +17,7 @@ class TensorflowPoseBody(PoseBody):
     """
     Representation of pose body data, optimized for TensorFlow operations.
 
-    * Inherites from PoseBody 
+    * Inherits from PoseBody 
 
     Parameters
     ----------
@@ -43,10 +43,11 @@ class TensorflowPoseBody(PoseBody):
 
         super().__init__(fps, data, confidence)
 
-    def zero_filled(self):
+    def zero_filled(self) -> 'TensorflowPoseBody':
         """Return an instance with zero-filled data."""
-        self.data = self.data.zero_filled()
-        return self
+        copy = self.copy()
+        copy.data = self.data.zero_filled()
+        return copy
 
     def select_frames(self, frame_indexes: List[int]):
         """
@@ -151,6 +152,17 @@ class TensorflowPoseBody(PoseBody):
             Transformed pose data.
         """
         return self.data.transpose(perm=POINTS_DIMS)
+
+    def copy(self) -> 'TensorflowPoseBody':
+        # Ensure copies are fully detached from the TF computation graph by round-trip through numpy
+        detached_data = tf.convert_to_tensor(self.data.tensor.numpy())
+        detached_mask = tf.convert_to_tensor(self.data.mask.numpy())
+        data_copy = MaskedTensor(detached_data, detached_mask)
+        confidence_copy = tf.convert_to_tensor(self.confidence.numpy())
+        return self.__class__(
+            fps=self.fps,
+            data=data_copy,
+            confidence=confidence_copy)
 
     def get_points(self, indexes: List[int]):
         """

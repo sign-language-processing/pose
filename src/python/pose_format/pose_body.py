@@ -1,8 +1,9 @@
+import math
 from random import sample
-from typing import BinaryIO, List, Tuple
+from typing import BinaryIO, List, Tuple, Optional
 
 import numpy as np
-import math
+
 
 from pose_format.pose_header import PoseHeader
 from pose_format.utils.reader import BufferReader, ConstStructs
@@ -60,9 +61,9 @@ class PoseBody:
 
         if header.version == 0:
             return cls.read_v0_0(header, reader, **kwargs)
-        elif round(header.version, 3) == 0.1:
+        if round(header.version, 3) == 0.1:
             return cls.read_v0_1(header, reader, **kwargs)
-        elif round(header.version, 3) == 0.2:
+        if round(header.version, 3) == 0.2:
             return cls.read_v0_2(header, reader, **kwargs)
 
         raise NotImplementedError("Unknown version - %f" % header.version)
@@ -93,8 +94,8 @@ class PoseBody:
                          frames: int,
                          shape: List[int],
                          reader: BufferReader,
-                         start_frame: int = None,
-                         end_frame: int = None):
+                         start_frame: Optional[int] = None,
+                         end_frame: Optional[int] = None):
         """
         Reads frame data for version 0.1 from a buffer.
 
@@ -149,8 +150,8 @@ class PoseBody:
     def read_v0_1(cls,
                   header: PoseHeader,
                   reader: BufferReader,
-                  start_frame: int = None,
-                  end_frame: int = None,
+                  start_frame: Optional[int] = None,
+                  end_frame: Optional[int] = None,
                   **unused_kwargs) -> "PoseBody":
         """
         Reads pose data for version 0.1 from a buffer.
@@ -176,7 +177,7 @@ class PoseBody:
         fps, _frames = reader.unpack(ConstStructs.double_ushort)
 
         _people = reader.unpack(ConstStructs.ushort)
-        _points = sum([len(c.points) for c in header.components])
+        _points = sum(len(c.points) for c in header.components)
         _dims = header.num_dims()
 
         # _frames is defined as short, which sometimes is not enough! TODO change to int
@@ -191,10 +192,10 @@ class PoseBody:
     def read_v0_2(cls,
                   header: PoseHeader,
                   reader: BufferReader,
-                  start_frame: int = None,
-                  end_frame: int = None,
-                  start_time: int = None,
-                  end_time: int = None,
+                  start_frame: Optional[int] = None,
+                  end_frame: Optional[int] = None,
+                  start_time: Optional[int] = None,
+                  end_time: Optional[int] = None,
                   **unused_kwargs) -> "PoseBody":
         """
         Reads pose data for version 0.2 from a buffer.
@@ -256,6 +257,11 @@ class PoseBody:
             Buffer to write the pose data to.
         """
         raise NotImplementedError("'write' not implemented on '%s'" % self.__class__)
+    
+    def copy(self)->"PoseBody":
+        return self.__class__(fps=self.fps,
+                          data=self.data,
+                          confidence=self.confidence)
 
     def __getitem__(self, index):
         """
@@ -306,7 +312,7 @@ class PoseBody:
         Raises
         ------
         NotImplementedError
-            If toch is not implemented.
+            If torch is not implemented.
         """
         raise NotImplementedError("'torch' not implemented on '%s'" % self.__class__)
 
@@ -474,7 +480,7 @@ class PoseBody:
         Returns
         -------
         PoseBody
-            PoseBody instance containing only choosen points.
+            PoseBody instance containing only chosen points.
              
         Raises
         ------

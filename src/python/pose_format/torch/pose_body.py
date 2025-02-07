@@ -4,8 +4,6 @@ import numpy as np
 import torch
 
 from ..pose_body import POINTS_DIMS, PoseBody
-from ..pose_header import PoseHeader
-from ..utils.reader import BufferReader
 from .masked.tensor import MaskedTensor
 
 
@@ -28,9 +26,20 @@ class TorchPoseBody(PoseBody):
         super().__init__(fps, data, confidence)
 
     def cuda(self):
-        """Move data and cofidence of tensors to GPU"""
+        """Move data and confidence of tensors to GPU"""
         self.data = self.data.cuda()
         self.confidence = self.confidence.cuda()
+
+    def copy(self) -> 'TorchPoseBody':
+        data_copy = MaskedTensor(tensor=self.data.tensor.detach().clone().to(self.data.tensor.device),
+                                 mask=self.data.mask.detach().clone().to(self.data.mask.device),
+                                 )
+        confidence_copy = self.confidence.detach().clone().to(self.confidence.device)
+
+        return self.__class__(fps=self.fps,
+                             data=data_copy,
+                             confidence=confidence_copy)
+
 
     def zero_filled(self) -> 'TorchPoseBody':
         """
@@ -42,8 +51,9 @@ class TorchPoseBody(PoseBody):
             TorchPoseBody instance with masked data filled with zeros.
 
         """
-        self.data.zero_filled()
-        return self
+        copy = self.copy()
+        copy.data = copy.data.zero_filled()
+        return copy
 
     def matmul(self, matrix: np.ndarray) -> 'TorchPoseBody':
         """
@@ -120,3 +130,6 @@ class TorchPoseBody(PoseBody):
         scalar = torch.ones(len(shape) + shape[-1], device=data.device)
         scalar[0] = 1 / self.fps
         return flat * scalar
+
+
+

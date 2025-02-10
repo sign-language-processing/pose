@@ -55,6 +55,20 @@ def _create_pose_header_component(name: str, num_keypoints: int) -> PoseHeaderCo
     return component
 
 
+def _distribute_points_among_components(component_count: int, total_keypoint_count: int):
+    if component_count <= 0 or total_keypoint_count < component_count + 1:
+        raise ValueError("Total keypoints must be at least component count+1 (so that 0 can have two), and component count must be positive")
+
+    # Step 1: Initialize with required minimum values
+    keypoint_counts = [2] + [1] * (component_count - 1)  # Ensure first is 2, others at least 1
+
+    # Step 2: Distribute remaining points
+    remaining_points = total_keypoint_count - sum(keypoint_counts)
+    for _ in range(remaining_points):
+        keypoint_counts[random.randint(0, component_count - 1)] += 1  # Add randomly
+
+    return keypoint_counts
+
 def _create_pose_header(width: int, height: int, depth: int, num_components: int, num_keypoints: int) -> PoseHeader:
     """
     Create a PoseHeader with given dimensions and components.
@@ -79,8 +93,10 @@ def _create_pose_header(width: int, height: int, depth: int, num_components: int
     """
     dimensions = PoseHeaderDimensions(width=width, height=height, depth=depth)
 
+    keypoints_per_component = _distribute_points_among_components(num_components, num_keypoints)
+
     components = [
-        _create_pose_header_component(name=str(index), num_keypoints=num_keypoints) for index in range(num_components)
+        _create_pose_header_component(name=str(index), num_keypoints=keypoints_per_component[index]) for index in range(num_components)
     ]
 
     header = PoseHeader(version=1.0, dimensions=dimensions, components=components)
@@ -132,6 +148,8 @@ def _create_random_tensorflow_data(frames_min: Optional[int] = None,
     mask = tf.cast(mask, tf.bool)
 
     return tensor, mask, confidence
+
+
 
 
 def _create_random_numpy_data(frames_min: Optional[int] = None,
@@ -286,7 +304,7 @@ def _get_random_pose_object_with_tf_posebody(num_keypoints: int, frames_min: int
     return Pose(header=header, body=body)
 
 
-def _get_random_pose_object_with_numpy_posebody(num_keypoints: int, frames_min: int = 1, frames_max: int = 10) -> Pose:
+def _get_random_pose_object_with_numpy_posebody(num_keypoints: int, frames_min: int = 1, frames_max: int = 10, num_components=3) -> Pose:
     """
     Creates a random Pose object with Numpy pose body for testing.
 
@@ -313,7 +331,7 @@ def _get_random_pose_object_with_numpy_posebody(num_keypoints: int, frames_min: 
 
     body = NumPyPoseBody(fps=10, data=masked_array, confidence=confidence)
 
-    header = _create_pose_header(width=10, height=7, depth=0, num_components=3, num_keypoints=num_keypoints)
+    header = _create_pose_header(width=10, height=7, depth=0, num_components=num_components, num_keypoints=num_keypoints)
 
     return Pose(header=header, body=body)
 
@@ -328,6 +346,82 @@ class TestPose(TestCase):
         Tests if the Pose object is callable.
         """
         assert callable(Pose)
+
+    def test_pose_remove_components(self):
+        pose = _get_random_pose_object_with_numpy_posebody(num_keypoints=5)
+        assert pose.body.data.shape[-2] == 5
+        assert pose.body.data.shape[-1] == 2 # XY dimensions
+
+        self.assertEqual(len(pose.header.components), 3)
+        self.assertEqual(sum(len(c.points) for c in pose.header.components), 5)
+        self.assertEqual(pose.header.components[0].name, "0")
+        self.assertEqual(pose.header.components[1].name, "1")
+        self.assertEqual(pose.header.components[0].points[0], "0_a")
+        self.assertIn("1_a", pose.header.components[1].points)
+        self.assertNotIn("1_f", pose.header.components[1].points)
+        self.assertNotIn("4", pose.header.components)
+
+        # test that we can remove a component
+        component_to_remove = "0"
+        pose_copy = pose.copy()
+        self.assertIn(component_to_remove, [c.name for c in pose_copy.header.components])
+        pose_copy = pose_copy.remove_components(component_to_remove)
+        self.assertNotIn(component_to_remove, [c.name for c in pose_copy.header.components])
+
+
+        # Remove a point only
+        point_to_remove = "0_a"
+        pose_copy = pose.copy()
+        self.assertIn(point_to_remove, pose_copy.header.components[0].points)
+        pose_copy = pose_copy.remove_components([], {point_to_remove[0]:[point_to_remove]})
+        self.assertNotIn(point_to_remove, pose_copy.header.components[0].points)
+
+
+        # Can we remove two things at once
+        component_to_remove = "1"
+        point_to_remove = "2_a"
+        component_to_remove_point_from = "2"
+        
+        self.assertIn(component_to_remove, [c.name for c in pose_copy.header.components])
+        self.assertIn(component_to_remove_point_from, [c.name for c in pose_copy.header.components])
+        self.assertIn(point_to_remove, pose_copy.header.components[2].points)
+        pose_copy = pose_copy.remove_components([component_to_remove], {component_to_remove_point_from:[point_to_remove]})
+        self.assertNotIn(component_to_remove, [c.name for c in pose_copy.header.components])
+        self.assertIn(component_to_remove_point_from, [c.name for c in pose_copy.header.components]) # this should still be around
+
+        # can we remove a component and a point FROM that component without crashing
+        component_to_remove = "0"
+        point_to_remove = "0_a"
+        pose_copy = pose.copy()
+        self.assertIn(point_to_remove, pose_copy.header.components[0].points)
+        pose_copy = pose_copy.remove_components([component_to_remove], {component_to_remove:[point_to_remove]})
+        self.assertNotIn(component_to_remove, [c.name for c in pose_copy.header.components])
+        self.assertNotIn(point_to_remove, pose_copy.header.components[0].points)
+
+
+        # can we "remove" a component that doesn't exist without crashing
+        component_to_remove = "NOT EXISTING"
+        pose_copy = pose.copy()
+        initial_count = len(pose_copy.header.components)
+        pose_copy = pose_copy.remove_components([component_to_remove])
+        self.assertEqual(initial_count, len(pose_copy.header.components))
+
+        # can we "remove" a point that doesn't exist from a component that does without crashing
+        point_to_remove = "2_x"
+        component_to_remove_point_from = "2"
+        pose_copy = pose.copy()
+        self.assertNotIn(point_to_remove, pose_copy.header.components[2].points)
+        pose_copy = pose_copy.remove_components([], {component_to_remove_point_from:[point_to_remove]})
+        self.assertNotIn(point_to_remove, pose_copy.header.components[2].points)
+
+        # can we remove a point from a component that doesn't exist
+        point_to_remove = "2_x"
+        component_to_remove_point_from = "NOT EXISTING"
+        pose_copy = pose.copy()
+        self.assertNotIn(point_to_remove, pose_copy.header.components[2].points)
+        pose_copy = pose_copy.remove_components([], {component_to_remove_point_from:[point_to_remove]})
+        self.assertNotIn(point_to_remove, pose_copy.header.components[2].points)
+
 
 
 
@@ -475,7 +569,7 @@ class TestPoseTensorflowPoseBody(TestCase):
             return example
 
         dataset.map(create_pose_and_frame_dropout_uniform)
-    
+
 
     def test_pose_tf_posebody_copy_creates_deepcopy(self):
         pose = _get_random_pose_object_with_tf_posebody(num_keypoints=5)
@@ -488,7 +582,7 @@ class TestPoseTensorflowPoseBody(TestCase):
 
         # Check that pose and pose_copy are not the same object
         self.assertNotEqual(pose, pose_copy, "Copy of pose should not be 'equal' to original")
-        
+
         # Ensure the data tensors are equal but independent
         self.assertTrue(tf.reduce_all(pose.body.data == pose_copy.body.data), "Copy's data should match original")
 
@@ -514,6 +608,14 @@ class TestPoseNumpyPoseBody(TestCase):
     """
     Testcases for Pose objects containing NumPy PoseBody data.
     """
+
+    def test_pose_numpy_generated_with_correct_shape(self):
+        pose = _get_random_pose_object_with_numpy_posebody(num_keypoints=5, frames_min=3)
+
+        # does the header match the body?
+        expected_keypoints_count_from_header = sum(len(c.points) for c in pose.header.components)
+        self.assertEqual(expected_keypoints_count_from_header, pose.body.data.shape[-2])
+
 
     def test_pose_numpy_posebody_normalize_preserves_shape(self):
         """
@@ -593,17 +695,16 @@ class TestPoseTorchPoseBody(TestCase):
         pose = _get_random_pose_object_with_torch_posebody(num_keypoints=5)
         self.assertIsInstance(pose.body, TorchPoseBody)
         self.assertIsInstance(pose.body.data, TorchMaskedTensor)
-        
 
         pose_copy = pose.copy()
         self.assertIsInstance(pose_copy.body, TorchPoseBody)
         self.assertIsInstance(pose_copy.body.data, TorchMaskedTensor)
 
-        self.assertNotEqual(pose, pose_copy, "Copy of pose should not be 'equal' to original")        
+        self.assertNotEqual(pose, pose_copy, "Copy of pose should not be 'equal' to original")
         self.assertTrue(pose.body.data.tensor.equal(pose_copy.body.data.tensor), "Copy's data should match original")
         self.assertTrue(pose.body.data.mask.equal(pose_copy.body.data.mask), "Copy's mask should match original")
 
-        pose.body.data = TorchMaskedTensor(tensor=torch.zeros_like(pose.body.data.tensor), 
+        pose.body.data = TorchMaskedTensor(tensor=torch.zeros_like(pose.body.data.tensor),
                                                    mask=torch.ones_like(pose.body.data.mask))
 
 

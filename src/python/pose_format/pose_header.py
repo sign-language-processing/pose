@@ -65,8 +65,15 @@ class PoseHeaderComponent:
 
         self.relative_limbs = self.get_relative_limbs()
 
+    def copy(self) -> 'PoseHeaderComponent':
+        return PoseHeaderComponent(name = self.name, 
+                                   points = self.points,
+                                   limbs= self.limbs,
+                                   colors=self.colors,
+                                   point_format = self.format)
+
     @staticmethod
-    def read(version: float, reader: BufferReader):
+    def read(version: float, reader: BufferReader) -> 'PoseHeaderComponent':
         """
         Reads pose header dimensions from reader (BufferReader).
 
@@ -182,8 +189,11 @@ class PoseHeaderDimensions:
         self.height = math.ceil(height)
         self.depth = math.ceil(depth)
 
+    def copy(self) -> 'PoseHeaderDimensions':
+        return self.__class__(self.width, self.height, self.depth)        
+
     @staticmethod
-    def read(version: float, reader: BufferReader):
+    def read(version: float, reader: BufferReader) -> 'PoseHeaderDimensions':
         """
         Reads and returns a PoseHeaderDimensions object from a buffer reader.
 
@@ -292,6 +302,13 @@ class PoseHeader:
         self.dimensions = dimensions
         self.components = components
         self.is_bbox = is_bbox
+
+    def copy(self) -> 'PoseHeader':
+        return PoseHeader(version=self.version,
+                          dimensions=self.dimensions.copy(),
+                          components=[c.copy() for c in self.components],
+                          is_bbox=self.is_bbox
+                          )
 
     @staticmethod
     def read(reader: BufferReader) -> 'PoseHeader':

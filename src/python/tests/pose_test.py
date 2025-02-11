@@ -479,7 +479,7 @@ class TestPoseTensorflowPoseBody(TestCase):
 
     def test_pose_tf_posebody_copy_creates_deepcopy(self):
         pose = _get_random_pose_object_with_tf_posebody(num_keypoints=5)
-        self.assertIsInstance(pose.body, TensorflowPoseBody)
+        self.assertIsInstance(pose.body, TensorflowPoseBody)        
         self.assertIsInstance(pose.body.data, TensorflowMaskedTensor)
 
         pose_copy = pose.copy()
@@ -488,7 +488,9 @@ class TestPoseTensorflowPoseBody(TestCase):
 
         # Check that pose and pose_copy are not the same object
         self.assertNotEqual(pose, pose_copy, "Copy of pose should not be 'equal' to original")
-        
+        self.assertNotEqual(pose.header, pose_copy.header, "headers should be new objects as well")
+        self.assertNotEqual(pose.header.components, pose_copy.header.components, "components should be new objects as well")
+
         # Ensure the data tensors are equal but independent
         self.assertTrue(tf.reduce_all(pose.body.data == pose_copy.body.data), "Copy's data should match original")
 
@@ -499,6 +501,9 @@ class TestPoseTensorflowPoseBody(TestCase):
 
         # Create another copy and ensure it matches the first copy
         pose = pose_copy.copy()
+        self.assertNotEqual(pose, pose_copy, "Copy of pose should not be 'equal' to original")
+        self.assertNotEqual(pose.header, pose_copy.header, "headers should be new objects as well")
+        self.assertNotEqual(pose.header.components, pose_copy.header.components, "Components should be new objects as well")
         
         self.assertTrue(tf.reduce_all(pose.body.data == pose_copy.body.data), "Copy's data should match original again")
 
@@ -560,8 +565,9 @@ class TestPoseNumpyPoseBody(TestCase):
         pose = _get_random_pose_object_with_numpy_posebody(num_keypoints=5, frames_min=3)
 
         pose_copy = pose.copy()
-
         self.assertNotEqual(pose, pose_copy, "Copy of pose should not be 'equal' to original")
+        self.assertNotEqual(pose.header, pose_copy.header, "headers should be new objects as well")
+        self.assertNotEqual(pose.header.components, pose_copy.header.components, "components should be new objects as well")
         
         self.assertTrue(np.array_equal(pose.body.data, pose_copy.body.data), "Copy's data should match original")
 
@@ -599,7 +605,9 @@ class TestPoseTorchPoseBody(TestCase):
         self.assertIsInstance(pose_copy.body, TorchPoseBody)
         self.assertIsInstance(pose_copy.body.data, TorchMaskedTensor)
 
-        self.assertNotEqual(pose, pose_copy, "Copy of pose should not be 'equal' to original")        
+        self.assertNotEqual(pose, pose_copy, "Copy of pose should not be 'equal' to original")
+        self.assertNotEqual(pose.header, pose_copy.header, "headers should be new objects as well")
+        self.assertNotEqual(pose.header.components, pose_copy.header.components, "components should be new objects as well")
         self.assertTrue(pose.body.data.tensor.equal(pose_copy.body.data.tensor), "Copy's data should match original")
         self.assertTrue(pose.body.data.mask.equal(pose_copy.body.data.mask), "Copy's mask should match original")
 

@@ -1,3 +1,4 @@
+from collections import defaultdict
 from typing import List, get_args
 import numpy as np
 import pytest
@@ -154,7 +155,34 @@ def test_correct_wrists(fake_poses: List[Pose]):
             assert corrected_pose != pose
             assert np.array_equal(corrected_pose.body.data, pose.body.data) is False 
 
-            
+@pytest.mark.parametrize("fake_poses", ["holistic"], indirect=["fake_poses"])
+def test_remove_one_point_and_one_component(fake_poses: List[Pose]):
+    component_to_drop = "POSE_WORLD_LANDMARKS"
+    point_to_drop = "LEFT_KNEE"
+    for pose in fake_poses:
+        original_component_names = []
+        original_points_dict = defaultdict(list)
+        for component in pose.header.components:
+            original_component_names.append(component.name)
+
+            for point in component.points:
+                original_points_dict[component.name].append(point)
+
+        assert component_to_drop in original_component_names
+        assert point_to_drop in original_points_dict["POSE_LANDMARKS"]
+        reduced_pose = pose.remove_components(component_to_drop, {"POSE_LANDMARKS": [point_to_drop]})
+        new_component_names, new_points_dict = [], defaultdict(list)
+        new_component_names = []
+        new_points_dict = defaultdict(list)
+        for component in reduced_pose.header.components:
+            new_component_names.append(component.name)
+
+            for point in component.points:
+                new_points_dict[component.name].append(point)
+
+
+        assert component_to_drop not in new_component_names
+        assert point_to_drop not in new_points_dict["POSE_LANDMARKS"]     
 
 
 @pytest.mark.parametrize("fake_poses", TEST_POSE_FORMATS, indirect=["fake_poses"])
@@ -205,9 +233,3 @@ def test_fake_pose(known_pose_format: KnownPoseFormat):
             assert pose.header.num_dims() == pose.body.data.shape[-1]
 
     poses = [fake_pose(25) for _ in range(5)]
-
-            
-
-
-
-    

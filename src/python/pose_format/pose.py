@@ -215,11 +215,11 @@ class Pose:
         for component in self.header.components:
             if component.name not in components_to_remove:
                 components_to_keep.append(component.name)
-                points_dict[component.name] = []
-                if points_to_remove is not None:
-                    for point in component.points:                    
-                        if point not in points_to_remove[component.name]:
-                            points_dict[component.name].append(point)
+                if points_to_remove:
+                    points_to_remove_list = points_to_remove.get(component.name, []) 
+                    points_dict[component.name] = [point for point in component.points if point not in points_to_remove_list]
+                else:
+                    points_dict[component.name] = component.points[:]
 
         return self.get_components(components_to_keep, points_dict)
         

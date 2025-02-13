@@ -84,7 +84,9 @@ def get_corresponding_pose_path(video_path: Path, keep_video_suffixes: bool = Fa
 
 
 def process_video(keep_video_suffixes: bool, pose_format: str, additional_config: dict, vid_path: Path) -> bool:
-    print(f'Estimating {vid_path} on CPU {psutil.Process().cpu_num()}')
+    cpu_num = psutil.cpu_num() if hasattr(psutil, "cpu_num") else (
+        os.sched_getcpu()) if hasattr(os, 'sched_getcpu') else "N/A"
+    print(f'Estimating {vid_path} on CPU {cpu_num}')
 
     try:
         pose_path = get_corresponding_pose_path(video_path=vid_path, keep_video_suffixes=keep_video_suffixes)

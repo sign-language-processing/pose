@@ -1,8 +1,7 @@
-from pathlib import Path
 from typing import Tuple, Literal, List, Union
 import copy
 import numpy as np
-from numpy import ma
+import numpy.ma as ma
 from pose_format.pose import Pose
 from pose_format.numpy import NumPyPoseBody
 from pose_format.pose_header import PoseHeader, PoseHeaderDimensions, PoseHeaderComponent, PoseNormalizationInfo
@@ -62,6 +61,43 @@ def normalize_pose_size(pose: Pose, target_width: int = 512):
     pose.header.dimensions.height = pose.header.dimensions.width = target_width
 
 
+def pose_remove_legs(pose: Pose) ->Pose:
+    """Remove (not _hide_) legs. Also does the hip
+    """
+    known_pose_format = detect_known_pose_format(pose)
+
+    if known_pose_format == "holistic":
+        mediapipe_point_names = ["KNEE", "ANKLE", "HEEL", "HIP", "FOOT_INDEX"]
+        mediapipe_sides = ["LEFT", "RIGHT"]
+        point_names_to_remove = [
+            side + "_" + name
+            for name in mediapipe_point_names
+            for side in mediapipe_sides
+        ]
+        points_to_remove_dict ={
+            "POSE_LANDMARKS": point_names_to_remove,
+            "POSE_WORLD_LANDMARKS": point_names_to_remove,
+        }
+
+    elif known_pose_format == 'openpose':
+        openpose_point_names = ["Hip", "Knee", "Ankle", "BigToe", "SmallToe", "Heel"]
+        openpose_sides  = ["L", "R", "Mid"]
+        point_names_to_remove = [
+            side + name
+            for name in openpose_point_names
+            for side in openpose_sides
+        ]
+        points_to_remove_dict = {
+            "pose_keypoints_2d": point_names_to_remove
+        }
+    else:
+        raise NotImplementedError(
+            f"Unsupported pose header schema {known_pose_format} for {pose_remove_legs.__name__}: {pose.header}"
+        )
+
+    pose = pose.remove_components([], points_to_remove_dict)
+    return pose
+
 def pose_hide_legs(pose: Pose):
     known_pose_format = detect_known_pose_format(pose)
     if known_pose_format == "holistic":
@@ -109,13 +145,17 @@ def hands_indexes(pose_header: PoseHeader)-> List[int]:
     known_pose_format = detect_known_pose_format(pose_header)
     if known_pose_format == "holistic":
         return [
+            # pylint: disable=protected-access
             pose_header._get_point_index("LEFT_HAND_LANDMARKS", "MIDDLE_FINGER_MCP"),
+            # pylint: disable=protected-access
             pose_header._get_point_index("RIGHT_HAND_LANDMARKS", "MIDDLE_FINGER_MCP"),
         ]
 
     if known_pose_format == "openpose":
         return [
+            # pylint: disable=protected-access
             pose_header._get_point_index("hand_left_keypoints_2d", "M_CMC"),
+            # pylint: disable=protected-access
             pose_header._get_point_index("hand_right_keypoints_2d", "M_CMC"),
         ]
     raise NotImplementedError(
@@ -148,12 +188,12 @@ def hands_components(pose_header: PoseHeader)-> Tuple[Tuple[str, str], Tuple[str
 def normalize_component_3d(pose, component_name: str, plane: Tuple[str, str, str], line: Tuple[str, str]):
     hand_pose = pose.get_components([component_name])
     plane_info = hand_pose.header.normalization_info(
-        p1=(component_name, plane[0]), 
-        p2=(component_name, plane[1]), 
+        p1=(component_name, plane[0]),
+        p2=(component_name, plane[1]),
         p3=(component_name, plane[2])
     )
     line_info = hand_pose.header.normalization_info(
-        p1=(component_name, line[0]), 
+        p1=(component_name, line[0]),
         p2=(component_name, line[1])
         )
 
@@ -176,10 +216,11 @@ def normalize_hands_3d(pose: Pose, left_hand=True, right_hand=True):
 def get_standard_components_for_known_format(known_pose_format: KnownPoseFormat) -> List[PoseHeaderComponent]:
     if known_pose_format == "holistic":
         try:
+            # pylint: disable=import-outside-toplevel
             import pose_format.utils.holistic as holistic_utils
             return holistic_utils.holistic_components()
         except ImportError as e:
-            raise e 
+            raise e
     if known_pose_format == "openpose":
         return OpenPose_Components
     if known_pose_format == "openpose_135":
@@ -191,7 +232,7 @@ def get_standard_components_for_known_format(known_pose_format: KnownPoseFormat)
 def fake_pose(num_frames: int, fps: int=25, components: Union[List[PoseHeaderComponent],None]=None)->Pose:
     if components is None:
         components = copy.deepcopy(OpenPose_Components) # fixes W0102, dangerous default value
-    
+
     if components[0].format == "XYZC":
         dimensions = PoseHeaderDimensions(width=1, height=1, depth=1)
     elif components[0].format == "XYC":
@@ -204,7 +245,6 @@ def fake_pose(num_frames: int, fps: int=25, components: Union[List[PoseHeaderCom
     data = np.random.randn(num_frames, 1, total_points, header.num_dims())
     confidence = np.random.randn(num_frames, 1, total_points)
     masked_data = ma.masked_array(data)
-    
 
     body = NumPyPoseBody(fps=int(fps), data=masked_data, confidence=confidence)
 
@@ -214,8 +254,10 @@ def fake_pose(num_frames: int, fps: int=25, components: Union[List[PoseHeaderCom
 def get_hand_wrist_index(pose: Pose, hand: str)-> int:
     known_pose_format = detect_known_pose_format(pose)
     if known_pose_format == "holistic":
+        # pylint: disable=protected-access
         return pose.header._get_point_index(f"{hand.upper()}_HAND_LANDMARKS", "WRIST")
     if known_pose_format == "openpose":
+        # pylint: disable=protected-access
         return pose.header._get_point_index(f"hand_{hand.lower()}_keypoints_2d", "BASE")
     raise NotImplementedError(
         f"Unsupported pose header schema {known_pose_format} for {get_hand_wrist_index.__name__}: {pose.header}"
@@ -225,8 +267,10 @@ def get_hand_wrist_index(pose: Pose, hand: str)-> int:
 def get_body_hand_wrist_index(pose: Pose, hand: str)-> int:
     known_pose_format = detect_known_pose_format(pose)
     if known_pose_format == "holistic":
+        # pylint: disable=protected-access
         return pose.header._get_point_index("POSE_LANDMARKS", f"{hand.upper()}_WRIST")
     if known_pose_format == "openpose":
+        # pylint: disable=protected-access
         return pose.header._get_point_index("pose_keypoints_2d", f"{hand.upper()[0]}Wrist")
     raise NotImplementedError(
         f"Unsupported pose header schema {known_pose_format} for {get_body_hand_wrist_index.__name__}: {pose.header}"
@@ -244,7 +288,7 @@ def correct_wrist(pose: Pose, hand: str) -> Pose:
     body_wrist_conf = pose.body.confidence[:, :, body_wrist_index]
 
     point_coordinate_count = wrist.shape[-1]
-    stacked_conf = np.stack([wrist_conf] * point_coordinate_count, axis=-1) 
+    stacked_conf = np.stack([wrist_conf] * point_coordinate_count, axis=-1)
     new_wrist_data = ma.where(stacked_conf == 0, body_wrist, wrist)
     new_wrist_conf = ma.where(wrist_conf == 0, body_wrist_conf, wrist_conf)
 
@@ -263,7 +307,7 @@ def reduce_holistic(pose: Pose) -> Pose:
     known_pose_format = detect_known_pose_format(pose)
     if known_pose_format != "holistic":
         return pose
-
+    # pylint: disable=pointless-string-statement
     """
     # from mediapipe.python.solutions.face_mesh_connections import FACEMESH_CONTOURS
     # points_set = set([p for p_tup in list(FACEMESH_CONTOURS) for p in p_tup])

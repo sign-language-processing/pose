@@ -10,7 +10,6 @@ from pose_format.utils.generic import (
     get_standard_components_for_known_format,
     KnownPoseFormat,
     pose_hide_legs,
-    pose_remove_legs,
     pose_shoulders,
     hands_indexes,
     normalize_pose_size,
@@ -67,7 +66,6 @@ def test_pose_hide_legs(fake_poses: List[Pose]):
         if detected_format == "openpose_135":
             with pytest.raises(NotImplementedError, match="Unsupported pose header schema"):
                 pose_hide_legs(pose)
-                return
         else:
             pose_hide_legs(pose)
             new_nonzeros_count = np.count_nonzero(pose.body.data)
@@ -197,7 +195,7 @@ def test_pose_remove_legs(fake_poses: List[Pose]):
             assert "LEFT_KNEE" in pose.header.components[pose_landmarks_index].points
 
 
-            pose_with_legs_removed = pose_remove_legs(pose)
+            pose_with_legs_removed = pose_hide_legs(pose, remove=True)
             assert pose_with_legs_removed != pose
             new_c_names = [c.name for c in pose_with_legs_removed.header.components]
             assert "POSE_LANDMARKS" in new_c_names
@@ -217,14 +215,14 @@ def test_pose_remove_legs(fake_poses: List[Pose]):
                                              'LSmallToe', 'RSmallToe',
                                              'LHeel', 'RHeel']
             component_index = c_names.index("pose_keypoints_2d")
-            pose_with_legs_removed = pose_remove_legs(pose)
+            pose_with_legs_removed = pose_hide_legs(pose, remove=True)
 
             for point_name in points_that_should_be_removed:
-                assert point_name not in pose_with_legs_removed.header.components[component_index].points
+                assert point_name not in pose_with_legs_removed.header.components[component_index].points, f"{pose_with_legs_removed.header.components[component_index].name},{pose_with_legs_removed.header.components[component_index].points}"
                 assert point_name in pose.header.components[component_index].points
         else:
             with pytest.raises(NotImplementedError, match="Unsupported pose header schema"):
-                pose_remove_legs(pose)
+                pose_hide_legs(pose, remove=True)
 
 
 

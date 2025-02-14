@@ -377,8 +377,12 @@ class PoseHeader:
 
         raise ValueError("Couldn't find component")
 
-    def get_point_index(self, component: str, point: str)-> int:
-        return self._get_point_index(component, point)
+    def get_point_index(self, component: str, point: str)-> Union[int, None]:
+        try:
+            return self._get_point_index(component, point)
+        except ValueError:
+            # if component or point doesn't exist.
+            return None
 
     def normalization_info(self, p1: Tuple[str, str], p2: Tuple[str, str], p3: Tuple[str, str] = None):
         """

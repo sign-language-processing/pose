@@ -61,65 +61,49 @@ def normalize_pose_size(pose: Pose, target_width: int = 512):
     pose.header.dimensions.height = pose.header.dimensions.width = target_width
 
 
-def pose_remove_legs(pose: Pose) ->Pose:
-    """Remove (not _hide_) legs. Also does the hip
+def pose_hide_legs(pose: Pose, remove: bool = False) -> Pose:
+    """
+    Hide or remove leg components from a pose.
+    
+    If `remove` is True, the leg components are removed; otherwise, they are hidden (zeroed out).
     """
     known_pose_format = detect_known_pose_format(pose)
-
+    
     if known_pose_format == "holistic":
-        mediapipe_point_names = ["KNEE", "ANKLE", "HEEL", "HIP", "FOOT_INDEX"]
-        mediapipe_sides = ["LEFT", "RIGHT"]
-        point_names_to_remove = [
-            side + "_" + name
-            for name in mediapipe_point_names
-            for side in mediapipe_sides
-        ]
-        points_to_remove_dict ={
+        point_names = ["KNEE", "ANKLE", "HEEL", "FOOT_INDEX", "HIP"]
+        sides = ["LEFT", "RIGHT"]
+        point_names_to_remove = [f"{side}_{name}" for side in sides for name in point_names]
+        points_to_remove_dict = {
             "POSE_LANDMARKS": point_names_to_remove,
             "POSE_WORLD_LANDMARKS": point_names_to_remove,
         }
 
-    elif known_pose_format == 'openpose':
-        openpose_point_names = ["Hip", "Knee", "Ankle", "BigToe", "SmallToe", "Heel"]
-        openpose_sides  = ["L", "R", "Mid"]
-        point_names_to_remove = [
-            side + name
-            for name in openpose_point_names
-            for side in openpose_sides
-        ]
-        points_to_remove_dict = {
-            "pose_keypoints_2d": point_names_to_remove
-        }
-    else:
-        raise NotImplementedError(
-            f"Unsupported pose header schema {known_pose_format} for {pose_remove_legs.__name__}: {pose.header}"
-        )
-
-    pose = pose.remove_components([], points_to_remove_dict)
-    return pose
-
-def pose_hide_legs(pose: Pose):
-    known_pose_format = detect_known_pose_format(pose)
-    if known_pose_format == "holistic":
-        point_names = ["KNEE", "ANKLE", "HEEL", "FOOT_INDEX"]
-        points = [
-            pose.header.get_point_index("POSE_LANDMARKS", side + "_" + n)
-            for n in point_names
-            for side in ["LEFT", "RIGHT"]
-        ]
-        pose.body.data[:, :, points, :] = 0
-        pose.body.confidence[:, :, points] = 0
     elif known_pose_format == "openpose":
         point_names = ["Hip", "Knee", "Ankle", "BigToe", "SmallToe", "Heel"]
-        points = [
-            pose.header.get_point_index("pose_keypoints_2d", side + n) for n in point_names for side in ["L", "R"]
-        ]
-        pose.body.data[:, :, points, :] = 0
-        pose.body.confidence[:, :, points] = 0
+        sides = ["L", "R", "Mid"]
+        point_names_to_remove = [f"{side}{name}" for side in sides for name in point_names]
+        points_to_remove_dict = {"pose_keypoints_2d": point_names_to_remove}
+
     else:
         raise NotImplementedError(
             f"Unsupported pose header schema {known_pose_format} for {pose_hide_legs.__name__}: {pose.header}"
         )
+
+    if remove:
+        return pose.remove_components([], points_to_remove_dict)
+
+    # Hide the points instead of removing them
+    # Some of the generated point_names_to_remove don't exist, e.g. MidHip, so get_point_index gives None
+    points = []
+    for name in point_names_to_remove:
+        point = pose.header.get_point_index(list(points_to_remove_dict.keys())[0], name)
+        if point is not None: # point not found
+            points.append(point)
+
+    pose.body.data[:, :, points, :] = 0
+    pose.body.confidence[:, :, points] = 0
+
+    return pose
 
 
 def pose_shoulders(pose_header: PoseHeader) -> Tuple[Tuple[str, str], Tuple[str, str]]:

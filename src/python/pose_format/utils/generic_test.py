@@ -60,6 +60,7 @@ def test_get_component_names(fake_poses: List[Pose], known_pose_format: KnownPos
 @pytest.mark.parametrize("fake_poses", list(get_args(KnownPoseFormat)), indirect=["fake_poses"])
 def test_pose_hide_legs(fake_poses: List[Pose]):
     for pose in fake_poses:
+        pose_copy = pose.copy()
         orig_nonzeros_count = np.count_nonzero(pose.body.data)
 
         detected_format = detect_known_pose_format(pose)
@@ -71,6 +72,9 @@ def test_pose_hide_legs(fake_poses: List[Pose]):
             new_nonzeros_count = np.count_nonzero(pose.body.data)
 
             assert orig_nonzeros_count > new_nonzeros_count
+            assert len(pose_copy.header.components) == len(pose.header.components)
+            for c_orig, c_copy in zip(pose.header.components, pose_copy.header.components):
+                assert len(c_orig.points) == len(c_copy.points)
 
 
 @pytest.mark.parametrize("fake_poses", TEST_POSE_FORMATS, indirect=["fake_poses"])

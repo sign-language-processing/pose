@@ -367,6 +367,10 @@ class TestPose(TestCase):
         self.assertIn(component_to_remove, [c.name for c in pose_copy.header.components])
         pose_copy = pose_copy.remove_components(component_to_remove)
         self.assertNotIn(component_to_remove, [c.name for c in pose_copy.header.components])
+        self.assertEqual(pose_copy.header.components[0].name, "1")
+        # quickly check to make sure other components/points weren't removed
+        self.assertIn("1_a", pose_copy.header.components[0].points)
+        self.assertEqual(pose_copy.header.components[0].points, pose.header.components[1].points)        
 
 
         # Remove a point only
@@ -375,9 +379,13 @@ class TestPose(TestCase):
         self.assertIn(point_to_remove, pose_copy.header.components[0].points)
         pose_copy = pose_copy.remove_components([], {point_to_remove[0]:[point_to_remove]})
         self.assertNotIn(point_to_remove, pose_copy.header.components[0].points)
+        # quickly check to make sure other components/points weren't removed
+        self.assertIn("1_a", pose_copy.header.components[1].points)
+        self.assertEqual(pose_copy.header.components[1].points, pose.header.components[1].points)        
 
 
         # Can we remove two things at once
+        pose_copy = pose.copy()
         component_to_remove = "1"
         point_to_remove = "2_a"
         component_to_remove_point_from = "2"
@@ -388,6 +396,8 @@ class TestPose(TestCase):
         pose_copy = pose_copy.remove_components([component_to_remove], {component_to_remove_point_from:[point_to_remove]})
         self.assertNotIn(component_to_remove, [c.name for c in pose_copy.header.components])
         self.assertIn(component_to_remove_point_from, [c.name for c in pose_copy.header.components]) # this should still be around
+        self.assertIn("0_a", pose_copy.header.components[0].points)
+        self.assertEqual(pose_copy.header.components[0].points, pose.header.components[0].points) # should be unaffected
 
         # can we remove a component and a point FROM that component without crashing
         component_to_remove = "0"
@@ -397,6 +407,7 @@ class TestPose(TestCase):
         pose_copy = pose_copy.remove_components([component_to_remove], {component_to_remove:[point_to_remove]})
         self.assertNotIn(component_to_remove, [c.name for c in pose_copy.header.components])
         self.assertNotIn(point_to_remove, pose_copy.header.components[0].points)
+        self.assertEqual(pose_copy.header.components[0].points, pose.header.components[1].points) # should be unaffected
 
 
         # can we "remove" a component that doesn't exist without crashing
@@ -405,6 +416,10 @@ class TestPose(TestCase):
         initial_count = len(pose_copy.header.components)
         pose_copy = pose_copy.remove_components([component_to_remove])
         self.assertEqual(initial_count, len(pose_copy.header.components))
+        for c_orig, c_copy in zip(pose.header.components, pose_copy.header.components):
+            self.assertNotEqual(c_copy, c_orig) # should be a new object...
+            self.assertEqual(c_copy.name, c_orig.name) # with the same name
+            self.assertEqual(c_copy.points, c_orig.points) # and the same points
 
 
         
@@ -416,6 +431,10 @@ class TestPose(TestCase):
         self.assertNotIn(point_to_remove, pose_copy.header.components[2].points)
         pose_copy = pose_copy.remove_components([], {component_to_remove_point_from:[point_to_remove]})
         self.assertNotIn(point_to_remove, pose_copy.header.components[2].points)
+        for c_orig, c_copy in zip(pose.header.components, pose_copy.header.components):
+            self.assertNotEqual(c_copy, c_orig) # should be a new object...
+            self.assertEqual(c_copy.name, c_orig.name) # with the same name
+            self.assertEqual(c_copy.points, c_orig.points) # and the same points
 
 
         # can we "remove" an empty list of points
@@ -426,7 +445,10 @@ class TestPose(TestCase):
         pose_copy = pose_copy.remove_components([], {component_to_remove_point_from:[]})
         self.assertEqual(initial_component_count, len(pose_copy.header.components))
         self.assertEqual(len(pose_copy.header.components[2].points), initial_point_count)
-
+        for c_orig, c_copy in zip(pose.header.components, pose_copy.header.components):
+            self.assertNotEqual(c_copy, c_orig) # should be a new object...
+            self.assertEqual(c_copy.name, c_orig.name) # with the same name
+            self.assertEqual(c_copy.points, c_orig.points) # and the same points
 
         # can we remove a point from a component that doesn't exist
         point_to_remove = "2_x"
@@ -435,6 +457,10 @@ class TestPose(TestCase):
         self.assertNotIn(point_to_remove, pose_copy.header.components[2].points)
         pose_copy = pose_copy.remove_components([], {component_to_remove_point_from:[point_to_remove]})
         self.assertNotIn(point_to_remove, pose_copy.header.components[2].points)
+        for c_orig, c_copy in zip(pose.header.components, pose_copy.header.components):
+            self.assertNotEqual(c_copy, c_orig) # should be a new object...
+            self.assertEqual(c_copy.name, c_orig.name) # with the same name
+            self.assertEqual(c_copy.points, c_orig.points) # and the same points
 
 
 

@@ -1,7 +1,7 @@
 [project]
 name = "pose_format"
 description = "Library for viewing, augmenting, and handling .pose files"
-version = "v0.8.5"
+version = "v0.8.6"
 keywords = ["Pose Files", "Pose Interpolation", "Pose Augmentation"]
 authors = [
     { name = "Amit Moryossef", email = "amitmoryossef@gmail.com" },

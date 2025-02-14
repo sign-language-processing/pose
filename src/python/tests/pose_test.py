@@ -608,8 +608,6 @@ class TestPoseTensorflowPoseBody(TestCase):
         # Create another copy and ensure it matches the first copy
         pose = pose_copy.copy()
         self.assertNotEqual(pose, pose_copy, "Copy of pose should not be 'equal' to original")
-        self.assertNotEqual(pose.header, pose_copy.header, "headers should be new objects as well")
-        self.assertNotEqual(pose.header.components, pose_copy.header.components, "Components should be new objects as well")
         
         self.assertTrue(tf.reduce_all(pose.body.data == pose_copy.body.data), "Copy's data should match original again")
 
@@ -680,8 +678,6 @@ class TestPoseNumpyPoseBody(TestCase):
 
         pose_copy = pose.copy()
         self.assertNotEqual(pose, pose_copy, "Copy of pose should not be 'equal' to original")
-        self.assertNotEqual(pose.header, pose_copy.header, "headers should be new objects as well")
-        self.assertNotEqual(pose.header.components, pose_copy.header.components, "components should be new objects as well")
         
         self.assertTrue(np.array_equal(pose.body.data, pose_copy.body.data), "Copy's data should match original")
 

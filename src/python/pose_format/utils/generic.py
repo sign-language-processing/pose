@@ -102,9 +102,8 @@ def pose_hide_legs(pose: Pose):
     known_pose_format = detect_known_pose_format(pose)
     if known_pose_format == "holistic":
         point_names = ["KNEE", "ANKLE", "HEEL", "FOOT_INDEX"]
-        # pylint: disable=protected-access
         points = [
-            pose.header._get_point_index("POSE_LANDMARKS", side + "_" + n)
+            pose.header.get_point_index("POSE_LANDMARKS", side + "_" + n)
             for n in point_names
             for side in ["LEFT", "RIGHT"]
         ]
@@ -112,9 +111,8 @@ def pose_hide_legs(pose: Pose):
         pose.body.confidence[:, :, points] = 0
     elif known_pose_format == "openpose":
         point_names = ["Hip", "Knee", "Ankle", "BigToe", "SmallToe", "Heel"]
-        # pylint: disable=protected-access
         points = [
-            pose.header._get_point_index("pose_keypoints_2d", side + n) for n in point_names for side in ["L", "R"]
+            pose.header.get_point_index("pose_keypoints_2d", side + n) for n in point_names for side in ["L", "R"]
         ]
         pose.body.data[:, :, points, :] = 0
         pose.body.confidence[:, :, points] = 0
@@ -145,18 +143,14 @@ def hands_indexes(pose_header: PoseHeader)-> List[int]:
     known_pose_format = detect_known_pose_format(pose_header)
     if known_pose_format == "holistic":
         return [
-            # pylint: disable=protected-access
-            pose_header._get_point_index("LEFT_HAND_LANDMARKS", "MIDDLE_FINGER_MCP"),
-            # pylint: disable=protected-access
-            pose_header._get_point_index("RIGHT_HAND_LANDMARKS", "MIDDLE_FINGER_MCP"),
+            pose_header.get_point_index("LEFT_HAND_LANDMARKS", "MIDDLE_FINGER_MCP"),
+            pose_header.get_point_index("RIGHT_HAND_LANDMARKS", "MIDDLE_FINGER_MCP"),
         ]
 
     if known_pose_format == "openpose":
         return [
-            # pylint: disable=protected-access
-            pose_header._get_point_index("hand_left_keypoints_2d", "M_CMC"),
-            # pylint: disable=protected-access
-            pose_header._get_point_index("hand_right_keypoints_2d", "M_CMC"),
+            pose_header.get_point_index("hand_left_keypoints_2d", "M_CMC"),
+            pose_header.get_point_index("hand_right_keypoints_2d", "M_CMC"),
         ]
     raise NotImplementedError(
         f"Unsupported pose header schema {known_pose_format} for {hands_indexes.__name__}: {pose_header}"
@@ -254,11 +248,9 @@ def fake_pose(num_frames: int, fps: int=25, components: Union[List[PoseHeaderCom
 def get_hand_wrist_index(pose: Pose, hand: str)-> int:
     known_pose_format = detect_known_pose_format(pose)
     if known_pose_format == "holistic":
-        # pylint: disable=protected-access
-        return pose.header._get_point_index(f"{hand.upper()}_HAND_LANDMARKS", "WRIST")
+        return pose.header.get_point_index(f"{hand.upper()}_HAND_LANDMARKS", "WRIST")
     if known_pose_format == "openpose":
-        # pylint: disable=protected-access
-        return pose.header._get_point_index(f"hand_{hand.lower()}_keypoints_2d", "BASE")
+        return pose.header.get_point_index(f"hand_{hand.lower()}_keypoints_2d", "BASE")
     raise NotImplementedError(
         f"Unsupported pose header schema {known_pose_format} for {get_hand_wrist_index.__name__}: {pose.header}"
     )
@@ -267,11 +259,9 @@ def get_hand_wrist_index(pose: Pose, hand: str)-> int:
 def get_body_hand_wrist_index(pose: Pose, hand: str)-> int:
     known_pose_format = detect_known_pose_format(pose)
     if known_pose_format == "holistic":
-        # pylint: disable=protected-access
-        return pose.header._get_point_index("POSE_LANDMARKS", f"{hand.upper()}_WRIST")
+        return pose.header.get_point_index("POSE_LANDMARKS", f"{hand.upper()}_WRIST")
     if known_pose_format == "openpose":
-        # pylint: disable=protected-access
-        return pose.header._get_point_index("pose_keypoints_2d", f"{hand.upper()[0]}Wrist")
+        return pose.header.get_point_index("pose_keypoints_2d", f"{hand.upper()[0]}Wrist")
     raise NotImplementedError(
         f"Unsupported pose header schema {known_pose_format} for {get_body_hand_wrist_index.__name__}: {pose.header}"
     )

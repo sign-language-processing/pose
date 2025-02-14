@@ -1,7 +1,7 @@
 import hashlib
 import math
 import struct
-from typing import BinaryIO, List, Tuple
+from typing import BinaryIO, List, Tuple, Optional, Union
 
 from .utils.reader import BufferReader, ConstStructs
 
@@ -21,7 +21,7 @@ class PoseNormalizationInfo:
             Third pose value. Defaults to None.
     """
 
-    def __init__(self, p1: int, p2: int, p3: int = None):
+    def __init__(self, p1: int, p2: int, p3: Optional[int] = None):
         """Initialize a PoseNormalizationInfo instance."""
         self.p1 = p1
         self.p2 = p2
@@ -66,7 +66,7 @@ class PoseHeaderComponent:
         self.relative_limbs = self.get_relative_limbs()
 
     @staticmethod
-    def read(version: float, reader: BufferReader):
+    def read(version: float, reader: BufferReader) -> 'PoseHeaderComponent':
         """
         Reads pose header dimensions from reader (BufferReader).
 
@@ -183,7 +183,7 @@ class PoseHeaderDimensions:
         self.depth = math.ceil(depth)
 
     @staticmethod
-    def read(version: float, reader: BufferReader):
+    def read(version: float, reader: BufferReader) -> 'PoseHeaderDimensions':
         """
         Reads and returns a PoseHeaderDimensions object from a buffer reader.
 
@@ -293,6 +293,7 @@ class PoseHeader:
         self.components = components
         self.is_bbox = is_bbox
 
+
     @staticmethod
     def read(reader: BufferReader) -> 'PoseHeader':
         """
@@ -376,9 +377,22 @@ class PoseHeader:
 
         raise ValueError("Couldn't find component")
 
+    def get_point_index(self, component: str, point: str) -> int:
+        """
+        Returns the index of a given point within the pose.
+
+        Args:
+            component (str): The name of the component containing the point.
+            point (str): The name of the point whose index is to be retrieved.
+
+        Raises:
+            ValueError: If the specified component or point is not found.
+        """
+        return self._get_point_index(component, point)
+
     def normalization_info(self, p1: Tuple[str, str], p2: Tuple[str, str], p3: Tuple[str, str] = None):
         """
-        Normalizates info for given points.
+        Normalization info for given points.
 
         Parameters
         ----------
@@ -394,9 +408,9 @@ class PoseHeader:
         PoseNormalizationInfo
             Normalization information for the points.
         """
-        return PoseNormalizationInfo(p1=self._get_point_index(*p1),
-                                     p2=self._get_point_index(*p2),
-                                     p3=None if p3 is None else self._get_point_index(*p3))
+        return PoseNormalizationInfo(p1=self.get_point_index(*p1),
+                                     p2=self.get_point_index(*p2),
+                                     p3=None if p3 is None else self.get_point_index(*p3))
 
     def bbox(self):
         """

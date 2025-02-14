@@ -20,4 +20,4 @@ def fake_poses(request) -> List[Pose]:
         for i, pose in enumerate(fake_poses_list):
             for component in pose.header.components:
                 component.name = f"unknown_component_{i}_formerly_{component.name}"
-        return copy.deepcopy(fake_poses_list)
+        return [pose.copy() for pose in fake_poses_list]

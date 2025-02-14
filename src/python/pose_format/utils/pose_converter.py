@@ -222,8 +222,8 @@ def convert_pose(pose: Pose, pose_components: List[PoseHeaderComponent]) -> Pose
     for (c1, p1), (c2, p2) in mapping.items():
         p2 = tuple([p2]) if isinstance(p2, str) else p2
         try:
-            p2s = [pose.header._get_point_index(c2, p) for p in list(p2)]
-            p1_index = pose_header._get_point_index(c1, p1)
+            p2s = [pose.header.get_point_index(c2, p) for p in list(p2)]
+            p1_index = pose_header.get_point_index(c1, p1)
             data[:, :, p1_index, :dims] = pose.body.data[:, :, p2s, :dims].mean(axis=2)
             conf[:, :, p1_index] = pose.body.confidence[:, :, p2s].mean(axis=2)
         except Exception as e:

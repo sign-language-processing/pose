@@ -95,17 +95,18 @@ def pose_hide_legs(pose: Pose, remove: bool = False) -> Pose:
         return pose.remove_components([], points_to_remove_dict)
 
     # Hide the points instead of removing them
-    points = []
-    for name in point_names_to_remove:
-        try:
-            point = pose.header.get_point_index(list(points_to_remove_dict.keys())[0], name)
-            points.append(point)
-        except ValueError: # point not found, maybe removed earlier in other preprocessing steps
-            pass
+    point_indices = []
+    for component, points in points_to_remove_dict.items():
+        for point_name in points:
+            try:
+                point_index = pose.header.get_point_index(component, point_name)
+                point_indices.append(point_index)
+            except ValueError: # point not found, maybe removed earlier in other preprocessing steps
+                pass
 
 
-    pose.body.data[:, :, points, :] = 0
-    pose.body.confidence[:, :, points] = 0
+    pose.body.data[:, :, point_indices, :] = 0
+    pose.body.confidence[:, :, point_indices] = 0
 
     return pose
 

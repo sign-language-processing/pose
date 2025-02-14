@@ -347,6 +347,23 @@ class TestPose(TestCase):
         """
         assert callable(Pose)
 
+    def test_get_index(self):
+        pose = _get_random_pose_object_with_numpy_posebody(num_keypoints=5)
+        expected_index = 0
+        self.assertEqual(0, pose.header.get_point_index("0", "0_a"))
+        for component in pose.header.components:
+            for point in component.points:
+                self.assertEqual(expected_index, pose.header.get_point_index(component.name, point))
+                expected_index +=1
+
+        with self.assertRaises(ValueError):
+            pose.header.get_point_index("component that doesn't exist", "")
+
+        with self.assertRaises(ValueError):
+            pose.header.get_point_index("0", "point that doesn't exist")
+
+        
+
     def test_pose_remove_components(self):
         pose = _get_random_pose_object_with_numpy_posebody(num_keypoints=5)
         assert pose.body.data.shape[-2] == 5

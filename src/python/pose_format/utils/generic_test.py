@@ -66,15 +66,18 @@ def test_pose_hide_legs(fake_poses: List[Pose]):
         detected_format = detect_known_pose_format(pose)
         if detected_format == "openpose_135":
             with pytest.raises(NotImplementedError, match="Unsupported pose header schema"):
-                pose_hide_legs(pose)
+                pose = pose_hide_legs(pose)
         else:
-            pose_hide_legs(pose)
+            pose = pose_hide_legs(pose)
             new_nonzeros_count = np.count_nonzero(pose.body.data)
 
             assert orig_nonzeros_count > new_nonzeros_count
             assert len(pose_copy.header.components) == len(pose.header.components)
             for c_orig, c_copy in zip(pose.header.components, pose_copy.header.components):
-                assert len(c_orig.points) == len(c_copy.points)
+                assert len(c_orig.points) == len(c_copy.points)            
+            # what if we remove the legs before hiding them first? It should not crash.
+            pose = pose_hide_legs(pose, remove=True)
+            pose = pose_hide_legs(pose, remove=False)
 
 
 @pytest.mark.parametrize("fake_poses", TEST_POSE_FORMATS, indirect=["fake_poses"])
@@ -226,7 +229,7 @@ def test_pose_remove_legs(fake_poses: List[Pose]):
                 assert point_name in pose.header.components[component_index].points
         else:
             with pytest.raises(NotImplementedError, match="Unsupported pose header schema"):
-                pose_hide_legs(pose, remove=True)
+                pose = pose_hide_legs(pose, remove=True)
 
 
 

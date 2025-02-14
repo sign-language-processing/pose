@@ -69,7 +69,7 @@ def pose_hide_legs(pose: Pose, remove: bool = False) -> Pose:
     If `remove` is True, the leg components are removed; otherwise, they are hidden (zeroed out).
     """
     known_pose_format = detect_known_pose_format(pose)
-    
+
     if known_pose_format == "holistic":
         point_names = ["KNEE", "ANKLE", "HEEL", "FOOT_INDEX", "HIP"]
         sides = ["LEFT", "RIGHT"]
@@ -81,7 +81,8 @@ def pose_hide_legs(pose: Pose, remove: bool = False) -> Pose:
 
     elif known_pose_format == "openpose":
         words_to_look_for = ["Hip", "Knee", "Ankle", "BigToe", "SmallToe", "Heel"]
-        point_names_to_remove = [point for point in OPENPOSE_BODY_POINTS if any(word in point for word in words_to_look_for)]
+        point_names_to_remove = [point for point in OPENPOSE_BODY_POINTS
+                                 if any(word in point for word in words_to_look_for)]
 
             # if any of the items in point_
         points_to_remove_dict = {"pose_keypoints_2d": point_names_to_remove}

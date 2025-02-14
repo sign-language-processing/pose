@@ -7,6 +7,7 @@ from pose_format.numpy import NumPyPoseBody
 from pose_format.pose_header import PoseHeader, PoseHeaderDimensions, PoseHeaderComponent, PoseNormalizationInfo
 from pose_format.utils.normalization_3d import PoseNormalizer
 from pose_format.utils.openpose import OpenPose_Components
+from pose_format.utils.openpose import BODY_POINTS as OPENPOSE_BODY_POINTS
 from pose_format.utils.openpose_135 import OpenPose_Components as OpenPose135_Components
 
 # from pose_format.utils.holistic import holistic_components
@@ -79,9 +80,10 @@ def pose_hide_legs(pose: Pose, remove: bool = False) -> Pose:
         }
 
     elif known_pose_format == "openpose":
-        point_names = ["Hip", "Knee", "Ankle", "BigToe", "SmallToe", "Heel"]
-        sides = ["L", "R", "Mid"]
-        point_names_to_remove = [f"{side}{name}" for side in sides for name in point_names]
+        words_to_look_for = ["Hip", "Knee", "Ankle", "BigToe", "SmallToe", "Heel"]
+        point_names_to_remove = [point for point in OPENPOSE_BODY_POINTS if any(word in point for word in words_to_look_for)]
+
+            # if any of the items in point_
         points_to_remove_dict = {"pose_keypoints_2d": point_names_to_remove}
 
     else:
@@ -93,12 +95,14 @@ def pose_hide_legs(pose: Pose, remove: bool = False) -> Pose:
         return pose.remove_components([], points_to_remove_dict)
 
     # Hide the points instead of removing them
-    # Some of the generated point_names_to_remove don't exist, e.g. MidHip, so get_point_index gives None
     points = []
     for name in point_names_to_remove:
-        point = pose.header.get_point_index(list(points_to_remove_dict.keys())[0], name)
-        if point is not None: # point not found
+        try:
+            point = pose.header.get_point_index(list(points_to_remove_dict.keys())[0], name)
             points.append(point)
+        except ValueError: # point not found, maybe removed earlier in other preprocessing steps
+            pass
+
 
     pose.body.data[:, :, points, :] = 0
     pose.body.confidence[:, :, points] = 0

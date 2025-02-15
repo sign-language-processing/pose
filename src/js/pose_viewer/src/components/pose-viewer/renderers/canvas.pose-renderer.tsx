@@ -31,24 +31,6 @@ export class CanvasPoseRenderer extends PoseRenderer {
     this.ctx.stroke();
   }
 
-  // renderLimb(from: PosePointModel, to: PosePointModel, color: RGBColor) {
-  //   const {R, G, B} = color;
-  //   this.ctx.fillStyle = `rgba(${R}, ${G}, ${B}, ${(from.C + to.C) / 2})`;
-  //
-  //   const x = this.x((from.X + to.X) / 2);
-  //   const y = this.y((from.Y + to.Y) / 2);
-  //
-  //   const sub = {x: this.x(from.X - to.X), y: this.y(from.Y - to.Y)}
-  //
-  //   const length = Math.sqrt(Math.pow(sub.x, 2) + Math.pow(sub.y, 2));
-  //   const radiusX = Math.floor(length / 2);
-  //   const radiusY = this.thickness;
-  //   const rotation = Math.floor(Math.atan2(sub.y, sub.x) * 180 / Math.PI);
-  //   this.ctx.beginPath();
-  //   this.ctx.ellipse(x, y, radiusX, radiusY, rotation, 0, 360);
-  //   this.ctx.fill();
-  // }
-
   render(frame: PoseBodyFrameModel) {
     const drawCanvas = () => {
       const canvas = this.viewer.element.shadowRoot.querySelector('canvas');

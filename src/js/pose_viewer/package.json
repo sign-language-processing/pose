@@ -24,12 +24,14 @@
     "prepare": "npm run build"
   },
   "dependencies": {
-    "@stencil/core": "4.22.3",
-    "pose-format": "1.6.0"
+    "@stencil/core": "4.26.0",
+    "pose-format": "1.6.0",
+    "three": "0.173.0"
   },
   "license": "MIT",
   "devDependencies": {
-    "rollup-plugin-node-polyfills": "0.2.1",
-    "@types/node": "22.10.0"
+    "@types/node": "22.13.4",
+    "@types/three": "0.173.0",
+    "rollup-plugin-node-polyfills": "0.2.1"
   }
 }

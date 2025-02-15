@@ -9,84 +9,13 @@
   <script nomodule src="/build/pose-viewer.js"></script>
 </head>
 <body>
-<!--<pose-viewer src="bad.pose"></pose-viewer>-->
-<br />
-<pose-viewer src="sample-data/example.pose" id="example" loop="true"></pose-viewer>
-<!--<br/>-->
-<!--<br/>-->
-<!--<br/>-->
-<!--<br/>-->
-<!--<br/>-->
-<!--<br/>-->
-<!--<h2>Generated with Python vs JS width=256, thickness=1</h2>-->
-<!--<img src="sample-data/test_256.png" width="256px"/>-->
-<!--<pose-viewer src="sample-data/test_256.pose" width="256px" autoplay="false" background="white" thickness="1"></pose-viewer>-->
 
-<!--<br/>-->
-<!--<br/>-->
-<!--<br/>-->
-<!--<h2>Ratio</h2>-->
-<!--<pose-viewer autoplay="false" width="512px" height="512px" padding="20%"-->
-<!--             src="https://nlp.biu.ac.il/~ccohenya8/sign/sentence/?slang=en.gb&amp;dlang=en.gb&amp;sentence=Absolutely"></pose-viewer>-->
+<pose-viewer
+  src="sample-data/example.pose"
+  width="768px"
+  id="example"
+  loop="true"
+  renderer="canvas"></pose-viewer>
 
-
-<!--<br/>-->
-<!--<br/>-->
-<!--&lt;!&ndash;<br/>&ndash;&gt;-->
-
-<!--<h2>Video Sync</h2>-->
-<!--<video src="sample-data/video/video.mp4" autoplay loop controls></video>-->
-<!--<br/>-->
-<!--<pose-viewer src="sample-data/video/sample.pose" svg="true" id="sync" width="1280px" height="720px"></pose-viewer>-->
-<!--&lt;!&ndash;<pose-viewer src="sample-data/video/sample.pose" width="500px" autoplay="false"></pose-viewer>&ndash;&gt;-->
-<!--&lt;!&ndash;<pose-viewer src="sample-data/video/sample.pose" width="500px" padding="20%" autoplay="false"></pose-viewer>&ndash;&gt;-->
-
-<!--&lt;!&ndash;&lt;!&ndash;<pose-viewer svg="true" src="sample-data/video/sample.pose" width="500px"></pose-viewer>&ndash;&gt;&ndash;&gt;-->
-
-<!--&lt;!&ndash;<pose-viewer id="sync" src="sample-data/video/sample.pose"&ndash;&gt;-->
-<!--&lt;!&ndash;             autoplay="false"&ndash;&gt;-->
-<!--&lt;!&ndash;             loop="false"&ndash;&gt;-->
-<!--&lt;!&ndash;             padding="10%"&ndash;&gt;-->
-<!--&lt;!&ndash;             width="512px"&ndash;&gt;-->
-<!--&lt;!&ndash;             aspect-ratio="1"></pose-viewer>&ndash;&gt;-->
-
-
-<!--<script>-->
-<!--  (async () => {-->
-<!--    await customElements.whenDefined('pose-viewer');-->
-
-<!--    // the component is registered now, so its methods are immediately available-->
-<!--    const poseViewer = document.querySelector('pose-viewer#sync');-->
-
-<!--    const video = document.querySelector('video');-->
-
-<!--    await poseViewer.syncMedia(video)-->
-<!--  })();-->
-<!--</script>-->
-
-<script>
-  (async () => {
-    await customElements.whenDefined('pose-viewer');
-
-    // the component is registered now, so its methods are immediately available
-    const poseViewer = document.querySelector('pose-viewer#example');
-
-    const url = 'https://us-central1-sign-mt.cloudfunctions.net/spoken_text_to_signed_pose?spoken=en&signed=ase&text=';
-    const sentence = 'wa';
-    poseViewer.setAttribute('src', url + sentence);
-
-    setTimeout(() => {
-      poseViewer.setAttribute('src', url + 'test');
-    }, 200);
-
-
-    // for(let i = 0; i < sentence.length; i++) {
-    //   setTimeout(() => {
-    //     const u = url + sentence.substring(0, i + 1);
-    //     poseViewer.setAttribute('src', u);
-    //   }, 300 * i);
-    // }
-  })();
-</script>
 </body>
 </html>

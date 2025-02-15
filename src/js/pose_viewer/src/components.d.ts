@@ -27,8 +27,8 @@ export namespace Components {
         "play": () => Promise<void>;
         "playbackRate": number;
         "readyState": number;
+        "renderer": 'canvas' | 'svg' | 'interactive';
         "src": string | Buffer;
-        "svg": boolean;
         "syncMedia": (media: HTMLMediaElement) => Promise<void>;
         "thickness": number;
         "width": string;
@@ -91,8 +91,8 @@ declare namespace LocalJSX {
         "paused"?: boolean;
         "playbackRate"?: number;
         "readyState"?: number;
+        "renderer"?: 'canvas' | 'svg' | 'interactive';
         "src"?: string | Buffer;
-        "svg"?: boolean;
         "thickness"?: number;
         "width"?: string;
     }

@@ -7,10 +7,10 @@ import type {Buffer} from "buffer";
 import {PoseRenderer} from "./renderers/pose-renderer";
 import {SVGPoseRenderer} from "./renderers/svg.pose-renderer";
 import {CanvasPoseRenderer} from "./renderers/canvas.pose-renderer";
+import {InteractivePoseRenderer} from "./renderers/interactive.pose-renderer";
 
 declare type ResizeObserver = any;
 declare var ResizeObserver: ResizeObserver;
-
 
 @Component({
   tag: 'pose-viewer',
@@ -24,7 +24,7 @@ export class PoseViewer {
 
   private lastSrc: string | Buffer;
   @Prop() src: string | Buffer; // Source URL for .pose file or path to a local file or Buffer
-  @Prop() svg: boolean = false; // Render in an SVG instead of a canvas
+  @Prop() renderer: 'canvas' | 'svg' | 'interactive' = 'canvas'; // Render in an SVG instead of a canvas
 
   // Dimensions
   @Prop() width: string = null;
@@ -67,7 +67,7 @@ export class PoseViewer {
 
   hasRendered = false;
 
-  renderer!: PoseRenderer;
+  rendererInstance!: PoseRenderer;
 
   media: HTMLMediaElement;
   pose: PoseModel;
@@ -77,7 +77,19 @@ export class PoseViewer {
   private loopInterval: any;
 
   componentWillLoad() {
-    this.renderer = this.svg ? new SVGPoseRenderer(this) : new CanvasPoseRenderer(this);
+    switch (this.renderer) {
+      case 'canvas':
+        this.rendererInstance = new CanvasPoseRenderer(this);
+        break;
+      case 'svg':
+        this.rendererInstance = new SVGPoseRenderer(this);
+        break;
+      case 'interactive':
+        this.rendererInstance = new InteractivePoseRenderer(this);
+        break;
+      default:
+        throw new Error('Invalid renderer');
+    }
 
     return this.srcChange();
   }
@@ -322,7 +334,7 @@ export class PoseViewer {
       return this.error.name !== "AbortError" ? this.error.message : "";
     }
 
-    if (!this.pose || isNaN(this.currentTime) || !this.renderer) {
+    if (!this.pose || isNaN(this.currentTime) || !this.rendererInstance) {
       return "";
     }
 
@@ -330,8 +342,9 @@ export class PoseViewer {
 
     const frameId = Math.floor(currentTime * this.pose.body.fps);
     const frame = this.pose.body.frames[frameId];
+    console.log(frame);
 
-    const render = this.renderer.render(frame);
+    const render = this.rendererInstance.render(frame);
     if (!this.hasRendered) {
       requestAnimationFrame(() => {
         this.hasRendered = true;

@@ -1,3 +1,4 @@
+from io import BytesIO
 from itertools import chain
 from typing import BinaryIO, Dict, List, Tuple, Type, Union
 
@@ -7,9 +8,10 @@ from pose_format.numpy import NumPyPoseBody
 from pose_format.pose_body import PoseBody
 from pose_format.pose_header import (PoseHeader, PoseHeaderComponent,
                                      PoseHeaderDimensions,
-                                     PoseNormalizationInfo)
+                                     PoseNormalizationInfo, PoseHeaderCache)
 from pose_format.utils.fast_math import distance_batch
-from pose_format.utils.reader import BufferReader
+from pose_format.utils.reader import BufferReader, BytesIOReader
+
 
 
 class Pose:
@@ -29,7 +31,7 @@ class Pose:
         self.body = body
 
     @staticmethod
-    def read(buffer: bytes, pose_body: Type[PoseBody] = NumPyPoseBody, **kwargs):
+    def read(buffer: Union[bytes, BytesIO], pose_body: Type[PoseBody] = NumPyPoseBody, **kwargs):
         """
         Read Pose object from buffer.
 
@@ -45,7 +47,8 @@ class Pose:
         Pose
             Pose object.
         """
-        reader = BufferReader(buffer)
+        reader = BufferReader(buffer) if isinstance(buffer, bytes) else BytesIOReader(buffer)
+        reader.expect_to_read(PoseHeaderCache.end_offset or 10 * 1024) # Expect to read the header at least (or 10kb)
         header = PoseHeader.read(reader)
         body = pose_body.read(header, reader, **kwargs)
 

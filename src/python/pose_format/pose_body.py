@@ -128,9 +128,9 @@ class PoseBody:
         _frames = frames
         if start_frame is not None and start_frame > 0:
             if start_frame >= frames:
-                raise ValueError("Start frame is greater than the number of frames")
+                raise ValueError(f"Start frame {start_frame} is greater than the number of frames {frames}")
             # Advance to the start frame
-            reader.advance(s, int(np.prod((start_frame, *shape))))
+            reader.skip(s, int(np.prod((start_frame, *shape))))
             _frames -= start_frame
 
         remove_frames = None
@@ -142,7 +142,7 @@ class PoseBody:
         tensor = tensor_reader(ConstStructs.float, shape=(_frames, *shape))
 
         if remove_frames is not None:
-            reader.advance(s, int(np.prod((remove_frames, *shape))))
+            reader.skip(s, int(np.prod((remove_frames, *shape))))
 
         return tensor
 

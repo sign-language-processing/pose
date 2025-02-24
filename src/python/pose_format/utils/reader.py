@@ -1,6 +1,7 @@
 import struct
 from dataclasses import dataclass
-from typing import Tuple
+from io import BytesIO
+from typing import Tuple, Union
 
 import numpy as np
 
@@ -35,6 +36,8 @@ Struct format for three unsigned short integers"""
 Struct format for unsigned integer"""
 
 
+
+
 class BufferReader:
     """
     Class is used to read binary data from buffer
@@ -45,11 +48,18 @@ class BufferReader:
             buffer from which to read data
         read_offset: int
             current read offset in buffer
+        read_skipped: int
+            how many bytes were skipped during reading
     """
 
-    def __init__(self, buffer: bytes):
-        self.buffer = buffer
+    def __init__(self, buffer: Union[bytearray, bytes]):
+        self.buffer: bytearray = buffer
+        self.total_bytes_read = len(buffer)
         self.read_offset = 0
+        self.read_skipped = 0
+
+    def expect_to_read(self, n: int):
+        pass
 
     def bytes_left(self):
         """
@@ -60,7 +70,7 @@ class BufferReader:
         int
             The number of bytes left to read.
         """
-        return len(self.buffer) - self.read_offset
+        return len(self.buffer) - self.read_offset +self.read_skipped
 
     def unpack_f(self, s_format: str):
         """
@@ -97,7 +107,9 @@ class BufferReader:
         np.ndarray
             The unpacked NumPy array.
         """
-        arr = np.ndarray(shape, s.format, self.buffer, self.read_offset).copy()
+        self.expect_to_read(s.size * int(np.prod(shape)))
+
+        arr = np.ndarray(shape, s.format, self.buffer, self.read_offset - self.read_skipped).copy()
         self.advance(s, int(np.prod(shape)))
         return arr
 
@@ -155,7 +167,8 @@ class BufferReader:
         -------
         Unpacked data as specified by the struct format.
         """
-        unpack: tuple = s.unpack_from(self.buffer, self.read_offset)
+        self.expect_to_read(s.size)
+        unpack: tuple = s.unpack_from(self.buffer, self.read_offset - self.read_skipped)
         self.advance(s)
         if len(unpack) == 1:
             return unpack[0]
@@ -174,6 +187,9 @@ class BufferReader:
         """
         self.read_offset += s.size * times
 
+    def skip(self, s: struct.Struct, times=1):
+        self.advance(s, times)
+
     def unpack_str(self) -> str:
         """
         Unpacks a string from the buffer.
@@ -184,8 +200,32 @@ class BufferReader:
             The unpacked string, encoded in UTF-8.
         """
         length: int = self.unpack(ConstStructs.ushort)
+        self.expect_to_read(length)
         bytes_: bytes = self.unpack_f("%ds" % length)
         return bytes_.decode("utf-8")
+
+
+class BytesIOReader(BufferReader):
+    def __init__(self, reader: BytesIO):
+        super().__init__(bytearray())
+        self.reader = reader
+
+    def skip(self, s: struct.Struct, times=1):
+        self.buffer = self.buffer[:self.read_offset] # remove the bytes that were not used
+        self.read_skipped += s.size * times
+        super().skip(s, times)
+
+    def read_chunk(self, chunk_size: int):
+        self.reader.seek(self.read_offset, 0) # 0 means absolute seek
+        self.buffer.extend(self.reader.read(chunk_size))
+        self.total_bytes_read += chunk_size
+
+        if not self.buffer:
+            raise EOFError("End of file reached")
+
+    def expect_to_read(self, n: int):
+        if self.bytes_left() < n:
+            self.read_chunk(n - self.bytes_left())
 
 
 if __name__ == "__main__":

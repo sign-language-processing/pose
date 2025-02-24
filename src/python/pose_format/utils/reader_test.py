@@ -1,12 +1,15 @@
 import os
 import struct
+import tempfile
 from unittest import TestCase
 
 import numpy as np
 import torch
+from pose_format import Pose
+from pose_format.utils.generic import fake_pose
+from pose_format.utils.openpose import OpenPose_Components
 
 os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
-import tensorflow as tf
 
 from pose_format.utils.reader import BufferReader, ConstStructs
 
@@ -83,6 +86,8 @@ class TestBufferReader(TestCase):
 
     def test_unpack_tensorflow(self):
         """ Test that unpack_tensorflow returns the correct value"""
+        import tensorflow as tf
+
         buffer = struct.pack("<ffff", 1., 2.5, 3.5, 4.5)
         reader = BufferReader(buffer)
 
@@ -91,3 +96,21 @@ class TestBufferReader(TestCase):
         res = tf.constant([[1., 2.5], [3.5, 4.5]])
         self.assertTrue(tf.reduce_all(tf.equal(arr, res)),
                         msg="Tensorflow unpacked array is not equal to expected array")
+
+    def test_file_reader_equal_buffer_reader(self):
+        pose = fake_pose(100, fps=25, components=OpenPose_Components)
+
+        file_path = tempfile.NamedTemporaryFile(delete=False)
+        with open(file_path.name, "wb") as f:
+            pose.write(f)
+
+        with open(file_path.name, "rb") as f:
+            pose_1 = Pose.read(f, start_frame=10, end_frame=50)
+
+        with open(file_path.name, "rb") as f:
+            pose_2 = Pose.read(f.read(), start_frame=10, end_frame=50)
+
+        self.assertEqual(pose_1.header, pose_2.header)
+        self.assertEqual(pose_1.body.fps, pose_2.body.fps)
+        self.assertTrue(np.all(pose_1.body.data == pose_2.body.data))
+        self.assertTrue(np.all(pose_1.body.confidence == pose_2.body.confidence))

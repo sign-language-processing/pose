@@ -6,6 +6,7 @@ from unittest import TestCase
 import numpy as np
 import torch
 from pose_format import Pose
+from pose_format.pose_header import PoseHeaderCache
 from pose_format.utils.generic import fake_pose
 from pose_format.utils.openpose import OpenPose_Components
 
@@ -97,20 +98,36 @@ class TestBufferReader(TestCase):
         self.assertTrue(tf.reduce_all(tf.equal(arr, res)),
                         msg="Tensorflow unpacked array is not equal to expected array")
 
-    def test_file_reader_equal_buffer_reader(self):
+class TestBytesIOReader(TestCase):
+    def check_file_reader_equal_buffer_reader(self, start_frame=0, end_frame=100):
         pose = fake_pose(100, fps=25, components=OpenPose_Components)
 
         file_path = tempfile.NamedTemporaryFile(delete=False)
         with open(file_path.name, "wb") as f:
             pose.write(f)
 
-        with open(file_path.name, "rb") as f:
-            pose_1 = Pose.read(f, start_frame=10, end_frame=50)
+        PoseHeaderCache.clear_cache()  # make sure the header is not re-used
 
         with open(file_path.name, "rb") as f:
-            pose_2 = Pose.read(f.read(), start_frame=10, end_frame=50)
+            pose_1 = Pose.read(f, start_frame=start_frame, end_frame=end_frame)
 
-        self.assertEqual(pose_1.header, pose_2.header)
+        PoseHeaderCache.clear_cache()  # make sure the header is not re-used
+
+        with open(file_path.name, "rb") as f:
+            pose_2 = Pose.read(f.read(), start_frame=start_frame, end_frame=end_frame)
+
+        for frame in range(end_frame-start_frame):
+            print(frame, pose_1.body.data[frame][0][0], pose_2.body.data[frame][0][0])
         self.assertEqual(pose_1.body.fps, pose_2.body.fps)
+        self.assertEqual(pose_1.body.data.shape, pose_2.body.data.shape)
         self.assertTrue(np.all(pose_1.body.data == pose_2.body.data))
         self.assertTrue(np.all(pose_1.body.confidence == pose_2.body.confidence))
+
+    def test_file_reader_equal_buffer_reader_start(self):
+        self.check_file_reader_equal_buffer_reader(0, 50)
+
+    def test_file_reader_equal_buffer_reader_middle(self):
+        self.check_file_reader_equal_buffer_reader(10, 80)
+
+    def test_file_reader_equal_buffer_reader_end(self):
+        self.check_file_reader_equal_buffer_reader(50, 100)

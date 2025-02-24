@@ -248,6 +248,13 @@ class PoseHeaderCache:
             return PoseHeaderCache.header
 
     @staticmethod
+    def clear_cache():
+        PoseHeaderCache.start_offset = None
+        PoseHeaderCache.end_offset = None
+        PoseHeaderCache.hash = None
+        PoseHeaderCache.header = None
+
+    @staticmethod
     def set_cache(header: 'PoseHeader', buffer: bytes, start_offset: int, end_offset: int):
         PoseHeaderCache.start_offset = start_offset
         PoseHeaderCache.end_offset = end_offset

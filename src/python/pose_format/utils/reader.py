@@ -70,7 +70,7 @@ class BufferReader:
         int
             The number of bytes left to read.
         """
-        return len(self.buffer) - self.read_offset +self.read_skipped
+        return len(self.buffer) - self.read_offset + self.read_skipped
 
     def unpack_f(self, s_format: str):
         """
@@ -216,7 +216,8 @@ class BytesIOReader(BufferReader):
         super().skip(s, times)
 
     def read_chunk(self, chunk_size: int):
-        self.reader.seek(self.read_offset, 0) # 0 means absolute seek
+        if self.read_offset > self.reader.tell():
+            self.reader.seek(self.read_offset, 0) # 0 means absolute seek
         self.buffer.extend(self.reader.read(chunk_size))
         self.total_bytes_read += chunk_size
 

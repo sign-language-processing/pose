@@ -47,8 +47,17 @@ class Pose:
         Pose
             Pose object.
         """
-        reader = BufferReader(buffer) if isinstance(buffer, bytes) else BytesIOReader(buffer)
-        reader.expect_to_read(PoseHeaderCache.end_offset or 10 * 1024) # Expect to read the header at least (or 10kb)
+
+        # Use BytesIO reader optimization only when start/end is specified, otherwise, it is faster to read from buffer
+        if isinstance(buffer, bytes):
+            reader = BufferReader(buffer)
+        else:
+            if kwargs.get("start_frame", None) or kwargs.get("end_frame", None) or kwargs.get("start_time", None) or kwargs.get("end_time", None):
+                reader = BytesIOReader(buffer)
+            else:
+                reader = BufferReader(buffer.read())
+
+        reader.expect_to_read((PoseHeaderCache.end_offset or 10 * 1024) + 100) # Expect to read the header at least (or 10kb)
         header = PoseHeader.read(reader)
         body = pose_body.read(header, reader, **kwargs)
 

@@ -339,18 +339,13 @@ class NumPyPoseBody(PoseBody):
         for people in points:
             new_frames = []
             for frames in people:
-                mask = frames.transpose()[-1].mask
-                # print(mask)
+                mask = frames.transpose()[-1].mask # takes mask from confidence value
 
                 partial_steps = ma.array(steps, mask=mask).compressed()
 
                 if partial_steps.shape[0] == 0:  # No data for this point
                     new_frames.append(np.zeros((_new_frames, frames.shape[1])))
                 else:
-                    # print(frames)
-                    # print(frames.shape)
-                    # print(frames.compressed().shape)
-                    # print(partial_steps.shape)
                     partial_frames = frames.compressed().reshape(partial_steps.shape[0], frames.shape[1])
 
                     if len(partial_steps) == 1:

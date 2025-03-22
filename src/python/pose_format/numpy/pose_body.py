@@ -339,7 +339,7 @@ class NumPyPoseBody(PoseBody):
         for people in points:
             new_frames = []
             for frames in people:
-                mask = frames.transpose()[0].mask
+                mask = frames.transpose()[-1].mask # takes mask from confidence value
 
                 partial_steps = ma.array(steps, mask=mask).compressed()
 

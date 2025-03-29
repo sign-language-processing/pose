@@ -31,7 +31,7 @@ importlib-resources==6.0.1
 Jinja2==3.1.2
 jsonschema==4.19.0
 jsonschema-specifications==2023.7.1
-keras==2.10.0
+keras==3.9.0
 Keras-Preprocessing==1.1.2
 kiwisolver==1.4.4
 latexcodec==2.0.1

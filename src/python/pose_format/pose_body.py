@@ -257,11 +257,11 @@ class PoseBody:
             Buffer to write the pose data to.
         """
         raise NotImplementedError("'write' not implemented on '%s'" % self.__class__)
-    
-    def copy(self)->"PoseBody":
+
+    def copy(self) -> "PoseBody":
         return self.__class__(fps=self.fps,
-                          data=self.data,
-                          confidence=self.confidence)
+                              data=self.data,
+                              confidence=self.confidence)
 
     def __getitem__(self, index):
         """
@@ -626,3 +626,10 @@ class PoseBody:
         text += f"Confidence shape: {type(self.confidence)} {self.confidence.shape}, {self.data.dtype}\n"
         text += f"Duration (seconds): {len(self.data) / self.fps}\n"
         return text
+
+    def __len__(self):
+        return len(self.data)
+
+
+class EmptyPoseBody(PoseBody):
+    tensor_reader = 'unpack_empty_tensor'  # This returns an empty tensor with the given shape

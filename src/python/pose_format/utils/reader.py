@@ -92,8 +92,6 @@ class BufferReader:
         return self.unpack(getattr(ConstStructs, s_format))
 
     def unpack_empty_tensor(self, s: struct.Struct, shape: Tuple):
-        self.expect_to_read(s.size * int(np.prod(shape)))
-
         arr = np.empty(shape, s.format)
         self.advance(s, int(np.prod(shape)))
         return arr

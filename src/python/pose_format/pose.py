@@ -5,7 +5,7 @@ from typing import BinaryIO, Dict, List, Tuple, Type, Union
 import numpy as np
 import numpy.ma as ma
 from pose_format.numpy import NumPyPoseBody
-from pose_format.pose_body import PoseBody
+from pose_format.pose_body import PoseBody, EmptyPoseBody
 from pose_format.pose_header import (PoseHeader, PoseHeaderComponent,
                                      PoseHeaderDimensions,
                                      PoseNormalizationInfo, PoseHeaderCache)
@@ -52,7 +52,9 @@ class Pose:
         if isinstance(buffer, bytes):
             reader = BufferReader(buffer)
         else:
-            if kwargs.get("start_frame", None) or kwargs.get("end_frame", None) or kwargs.get("start_time", None) or kwargs.get("end_time", None):
+            if (kwargs.get("start_frame", None) or kwargs.get("end_frame", None) or
+                    kwargs.get("start_time", None) or kwargs.get("end_time", None) or
+                    pose_body is EmptyPoseBody):
                 reader = BytesIOReader(buffer)
             else:
                 reader = BufferReader(buffer.read())

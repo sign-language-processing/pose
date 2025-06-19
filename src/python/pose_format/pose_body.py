@@ -630,6 +630,38 @@ class PoseBody:
     def __len__(self):
         return len(self.data)
 
+    def duration_in_frames(self, start_time: Optional[int] = None, end_time: Optional[int] = None) -> int:
+        """
+        Returns the number of frames in the PoseBody based on start and end times.
+
+        Parameters
+        ----------
+        start_time : int, optional
+            Start time in milliseconds. Default is None.
+        end_time : int, optional
+            End time in milliseconds. Default is None.
+
+        Returns
+        -------
+        int
+            Number of frames in the PoseBody between the specified start and end times.
+        """
+        start_frame = 0
+        if start_time is not None:
+            start_frame = int(start_time / 1000 * self.fps)
+            assert start_frame >= 0, ValueError(f"Start frame {start_frame} is less than 0")
+            assert start_frame < len(self), f"Start frame {start_frame} is greater than the number of frames {len(self)}"
+
+        end_frame = len(self) - 1
+        if end_time is not None:
+            end_frame = int(end_time / 1000 * self.fps)
+            assert end_frame >= 0, ValueError(f"End frame {end_frame} is less than 0")
+            assert end_frame < len(self), f"End frame {end_frame} is greater than the number of frames {len(self)}"
+            assert start_frame <= end_frame, ValueError(f"Start frame {start_frame} is greater than end frame {end_frame}")
+
+        return end_frame - start_frame + 1
+
+
 
 class EmptyPoseBody(PoseBody):
     tensor_reader = 'unpack_empty_tensor'  # This returns an empty tensor with the given shape

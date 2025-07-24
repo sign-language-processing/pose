@@ -19,6 +19,11 @@ jobs:
         id: get_version
         run: echo "version=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
 
+      - name: Copy README from root to src/python
+        run: |
+          rm -f src/python/README.md
+          cp README.md src/python/README.md
+
       - name: Update version in pyproject.toml
         working-directory: src/python
         run: |

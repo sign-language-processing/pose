@@ -3,7 +3,7 @@ name = "pose_format"
 description = "Library for viewing, augmenting, and handling .pose files"
 version = "v0.10.2"
 keywords = ["Pose Files", "Pose Interpolation", "Pose Augmentation"]
-readme = "../../README.md"
+readme = "README.md"
 authors = [
     { name = "Amit Moryossef", email = "amitmoryossef@gmail.com" },
     { name = "Mathias Müller", email = "anon1@ymous.com" },

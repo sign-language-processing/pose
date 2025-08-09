@@ -20,7 +20,7 @@ requires-python = ">= 3.8"
 dev = [
     "pylint",
     "pytest",
-    "opencv-python==4.5.5.64",
+    "opencv-python",
     "vidgear",
     "mediapipe",
     "torch",

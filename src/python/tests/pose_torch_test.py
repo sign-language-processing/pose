@@ -9,7 +9,7 @@ from pose_format import Pose
 from pose_format.torch.masked import MaskedTensor as TorchMaskedTensor
 from pose_format.torch.pose_body import TorchPoseBody
 
-from src.python.tests.pose_test import _create_pose_header
+from tests.pose_test import _create_pose_header
 
 
 def _create_random_torch_data(frames_min: Optional[int] = None,

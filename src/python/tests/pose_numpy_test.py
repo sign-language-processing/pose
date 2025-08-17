@@ -4,7 +4,7 @@ import numpy as np
 import numpy.ma as ma
 
 
-from src.python.tests.pose_test import _get_random_pose_object_with_numpy_posebody
+from tests.pose_test import _get_random_pose_object_with_numpy_posebody
 
 
 class TestPoseNumpyPoseBody(TestCase):

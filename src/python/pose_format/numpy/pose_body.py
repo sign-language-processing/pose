@@ -292,7 +292,7 @@ class NumPyPoseBody(PoseBody):
 
         new_data = ma.transpose(boxes_cat, axes=POINTS_DIMS)
 
-        confidence_mask = np.split(new_data.mask, [-1], axis=3)[0]
+        confidence_mask = np.split(new_data.mask, [-1], axis=3)[-1]
         confidence_mask = np.squeeze(confidence_mask, axis=-1)
         confidence = np.where(confidence_mask == True, 0, 1)
 

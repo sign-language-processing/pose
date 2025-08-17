@@ -9,7 +9,7 @@ from pose_format import Pose
 from pose_format.tensorflow.masked.tensor import MaskedTensor as TensorflowMaskedTensor
 from pose_format.tensorflow.pose_body import TensorflowPoseBody
 
-from .pose_test import _get_random_pose_object_with_tf_posebody, _create_pose_header
+from .pose_test import _create_pose_header
 
 
 def _create_random_tensorflow_data(frames_min: Optional[int] = None,

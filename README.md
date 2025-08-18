@@ -26,8 +26,10 @@ pip install pose-format
 ```
 ##### Install from Source 
 
-```
-!git clone https://github.com/sign-language-processing/pose.git && cd pose/src/python && pip install -e .
+```bash
+git clone https://github.com/sign-language-processing/pose.git
+cd pose/src/python
+pip install -e .
 ```
 
 #### 2. Estimating Pose from Video:

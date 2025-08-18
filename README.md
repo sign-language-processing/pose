@@ -24,6 +24,13 @@ More about the header and the body details and their binary specifics can be fou
 ```bash
 pip install pose-format
 ```
+##### Install from Source 
+
+```bash
+git clone https://github.com/sign-language-processing/pose.git
+cd pose/src/python
+pip install -e .
+```
 
 #### 2. Estimating Pose from Video:
 

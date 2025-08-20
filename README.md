@@ -46,10 +46,9 @@ video_to_pose --format mediapipe -i example.mp4 -o example.pose \
 
 # Recursively search for videos within a directory, and process them 10 at a time
 videos_to_poses --format mediapipe -num-workers 10 --recursive --directory /path/to/videos 
-
 ```
 
-#### 3. Reading `.pose` Files: 
+#### 3. Reading and Writing `.pose` Files:
 
 To load a `.pose` file, use the `Pose` class.
 
@@ -92,6 +91,13 @@ pose.torch()
 
 # Convert to TensorFlow:
 pose.tensorflow()
+```
+
+Finally, to write a `Pose` object to a file:
+
+```python
+with open(pose_filepath, "wb") as data_buffer:
+    pose.write(data_buffer)
 ```
 
 #### 4. Data Manipulation: 
@@ -193,6 +199,14 @@ v.save_gif("test.gif", v.draw())
 
 display(Image(open('test.gif','rb').read()))
 ```
+
+There is also a CLI command for visualizing poses:
+
+```bash
+visualize_pose -i example.pose -o example.mp4 --normalize
+```
+
+Normalizing the pose  before creating the mp4 output file (`--normalize`) is optional.
 
 #### 6. Integration with External Data Sources:
 If you have pose data in OpenPose or MediaPipe Holistic format, you can easily import it. 

@@ -8,6 +8,8 @@ from typing import Iterable, Tuple, Union
 import numpy as np
 import numpy.ma as ma
 from tqdm import tqdm
+from simple_video_utils.metadata import video_metadata
+from simple_video_utils.frames import read_frames_exact
 
 from .pose import Pose
 
@@ -133,6 +135,7 @@ class PoseVisualizer:
                                 'lineType': self.cv2.LINE_AA,
                                 'z': (point1[2] + point2[2]) / 2 if len(point1) > 2 else 0
                             })
+                            print(draw_operations[-1]['z'])
 
                 idx += len(component.points)
 
@@ -218,19 +221,16 @@ class PoseVisualizer:
             max_frames = len(int_data)
 
         def get_frames(video_path):
-
-            cap = self.cv2.VideoCapture(video_path)
-            video_fps = cap.get(self.cv2.CAP_PROP_FPS)
+            # Get video metadata
+            metadata = video_metadata(video_path)
+            video_fps = metadata.fps
 
             assert math.isclose(video_fps, self.pose_fps, abs_tol=0.1), \
                 "Fps of pose and video do not match: %f != %f" % (self.pose_fps, video_fps)
 
-            while True:
-                ret, vf = cap.read()
-                if not ret:
-                    break
-                yield vf
-            cap.release()
+            # Read frames and convert RGB to BGR (cv2 expects BGR)
+            for frame in read_frames_exact(video_path):
+                yield self.cv2.cvtColor(frame, self.cv2.COLOR_RGB2BGR)
 
         if isinstance(background_video, str):
             background_video = iter(get_frames(background_video))

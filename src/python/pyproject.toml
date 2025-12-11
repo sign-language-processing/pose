@@ -12,7 +12,8 @@ authors = [
 dependencies = [
     "numpy",
     "scipy",
-    "tqdm"
+    "tqdm",
+    "simple-video-utils"
 ]
 requires-python = ">= 3.8"
 

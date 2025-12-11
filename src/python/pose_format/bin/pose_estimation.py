@@ -2,27 +2,19 @@
 import argparse
 import os
 
-import cv2
+from simple_video_utils.metadata import video_metadata
+from simple_video_utils.frames import read_frames_exact
 from pose_format.utils.holistic import load_holistic
 
 
-def load_video_frames(cap: cv2.VideoCapture):
-    while True:
-        ret, frame = cap.read()
-        if not ret:
-            break
-        yield cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-    cap.release()
-
-
 def pose_video(input_path: str, output_path: str, format: str, additional_config: dict = {'model_complexity': 1}, progress: bool = True):
-    # Load video frames
+    # Load video metadata
     print('Loading video ...')
-    cap = cv2.VideoCapture(input_path)
-    width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-    height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-    fps = cap.get(cv2.CAP_PROP_FPS)
-    frames = load_video_frames(cap)
+    metadata = video_metadata(input_path)
+    width = metadata.width
+    height = metadata.height
+    fps = metadata.fps
+    frames = read_frames_exact(input_path)
 
     # Perform pose estimation
     print('Estimating pose ...')

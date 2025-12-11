@@ -4,6 +4,7 @@ import os
 
 import cv2
 from pose_format.utils.holistic import load_holistic
+from pose_format.utils.mmposewholebody import load_mmposewholebody
 
 
 def load_video_frames(cap: cv2.VideoCapture):
@@ -15,7 +16,8 @@ def load_video_frames(cap: cv2.VideoCapture):
     cap.release()
 
 
-def pose_video(input_path: str, output_path: str, format: str, additional_config: dict = {'model_complexity': 1}, progress: bool = True):
+def pose_video(input_path: str, output_path: str, format: str, use_cpu: bool, additional_config: dict = {'model_complexity': 1}, progress: bool = True):
+    
     # Load video frames
     print('Loading video ...')
     cap = cv2.VideoCapture(input_path)
@@ -33,12 +35,25 @@ def pose_video(input_path: str, output_path: str, format: str, additional_config
                              height=height,
                              progress=progress,
                              additional_holistic_config=additional_config)
+    elif format == 'mmposewholebody':
+        pose = load_mmposewholebody(input_path,
+                            output_path, 
+                            use_cpu=use_cpu,
+                            fps=fps,
+                            width=width,
+                            height=height)
     else:
         raise NotImplementedError('Pose format not supported')
 
+    # Build output filename
+    video_name = os.path.splitext(os.path.basename(input_path))[0]   # "SOUP" from ".../SOUP.mp4"
+    output_pose_file_path = os.path.join(output_path, f"{video_name}.pose")
+    os.makedirs(output_path, exist_ok=True)
+
     # Write
-    print('Saving to disk ...')
-    with open(output_path, "wb") as f:
+    print(f'Saving to disk at path {output_pose_file_path}')
+
+    with open(output_pose_file_path, "wb") as f:
         pose.write(f)
 
 
@@ -70,10 +85,14 @@ def main():
     parser.add_argument('-i', required=True, type=str, help='path to input video file')
     parser.add_argument('-o', required=True, type=str, help='path to output pose file')
     parser.add_argument('--format',
-                        choices=['mediapipe'],
+                        choices=['mediapipe', 'mmposewholebody'],
                         default='mediapipe',
                         type=str,
                         help='type of pose estimation to use')
+    parser.add_argument('--usecpu', 
+                        default=False,
+                        type=bool, 
+                        help='option to use CPU for pose estimation (if supported)')
     parser.add_argument('--additional-config', type=str, help='additional configuration for the pose estimator')
 
     args = parser.parse_args()
@@ -82,7 +101,7 @@ def main():
         raise FileNotFoundError(f"Video file {args.i} not found")
 
     additional_config = parse_additional_config(args.additional_config)
-    pose_video(args.i, args.o, args.format, additional_config)
+    pose_video(args.i, args.o, args.format, args.usecpu, additional_config)
 
     # pip install . && video_to_pose -i como.mp4 -o como1.pose --format mediapipe
     # pip install . && video_to_pose -i como.mp4 -o como2.pose --format mediapipe --additional-config="model_complexity=2,smooth_landmarks=false,refine_face_landmarks=true"

@@ -342,7 +342,6 @@ export class PoseViewer {
 
     const frameId = Math.floor(currentTime * this.pose.body.fps);
     const frame = this.pose.body.frames[frameId];
-    console.log(frame);
 
     const render = this.rendererInstance.render(frame);
     if (!this.hasRendered) {

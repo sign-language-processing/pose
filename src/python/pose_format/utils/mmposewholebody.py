@@ -1,3 +1,5 @@
+# based on code from https://github.com/open-mmlab/mmpose/blob/main/configs/_base_/datasets/coco_wholebody.py
+
 import numpy as np
 from tqdm import tqdm
 from ..numpy.pose_body import NumPyPoseBody
@@ -13,7 +15,7 @@ def mmposewholebody_components():
     Returns
     -------
     list of PoseHeaderComponent
-        List of holistic components.
+        List of MMPoseWholeBody components.
     """
     BODY_POINTS = [
         "nose","left_eye","right_eye","left_ear","right_ear",
@@ -184,12 +186,13 @@ def process_mmposewholebody(input_path, output_path, fps, use_cpu) -> NumPyPoseB
         return_vis=True,
         save_out_video=True,
         out_dir=visualization_path)  
-    print("MMPoseWholeBody processing complete.")
+    print("MMPoseWholeBody pose estimation complete. Beginning conversion to .pose format...")
 
     frames_data = []
     frames_conf = []
 
 
+    # Convert to NumPyPoseBody format
     for result in result_generator: 
         predictions_by_frame = result['predictions'] # each result represents one frame
         person_keypoints = []

@@ -1,10 +1,7 @@
 #!/usr/bin/env python
 import argparse
 import os
-
 import cv2
-from pose_format.utils.holistic import load_holistic
-from pose_format.utils.mmposewholebody import load_mmposewholebody
 
 
 def load_video_frames(cap: cv2.VideoCapture):
@@ -29,13 +26,28 @@ def pose_video(input_path: str, output_path: str, format: str, use_cpu: bool, ad
     # Perform pose estimation
     print('Estimating pose ...')
     if format == 'mediapipe':
+        from pose_format.utils.holistic import load_holistic
         pose = load_holistic(frames,
                              fps=fps,
                              width=width,
                              height=height,
                              progress=progress,
                              additional_holistic_config=additional_config)
+    elif format == 'openpose':
+        from pose_format.utils.openpose import estimate_and_load_openpose
+        pose = estimate_and_load_openpose(input_path, 
+                            output_path,   
+                            fps=fps, 
+                            width=width,
+                            height=height)
+    elif format == 'openpifpaf':
+        from pose_format.utils.openpifpaf import estimate_and_load_openpifpaf
+        pose = estimate_and_load_openpifpaf(frames,
+                            fps=fps, 
+                            width=width,
+                            height=height)
     elif format == 'mmposewholebody':
+        from pose_format.utils.mmposewholebody import load_mmposewholebody
         pose = load_mmposewholebody(input_path,
                             output_path, 
                             use_cpu=use_cpu,
@@ -85,7 +97,7 @@ def main():
     parser.add_argument('-i', required=True, type=str, help='path to input video file')
     parser.add_argument('-o', required=True, type=str, help='path to output pose file')
     parser.add_argument('--format',
-                        choices=['mediapipe', 'mmposewholebody'],
+                        choices=['mediapipe', 'mmposewholebody', 'openpose', 'openpifpaf'],
                         default='mediapipe',
                         type=str,
                         help='type of pose estimation to use')

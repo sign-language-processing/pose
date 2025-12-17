@@ -44,6 +44,7 @@ def pose_video(input_path: str, output_path: str, format: str, use_cpu: bool, ad
         from pose_format.utils.openpifpaf import estimate_and_load_openpifpaf
         pose = estimate_and_load_openpifpaf(frames,
                             fps=fps, 
+                            use_cpu=use_cpu,
                             width=width,
                             height=height)
     elif format == 'mmposewholebody':

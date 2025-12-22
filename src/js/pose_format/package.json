@@ -1,6 +1,6 @@
 {
   "name": "pose-format",
-  "version": "1.6.0",
+  "version": "1.6.2",
   "description": "Library for handling .pose files",
   "scripts": {
     "build": "tsc",
@@ -15,10 +15,10 @@
   "author": "Amit Moryossef",
   "license": "MIT",
   "dependencies": {
-    "binary-parser": "2.2.1"
+    "binary-parser": "2.3.0"
   },
   "devDependencies": {
-    "@types/node": "22.10.0",
-    "typescript": "5.7.2"
+    "@types/node": "25.0.3",
+    "typescript": "5.9.3"
   }
 }

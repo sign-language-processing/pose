@@ -5,32 +5,75 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { Buffer } from "buffer";
 import { PoseModel } from "pose-format/dist/types";
-export { Buffer } from "buffer";
 export { PoseModel } from "pose-format/dist/types";
 export namespace Components {
     interface PoseViewer {
+        /**
+          * @default null
+         */
         "aspectRatio": number;
+        /**
+          * @default true
+         */
         "autoplay": boolean;
+        /**
+          * @default null
+         */
         "background": string;
+        /**
+          * @default NaN
+         */
         "currentTime": number;
+        /**
+          * @default NaN
+         */
         "duration": number;
+        /**
+          * @default false
+         */
         "ended": boolean;
         "getPose": () => Promise<PoseModel>;
+        /**
+          * @default null
+         */
         "height": string;
+        /**
+          * @default false
+         */
         "loop": boolean;
         "nextFrame": () => Promise<void>;
+        /**
+          * @default null
+         */
         "padding": string;
         "pause": () => Promise<void>;
+        /**
+          * @default true
+         */
         "paused": boolean;
         "play": () => Promise<void>;
+        /**
+          * @default 1
+         */
         "playbackRate": number;
+        /**
+          * @default 0
+         */
         "readyState": number;
+        /**
+          * @default 'canvas'
+         */
         "renderer": 'canvas' | 'svg' | 'interactive';
         "src": string | Buffer;
         "syncMedia": (media: HTMLMediaElement) => Promise<void>;
+        /**
+          * @default null
+         */
         "thickness": number;
+        /**
+          * @default null
+         */
         "width": string;
     }
 }
@@ -70,13 +113,37 @@ declare global {
 }
 declare namespace LocalJSX {
     interface PoseViewer {
+        /**
+          * @default null
+         */
         "aspectRatio"?: number;
+        /**
+          * @default true
+         */
         "autoplay"?: boolean;
+        /**
+          * @default null
+         */
         "background"?: string;
+        /**
+          * @default NaN
+         */
         "currentTime"?: number;
+        /**
+          * @default NaN
+         */
         "duration"?: number;
+        /**
+          * @default false
+         */
         "ended"?: boolean;
+        /**
+          * @default null
+         */
         "height"?: string;
+        /**
+          * @default false
+         */
         "loop"?: boolean;
         "onCanplaythrough$"?: (event: PoseViewerCustomEvent<void>) => void;
         "onEnded$"?: (event: PoseViewerCustomEvent<void>) => void;
@@ -87,13 +154,34 @@ declare namespace LocalJSX {
         "onPause$"?: (event: PoseViewerCustomEvent<void>) => void;
         "onPlay$"?: (event: PoseViewerCustomEvent<void>) => void;
         "onRender$"?: (event: PoseViewerCustomEvent<void>) => void;
+        /**
+          * @default null
+         */
         "padding"?: string;
+        /**
+          * @default true
+         */
         "paused"?: boolean;
+        /**
+          * @default 1
+         */
         "playbackRate"?: number;
+        /**
+          * @default 0
+         */
         "readyState"?: number;
+        /**
+          * @default 'canvas'
+         */
         "renderer"?: 'canvas' | 'svg' | 'interactive';
         "src"?: string | Buffer;
+        /**
+          * @default null
+         */
         "thickness"?: number;
+        /**
+          * @default null
+         */
         "width"?: string;
     }
     interface IntrinsicElements {

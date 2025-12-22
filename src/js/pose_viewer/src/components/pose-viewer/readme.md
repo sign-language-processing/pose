@@ -22,7 +22,7 @@
 | `playbackRate` | `playback-rate` |             | `number`                             | `1`         |
 | `readyState`   | `ready-state`   |             | `number`                             | `0`         |
 | `renderer`     | `renderer`      |             | `"canvas" \| "interactive" \| "svg"` | `'canvas'`  |
-| `src`          | `src`           |             | `Buffer \| string`                   | `undefined` |
+| `src`          | `src`           |             | `Buffer<ArrayBufferLike> \| string`  | `undefined` |
 | `thickness`    | `thickness`     |             | `number`                             | `null`      |
 | `width`        | `width`         |             | `string`                             | `null`      |
 

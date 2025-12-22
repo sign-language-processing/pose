@@ -2,7 +2,8 @@ import { PoseRenderer } from "./pose-renderer";
 import { PoseBodyFrameModel, PosePointModel, RGBColor } from "pose-format";
 import { h } from "@stencil/core";
 import * as THREE from "three";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+
 
 export class InteractivePoseRenderer extends PoseRenderer {
   private scene!: THREE.Scene;

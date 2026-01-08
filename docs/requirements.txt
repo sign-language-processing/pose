@@ -104,7 +104,7 @@ tqdm==4.66.1
 typing_extensions==4.7.1
 urllib3==1.26.16
 vidgear==0.3.1
-Werkzeug==2.3.7
+Werkzeug==3.1.5
 wheel==0.41.1
 wrapt==1.15.0
 zipp==3.16.2

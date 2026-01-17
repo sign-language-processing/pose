@@ -262,6 +262,22 @@ pose = fake_holistic_pose(num_frames=10, num_people=1, fps=25.0)
 
 These functions also exist for OpenPose data: `fake_openpose_pose` and `fake_openpose_135_pose`.
 
+#### 8. Loading AlphaPose WholeBody JSON:
+
+```python
+from pose_format.utils.alphapose import load_alphapose_wholebody_from_json
+
+pose = load_alphapose_wholebody_from_json("alphapose.json")  # 136-keypoint (default)
+```
+
+For the 133-keypoint variant:
+
+```python
+from pose_format.utils.alphapose_133 import load_alphapose_wholebody_from_json as load_alphapose_133
+
+pose = load_alphapose_133("alphapose.json")
+```
+
 ### Running Tests:
 
 To ensure the integrity of the toolkit, you can run tests using Bazel:

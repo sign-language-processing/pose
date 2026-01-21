@@ -69,9 +69,9 @@ def process_mmposewholebody(input_path, output_path, fps, use_cpu) -> NumPyPoseB
         input_path,
         show=False, 
         save_vis=False, 
-        return_vis=True,
-        save_out_video=True,
-        out_dir=visualization_path)  
+        return_vis=False,
+        save_out_video=False)
+            #out_dir=visualization_path  #TODO: make saving of visualizations and json to disk toggleable
     print("MMPoseWholeBody pose estimation complete. Beginning conversion to .pose format...")
 
     frames_data = []
@@ -94,6 +94,11 @@ def process_mmposewholebody(input_path, output_path, fps, use_cpu) -> NumPyPoseB
 
     data_array = np.array(frames_data)        # (frames, people, points, 2)
     conf_array = np.array(frames_conf)         # (frames, people, points)
+
+    # Replace leg keypoints with zeros
+    LEG_IDXS = list(range(13, 23))
+    data_array[:, :, LEG_IDXS, :] = 0
+    conf_array[:, :, LEG_IDXS] = 0
 
     return NumPyPoseBody(fps=fps, data=data_array, confidence=conf_array)
 

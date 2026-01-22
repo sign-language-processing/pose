@@ -105,7 +105,7 @@ typing_extensions==4.7.1
 urllib3==1.26.16
 vidgear==0.3.1
 Werkzeug==2.3.7
-wheel==0.41.1
+wheel==0.46.2
 wrapt==1.15.0
 zipp==3.16.2
 docutils==0.18.1

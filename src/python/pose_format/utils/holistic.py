@@ -10,7 +10,7 @@ try:
     import mediapipe as mp
     from mediapipe.python.solutions.face_mesh_connections import FACEMESH_IRISES
 except ImportError:
-    raise ImportError("Please install mediapipe with: pip install mediapipe")
+    raise ImportError("Please install mediapipe with: pip install \"mediapipe<0.10.30\"")
 
 mp_holistic = mp.solutions.holistic
 

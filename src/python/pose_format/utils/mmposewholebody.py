@@ -95,10 +95,5 @@ def process_mmposewholebody(input_path, output_path, fps, use_cpu) -> NumPyPoseB
     data_array = np.array(frames_data)        # (frames, people, points, 2)
     conf_array = np.array(frames_conf)         # (frames, people, points)
 
-    # Replace leg keypoints with zeros
-    LEG_IDXS = list(range(13, 23))
-    data_array[:, :, LEG_IDXS, :] = 0
-    conf_array[:, :, LEG_IDXS] = 0
-
     return NumPyPoseBody(fps=fps, data=data_array, confidence=conf_array)
 

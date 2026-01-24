@@ -139,7 +139,7 @@ def pose_shoulders(pose_header: PoseHeader) -> Tuple[Tuple[str, str], Tuple[str,
         return ("pose_keypoints_2d", "RShoulder"), ("pose_keypoints_2d", "LShoulder")
     
     if known_pose_format == "coco_wholebody_133":
-        return ("BODY_POINTS", "right_shoulder"), ("BODY_POINTS", "left_shoulder")
+        return ("BODY", "right_shoulder"), ("BODY", "left_shoulder")
 
     raise NotImplementedError(
         f"Unsupported pose header schema {known_pose_format} for {pose_shoulders.__name__}: {pose_header}"
@@ -162,8 +162,8 @@ def hands_indexes(pose_header: PoseHeader)-> List[int]:
     if known_pose_format == "coco_wholebody_133":
         return [
             #not sure this is correct, unclear what this is being used for
-            pose_header.get_point_index("LEFT_HAND_POINTS", "left_hand_0"),
-            pose_header.get_point_index("RIGHT_HAND_POINTS", "right_hand_0"),
+            pose_header.get_point_index("LEFT_HAND", "left_hand_0"),
+            pose_header.get_point_index("RIGHT_HAND", "right_hand_0"),
         ]
     raise NotImplementedError(
         f"Unsupported pose header schema {known_pose_format} for {hands_indexes.__name__}: {pose_header}"

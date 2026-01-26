@@ -32,6 +32,20 @@ cd pose/src/python
 pip install -e .
 ```
 
+##### Additional install targets
+
+To install packages needed for development (for example running tests):
+
+```bash
+pip install pose-format[dev]
+```
+
+and to only install the exact version of mediapipe required by this library:
+
+```bash
+pip install pose-format[mediapipe]
+```
+
 #### 2. Estimating Pose from Video:
 
 ```bash
@@ -96,7 +110,7 @@ pose.tensorflow()
 Finally, to write a `Pose` object to a file:
 
 ```python
-with open(pose_filepath, "wb") as data_buffer:
+with open("file.pose", "wb") as data_buffer:
     pose.write(data_buffer)
 ```
 

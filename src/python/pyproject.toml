@@ -26,7 +26,11 @@ dev = [
     "mediapipe",
     "torch",
     "tensorflow",
-    "matplotlib"
+    "matplotlib",
+]
+
+mediapipe = [
+    "mediapipe<0.10.30",
 ]
 
 [tool.setuptools]

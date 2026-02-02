@@ -23,7 +23,7 @@ dev = [
     "pytest",
     "opencv-python",
     "vidgear",
-    "mediapipe",
+    "mediapipe<0.10.30",
     "torch",
     "tensorflow",
     "matplotlib",

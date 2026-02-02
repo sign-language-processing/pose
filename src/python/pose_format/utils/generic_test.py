@@ -227,6 +227,22 @@ def test_pose_remove_legs(fake_poses: List[Pose]):
             for point_name in points_that_should_be_removed:
                 assert point_name not in pose_with_legs_removed.header.components[component_index].points, f"{pose_with_legs_removed.header.components[component_index].name},{pose_with_legs_removed.header.components[component_index].points}"
                 assert point_name in pose.header.components[component_index].points
+
+        elif known_pose_format == "alphapose":
+            c_names = [c.name for c in pose.header.components]
+            points_that_should_be_removed = [
+                "left_hip", "right_hip",
+                "left_knee", "right_knee",
+                "left_ankle", "right_ankle",
+                "left_big_toe", "left_small_toe", "left_heel",
+                "right_big_toe", "right_small_toe", "right_heel",
+            ]
+            component_index = c_names.index("BODY")
+            pose_with_legs_removed = pose_hide_legs(pose, remove=True)
+
+            for point_name in points_that_should_be_removed:
+                assert point_name not in pose_with_legs_removed.header.components[component_index].points, f"{pose_with_legs_removed.header.components[component_index].name},{pose_with_legs_removed.header.components[component_index].points}"
+                assert point_name in pose.header.components[component_index].points
         else:
             with pytest.raises(NotImplementedError, match="Unsupported pose header schema"):
                 pose = pose_hide_legs(pose, remove=True)
@@ -272,6 +288,9 @@ def test_fake_pose(known_pose_format: KnownPoseFormat):
                 assert point_formats[0] == "XYC"
             elif detected_format == 'openpose_135':
                 assert point_formats[0] == "XYC"
+            elif detected_format == 'alphapose':
+                assert point_formats[0] == "XYC"
+
 
             assert detected_format == known_pose_format
             assert pose.body.fps == fps

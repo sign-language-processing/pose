@@ -9,12 +9,12 @@ from pose_format.utils.normalization_3d import PoseNormalizer
 from pose_format.utils.openpose import OpenPose_Components
 from pose_format.utils.openpose import BODY_POINTS as OPENPOSE_BODY_POINTS
 from pose_format.utils.openpose_135 import OpenPose_Components as OpenPose135_Components
+from pose_format.utils.alphapose import get_alphapose_133_components, get_alphapose_136_components
 
 # from pose_format.utils.holistic import holistic_components
 # The import above creates an error: ImportError: Please install mediapipe with: pip install mediapipe
 
-KnownPoseFormat = Literal["holistic", "openpose", "openpose_135"]
-
+KnownPoseFormat = Literal["holistic", "openpose", "openpose_135", "alphapose_133", "alphapose_136"]
 
 def get_component_names(
     pose_or_header_or_components: Union[Pose,PoseHeader]) -> List[str]:
@@ -41,6 +41,10 @@ def detect_known_pose_format(pose_or_header: Union[Pose,PoseHeader]) -> KnownPos
 
     openpose_135_components = [c.name for c in OpenPose135_Components]
 
+    alphapose_133_components = [c.name for c in get_alphapose_133_components()]
+
+    alphapose_136_components = [c.name for c in get_alphapose_136_components()]
+
     for component_name in component_names:
         if component_name in mediapipe_components:
             return "holistic"
@@ -48,6 +52,10 @@ def detect_known_pose_format(pose_or_header: Union[Pose,PoseHeader]) -> KnownPos
             return "openpose"
         if component_name in openpose_135_components:
             return "openpose_135"
+        if component_name in alphapose_133_components:
+            return "alphapose_133"
+        if component_name in alphapose_136_components:
+            return "alphapose_136"
 
     raise ValueError(
         f"Could not detect pose format, unknown pose header schema with component names: {component_names}"
@@ -87,6 +95,18 @@ def pose_hide_legs(pose: Pose, remove: bool = False) -> Pose:
             # if any of the items in point_
         points_to_remove_dict = {"pose_keypoints_2d": point_names_to_remove}
 
+    elif known_pose_format == "alphapose_133" or known_pose_format == "alphapose_136":
+        point_names_to_remove = [
+            "left_hip", "right_hip",
+            "left_knee", "right_knee",
+            "left_ankle", "right_ankle",
+            "left_big_toe", "left_small_toe", "left_heel",
+            "right_big_toe", "right_small_toe", "right_heel",
+        ]
+        points_to_remove_dict = {
+            f"BODY_{known_pose_format[-3:]}": point_names_to_remove
+        }
+
     else:
         raise NotImplementedError(
             f"Unsupported pose header schema {known_pose_format} for {pose_hide_legs.__name__}: {pose.header}"
@@ -124,6 +144,9 @@ def pose_shoulders(pose_header: PoseHeader) -> Tuple[Tuple[str, str], Tuple[str,
     if known_pose_format == "openpose":
         return ("pose_keypoints_2d", "RShoulder"), ("pose_keypoints_2d", "LShoulder")
 
+    if known_pose_format == "alphapose_133" or known_pose_format == "alphapose_136":
+        return (f"BODY_{known_pose_format[-3:]}", "right_shoulder"), (f"BODY_{known_pose_format[-3:]}", "left_shoulder")
+
     raise NotImplementedError(
         f"Unsupported pose header schema {known_pose_format} for {pose_shoulders.__name__}: {pose_header}"
     )
@@ -141,6 +164,12 @@ def hands_indexes(pose_header: PoseHeader)-> List[int]:
         return [
             pose_header.get_point_index("hand_left_keypoints_2d", "M_CMC"),
             pose_header.get_point_index("hand_right_keypoints_2d", "M_CMC"),
+        ]
+
+    if known_pose_format == "alphapose_133" or known_pose_format == "alphapose_136":
+        return [
+            pose_header.get_point_index(f"LEFT_HAND_{known_pose_format[-3:]}", "hand_9"),
+            pose_header.get_point_index(f"RIGHT_HAND_{known_pose_format[-3:]}", "hand_9"),
         ]
     raise NotImplementedError(
         f"Unsupported pose header schema {known_pose_format} for {hands_indexes.__name__}: {pose_header}"
@@ -163,7 +192,9 @@ def hands_components(pose_header: PoseHeader)-> Tuple[Tuple[str, str], Tuple[str
 
     if known_pose_format == "openpose":
         return ("hand_left_keypoints_2d", "hand_right_keypoints_2d"), ("BASE", "P_CMC", "I_CMC"), ("BASE", "M_CMC")
-
+    
+    if known_pose_format == "alphapose_133" or known_pose_format == "alphapose_136":
+        return (f"LEFT_HAND_{known_pose_format[-3:]}", f"RIGHT_HAND_{known_pose_format[-3:]}"), ("hand_0", "hand_17", "hand_5"), ("hand_0", "hand_9")
     raise NotImplementedError(
         f"Unsupported pose header schema '{known_pose_format}' for {hands_components.__name__}: {pose_header}"
     )
@@ -209,6 +240,10 @@ def get_standard_components_for_known_format(known_pose_format: KnownPoseFormat)
         return OpenPose_Components
     if known_pose_format == "openpose_135":
         return OpenPose135_Components
+    if known_pose_format == "alphapose_133":
+        return get_alphapose_133_components()
+    if known_pose_format == "alphapose_136":
+        return get_alphapose_136_components()
 
     raise NotImplementedError(f"Unsupported pose header schema {known_pose_format}")
 
@@ -241,6 +276,8 @@ def get_hand_wrist_index(pose: Pose, hand: str)-> int:
         return pose.header.get_point_index(f"{hand.upper()}_HAND_LANDMARKS", "WRIST")
     if known_pose_format == "openpose":
         return pose.header.get_point_index(f"hand_{hand.lower()}_keypoints_2d", "BASE")
+    if known_pose_format == "alphapose_133" or known_pose_format == "alphapose_136":
+        return pose.header.get_point_index(f"{hand.upper()}_HAND_{known_pose_format[-3:]}", f"hand_0")
     raise NotImplementedError(
         f"Unsupported pose header schema {known_pose_format} for {get_hand_wrist_index.__name__}: {pose.header}"
     )
@@ -252,6 +289,8 @@ def get_body_hand_wrist_index(pose: Pose, hand: str)-> int:
         return pose.header.get_point_index("POSE_LANDMARKS", f"{hand.upper()}_WRIST")
     if known_pose_format == "openpose":
         return pose.header.get_point_index("pose_keypoints_2d", f"{hand.upper()[0]}Wrist")
+    if known_pose_format == "alphapose_133" or known_pose_format == "alphapose_136":
+        return pose.header.get_point_index(f"BODY_{known_pose_format[-3:]}", f"{hand.lower()}_wrist")
     raise NotImplementedError(
         f"Unsupported pose header schema {known_pose_format} for {get_body_hand_wrist_index.__name__}: {pose.header}"
     )

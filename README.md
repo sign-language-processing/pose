@@ -250,6 +250,22 @@ directory = "/path/to/holistic/directory"
 pose = load_MediaPipe_directory(directory, fps=24, width=1000, height=1000)
 ```
 
+#### 7. Conversion from JSON poses to `.pose` format
+
+The library supports converting pose estimation outputs stored as `.json` files into the `.pose` format via `json_to_pose` utility.
+
+> **Note**  
+> - At the moment, `json_to_pose` only supports [AlphaPose](https://github.com/MVIG-SJTU/AlphaPose) models with **133 keypoints** JSON files with 133 keypoints.
+> - Metadata such as FPS, width, and height can be automatically extracted from the original RGB video if provided.
+
+**Example usage:**
+
+```bash
+json_to_pose -i alphapose.json -o alphapose.pose --format alphapose
+json_to_pose -i alphapose.json -o alphapose.pose --original-video video.mp4 --format alphapose
+```
+
+
 ### Running Tests:
 
 To ensure the integrity of the toolkit, you can run tests using Bazel:

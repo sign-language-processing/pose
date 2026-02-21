@@ -7,7 +7,7 @@ from ..pose_body import POINTS_DIMS, PoseBody
 from .masked.tensor import MaskedTensor
 
 TF_POSE_RECORD_DESCRIPTION = {
-    'fps': tf.io.FixedLenFeature([], tf.int64, default_value=0),
+    'fps': tf.io.FixedLenFeature([], tf.float32, default_value=0.0),
     'pose_data': tf.io.FixedLenFeature([], tf.string),
     'pose_confidence': tf.io.FixedLenFeature([], tf.string),
 }
@@ -218,7 +218,7 @@ class TensorflowPoseBody(PoseBody):
         confidence = tf.io.serialize_tensor(self.confidence).numpy()
 
         return {
-            'fps': tf.train.Feature(int64_list=tf.train.Int64List(value=[self.fps])),
+            'fps': tf.train.Feature(float_list=tf.train.FloatList(value=[self.fps])),
             'pose_data': tf.train.Feature(bytes_list=tf.train.BytesList(value=[data])),
             'pose_confidence': tf.train.Feature(bytes_list=tf.train.BytesList(value=[confidence]))
         }
@@ -238,7 +238,7 @@ class TensorflowPoseBody(PoseBody):
         TensorflowPoseBody
             An instance constructed from given TensorFlow record data
         """
-        fps = tf.cast(tfrecord_dict['fps'], dtype=tf.float32)
+        fps = tfrecord_dict['fps']
         data = tf.io.parse_tensor(tfrecord_dict['pose_data'], out_type=tf.float32)
         confidence = tf.io.parse_tensor(tfrecord_dict['pose_confidence'], out_type=tf.float32)
         return cls(fps=fps, data=data, confidence=confidence)

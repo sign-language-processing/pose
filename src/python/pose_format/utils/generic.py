@@ -213,7 +213,7 @@ def get_standard_components_for_known_format(known_pose_format: KnownPoseFormat)
     raise NotImplementedError(f"Unsupported pose header schema {known_pose_format}")
 
 
-def fake_pose(num_frames: int, fps: int=25, components: Union[List[PoseHeaderComponent],None]=None)->Pose:
+def fake_pose(num_frames: int, fps: float=25.0, components: Union[List[PoseHeaderComponent],None]=None)->Pose:
     if components is None:
         components = copy.deepcopy(OpenPose_Components) # fixes W0102, dangerous default value
 
@@ -230,7 +230,7 @@ def fake_pose(num_frames: int, fps: int=25, components: Union[List[PoseHeaderCom
     confidence = np.random.randn(num_frames, 1, total_points)
     masked_data = ma.masked_array(data)
 
-    body = NumPyPoseBody(fps=int(fps), data=masked_data, confidence=confidence)
+    body = NumPyPoseBody(fps=fps, data=masked_data, confidence=confidence)
 
     return Pose(header, body)
 

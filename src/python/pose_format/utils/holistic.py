@@ -367,7 +367,7 @@ def formatted_holistic_pose(width: int, height: int, additional_face_points: int
                                {"FACE_LANDMARKS": FACEMESH_CONTOURS_POINTS})
 
 
-def load_mediapipe_directory(directory: str, fps: int, width: int, height: int, num_face_points: int = 128) -> Pose:
+def load_mediapipe_directory(directory: str, fps: float, width: int, height: int, num_face_points: int = 128) -> Pose:
     """
     Load pose data from a directory of MediaPipe
 

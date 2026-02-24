@@ -298,13 +298,13 @@ class NumPyPoseBody(PoseBody):
 
         return NumPyPoseBody(self.fps, new_data, confidence)
 
-    def interpolate(self, new_fps: int = None, kind='cubic'):
+    def interpolate(self, new_fps: float = None, kind='cubic'):
         """
         Interpolates the pose data to match a new frame rate.
 
         Parameters
         ----------
-        new_fps : int, optional
+        new_fps : float, optional
             The desired frame rate for interpolation.
         kind : str, optional
             The type of interpolation. Options include: "linear", "quadratic", and "cubic".

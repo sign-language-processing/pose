@@ -279,7 +279,7 @@ def load_openpose(frames: OpenPoseFrames,
     stacked_confidence = np.stack([mask, mask], axis=3)
     masked_data = ma.masked_array(data, mask=stacked_confidence)
 
-    body = NumPyPoseBody(fps=int(fps), data=masked_data, confidence=confidence)
+    body = NumPyPoseBody(fps=fps, data=masked_data, confidence=confidence)
 
     return Pose(header, body)
 

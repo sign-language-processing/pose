@@ -213,7 +213,7 @@ def get_standard_components_for_known_format(known_pose_format: KnownPoseFormat)
     raise NotImplementedError(f"Unsupported pose header schema {known_pose_format}")
 
 
-def fake_pose(num_frames: int, fps: float=25.0, components: Union[List[PoseHeaderComponent],None]=None)->Pose:
+def fake_pose(num_frames: int, num_people: int = 1, fps: float=25.0, components: Union[List[PoseHeaderComponent],None]=None)->Pose:
     if components is None:
         components = copy.deepcopy(OpenPose_Components) # fixes W0102, dangerous default value
 
@@ -226,13 +226,46 @@ def fake_pose(num_frames: int, fps: float=25.0, components: Union[List[PoseHeade
     header = PoseHeader(version=0.2, dimensions=dimensions, components=components)
 
     total_points = header.total_points()
-    data = np.random.randn(num_frames, 1, total_points, header.num_dims())
-    confidence = np.random.randn(num_frames, 1, total_points)
+    data = np.random.randn(num_frames, num_people, total_points, header.num_dims())
+    confidence = np.random.randn(num_frames, num_people, total_points)
     masked_data = ma.masked_array(data)
 
     body = NumPyPoseBody(fps=fps, data=masked_data, confidence=confidence)
 
     return Pose(header, body)
+
+
+def fake_holistic_pose(num_frames: int, num_people: int = 1, fps: float=25.0) -> Pose:
+    """
+    Generates simulated holistic pose data mimicking the behavior of a mediapipe pose
+    estimation result over a sequence of frames.
+    """
+
+    holistic_components = get_standard_components_for_known_format("holistic")
+
+    return fake_pose(num_frames=num_frames, num_people=num_people, fps=fps, components=holistic_components)
+
+
+def fake_openpose_pose(num_frames: int, num_people: int = 1, fps: float = 25.0) -> Pose:
+    """
+    Generates simulated Openpose 137 pose data mimicking the behavior of an Openpose pose
+    estimation result over a sequence of frames.
+    """
+
+    openpose_components = get_standard_components_for_known_format("openpose")
+
+    return fake_pose(num_frames=num_frames, num_people=num_people, fps=fps, components=openpose_components)
+
+
+def fake_openpose_135_pose(num_frames: int, num_people: int = 1, fps: float = 25.0) -> Pose:
+    """
+    Generates simulated Openpose 135 pose data mimicking the behavior of an Openpose pose
+    estimation result over a sequence of frames.
+    """
+
+    openpose_135_components = get_standard_components_for_known_format("openpose_135")
+
+    return fake_pose(num_frames=num_frames, num_people=num_people, fps=fps, components=openpose_135_components)
 
 
 def get_hand_wrist_index(pose: Pose, hand: str)-> int:

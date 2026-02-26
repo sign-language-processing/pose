@@ -250,6 +250,16 @@ directory = "/path/to/holistic/directory"
 pose = load_MediaPipe_directory(directory, fps=24, width=1000, height=1000)
 ```
 
+#### 7. Generating Fake Pose Data for Testing Purposes:
+
+```python
+from pose_format.utils.generic import fake_holistic_pose
+
+pose = fake_holistic_pose(num_frames=10, num_people=1, fps=25.0)
+```
+
+These functions also exist for OpenPose data: `fake_openpose_pose` and `fake_openpose_135_pose`.
+
 ### Running Tests:
 
 To ensure the integrity of the toolkit, you can run tests using Bazel:

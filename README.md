@@ -245,7 +245,7 @@ pose = load_openpose_directory(directory, fps=24, width=1000, height=1000)
 from pose_format.utils.openpose_135 import load_openpose_135_directory
 
 directory = "/path/to/openpose_135/directory"
-pose = load_openpose_directory(directory, fps=24, width=1000, height=1000)
+pose = load_openpose_135_directory(directory, fps=24, width=1000, height=1000)
 ```
 
 #### 7. Generating Fake Pose Data for Testing Purposes:

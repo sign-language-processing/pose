@@ -369,7 +369,8 @@ def formatted_holistic_pose(width: int, height: int, additional_face_points: int
 
 def load_mediapipe_directory(directory: str, fps: float, width: int, height: int, num_face_points: int = 128) -> Pose:
     """
-    Load pose data from a directory of MediaPipe
+    Load pose data from a directory of MediaPipe Holistic outputs. This function exists for loading a LEGACY format
+    produced by the University of Surrey for one single dataset: Mediapipe Holistic poses for the WMT-SLT 22 data.
 
     Parameters
     ----------

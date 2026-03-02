@@ -223,14 +223,14 @@ visualize_pose -i example.pose -o example.mp4 --normalize
 Normalizing the pose  before creating the mp4 output file (`--normalize`) is optional.
 
 #### 6. Integration with External Data Sources:
-If you have pose data in OpenPose or MediaPipe Holistic format, you can easily import it. 
 
-##### Loading OpenPose and MediaPipe Holistic Data
+If you have pose data in OpenPose (usually folders of JSON files, one per frame) format, you can easily import it. 
 
-* For OpenPose: 
+##### Loading OpenPose Data
 
 To load an OpenPose `directory`, use the `load_openpose_directory` utility:
 
+* For the 137-keypoint OpenPose model:
 
 ```python
 from pose_format.utils.openpose import load_openpose_directory
@@ -239,15 +239,13 @@ directory = "/path/to/openpose/directory"
 pose = load_openpose_directory(directory, fps=24, width=1000, height=1000)
 ```
 
-* For MediaPipe Holistic: 
-
-Similarly, to load a MediaPipe Holistic `directory`, use the `load_MediaPipe_directory` utility:
+* For the 135-keypoint OpenPose model:
 
 ```python
-from pose_format.utils.holistic import load_MediaPipe_directory
+from pose_format.utils.openpose_135 import load_openpose_135_directory
 
-directory = "/path/to/holistic/directory"
-pose = load_MediaPipe_directory(directory, fps=24, width=1000, height=1000)
+directory = "/path/to/openpose_135/directory"
+pose = load_openpose_directory(directory, fps=24, width=1000, height=1000)
 ```
 
 #### 7. Generating Fake Pose Data for Testing Purposes:

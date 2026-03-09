@@ -5,7 +5,6 @@ from typing import List
 import logging
 from tqdm import tqdm
 from tqdm.contrib.concurrent import process_map
-import psutil
 import os
 from functools import partial
 
@@ -84,8 +83,7 @@ def get_corresponding_pose_path(video_path: Path, keep_video_suffixes: bool = Fa
 
 
 def process_video(keep_video_suffixes: bool, pose_format: str, additional_config: dict, vid_path: Path) -> bool:
-    cpu_num = psutil.cpu_num() if hasattr(psutil, "cpu_num") else (
-        os.sched_getcpu()) if hasattr(os, 'sched_getcpu') else "N/A"
+    cpu_num = os.sched_getcpu() if hasattr(os, 'sched_getcpu') else "N/A"
     print(f'Estimating {vid_path} on CPU {cpu_num}')
 
     try:
@@ -179,7 +177,8 @@ def main():
     if args.num_workers == 1:
         print('Process sequentially ...')
     else:
-        print(f'Multiprocessing with {args.num_workers} workers on {len(os.sched_getaffinity(0))} available CPUs ...')
+        available_cpus = len(os.sched_getaffinity(0)) if hasattr(os, 'sched_getaffinity') else os.cpu_count()
+        print(f'Multiprocessing with {args.num_workers} workers on {available_cpus} available CPUs ...')
 
     func = partial(process_video, args.keep_video_suffixes, args.format, additional_config)
     for success in process_map(func, videos_with_missing_pose_files, max_workers=args.num_workers):

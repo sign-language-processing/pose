@@ -17,6 +17,10 @@ At the core of the file format is `Header` and a `Body`.
 
 More about the header and the body details and their binary specifics can be found in [docs/specs/v0.1.md](specs_v01.rst#specs_v01).
 
+### Tutorials
+
+For a step-by-step tutorial with practical examples for beginners, see [pose-format-tutorials](https://github.com/24-mohamedyehia/pose-format-tutorials).
+
 ### Python Usage Guide: 
 
 #### 1. Installation: 

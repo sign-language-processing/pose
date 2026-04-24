@@ -9,7 +9,8 @@ from pose_format.utils.normalization_3d import PoseNormalizer
 from pose_format.utils.openpose import OpenPose_Components
 from pose_format.utils.openpose import BODY_POINTS as OPENPOSE_BODY_POINTS
 from pose_format.utils.openpose_135 import OpenPose_Components as OpenPose135_Components
-from pose_format.utils.alphapose import get_alphapose_133_components, get_alphapose_136_components
+from pose_format.utils.alphapose import get_alphapose_components
+from pose_format.utils.alphapose_133 import get_alphapose_133_components
 
 # from pose_format.utils.holistic import holistic_components
 # The import above creates an error: ImportError: Please install mediapipe with: pip install mediapipe
@@ -43,7 +44,7 @@ def detect_known_pose_format(pose_or_header: Union[Pose,PoseHeader]) -> KnownPos
 
     alphapose_133_components = [c.name for c in get_alphapose_133_components()]
 
-    alphapose_136_components = [c.name for c in get_alphapose_136_components()]
+    alphapose_136_components = [c.name for c in get_alphapose_components()]
 
     for component_name in component_names:
         if component_name in mediapipe_components:
@@ -243,7 +244,7 @@ def get_standard_components_for_known_format(known_pose_format: KnownPoseFormat)
     if known_pose_format == "alphapose_133":
         return get_alphapose_133_components()
     if known_pose_format == "alphapose_136":
-        return get_alphapose_136_components()
+        return get_alphapose_components()
 
     raise NotImplementedError(f"Unsupported pose header schema {known_pose_format}")
 

@@ -85,8 +85,8 @@ def test_pose_shoulders(fake_poses: List[Pose]):
     for pose in fake_poses:
         shoulders = pose_shoulders(pose.header)
         assert len(shoulders) == 2
-        assert "RIGHT" in shoulders[0][1] or shoulders[0][1][0] == "R"
-        assert "LEFT" in shoulders[1][1] or shoulders[1][1][0] == "L"
+        assert "RIGHT" in shoulders[0][1] or shoulders[0][1][0] in ("R", "r")
+        assert "LEFT" in shoulders[1][1] or shoulders[1][1][0] in ("L", "l")
 
 
 @pytest.mark.parametrize("fake_poses", TEST_POSE_FORMATS, indirect=["fake_poses"])

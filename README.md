@@ -252,17 +252,7 @@ directory = "/path/to/openpose_135/directory"
 pose = load_openpose_135_directory(directory, fps=24, width=1000, height=1000)
 ```
 
-#### 7. Generating Fake Pose Data for Testing Purposes:
-
-```python
-from pose_format.utils.generic import fake_holistic_pose
-
-pose = fake_holistic_pose(num_frames=10, num_people=1, fps=25.0)
-```
-
-These functions also exist for OpenPose data: `fake_openpose_pose` and `fake_openpose_135_pose`.
-
-#### 8. Loading AlphaPose WholeBody JSON:
+##### Loading AlphaPose WholeBody JSON
 
 ```python
 from pose_format.utils.alphapose import load_alphapose_wholebody_from_json
@@ -277,6 +267,16 @@ from pose_format.utils.alphapose_133 import load_alphapose_wholebody_from_json a
 
 pose = load_alphapose_133("alphapose.json")
 ```
+
+#### 7. Generating Fake Pose Data for Testing Purposes:
+
+```python
+from pose_format.utils.generic import fake_holistic_pose
+
+pose = fake_holistic_pose(num_frames=10, num_people=1, fps=25.0)
+```
+
+These functions also exist for OpenPose data: `fake_openpose_pose` and `fake_openpose_135_pose`.
 
 ### Running Tests:
 

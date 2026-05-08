@@ -252,6 +252,22 @@ directory = "/path/to/openpose_135/directory"
 pose = load_openpose_135_directory(directory, fps=24, width=1000, height=1000)
 ```
 
+##### Loading AlphaPose WholeBody JSON
+
+```python
+from pose_format.utils.alphapose import load_alphapose_wholebody_from_json
+
+pose = load_alphapose_wholebody_from_json("alphapose.json")  # 136-keypoint (default)
+```
+
+For the 133-keypoint variant:
+
+```python
+from pose_format.utils.alphapose_133 import load_alphapose_wholebody_from_json as load_alphapose_133
+
+pose = load_alphapose_133("alphapose.json")
+```
+
 #### 7. Generating Fake Pose Data for Testing Purposes:
 
 ```python

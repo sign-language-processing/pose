@@ -97,7 +97,7 @@ def pose_hide_legs(pose: Pose, remove: bool = False) -> Pose:
         points_to_remove_dict = {"pose_keypoints_2d": point_names_to_remove}
 
     elif known_pose_format == "alphapose_133" or known_pose_format == "alphapose_136":
-        variant = known_pose_format.removeprefix("alphapose_")
+        variant = known_pose_format[len("alphapose_"):]
         point_names_to_remove = [
             "left_hip", "right_hip",
             "left_knee", "right_knee",
@@ -145,7 +145,7 @@ def pose_shoulders(pose_header: PoseHeader) -> Tuple[Tuple[str, str], Tuple[str,
         return ("pose_keypoints_2d", "RShoulder"), ("pose_keypoints_2d", "LShoulder")
 
     if known_pose_format == "alphapose_133" or known_pose_format == "alphapose_136":
-        variant = known_pose_format.removeprefix("alphapose_")
+        variant = known_pose_format[len("alphapose_"):]
         return (f"BODY_{variant}", "right_shoulder"), (f"BODY_{variant}", "left_shoulder")
 
     raise NotImplementedError(
@@ -168,7 +168,7 @@ def hands_indexes(pose_header: PoseHeader)-> List[int]:
         ]
 
     if known_pose_format == "alphapose_133" or known_pose_format == "alphapose_136":
-        variant = known_pose_format.removeprefix("alphapose_")
+        variant = known_pose_format[len("alphapose_"):]
         return [
             pose_header.get_point_index(f"LEFT_HAND_{variant}", "hand_9"),
             pose_header.get_point_index(f"RIGHT_HAND_{variant}", "hand_9"),
@@ -196,7 +196,7 @@ def hands_components(pose_header: PoseHeader)-> Tuple[Tuple[str, str], Tuple[str
         return ("hand_left_keypoints_2d", "hand_right_keypoints_2d"), ("BASE", "P_CMC", "I_CMC"), ("BASE", "M_CMC")
     
     if known_pose_format == "alphapose_133" or known_pose_format == "alphapose_136":
-        variant = known_pose_format.removeprefix("alphapose_")
+        variant = known_pose_format[len("alphapose_"):]
         return (f"LEFT_HAND_{variant}", f"RIGHT_HAND_{variant}"), ("hand_0", "hand_17", "hand_5"), ("hand_0", "hand_9")
     raise NotImplementedError(
         f"Unsupported pose header schema '{known_pose_format}' for {hands_components.__name__}: {pose_header}"
@@ -313,7 +313,7 @@ def get_hand_wrist_index(pose: Pose, hand: str)-> int:
     if known_pose_format == "openpose":
         return pose.header.get_point_index(f"hand_{hand.lower()}_keypoints_2d", "BASE")
     if known_pose_format == "alphapose_133" or known_pose_format == "alphapose_136":
-        variant = known_pose_format.removeprefix("alphapose_")
+        variant = known_pose_format[len("alphapose_"):]
         return pose.header.get_point_index(f"{hand.upper()}_HAND_{variant}", "hand_0")
     raise NotImplementedError(
         f"Unsupported pose header schema {known_pose_format} for {get_hand_wrist_index.__name__}: {pose.header}"
@@ -327,7 +327,7 @@ def get_body_hand_wrist_index(pose: Pose, hand: str)-> int:
     if known_pose_format == "openpose":
         return pose.header.get_point_index("pose_keypoints_2d", f"{hand.upper()[0]}Wrist")
     if known_pose_format == "alphapose_133" or known_pose_format == "alphapose_136":
-        variant = known_pose_format.removeprefix("alphapose_")
+        variant = known_pose_format[len("alphapose_"):]
         return pose.header.get_point_index(f"BODY_{variant}", f"{hand.lower()}_wrist")
     raise NotImplementedError(
         f"Unsupported pose header schema {known_pose_format} for {get_body_hand_wrist_index.__name__}: {pose.header}"

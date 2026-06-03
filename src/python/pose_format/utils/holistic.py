@@ -427,16 +427,19 @@ def mirror_horizontal(pose: Pose) -> Pose:
             f"Unsupported pose header schema {known_pose_format} for {mirror_horizontal.__name__}: {pose.header}"
         )
 
-    components_by_name = {c.name: c for c in pose.header.components}
-
+    # Per component: its global start index and a name -> local index lookup.
     component_start = {}
+    point_index = {}
     idx = 0
     for c in pose.header.components:
         component_start[c.name] = idx
+        point_index[c.name] = {p: i for i, p in enumerate(c.points)}
         idx += len(c.points)
 
-    body_name_flip = dict(zip(BODY_POINTS, FLIPPED_BODY_POINTS))
-    face_name_flip = {str(i): str(flipped) for i, flipped in enumerate(FLIPPED_FACE_POINTS)}
+    point_name_flip = {
+        "POSE_LANDMARKS": dict(zip(BODY_POINTS, FLIPPED_BODY_POINTS)),
+        "FACE_LANDMARKS": {str(i): str(flipped) for i, flipped in enumerate(FLIPPED_FACE_POINTS)},
+    }
     mirror_component = {
         "LEFT_HAND_LANDMARKS": "RIGHT_HAND_LANDMARKS",
         "RIGHT_HAND_LANDMARKS": "LEFT_HAND_LANDMARKS",
@@ -447,22 +450,18 @@ def mirror_horizontal(pose: Pose) -> Pose:
     perm = []
     flip_x = []
     for c in pose.header.components:
-        is_world = "WORLD" in c.name
-        source = c if is_world else components_by_name.get(mirror_component.get(c.name, c.name), c)
-        for point in c.points:
-            if is_world:  # world landmarks are not mirrored, see docstring
-                flipped_point = point
-            elif c.name == "POSE_LANDMARKS":
-                flipped_point = body_name_flip.get(point, point)
-            elif c.name == "FACE_LANDMARKS":
-                flipped_point = face_name_flip.get(point, point)
-            else:
-                flipped_point = point
+        is_world = "WORLD" in c.name  # world landmarks are not mirrored, see docstring
+        source = c.name if is_world else mirror_component.get(c.name, c.name)
+        if source not in point_index:  # mirrored partner absent (e.g. a lone hand): stay in place
+            source = c.name
+        name_flip = {} if is_world else point_name_flip.get(c.name, {})
 
-            if flipped_point in source.points:
-                perm.append(component_start[source.name] + source.points.index(flipped_point))
+        for point in c.points:
+            flipped_point = name_flip.get(point, point)
+            if flipped_point in point_index[source]:
+                perm.append(component_start[source] + point_index[source][flipped_point])
             else:  # flipped counterpart not present (e.g. a reduced subset): keep the point in place
-                perm.append(component_start[c.name] + c.points.index(point))
+                perm.append(component_start[c.name] + point_index[c.name][point])
             flip_x.append(not is_world)
 
     perm = np.array(perm)
@@ -472,10 +471,7 @@ def mirror_horizontal(pose: Pose) -> Pose:
     data[:, :, flip_x, 0] = width - data[:, :, flip_x, 0]
     confidence = pose.body.confidence[:, :, perm]
 
-    mirrored = pose.copy()
-    mirrored.body.data = data
-    mirrored.body.confidence = confidence
-    return mirrored
+    return Pose(pose.header, type(pose.body)(fps=pose.body.fps, data=data, confidence=confidence))
 
 
 def load_holistic(frames: list,

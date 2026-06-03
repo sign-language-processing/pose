@@ -26,6 +26,10 @@ def _run(frame: np.ndarray, config: dict = HOLISTIC_CONFIG):
                          additional_holistic_config=dict(config), pose_workers=1)
 
 
+def _component(header, name):
+    return next(c for c in header.components if c.name == name)
+
+
 # POSE_WORLD_LANDMARKS is left unchanged by mirror_horizontal (mediapipe's world landmarks do not
 # mirror with the image), and is too noisy per-joint to compare point-by-point, so it is excluded.
 FLIPPING_COMPONENTS = ["POSE_LANDMARKS", "FACE_LANDMARKS", "LEFT_HAND_LANDMARKS", "RIGHT_HAND_LANDMARKS"]
@@ -55,7 +59,7 @@ class TestMirrorHorizontal(TestCase):
         reference_conf = reference_pose.body.confidence[0, 0]
 
         for name in FLIPPING_COMPONENTS:
-            component = next(c for c in header.components if c.name == name)
+            component = _component(header, name)
             checked = 0
             for point in component.points:
                 index = header.get_point_index(name, point)
@@ -92,10 +96,12 @@ class TestMirrorHorizontal(TestCase):
         np.testing.assert_array_equal(np.sort(original_conf), np.sort(mirrored_conf))
 
     def test_world_landmarks_unchanged(self):
-        index = self.mirrored.header.get_point_index("POSE_WORLD_LANDMARKS", "NOSE")
+        header = self.mirrored.header
+        start = header.get_point_index("POSE_WORLD_LANDMARKS", "NOSE")
+        end = start + len(_component(header, "POSE_WORLD_LANDMARKS").points)
         np.testing.assert_array_equal(
-            self.mirrored.body.data.filled(0)[:, :, index:],
-            self.original.body.data.filled(0)[:, :, index:],
+            self.mirrored.body.data.filled(0)[:, :, start:end],
+            self.original.body.data.filled(0)[:, :, start:end],
         )
 
     def test_matches_holistic_on_flipped_image(self):
@@ -107,8 +113,7 @@ class TestMirrorHorizontal(TestCase):
         reference = _run(np.ascontiguousarray(self.frame[:, ::-1, :]), config)
         mirrored = mirror_horizontal(original)
 
-        face = next(c for c in mirrored.header.components if c.name == "FACE_LANDMARKS")
-        self.assertEqual(len(face.points), 468)
+        self.assertEqual(len(_component(mirrored.header, "FACE_LANDMARKS").points), 468)
         self._assert_matches_flipped(mirrored, reference)
 
 

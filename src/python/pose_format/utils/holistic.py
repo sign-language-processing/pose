@@ -11,6 +11,7 @@ from tqdm import tqdm
 from ..numpy.pose_body import NumPyPoseBody
 from ..pose import Pose
 from ..pose_header import PoseHeader, PoseHeaderComponent, PoseHeaderDimensions
+from .generic import detect_known_pose_format
 from .openpose import hand_colors, load_frames_directory_dict
 
 try:
@@ -63,40 +64,52 @@ list[str]
 FACE_LIMBS = [(int(a), int(b)) for a, b in mp_holistic.FACEMESH_TESSELATION]
 FACE_IRISES = [(int(a), int(b)) for a, b in FACEMESH_IRISES]
 
-FLIPPED_BODY_POINTS = [
-    'NOSE',
-    'RIGHT_EYE_INNER',
-    'RIGHT_EYE',
-    'RIGHT_EYE_OUTER',
-    'LEFT_EYE_INNER',
-    'LEFT_EYE',
-    'LEFT_EYE_OUTER',
-    'RIGHT_EAR',
-    'LEFT_EAR',
-    'MOUTH_RIGHT',
-    'MOUTH_LEFT',
-    'RIGHT_SHOULDER',
-    'LEFT_SHOULDER',
-    'RIGHT_ELBOW',
-    'LEFT_ELBOW',
-    'RIGHT_WRIST',
-    'LEFT_WRIST',
-    'RIGHT_PINKY',
-    'LEFT_PINKY',
-    'RIGHT_INDEX',
-    'LEFT_INDEX',
-    'RIGHT_THUMB',
-    'LEFT_THUMB',
-    'RIGHT_HIP',
-    'LEFT_HIP',
-    'RIGHT_KNEE',
-    'LEFT_KNEE',
-    'RIGHT_ANKLE',
-    'LEFT_ANKLE',
-    'RIGHT_HEEL',
-    'LEFT_HEEL',
-    'RIGHT_FOOT_INDEX',
-    'LEFT_FOOT_INDEX',
+def _swap_left_right(name: str) -> str:
+    return name.replace("LEFT", "\0").replace("RIGHT", "LEFT").replace("\0", "RIGHT")
+
+
+FLIPPED_BODY_POINTS = [_swap_left_right(p) for p in BODY_POINTS]
+
+# Left-right mirror permutation for the 478 face-mesh landmarks: FLIPPED_FACE_POINTS[i] is the
+# index whose canonical position is the horizontal reflection of point i. The first 468 entries are
+# derived from MediaPipe's symmetric canonical face model (it is not shipped in the pip package):
+#   https://raw.githubusercontent.com/google-ai-edge/mediapipe/master/mediapipe/modules/face_geometry/data/canonical_face_model.obj
+# Parse its 468 "v x y z" vertices, negate x, and for each take the nearest original vertex; the
+# reflection lands exactly on another vertex (max distance 0.0), so the mapping is exact and a clean
+# involution. The last 10 entries swap the refined iris landmarks (468-477), which the .obj omits,
+# derived from running holistic on an image and its horizontal flip. The first 468 form a
+# self-contained permutation for the unrefined (468-point) mesh.
+FLIPPED_FACE_POINTS = [
+    0, 1, 2, 248, 4, 5, 6, 249, 8, 9, 10, 11, 12, 13, 14, 15,
+    16, 17, 18, 19, 250, 251, 252, 253, 254, 255, 256, 257, 258, 259, 260, 261,
+    262, 263, 264, 265, 266, 267, 268, 269, 270, 271, 272, 273, 274, 275, 276, 277,
+    278, 279, 280, 281, 282, 283, 284, 285, 286, 287, 288, 289, 290, 291, 292, 293,
+    294, 295, 296, 297, 298, 299, 300, 301, 302, 303, 304, 305, 306, 307, 308, 309,
+    310, 311, 312, 313, 314, 315, 316, 317, 318, 319, 320, 321, 322, 323, 94, 324,
+    325, 326, 327, 328, 329, 330, 331, 332, 333, 334, 335, 336, 337, 338, 339, 340,
+    341, 342, 343, 344, 345, 346, 347, 348, 349, 350, 351, 352, 353, 354, 355, 356,
+    357, 358, 359, 360, 361, 362, 363, 364, 365, 366, 367, 368, 369, 370, 371, 372,
+    373, 374, 375, 376, 377, 378, 379, 151, 152, 380, 381, 382, 383, 384, 385, 386,
+    387, 388, 389, 390, 164, 391, 392, 393, 168, 394, 395, 396, 397, 398, 399, 175,
+    400, 401, 402, 403, 404, 405, 406, 407, 408, 409, 410, 411, 412, 413, 414, 415,
+    416, 417, 418, 195, 419, 197, 420, 199, 200, 421, 422, 423, 424, 425, 426, 427,
+    428, 429, 430, 431, 432, 433, 434, 435, 436, 437, 438, 439, 440, 441, 442, 443,
+    444, 445, 446, 447, 448, 449, 450, 451, 452, 453, 454, 455, 456, 457, 458, 459,
+    460, 461, 462, 463, 464, 465, 466, 467, 3, 7, 20, 21, 22, 23, 24, 25,
+    26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41,
+    42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57,
+    58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73,
+    74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89,
+    90, 91, 92, 93, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106,
+    107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122,
+    123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138,
+    139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 153, 154, 155, 156,
+    157, 158, 159, 160, 161, 162, 163, 165, 166, 167, 169, 170, 171, 172, 173, 174,
+    176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191,
+    192, 193, 194, 196, 198, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211,
+    212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 224, 225, 226, 227,
+    228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238, 239, 240, 241, 242, 243,
+    244, 245, 246, 247, 473, 476, 475, 474, 477, 468, 471, 470, 469, 472,
 ]
 
 
@@ -382,6 +395,87 @@ def holistic_components(pf="XYZC", additional_face_points=0):
                             colors=[(255, 0, 0)],
                             point_format=pf),
     ]
+
+
+def mirror_horizontal(pose: Pose) -> Pose:
+    """
+    Horizontally mirror a holistic pose, as if the source image had been flipped left-to-right.
+
+    Mirroring an image swaps the subject's left and right sides, so a correct mirror must do more
+    than negate the x coordinate: image-space points are reflected as ``width - x``, body landmarks
+    are relabelled via ``FLIPPED_BODY_POINTS``, the two hand components are swapped, and the face
+    mesh is reindexed via ``FLIPPED_FACE_POINTS``.
+
+    ``POSE_WORLD_LANDMARKS`` is left unchanged. MediaPipe reconstructs world landmarks in a canonical
+    3D frame and cannot resolve the left/right ambiguity of a single view, so flipping the image does
+    not mirror them - re-running holistic on a flipped image returns essentially the same world
+    landmarks, and we match that behaviour.
+
+    Parameters
+    ----------
+    pose : Pose
+        A holistic pose (must contain a ``POSE_LANDMARKS`` component).
+
+    Returns
+    -------
+    Pose
+        A new mirrored pose. The input is not modified.
+    """
+    known_pose_format = detect_known_pose_format(pose)
+    if known_pose_format != "holistic":
+        raise NotImplementedError(
+            f"Unsupported pose header schema {known_pose_format} for {mirror_horizontal.__name__}: {pose.header}"
+        )
+
+    components_by_name = {c.name: c for c in pose.header.components}
+
+    component_start = {}
+    idx = 0
+    for c in pose.header.components:
+        component_start[c.name] = idx
+        idx += len(c.points)
+
+    body_name_flip = dict(zip(BODY_POINTS, FLIPPED_BODY_POINTS))
+    face_name_flip = {str(i): str(flipped) for i, flipped in enumerate(FLIPPED_FACE_POINTS)}
+    mirror_component = {
+        "LEFT_HAND_LANDMARKS": "RIGHT_HAND_LANDMARKS",
+        "RIGHT_HAND_LANDMARKS": "LEFT_HAND_LANDMARKS",
+    }
+
+    width = pose.header.dimensions.width
+
+    perm = []
+    flip_x = []
+    for c in pose.header.components:
+        is_world = "WORLD" in c.name
+        source = c if is_world else components_by_name.get(mirror_component.get(c.name, c.name), c)
+        for point in c.points:
+            if is_world:  # world landmarks are not mirrored, see docstring
+                flipped_point = point
+            elif c.name == "POSE_LANDMARKS":
+                flipped_point = body_name_flip.get(point, point)
+            elif c.name == "FACE_LANDMARKS":
+                flipped_point = face_name_flip.get(point, point)
+            else:
+                flipped_point = point
+
+            if flipped_point in source.points:
+                perm.append(component_start[source.name] + source.points.index(flipped_point))
+            else:  # flipped counterpart not present (e.g. a reduced subset): keep the point in place
+                perm.append(component_start[c.name] + c.points.index(point))
+            flip_x.append(not is_world)
+
+    perm = np.array(perm)
+    flip_x = np.array(flip_x)
+
+    data = pose.body.data[:, :, perm, :]
+    data[:, :, flip_x, 0] = width - data[:, :, flip_x, 0]
+    confidence = pose.body.confidence[:, :, perm]
+
+    mirrored = pose.copy()
+    mirrored.body.data = data
+    mirrored.body.confidence = confidence
+    return mirrored
 
 
 def load_holistic(frames: list,

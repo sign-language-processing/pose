@@ -9,6 +9,7 @@ pose\_format.utils package
    :caption: pose_format.utils submodules:
 
    pose_format.utils.fast_math 
+   pose_format.utils.hand
    pose_format.utils.normalization_3d 
    pose_format.utils.openpose 
    pose_format.utils.openpose_135 
@@ -18,4 +19,4 @@ pose\_format.utils package
    pose_format.utils.reader_test
    pose_format.utils.siren
    pose_format.utils.pose_converter
-   pose_format.utils.holistic 
+   pose_format.utils.holistic

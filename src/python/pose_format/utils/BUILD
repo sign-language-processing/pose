@@ -11,6 +11,17 @@ py_library(
 )
 
 py_library(
+    name = "hand",
+    srcs = ["hand.py"],
+    srcs_version = "PY3",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//third_party/py/numpy",
+        "//:pose",
+    ],
+)
+
+py_library(
     name = "openpose",
     srcs = ["openpose.py"],
     srcs_version = "PY3",

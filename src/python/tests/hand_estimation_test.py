@@ -1,11 +1,24 @@
+from pathlib import Path
+
 import numpy as np
 import numpy.ma as ma
+import pytest
 
 from pose_format.numpy import NumPyPoseBody
 from pose_format.pose import Pose
 from pose_format.pose_header import PoseHeader, PoseHeaderComponent, PoseHeaderDimensions
+from pose_format.utils.generic import fake_openpose_pose
 from pose_format.utils.hand import estimate_active_hand
 
+DATA_DIR = Path(__file__).parent / "data" / "hand_estimation"
+
+REAL_POSE_CASES = [
+    ("84322c38ff23406f222641da30d0a49b.pose", "LEFT"),
+    ("7731febd6afbbe90f806a4434c282016.pose", "RIGHT"),
+    ("6fb01565da31c5500d1ef2cd2906b06b.pose", "RIGHT"),
+    ("7bd6dd48722def3cf84258b96371cb1e.pose", "LEFT"),
+    ("0ff215ef4f1f111e217e2cefee0adc77.pose", "RIGHT"),
+]
 
 BODY_POINTS = [
     "LEFT_SHOULDER",
@@ -102,3 +115,25 @@ def test_estimate_active_hand_uses_motion_for_short_clips_with_weak_hand_trackin
         _set_hand_frame(pose, frame, "RIGHT", 60, 35, conf=0.0)
 
     assert estimate_active_hand(pose) == "LEFT"
+
+
+def test_estimate_active_hand_rejects_non_holistic_poses():
+    with pytest.raises(NotImplementedError, match="Unsupported pose header schema openpose"):
+        estimate_active_hand(fake_openpose_pose(num_frames=2))
+
+
+@pytest.mark.parametrize("filename, expected_hand", REAL_POSE_CASES)
+def test_estimate_active_hand_on_real_holistic_fixtures(filename, expected_hand):
+    pose = Pose.read((DATA_DIR / filename).read_bytes())
+
+    assert estimate_active_hand(pose) == expected_hand
+
+
+@pytest.mark.parametrize("filename, expected_hand", REAL_POSE_CASES)
+def test_estimate_active_hand_flips_after_horizontal_mirror(filename, expected_hand):
+    from pose_format.utils.holistic import mirror_horizontal
+
+    opposite_hand = "LEFT" if expected_hand == "RIGHT" else "RIGHT"
+    pose = Pose.read((DATA_DIR / filename).read_bytes())
+
+    assert estimate_active_hand(mirror_horizontal(pose)) == opposite_hand

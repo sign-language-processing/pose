@@ -7,6 +7,7 @@ import numpy as np
 import numpy.ma as ma
 
 from pose_format.pose import Pose
+from pose_format.utils.generic import detect_known_pose_format
 
 HandSide = Literal["LEFT", "RIGHT"]
 __all__ = ["estimate_active_hand"]
@@ -48,9 +49,15 @@ def estimate_active_hand(pose: Pose) -> HandSide:
     ChicagoFSWild datasets, where it achieved 100% accuracy, including mirrored-video validation. That validation
     result is a dataset-specific check of this heuristic, not a guarantee for every pose distribution.
 
-    The pose is expected to contain MediaPipe holistic components named ``POSE_LANDMARKS``,
+    The pose must use the ``holistic`` pose format, with components named ``POSE_LANDMARKS``,
     ``LEFT_HAND_LANDMARKS``, and ``RIGHT_HAND_LANDMARKS``. Only the first tracked person is considered.
     """
+    known_pose_format = detect_known_pose_format(pose)
+    if known_pose_format != "holistic":
+        raise NotImplementedError(
+            f"Unsupported pose header schema {known_pose_format} for {estimate_active_hand.__name__}: {pose.header}"
+        )
+
     if _is_short_clip(pose):
         return _estimate_short_clip_hand(pose)
     return _estimate_long_clip_hand(pose)

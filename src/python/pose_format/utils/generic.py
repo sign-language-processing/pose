@@ -194,8 +194,8 @@ def hands_indexes(pose_header: PoseHeader)-> List[int]:
         ]
     if known_pose_format == "coco_wholebody_133":
         return [
-            pose_header.get_point_index("LEFT_HAND", "left_hand_9"),
-            pose_header.get_point_index("RIGHT_HAND", "right_hand_9"),
+            pose_header.get_point_index("LEFT_HAND", "hand_9"),
+            pose_header.get_point_index("RIGHT_HAND", "hand_9"),
         ]
     raise NotImplementedError(
         f"Unsupported pose header schema {known_pose_format} for {hands_indexes.__name__}: {pose_header}"
@@ -223,9 +223,7 @@ def hands_components(pose_header: PoseHeader)-> Tuple[Tuple[str, str], Tuple[str
         variant = known_pose_format[len("alphapose_"):]
         return (f"LEFT_HAND_{variant}", f"RIGHT_HAND_{variant}"), ("hand_0", "hand_17", "hand_5"), ("hand_0", "hand_9")
     if known_pose_format == "coco_wholebody_133":
-        # Note: LEFT_HAND uses "left_hand_N" naming, RIGHT_HAND uses "right_hand_N".
-        # normalize_hands_3d only supports left hand normalization with these plane/line names.
-        return ("LEFT_HAND", "RIGHT_HAND"), ("left_hand_0", "left_hand_17", "left_hand_5"), ("left_hand_0", "left_hand_9")
+        return ("LEFT_HAND", "RIGHT_HAND"), ("hand_0", "hand_17", "hand_5"), ("hand_0", "hand_9")
     raise NotImplementedError(
         f"Unsupported pose header schema '{known_pose_format}' for {hands_components.__name__}: {pose_header}"
     )
@@ -346,7 +344,7 @@ def get_hand_wrist_index(pose: Pose, hand: str)-> int:
         variant = known_pose_format[len("alphapose_"):]
         return pose.header.get_point_index(f"{hand.upper()}_HAND_{variant}", "hand_0")
     if known_pose_format == "coco_wholebody_133":
-        return pose.header.get_point_index(f"{hand.upper()}_HAND", f"{hand.lower()}_hand_0")
+        return pose.header.get_point_index(f"{hand.upper()}_HAND", "hand_0")
     raise NotImplementedError(
         f"Unsupported pose header schema {known_pose_format} for {get_hand_wrist_index.__name__}: {pose.header}"
     )

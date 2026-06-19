@@ -11,11 +11,12 @@ from pose_format.utils.openpose import BODY_POINTS as OPENPOSE_BODY_POINTS
 from pose_format.utils.openpose_135 import OpenPose_Components as OpenPose135_Components
 from pose_format.utils.alphapose import get_alphapose_components
 from pose_format.utils.alphapose_133 import get_alphapose_133_components
+from pose_format.utils.cocowholebody133_header import cocowholebody_components
 
 # from pose_format.utils.holistic import holistic_components
 # The import above creates an error: ImportError: Please install mediapipe with: pip install mediapipe
 
-KnownPoseFormat = Literal["holistic", "openpose", "openpose_135", "alphapose_133", "alphapose_136"]
+KnownPoseFormat = Literal["holistic", "openpose", "openpose_135", "alphapose_133", "alphapose_136", "coco_wholebody_133"]
 
 def get_component_names(
     pose_or_header_or_components: Union[Pose,PoseHeader]) -> List[str]:
@@ -57,6 +58,11 @@ def detect_known_pose_format(pose_or_header: Union[Pose,PoseHeader]) -> KnownPos
             return "alphapose_133"
         if component_name in alphapose_136_components:
             return "alphapose_136"
+
+    # COCO wholebody 133 uses "BODY", "FACE", "LEFT_HAND", "RIGHT_HAND" — distinct from alphapose ("BODY_133" etc.)
+    # When smplest-x or other formats using "BODY" are added, distinguish by body point names at that point.
+    if "BODY" in component_names and "LEFT_HAND" in component_names:
+        return "coco_wholebody_133"
 
     raise ValueError(
         f"Could not detect pose format, unknown pose header schema with component names: {component_names}"
@@ -107,6 +113,16 @@ def pose_hide_legs(pose: Pose, remove: bool = False) -> Pose:
         ]
         points_to_remove_dict = {f"BODY_{variant}": point_names_to_remove}
 
+    elif known_pose_format == "coco_wholebody_133":
+        point_names_to_remove = [
+            "left_hip", "right_hip",
+            "left_knee", "right_knee",
+            "left_ankle", "right_ankle",
+            "left_big_toe", "left_small_toe", "left_heel",
+            "right_big_toe", "right_small_toe", "right_heel",
+        ]
+        points_to_remove_dict = {"BODY": point_names_to_remove}
+
     else:
         raise NotImplementedError(
             f"Unsupported pose header schema {known_pose_format} for {pose_hide_legs.__name__}: {pose.header}"
@@ -148,6 +164,9 @@ def pose_shoulders(pose_header: PoseHeader) -> Tuple[Tuple[str, str], Tuple[str,
         variant = known_pose_format[len("alphapose_"):]
         return (f"BODY_{variant}", "right_shoulder"), (f"BODY_{variant}", "left_shoulder")
 
+    if known_pose_format == "coco_wholebody_133":
+        return ("BODY", "right_shoulder"), ("BODY", "left_shoulder")
+
     raise NotImplementedError(
         f"Unsupported pose header schema {known_pose_format} for {pose_shoulders.__name__}: {pose_header}"
     )
@@ -172,6 +191,11 @@ def hands_indexes(pose_header: PoseHeader)-> List[int]:
         return [
             pose_header.get_point_index(f"LEFT_HAND_{variant}", "hand_9"),
             pose_header.get_point_index(f"RIGHT_HAND_{variant}", "hand_9"),
+        ]
+    if known_pose_format == "coco_wholebody_133":
+        return [
+            pose_header.get_point_index("LEFT_HAND", "left_hand_9"),
+            pose_header.get_point_index("RIGHT_HAND", "right_hand_9"),
         ]
     raise NotImplementedError(
         f"Unsupported pose header schema {known_pose_format} for {hands_indexes.__name__}: {pose_header}"
@@ -198,6 +222,10 @@ def hands_components(pose_header: PoseHeader)-> Tuple[Tuple[str, str], Tuple[str
     if known_pose_format == "alphapose_133" or known_pose_format == "alphapose_136":
         variant = known_pose_format[len("alphapose_"):]
         return (f"LEFT_HAND_{variant}", f"RIGHT_HAND_{variant}"), ("hand_0", "hand_17", "hand_5"), ("hand_0", "hand_9")
+    if known_pose_format == "coco_wholebody_133":
+        # Note: LEFT_HAND uses "left_hand_N" naming, RIGHT_HAND uses "right_hand_N".
+        # normalize_hands_3d only supports left hand normalization with these plane/line names.
+        return ("LEFT_HAND", "RIGHT_HAND"), ("left_hand_0", "left_hand_17", "left_hand_5"), ("left_hand_0", "left_hand_9")
     raise NotImplementedError(
         f"Unsupported pose header schema '{known_pose_format}' for {hands_components.__name__}: {pose_header}"
     )
@@ -247,6 +275,8 @@ def get_standard_components_for_known_format(known_pose_format: KnownPoseFormat)
         return get_alphapose_133_components()
     if known_pose_format == "alphapose_136":
         return get_alphapose_components()
+    if known_pose_format == "coco_wholebody_133":
+        return cocowholebody_components()
 
     raise NotImplementedError(f"Unsupported pose header schema {known_pose_format}")
 
@@ -315,6 +345,8 @@ def get_hand_wrist_index(pose: Pose, hand: str)-> int:
     if known_pose_format == "alphapose_133" or known_pose_format == "alphapose_136":
         variant = known_pose_format[len("alphapose_"):]
         return pose.header.get_point_index(f"{hand.upper()}_HAND_{variant}", "hand_0")
+    if known_pose_format == "coco_wholebody_133":
+        return pose.header.get_point_index(f"{hand.upper()}_HAND", f"{hand.lower()}_hand_0")
     raise NotImplementedError(
         f"Unsupported pose header schema {known_pose_format} for {get_hand_wrist_index.__name__}: {pose.header}"
     )
@@ -329,6 +361,8 @@ def get_body_hand_wrist_index(pose: Pose, hand: str)-> int:
     if known_pose_format == "alphapose_133" or known_pose_format == "alphapose_136":
         variant = known_pose_format[len("alphapose_"):]
         return pose.header.get_point_index(f"BODY_{variant}", f"{hand.lower()}_wrist")
+    if known_pose_format == "coco_wholebody_133":
+        return pose.header.get_point_index("BODY", f"{hand.lower()}_wrist")
     raise NotImplementedError(
         f"Unsupported pose header schema {known_pose_format} for {get_body_hand_wrist_index.__name__}: {pose.header}"
     )

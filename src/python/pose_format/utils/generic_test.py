@@ -4,6 +4,7 @@ import numpy as np
 import pytest
 from pose_format.pose import Pose
 from pose_format.pose_header import PoseNormalizationInfo
+from pose_format.utils.cocowholebody133_header import cocowholebody_components
 from pose_format.utils.generic import (
     detect_known_pose_format,
     get_component_names,
@@ -243,6 +244,21 @@ def test_pose_remove_legs(fake_poses: List[Pose]):
             for point_name in points_that_should_be_removed:
                 assert point_name not in pose_with_legs_removed.header.components[component_index].points, f"{pose_with_legs_removed.header.components[component_index].name},{pose_with_legs_removed.header.components[component_index].points}"
                 assert point_name in pose.header.components[component_index].points
+        elif known_pose_format == "coco_wholebody_133":
+            c_names = [c.name for c in pose.header.components]
+            points_that_should_be_removed = [
+                "left_hip", "right_hip",
+                "left_knee", "right_knee",
+                "left_ankle", "right_ankle",
+                "left_big_toe", "left_small_toe", "left_heel",
+                "right_big_toe", "right_small_toe", "right_heel",
+            ]
+            component_index = c_names.index("BODY")
+            pose_with_legs_removed = pose_hide_legs(pose, remove=True)
+
+            for point_name in points_that_should_be_removed:
+                assert point_name not in pose_with_legs_removed.header.components[component_index].points, f"{pose_with_legs_removed.header.components[component_index].name},{pose_with_legs_removed.header.components[component_index].points}"
+                assert point_name in pose.header.components[component_index].points
         else:
             with pytest.raises(NotImplementedError, match="Unsupported pose header schema"):
                 pose = pose_hide_legs(pose, remove=True)
@@ -290,6 +306,8 @@ def test_fake_pose(known_pose_format: KnownPoseFormat):
                 assert point_formats[0] == "XYC"
             elif detected_format == 'alphapose_133' or detected_format == 'alphapose_136':
                 assert point_formats[0] == "XYC"
+            elif detected_format == 'coco_wholebody_133':
+                assert point_formats[0] == "XYC"
 
 
             assert detected_format == known_pose_format
@@ -297,3 +315,23 @@ def test_fake_pose(known_pose_format: KnownPoseFormat):
             assert pose.body.data.shape == (frame_count, 1, pose.header.total_points(), data_dimension_expected)
             assert pose.body.data.shape[0] == frame_count
             assert pose.header.num_dims() == pose.body.data.shape[-1]
+
+
+def test_cocowholebody133_total_keypoints():
+    components = cocowholebody_components()
+    total = sum(len(c.points) for c in components)
+    assert total == 133
+
+
+def test_cocowholebody133_component_names():
+    components = cocowholebody_components()
+    names = [c.name for c in components]
+    assert names == ["BODY", "FACE", "LEFT_HAND", "RIGHT_HAND"]
+
+
+def test_cocowholebody133_limb_indices_in_bounds():
+    for c in cocowholebody_components():
+        n = len(c.points)
+        for (a, b) in c.limbs:
+            assert 0 <= a < n, f"{c.name}: limb index {a} out of bounds (n={n})"
+            assert 0 <= b < n, f"{c.name}: limb index {b} out of bounds (n={n})"

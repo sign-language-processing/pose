@@ -133,7 +133,9 @@ class TestPoseTensorflowPoseBody(TestCase):
         actual_tensor_zero_filled = actual_tensor_nan_fixed.zero_filled()
         actual_tensor_as_numpy = actual_tensor_zero_filled.numpy()
 
-        self.assertTrue(np.allclose(actual_tensor_as_numpy, expected_tensor),
+        # actual is float32 (TF), expected is float64 (numpy); atol must tolerate
+        # float32 rounding on near-zero values, where allclose's default 1e-8 is too tight.
+        self.assertTrue(np.allclose(actual_tensor_as_numpy, expected_tensor, atol=1e-4),
                         "Normalize distribution did not return the expected result.")
 
     def test_pose_tf_posebody_frame_dropout_normal_eager_mode_num_frames_not_zero(self):

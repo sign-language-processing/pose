@@ -33,6 +33,13 @@ mediapipe = [
     "mediapipe<0.10.30",
 ]
 
+mmpose = [
+    "mmcv>=2.0.0",
+    "mmengine>=0.7.0",
+    "mmdet>=3.0.0",
+    "mmpose>=1.0.0",
+]
+
 [tool.setuptools]
 packages = [
     "pose_format",

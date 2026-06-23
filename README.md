@@ -228,11 +228,11 @@ Normalizing the pose  before creating the mp4 output file (`--normalize`) is opt
 
 #### 6. Integration with External Data Sources:
 
-If you have pose data in OpenPose (usually folders of JSON files, one per frame) format, you can easily import it. 
+Loaders are available for several pose estimators. **OpenPose** support is core and well-tested. Support for additional estimators is **experimental** — APIs may evolve and edge cases may not yet be fully handled.
 
-##### Loading OpenPose Data
+##### Core: OpenPose
 
-To load an OpenPose `directory`, use the `load_openpose_directory` utility:
+To load an OpenPose `directory` (one JSON file per frame):
 
 * For the 137-keypoint OpenPose model:
 
@@ -252,7 +252,7 @@ directory = "/path/to/openpose_135/directory"
 pose = load_openpose_135_directory(directory, fps=24, width=1000, height=1000)
 ```
 
-##### Loading AlphaPose WholeBody JSON
+##### Experimental: AlphaPose WholeBody
 
 ```python
 from pose_format.utils.alphapose import load_alphapose_wholebody_from_json
@@ -266,6 +266,16 @@ For the 133-keypoint variant:
 from pose_format.utils.alphapose_133 import load_alphapose_wholebody_from_json as load_alphapose_133
 
 pose = load_alphapose_133("alphapose.json")
+```
+
+##### Experimental: MMPose WholeBody
+
+Requires MMPose and its dependencies (`pip install mmpose mmcv mmengine mmdet`). Runs inference directly on a video file:
+
+```python
+from pose_format.utils.mmposewholebody import load_mmposewholebody
+
+pose = load_mmposewholebody("video.mp4", fps=25, width=1920, height=1080)
 ```
 
 #### 7. Generating Fake Pose Data for Testing Purposes:

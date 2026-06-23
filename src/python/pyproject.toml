@@ -34,10 +34,10 @@ mediapipe = [
 ]
 
 mmpose = [
-    "mmcv>=2.0.0",
-    "mmengine>=0.7.0",
-    "mmdet>=3.0.0",
-    "mmpose>=1.0.0",
+    "mmcv>=2.1.0",
+    "mmengine>=0.10.7",
+    "mmdet>=3.3.0",
+    "mmpose>=1.3.2",
 ]
 
 [tool.setuptools]

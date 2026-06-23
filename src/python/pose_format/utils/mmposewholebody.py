@@ -5,8 +5,9 @@ try:
     from mmpose.apis import MMPoseInferencer
 except ImportError:
     raise ImportError(
-        "Please install MMPose and its dependencies with:\n"
-        "  pip install mmpose mmcv mmengine mmdet"
+        "Please install MMPose and its dependencies. For GPU support, mmcv must be installed\n"
+        "from the OpenMMLab CUDA-specific index (see https://mmcv.readthedocs.io/en/latest/get_started/installation.html).\n"
+        "The remaining packages: pip install 'mmpose>=1.3.2' 'mmengine>=0.10.7' 'mmdet>=3.3.0'"
     )
 
 from ..numpy.pose_body import NumPyPoseBody

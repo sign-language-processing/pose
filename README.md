@@ -270,7 +270,13 @@ pose = load_alphapose_133("alphapose.json")
 
 ##### Experimental: MMPose WholeBody
 
-Requires MMPose and its dependencies (`pip install mmpose mmcv mmengine mmdet`). Runs inference directly on a video file:
+Requires MMPose and its dependencies. For GPU use, `mmcv` must be installed from the OpenMMLab CUDA-specific index — plain `pip install mmcv` installs a CPU-only build. See the [mmcv installation guide](https://mmcv.readthedocs.io/en/latest/get_started/installation.html) for the right command for your CUDA and PyTorch versions. The remaining packages can be installed with pip:
+
+```bash
+pip install mmpose>=1.3.2 mmengine>=0.10.7 mmdet>=3.3.0
+```
+
+Then run inference directly on a video file:
 
 ```python
 from pose_format.utils.mmposewholebody import load_mmposewholebody

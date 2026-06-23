@@ -228,9 +228,15 @@ Normalizing the pose  before creating the mp4 output file (`--normalize`) is opt
 
 #### 6. Integration with External Data Sources:
 
-Loaders are available for several pose estimators. **OpenPose** support is core and well-tested. Support for additional estimators is **experimental** — APIs may evolve and edge cases may not yet be fully handled.
+Loaders are available for several pose estimators:
 
-##### Core: OpenPose
+| Estimator | Support |
+|---|---|
+| OpenPose | core |
+| AlphaPose WholeBody | experimental |
+| MMPose WholeBody | experimental |
+
+##### OpenPose
 
 To load an OpenPose `directory` (one JSON file per frame):
 
@@ -252,7 +258,7 @@ directory = "/path/to/openpose_135/directory"
 pose = load_openpose_135_directory(directory, fps=24, width=1000, height=1000)
 ```
 
-##### Experimental: AlphaPose WholeBody
+##### AlphaPose WholeBody
 
 ```python
 from pose_format.utils.alphapose import load_alphapose_wholebody_from_json
@@ -268,7 +274,7 @@ from pose_format.utils.alphapose_133 import load_alphapose_wholebody_from_json a
 pose = load_alphapose_133("alphapose.json")
 ```
 
-##### Experimental: MMPose WholeBody
+##### MMPose WholeBody
 
 Requires MMPose and its dependencies. For GPU use, `mmcv` must be installed from the OpenMMLab CUDA-specific index — plain `pip install mmcv` installs a CPU-only build. See the [mmcv installation guide](https://mmcv.readthedocs.io/en/latest/get_started/installation.html) for the right command for your CUDA and PyTorch versions. The remaining packages can be installed with pip:
 

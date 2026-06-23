@@ -228,16 +228,11 @@ Normalizing the pose  before creating the mp4 output file (`--normalize`) is opt
 
 #### 6. Integration with External Data Sources:
 
-Loaders are available for several pose estimators:
+If you have pose data in OpenPose (usually folders of JSON files, one per frame) format, you can easily import it. 
 
-| Estimator | Support |
-|---|---|
-| OpenPose | core |
-| AlphaPose WholeBody | experimental |
+##### Loading OpenPose Data
 
-##### OpenPose
-
-To load an OpenPose `directory` (one JSON file per frame):
+To load an OpenPose `directory`, use the `load_openpose_directory` utility:
 
 * For the 137-keypoint OpenPose model:
 
@@ -257,7 +252,7 @@ directory = "/path/to/openpose_135/directory"
 pose = load_openpose_135_directory(directory, fps=24, width=1000, height=1000)
 ```
 
-##### AlphaPose WholeBody
+##### Loading AlphaPose WholeBody JSON
 
 ```python
 from pose_format.utils.alphapose import load_alphapose_wholebody_from_json

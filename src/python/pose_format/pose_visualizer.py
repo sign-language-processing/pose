@@ -1,8 +1,8 @@
 import itertools
 import logging
 import math
-from functools import lru_cache
 from io import BytesIO
+from operator import itemgetter
 from typing import Iterable, Tuple, Union
 
 import numpy as np
@@ -42,6 +42,13 @@ class PoseVisualizer:
         except ImportError:
             raise ImportError("Please install OpenCV with: pip install opencv-python")
 
+        # Connectivity and palettes are constant across frames; resolve them once
+        self._components = []
+        for c in self.pose.header.components:
+            palette = np.array([col[::-1] for col in c.colors], dtype=float)  # RGB -> BGR
+            limbs = np.array(c.limbs, dtype=int).reshape(-1, 2)
+            self._components.append((c, palette, limbs, len(c.points)))
+
     def _draw_frame(self, frame: ma.MaskedArray,
                     frame_confidence: np.ndarray, img,
                     transparency: bool = False) -> np.ndarray:
@@ -65,107 +72,65 @@ class PoseVisualizer:
             Image with drawn pose data.
         """
 
-        background_color = img[0][0]  # Estimation of background color for opacity. `mean` is slow
+        background_color = np.asarray(img[0][0][:3], dtype=float)  # background color for opacity; `mean` is slow
 
-        # Estimation of thickness and radius for drawing
         thickness = self.thickness
         if self.thickness is None:
             thickness = round(math.sqrt(img.shape[0] * img.shape[1]) / 150)
         radius = math.ceil(thickness / 2)
 
-        draw_operations = []
+        # MaskedArray element indexing is very slow, so resolve coordinates to plain ints once per frame
+        points = np.asarray(frame)
+        xy = np.round(points[..., :2]).astype(int)
+        has_z = points.shape[-1] > 2
+        z = points[..., 2] if has_z else None
 
-        for person, person_confidence in zip(frame, frame_confidence):
-            c = person_confidence.tolist()
+        is_bbox = self.pose.header.is_bbox
+        ops = []  # (z, kind, pt1, pt2, color); kind 0=circle, 1=line, 2=rectangle
+
+        for p, person_confidence in enumerate(frame_confidence):
+            conf = np.asarray(person_confidence)
             idx = 0
-            for component in self.pose.header.components:
-                colors = [np.array(c[::-1]) for c in component.colors]
+            for component, palette, limbs, n in self._components:
+                comp_conf = conf[idx:idx + n]
+                opacity = comp_conf[:, None]
+                colors = (palette[np.arange(n) % len(palette)] * opacity
+                          + (1 - opacity) * background_color).astype(int)
+                if transparency:
+                    colors = np.concatenate([colors, (comp_conf[:, None] * 255).astype(int)], axis=1)
 
-                @lru_cache(maxsize=None)
-                def _point_color(p_i: int):
-                    opacity = c[p_i + idx]
-                    np_color = colors[p_i % len(component.colors)] * opacity + (1 - opacity) * background_color[
-                                                                                               :3]  # [:3] ignores alpha value if present
-                    if transparency:
-                        np_color = np.append(np_color, opacity * 255)
-                    return tuple([int(c) for c in np_color])
+                comp_xy = xy[p, idx:idx + n].tolist()
+                comp_z = z[p, idx:idx + n].tolist() if has_z else [0] * n
+                vis = comp_conf > 0
+                idx += n
 
-                # Collect Points
-                for i, point_name in enumerate(component.points):
-                    if c[i + idx] > 0:
-                        center = person[i + idx]
-                        draw_operations.append({
-                            'type': 'circle',
-                            'center': center,
-                            'radius': radius,
-                            'color': _point_color(i),
-                            'thickness': -1,
-                            'lineType': 16,
-                            'z': center[2] if len(center) > 2 else 0
-                        })
+                if is_bbox:
+                    color = ((colors[0] + colors[1]) / 2).tolist()
+                    ops.append(((comp_z[0] + comp_z[1]) / 2, 2, tuple(comp_xy[0]), tuple(comp_xy[1]), color))
+                    continue
 
-                if self.pose.header.is_bbox:
-                    point1 = person[0 + idx]
-                    point2 = person[1 + idx]
-                    color = tuple(np.mean([_point_color(0), _point_color(1)], axis=0))
+                points_color = colors.tolist()
+                for i in np.flatnonzero(vis).tolist():
+                    ops.append((comp_z[i], 0, tuple(comp_xy[i]), None, points_color[i]))
 
-                    draw_operations.append({
-                        'type': 'rectangle',
-                        'pt1': point1,
-                        'pt2': point2,
-                        'color': color,
-                        'thickness': thickness,
-                        'z': (point1[2] + point2[2]) / 2 if len(point1) > 2 else 0
-                    })
-                else:
-                    # Collect Limbs
-                    for (p1, p2) in component.limbs:
-                        if c[p1 + idx] > 0 and c[p2 + idx] > 0:
-                            point1 = person[p1 + idx]
-                            point2 = person[p2 + idx]
+                if len(limbs):
+                    a, b = limbs[:, 0], limbs[:, 1]
+                    sel = np.flatnonzero(vis[a] & vis[b])
+                    a, b = a[sel].tolist(), b[sel].tolist()
+                    limb_colors = ((colors[limbs[sel, 0]] + colors[limbs[sel, 1]]) / 2).tolist()
+                    for k, (i, j) in enumerate(zip(a, b)):
+                        ops.append(((comp_z[i] + comp_z[j]) / 2, 1,
+                                    tuple(comp_xy[i]), tuple(comp_xy[j]), limb_colors[k]))
 
-                            color = tuple(np.mean([_point_color(p1), _point_color(p2)], axis=0))
-
-                            draw_operations.append({
-                                'type': 'line',
-                                'pt1': point1,
-                                'pt2': point2,
-                                'color': color,
-                                'thickness': thickness,
-                                'lineType': self.cv2.LINE_AA,
-                                'z': (point1[2] + point2[2]) / 2 if len(point1) > 2 else 0
-                            })
-                            print(draw_operations[-1]['z'])
-
-                idx += len(component.points)
-
-        draw_operations = sorted(draw_operations, key=lambda op: op['z'], reverse=True)
-
-        def point_to_xy(point: ma.MaskedArray):
-            return tuple([round(p) for p in point[:2]])
-
-        # Execute draw operations
-        for op in draw_operations:
-            if op['type'] == 'circle':
-                self.cv2.circle(img=img,
-                                center=point_to_xy(op['center']),
-                                radius=op['radius'],
-                                color=op['color'],
-                                thickness=op['thickness'],
-                                lineType=op['lineType'])
-            elif op['type'] == 'rectangle':
-                self.cv2.rectangle(img=img,
-                                   pt1=point_to_xy(op['pt1']),
-                                   pt2=point_to_xy(op['pt2']),
-                                   color=op['color'],
-                                   thickness=op['thickness'])
-            elif op['type'] == 'line':
-                self.cv2.line(img,
-                              pt1=point_to_xy(op['pt1']),
-                              pt2=point_to_xy(op['pt2']),
-                              color=op['color'],
-                              thickness=op['thickness'],
-                              lineType=op['lineType'])
+        # Painter's algorithm: draw far operations first (larger z = further away)
+        ops.sort(key=itemgetter(0), reverse=True)
+        for _, kind, pt1, pt2, color in ops:
+            if kind == 0:
+                self.cv2.circle(img, pt1, radius, color, thickness=-1, lineType=16)
+            elif kind == 1:
+                self.cv2.line(img, pt1, pt2, color, thickness=thickness, lineType=self.cv2.LINE_AA)
+            else:
+                self.cv2.rectangle(img, pt1, pt2, color, thickness=thickness)
 
         return img
 

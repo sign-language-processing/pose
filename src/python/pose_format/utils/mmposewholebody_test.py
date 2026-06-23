@@ -12,7 +12,7 @@ for _mod in ["mmpose", "mmpose.apis", "mmcv", "mmengine", "mmdet"]:
     sys.modules.setdefault(_mod, MagicMock())
 
 from pose_format.utils import mmposewholebody  # noqa: E402 — must come after the stubs above
-from pose_format.utils.mmposewholebody import load_mmposewholebody  # noqa: E402
+from pose_format.utils.mmposewholebody import estimate_mmpose_wholebody  # noqa: E402
 from pose_format.utils.cocowholebody133_header import cocowholebody_components  # noqa: E402
 
 NUM_KEYPOINTS = 133
@@ -70,7 +70,7 @@ def test_load_shape(monkeypatch, tmp_path):
     """Output Pose has the right frame/keypoint shape."""
     monkeypatch.setattr(mmposewholebody, "MMPoseInferencer",
                         _make_inferencer([_fake_result(), _fake_result(), _fake_result()]))
-    pose = load_mmposewholebody(str(tmp_path / "video.mp4"), fps=25.0, width=1280, height=720)
+    pose = estimate_mmpose_wholebody(str(tmp_path / "video.mp4"), fps=25.0, width=1280, height=720)
 
     assert pose.body.data.shape == (3, 1, NUM_KEYPOINTS, 2)
     assert pose.body.fps == 25.0
@@ -81,7 +81,7 @@ def test_load_shape(monkeypatch, tmp_path):
 def test_load_component_names(monkeypatch, tmp_path):
     monkeypatch.setattr(mmposewholebody, "MMPoseInferencer",
                         _make_inferencer([_fake_result()]))
-    pose = load_mmposewholebody(str(tmp_path / "video.mp4"))
+    pose = estimate_mmpose_wholebody(str(tmp_path / "video.mp4"))
 
     assert [c.name for c in pose.header.components] == ["BODY", "FACE", "LEFT_HAND", "RIGHT_HAND"]
 
@@ -90,7 +90,7 @@ def test_empty_frame_is_masked(monkeypatch, tmp_path):
     """Frames with no detection are present in the output but fully masked."""
     results = [_fake_result(), _empty_result(), _fake_result()]
     monkeypatch.setattr(mmposewholebody, "MMPoseInferencer", _make_inferencer(results))
-    pose = load_mmposewholebody(str(tmp_path / "video.mp4"))
+    pose = estimate_mmpose_wholebody(str(tmp_path / "video.mp4"))
 
     # All three frames must be present so frame count matches the video.
     assert pose.body.data.shape[0] == 3
@@ -105,7 +105,7 @@ def test_all_empty_frames(monkeypatch, tmp_path):
     """A video where no person is ever detected produces a fully masked Pose."""
     results = [_empty_result(), _empty_result()]
     monkeypatch.setattr(mmposewholebody, "MMPoseInferencer", _make_inferencer(results))
-    pose = load_mmposewholebody(str(tmp_path / "video.mp4"))
+    pose = estimate_mmpose_wholebody(str(tmp_path / "video.mp4"))
 
     assert pose.body.data.shape[0] == 2
     assert pose.body.data.mask.all()
@@ -114,5 +114,5 @@ def test_all_empty_frames(monkeypatch, tmp_path):
 def test_version_default(monkeypatch, tmp_path):
     monkeypatch.setattr(mmposewholebody, "MMPoseInferencer",
                         _make_inferencer([_fake_result()]))
-    pose = load_mmposewholebody(str(tmp_path / "video.mp4"))
+    pose = estimate_mmpose_wholebody(str(tmp_path / "video.mp4"))
     assert pose.header.version == 0.2

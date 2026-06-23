@@ -18,7 +18,7 @@ from .cocowholebody133_header import cocowholebody_components
 NUM_KEYPOINTS = 133
 
 
-def load_mmposewholebody(input_path: str,
+def estimate_mmpose_wholebody(input_path: str,
                          version: float = 0.2,
                          fps: float = 24,
                          width: int = 1000,

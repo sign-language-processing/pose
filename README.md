@@ -232,10 +232,8 @@ Loaders are available for several pose estimators:
 
 | Estimator | Support |
 |---|---|
-| Mediapipe Holistic | core |
 | OpenPose | core |
 | AlphaPose WholeBody | experimental |
-| MMPose WholeBody | experimental |
 
 ##### OpenPose
 
@@ -273,20 +271,6 @@ For the 133-keypoint variant:
 from pose_format.utils.alphapose_133 import load_alphapose_wholebody_from_json as load_alphapose_133
 
 pose = load_alphapose_133("alphapose.json")
-```
-
-##### MMPose WholeBody
-
-Requires MMPose and its dependencies, install the `pose` library with an additional target:
-
-```bash
-pip install pose-format[mmpose]
-```
-
-```python
-from pose_format.utils.mmposewholebody import load_mmposewholebody
-
-pose = load_mmposewholebody("video.mp4", fps=25, width=1920, height=1080)
 ```
 
 #### 7. Generating Fake Pose Data for Testing Purposes:

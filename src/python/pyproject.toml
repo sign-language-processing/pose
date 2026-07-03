@@ -11,7 +11,6 @@ authors = [
 ]
 dependencies = [
     "numpy",
-    "scipy",
     "tqdm",
     "simple-video-utils",
 ]
@@ -21,6 +20,7 @@ requires-python = ">= 3.8"
 dev = [
     "pylint",
     "pytest",
+    "scipy",
     "opencv-python",
     "vidgear",
     "mediapipe<0.10.30",

@@ -2,7 +2,6 @@ from typing import Tuple
 
 import numpy as np
 import numpy.ma as ma
-from scipy.spatial.transform import Rotation
 
 from pose_format.pose_header import PoseNormalizationInfo
 
@@ -136,8 +135,15 @@ class PoseNormalizer:
         ma.masked_array
             rotated pose
         """
-        r = Rotation.from_euler('z', -angle[..., np.newaxis], degrees=True)  # Clockwise rotation
-        rotated = np.einsum('...ij,...kj->...ik', pose, r.as_matrix()).reshape(pose.shape)
+        theta = np.radians(-angle)  # Clockwise rotation
+        cos, sin = np.cos(theta), np.sin(theta)
+        rotation_matrix = np.zeros((*theta.shape, 3, 3))
+        rotation_matrix[..., 0, 0] = cos
+        rotation_matrix[..., 0, 1] = -sin
+        rotation_matrix[..., 1, 0] = sin
+        rotation_matrix[..., 1, 1] = cos
+        rotation_matrix[..., 2, 2] = 1
+        rotated = np.einsum('...ij,...kj->...ik', pose, rotation_matrix).reshape(pose.shape)
         return ma.masked_array(rotated, pose.mask)
 
     def scale(self, pose: ma.masked_array) -> ma.masked_array:

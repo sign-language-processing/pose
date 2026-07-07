@@ -92,7 +92,8 @@ class BufferReader:
         return self.unpack(getattr(ConstStructs, s_format))
 
     def unpack_empty_tensor(self, s: struct.Struct, shape: Tuple):
-        arr = np.empty(shape, s.format)
+        # Zero-stride view: keeps the shape without allocating shape-sized memory
+        arr = np.broadcast_to(np.array(0, dtype=s.format), shape)
         self.advance(s, int(np.prod(shape)))
         return arr
 
@@ -220,6 +221,17 @@ class BytesIOReader(BufferReader):
         self.read_skipped += s.size * times
         super().skip(s, times)
 
+    def bytes_left(self):
+        # Unlike BufferReader, the buffer only holds what was already read from the file,
+        # so count the file's remaining bytes as well (v0.1 infers frame count from this)
+        current = self.reader.tell()
+        file_size = self.reader.seek(0, 2)
+        self.reader.seek(current)
+        return file_size - self.read_offset
+
+    def buffered_bytes_left(self):
+        return len(self.buffer) - self.read_offset + self.read_skipped
+
     def read_chunk(self, chunk_size: int):
         if self.read_offset > self.reader.tell():
             self.reader.seek(self.read_offset, 0) # 0 means absolute seek
@@ -230,8 +242,8 @@ class BytesIOReader(BufferReader):
             raise EOFError("End of file reached")
 
     def expect_to_read(self, n: int):
-        if self.bytes_left() < n:
-            self.read_chunk(n - self.bytes_left())
+        if self.buffered_bytes_left() < n:
+            self.read_chunk(n - self.buffered_bytes_left())
 
 
 if __name__ == "__main__":

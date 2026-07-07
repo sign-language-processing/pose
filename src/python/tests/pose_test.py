@@ -9,6 +9,7 @@ import numpy.ma as ma
 
 from pose_format.numpy.pose_body import NumPyPoseBody
 from pose_format.pose import Pose
+from pose_format.pose_body import EmptyPoseBody
 from pose_format.pose_header import (PoseHeader, PoseHeaderComponent,
                                      PoseHeaderDimensions)
 
@@ -322,6 +323,22 @@ class TestPose(TestCase):
             self.assertNotEqual(c_copy, c_orig)  # should be a new object...
             self.assertEqual(c_copy.name, c_orig.name)  # with the same name
             self.assertEqual(c_copy.points, c_orig.points)  # and the same points
+
+    def test_read_empty_pose_body_shape_matches_numpy_pose_body(self):
+        data_dir = Path(__file__).parent / "data"
+        for pose_file in sorted(data_dir.glob("*.pose")):
+            with self.subTest(pose_file=pose_file.name):
+                with open(pose_file, 'rb') as f:
+                    numpy_pose = Pose.read(f, pose_body=NumPyPoseBody)
+                if numpy_pose.header.version == 0:  # EmptyPoseBody does not support the legacy v0.0 format
+                    continue
+                with open(pose_file, 'rb') as f:
+                    empty_pose = Pose.read(f, pose_body=EmptyPoseBody)
+
+                self.assertEqual(empty_pose.body.data.shape, numpy_pose.body.data.shape)
+                self.assertEqual(empty_pose.body.data.dtype, numpy_pose.body.data.dtype)
+                self.assertEqual(empty_pose.body.confidence.shape, numpy_pose.body.confidence.shape)
+                self.assertEqual(empty_pose.body.fps, numpy_pose.body.fps)
 
     def test_pose_bbox(self):
         data_dir = Path(__file__).parent / "data"

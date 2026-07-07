@@ -75,6 +75,17 @@ class TestBufferReader(TestCase):
 
         arr -= 0.1
 
+    def test_unpack_empty_tensor(self):
+        """ Test that unpack_empty_tensor keeps shape and dtype, and advances the buffer"""
+        buffer = struct.pack("<ffff", 1., 2.5, 3.5, 4.5)
+        reader = BufferReader(buffer)
+
+        arr = reader.unpack_empty_tensor(ConstStructs.float, (2, 2))
+
+        self.assertEqual(arr.shape, (2, 2))
+        self.assertEqual(arr.dtype, np.float32)
+        self.assertEqual(reader.bytes_left(), 0, msg="Buffer should advance as if the data was read")
+
     def test_unpack_torch(self):
         """ Test that unpack_torch returns the correct value"""
         buffer = struct.pack("<ffff", 1., 2.5, 3.5, 4.5)

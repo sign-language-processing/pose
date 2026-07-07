@@ -224,9 +224,9 @@ class BytesIOReader(BufferReader):
     def bytes_left(self):
         # Unlike BufferReader, the buffer only holds what was already read from the file,
         # so count the file's remaining bytes as well (v0.1 infers frame count from this)
-        current = self.reader.tell()
-        file_size = self.reader.seek(0, 2)
-        self.reader.seek(current)
+        current = self.reader.tell()  # remember the position, since seeking moves it
+        file_size = self.reader.seek(0, 2)  # seek 0 bytes from the end (SEEK_END): reads nothing, returns the file size
+        self.reader.seek(current)  # restore the position so read_chunk continues from the right place
         return file_size - self.read_offset
 
     def buffered_bytes_left(self):

@@ -42,8 +42,7 @@ autodoc_mock_imports  = ['mediapipe'] # mocks import of mediapipe for readthedoc
 html_theme = 'sphinx_rtd_theme' 
 html_static_path = ['_static']
 html_theme_options = {
-    'logo_only': False,
-    'display_version': True}
+    'logo_only': False}
 
 html_context = {
     'display_github': True,

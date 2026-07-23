@@ -1,6 +1,7 @@
 import hashlib
 import math
 import struct
+import threading
 from typing import BinaryIO, List, Tuple, Optional, Union
 
 from .utils.reader import BufferReader, ConstStructs
@@ -230,36 +231,45 @@ class PoseHeaderDimensions:
 
 
 class PoseHeaderCache:
+    # All access goes through _lock: an unsynchronized reader races with set_cache and
+    # can observe a half-updated cache (e.g. the new header with the old hash/offsets).
+    # check_cache therefore also returns end_offset, so callers position their reader
+    # from the same consistent snapshot instead of re-reading the class attribute.
     start_offset: int = None
     end_offset: int = None
     hash: str = None
     header: 'PoseHeader' = None
+    _lock = threading.Lock()
 
     @staticmethod
     def calc_hash(buffer: bytes):
         return hashlib.md5(buffer[PoseHeaderCache.start_offset:PoseHeaderCache.end_offset]).hexdigest()
 
     @staticmethod
-    def check_cache(buffer: bytes) -> 'PoseHeader':
-        if PoseHeaderCache.hash is None:
-            return None
+    def check_cache(buffer: bytes) -> Optional[Tuple['PoseHeader', int]]:
+        with PoseHeaderCache._lock:
+            if PoseHeaderCache.hash is None:
+                return None
 
-        if PoseHeaderCache.hash == PoseHeaderCache.calc_hash(buffer):
-            return PoseHeaderCache.header
+            if PoseHeaderCache.hash == PoseHeaderCache.calc_hash(buffer):
+                return PoseHeaderCache.header, PoseHeaderCache.end_offset
+            return None
 
     @staticmethod
     def clear_cache():
-        PoseHeaderCache.start_offset = None
-        PoseHeaderCache.end_offset = None
-        PoseHeaderCache.hash = None
-        PoseHeaderCache.header = None
+        with PoseHeaderCache._lock:
+            PoseHeaderCache.start_offset = None
+            PoseHeaderCache.end_offset = None
+            PoseHeaderCache.hash = None
+            PoseHeaderCache.header = None
 
     @staticmethod
     def set_cache(header: 'PoseHeader', buffer: bytes, start_offset: int, end_offset: int):
-        PoseHeaderCache.start_offset = start_offset
-        PoseHeaderCache.end_offset = end_offset
-        PoseHeaderCache.header = header
-        PoseHeaderCache.hash = PoseHeaderCache.calc_hash(buffer)
+        with PoseHeaderCache._lock:
+            PoseHeaderCache.start_offset = start_offset
+            PoseHeaderCache.end_offset = end_offset
+            PoseHeaderCache.header = header
+            PoseHeaderCache.hash = PoseHeaderCache.calc_hash(buffer)
 
 
 class PoseHeader:
@@ -317,9 +327,12 @@ class PoseHeader:
         PoseHeader
             An instance of PoseHeader.
         """
-        cached_header = PoseHeaderCache.check_cache(reader.buffer)
-        if cached_header is not None:
-            reader.read_offset = PoseHeaderCache.end_offset
+        cached = PoseHeaderCache.check_cache(reader.buffer)
+        if cached is not None:
+            # header and end_offset come from the same atomic cache snapshot -- reading
+            # PoseHeaderCache.end_offset here instead would race with concurrent set_cache
+            cached_header, end_offset = cached
+            reader.read_offset = end_offset
             return cached_header
 
         start_offset = reader.read_offset

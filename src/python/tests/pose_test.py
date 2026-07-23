@@ -1,5 +1,6 @@
 import random
 import string
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from typing import Optional, Tuple
 from unittest import TestCase
@@ -339,6 +340,30 @@ class TestPose(TestCase):
                 self.assertEqual(empty_pose.body.data.dtype, numpy_pose.body.data.dtype)
                 self.assertEqual(empty_pose.body.confidence.shape, numpy_pose.body.confidence.shape)
                 self.assertEqual(empty_pose.body.fps, numpy_pose.body.fps)
+
+    def test_concurrent_read_of_different_files_is_safe(self):
+        # Regression test: PoseHeaderCache used to be updated non-atomically, so
+        # concurrent Pose.read calls on files with different headers could crash
+        # ("buffer is too small for requested array") or, worse, silently return a
+        # pose parsed with another file's header.
+        data_dir = Path(__file__).parent / "data"
+        buffers = {}
+        expected = {}
+        for name in ["mediapipe.pose", "openpose.pose"]:
+            with open(data_dir / name, 'rb') as f:
+                buffers[name] = f.read()
+            pose = Pose.read(buffers[name])
+            expected[name] = ([c.name for c in pose.header.components], pose.body.data.shape)
+
+        def read_one(name):
+            pose = Pose.read(buffers[name])
+            return name, ([c.name for c in pose.header.components], pose.body.data.shape)
+
+        names = list(buffers.keys()) * 4
+        with ThreadPoolExecutor(max_workers=8) as executor:
+            for _ in range(30):
+                for name, got in executor.map(read_one, names):
+                    self.assertEqual(expected[name], got)
 
     def test_pose_bbox(self):
         data_dir = Path(__file__).parent / "data"
